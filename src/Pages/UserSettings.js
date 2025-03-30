@@ -31,7 +31,7 @@ const SettingsPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`https://urchin-app-lpasr.ondigitalocean.app/api/User/${userId}`, {
+        const response = await fetch(`https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/User/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -99,7 +99,7 @@ const SettingsPage = () => {
     };
 
     try {
-      const response = await fetch(`https://urchin-app-lpasr.ondigitalocean.app/api/User/${userId}`, {
+      const response = await fetch(`https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/User/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const handleDeleteAccount = async () => {
       console.log("Deleting account for userId:", userId);
       console.log("Using token:", parsedRes.token);
       
-      const response = await fetch(`https://urchin-app-lpasr.ondigitalocean.app/api/User/${userId}`, {
+      const response = await fetch(`https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/User/${userId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

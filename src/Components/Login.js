@@ -18,7 +18,7 @@ function LoginComponent() {
     setError(null);
 
     try {
-      const response = await fetch('https://urchin-app-lpasr.ondigitalocean.app/api/Login', {
+      const response = await fetch('https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ function LoginComponent() {
     setError(null);
     try {
       // Send the Google credential token to your backend for login/registration
-      const response = await fetch('https://urchin-app-lpasr.ondigitalocean.app/api/GoogleLogin', {
+      const response = await fetch('https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/GoogleLogin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

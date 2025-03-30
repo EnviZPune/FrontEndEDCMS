@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import '../Styling/register_user.css';
-import { FaGoogle } from "react-icons/fa";
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 
@@ -14,7 +13,7 @@ function RegisterFormUser() {
     email: '',
     createPassword: '',
     confirmPassword: '',
-    role: '2' // Default role as "0" (User)
+    role: '2' // Default role as "2" (User)
   });
 
   const [loading, setLoading] = useState(false);
@@ -58,14 +57,14 @@ function RegisterFormUser() {
 
     const requestBody = {
       name: `${formData.firstName} ${formData.lastName}`,
+      username: `${formData.username}`,
       email: formData.email,
       password: formData.createPassword,
       role: roleMap[formData.role]
-      // You can add additional fields (like dateOfBirth, username, phoneNumber) if your backend requires them
     };
 
     try {
-      const response = await fetch('https://urchin-app-lpasr.ondigitalocean.app/api/user', {
+      const response = await fetch('https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -93,7 +92,6 @@ function RegisterFormUser() {
         role: '2'
       });
 
-      // Redirect to login page after successful registration
       window.location.href = "http://localhost:3000/login";
     } catch (err) {
       setError(err.message || "An error occurred while registering.");
@@ -108,7 +106,7 @@ function RegisterFormUser() {
     setError(null);
     try {
       // Send the Google credential to your backend registration endpoint
-      const response = await fetch('https://urchin-app-lpasr.ondigitalocean.app/api/GoogleRegister', {
+      const response = await fetch('https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/GoogleRegister', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

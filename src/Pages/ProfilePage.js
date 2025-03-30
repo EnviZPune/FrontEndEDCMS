@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../Styling/profilepage.css";
 import UserDashboard from "../Components/UserDashboard";
 import Navbar from "../Components/Navbar";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 const getDecodedToken = () => {
   try {
@@ -26,7 +26,7 @@ const { decoded, token } = getDecodedToken();
 const loggedInUserId = decoded?.UserId || "";
 
 const ProfilePage = () => {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState("");
   const [lastSeen, setLastSeen] = useState("");
   const [timeSpent, setTimeSpent] = useState(0);
   const [result, setResult] = useState(null);
@@ -40,7 +40,7 @@ const ProfilePage = () => {
           throw new Error("No valid user ID found.");
         }
         const response = await fetch(
-          `https://urchin-app-lpasr.ondigitalocean.app/api/User/${loggedInUserId}`
+          `https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/User/${loggedInUserId}`
         );
         if (!response.ok) {
           throw new Error(`User not found. Status: ${response.status}`);
@@ -74,12 +74,12 @@ const ProfilePage = () => {
     const fetchBusinessData = async () => {
       try {
         const res = await fetch(
-          `https://urchin-app-lpasr.ondigitalocean.app/api/Business/13`,
+          `https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Business`,
           {
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}` 
-            }
+              "Authorization": `Bearer ${token}`,
+            },
           }
         );
         if (!res.ok) {
@@ -98,7 +98,12 @@ const ProfilePage = () => {
   }, [loggedInUserId, token]);
 
   if (!userData) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading user data...</p>
+      </div>
+    );
   }
 
   return (

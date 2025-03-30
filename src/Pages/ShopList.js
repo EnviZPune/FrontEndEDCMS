@@ -2,13 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
-import '../Styling/shoplist.css'; // Ensure this CSS file exists
+import '../Styling/shoplist.css';
 
 const ShopList = () => {
     const [shops, setShops] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const carouselRef = useRef(null);
+
 
     useEffect(() => {
         const fetchShops = async () => {
@@ -24,13 +25,8 @@ const ShopList = () => {
                 const parsedTokenData = JSON.parse(tokenData);
                 const token = parsedTokenData.token || parsedTokenData;
 
-                const response = await fetch('https://urchin-app-lpasr.ondigitalocean.app/api/Business', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    method: 'GET',
-                });
+                const response = await fetch(`https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Business/ViewAllBusinesses`);
+            
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -65,8 +61,13 @@ const ShopList = () => {
     };
 
     if (loading) {
-        return <div className="shoplist-loading">Loading shops...</div>;
-    }
+        return (
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading all shops</p>
+          </div>
+        );
+      }
 
     if (error) {
         return <div className="shoplist-error">Error: {error}</div>;
@@ -93,7 +94,7 @@ const ShopList = () => {
                                     />
                                     <h2>{shop.name}</h2>
                                     <p>{shop.description || "No description available."}</p>
-                                    <Link to={`/shops/${shop.businessId}`} className="view-details-link">
+                                    <Link to={`/shops/${shop.name}`} className="view-details-link">
                                         View Details
                                     </Link>
                                 </div>
