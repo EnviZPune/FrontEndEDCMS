@@ -2,9 +2,22 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar";
 import "../../Styling/settings.css";
+import { FaSearch } from "react-icons/fa";
+import {
+  FaBuilding,
+  FaBoxOpen,
+  FaEdit,
+  FaList,
+  FaUserEdit,
+  FaUsers,
+  FaExclamationTriangle,
+  FaEye,
+  FaTrash,
+} from "react-icons/fa";
 
 const getToken = () => {
-  const raw = localStorage.getItem("token") || localStorage.getItem("authToken");
+  const raw =
+    localStorage.getItem("token") || localStorage.getItem("authToken");
   if (!raw || raw.trim() === "") return null;
   try {
     const parsed = JSON.parse(raw);
@@ -14,7 +27,6 @@ const getToken = () => {
   }
 };
 
-// Helper function to safely parse JSON responses
 const safeParseJson = async (res) => {
   const text = await res.text();
   try {
@@ -34,8 +46,6 @@ const Settings = () => {
 
   // Products state
   const [products, setProducts] = useState([]);
-
-  // Updated Product state with new fields (aligned with ClothingItemDTO)
   const [newProduct, setNewProduct] = useState({
     description: "",
     price: "",
@@ -45,9 +55,8 @@ const Settings = () => {
     model: "",
     pictureUrls: "",
     colors: "",
-    sizes: "",
-    customSize: "",
-    material: ""
+    sizes: "XS", // default; valid: XS, S, M, L, XL, XXL
+    material: "",
   });
   const [editingProductId, setEditingProductId] = useState(null);
 
@@ -55,12 +64,16 @@ const Settings = () => {
   const [newCategory, setNewCategory] = useState({ name: "", color: "#000000" });
   const [categories, setCategories] = useState([]);
 
-  // Other states
+  // Employee management states
   const [employees, setEmployees] = useState([]);
+  const [newEmployee, setNewEmployee] = useState({ name: "", email: "", role: "" });
+  const [editingEmployee, setEditingEmployee] = useState(null);
+
+  // Other states
   const [pendingChanges, setPendingChanges] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // New states for profile and cover photo file uploads
+  // Profile and cover photo uploads
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [coverPhoto, setCoverPhoto] = useState(null);
 
@@ -71,6 +84,11 @@ const Settings = () => {
     Authorization: `Bearer ${getToken()}`,
   });
 
+  // Mapping for sizes (for saving)
+  const sizeMapping = { XS: 0, S: 1, M: 2, L: 3, XL: 4, XXL: 5 };
+  // Reverse mapping for inline editing display (if your API returns numeric values)
+  const reverseSizeMapping = { 0: "XS", 1: "S", 2: "M", 3: "L", 4: "XL", 5: "XXL" };
+
   const handleSelectBusiness = (businessId) => {
     const business = userBusinesses.find((b) => b.businessId === businessId);
     if (business) fetchBusinessDetails(business.businessId);
@@ -78,9 +96,10 @@ const Settings = () => {
 
   useEffect(() => {
     const fetchBusinesses = async () => {
-      const res = await fetch("https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Business", {
-        headers: getHeaders(),
-      });
+      const res = await fetch(
+        "https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Business",
+        { headers: getHeaders() }
+      );
       const data = (await safeParseJson(res)) || [];
       setUserBusinesses(data);
       if (data.length > 0) fetchBusinessDetails(data[0].businessId);
@@ -131,9 +150,10 @@ const Settings = () => {
   };
 
   const fetchPendingChanges = async () => {
-    const res = await fetch("https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/ProposedChange", {
-      headers: getHeaders(),
-    });
+    const res = await fetch(
+      "https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/ProposedChange",
+      { headers: getHeaders() }
+    );
     const data = (await safeParseJson(res)) || [];
     setPendingChanges(data);
   };
@@ -150,15 +170,11 @@ const Settings = () => {
     alert(res.ok ? "Business info updated!" : "Failed to update business.");
   };
 
-  // Updated saveProduct: builds payload according to ClothingItemDTO.
-  // If "Other" is selected for size, it uses the custom size value.
   const saveProduct = async () => {
     const method = editingProductId ? "PUT" : "POST";
     const url = editingProductId
       ? `https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/ClothingItem/item/${editingProductId}`
       : "https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/ClothingItem";
-    
-    const sizeValue = newProduct.sizes === "Other" ? newProduct.customSize : newProduct.sizes;
 
     const body = {
       BusinessIds: [selectedBusiness.businessId],
@@ -170,17 +186,29 @@ const Settings = () => {
       Model: newProduct.model,
       PictureUrls: newProduct.pictureUrls ? [newProduct.pictureUrls] : [],
       Colors: newProduct.colors,
-      Sizes: sizeValue,
+      Sizes: sizeMapping[newProduct.sizes],
       Material: newProduct.material,
     };
 
-    const res = await fetch(url, {
-      method,
-      headers: getHeaders(),
-      body: JSON.stringify(body),
-    });
-    alert(res.ok ? "Product saved!" : "Failed to save product.");
-    // Reset product state
+    try {
+      const res = await fetch(url, {
+        method,
+        mode: "cors",
+        headers: getHeaders(),
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        console.error("Failed to save product, status:", res.status);
+        alert("Failed to save product.");
+      } else {
+        alert("Product saved!");
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      alert("Network error when attempting to save product.");
+    }
+
+    // Reset form state and exit edit mode
     setNewProduct({
       description: "",
       price: "",
@@ -190,35 +218,27 @@ const Settings = () => {
       model: "",
       pictureUrls: "",
       colors: "",
-      sizes: "",
-      customSize: "",
-      material: ""
+      sizes: "XS",
+      material: "",
     });
     setEditingProductId(null);
     fetchProducts(selectedBusiness.businessId);
   };
 
-  // New function: Save profile and cover photos using file upload (FormData)
   const saveProfileCoverPhotos = async () => {
     if (!profilePhoto && !coverPhoto) {
       alert("Please select at least one image to update.");
       return;
     }
     const formData = new FormData();
-    if (profilePhoto) {
-      formData.append("profilePhoto", profilePhoto);
-    }
-    if (coverPhoto) {
-      formData.append("coverPhoto", coverPhoto);
-    }
+    if (profilePhoto) formData.append("profilePhoto", profilePhoto);
+    if (coverPhoto) formData.append("coverPhoto", coverPhoto);
+
     const res = await fetch(
       `https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Business/${selectedBusiness.businessId}/profile`,
       {
         method: "PUT",
-        // Do not set "Content-Type" header when using FormData
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
+        headers: { Authorization: `Bearer ${getToken()}` },
         body: formData,
       }
     );
@@ -233,30 +253,92 @@ const Settings = () => {
     fetchProducts(selectedBusiness.businessId);
   };
 
-  const saveCategory = async () => {
-    const res = await fetch("https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Category", {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify({
-        name: newCategory.name,
-        color: newCategory.color,
-        businessId: selectedBusiness.businessId,
-      }),
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const deleteBusiness = async () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this business? This action cannot be undone."
+      )
+    ) {
+      const res = await fetch(
+        `https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Business/${selectedBusiness.businessId}`,
+        { method: "DELETE", headers: getHeaders() }
+      );
+      if (res.ok) {
+        alert("Business deleted successfully.");
+        navigate("/dashboard");
+      } else {
+        alert("Failed to delete business. Error " + res.status);
+      }
+    }
+  };
+
+  // Employee endpoints
+  const handleEmployeeSubmit = async (e) => {
+    e.preventDefault();
+    if (editingEmployee) {
+      const res = await fetch(
+        `https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Employee/${editingEmployee.id}`,
+        {
+          method: "PUT",
+          headers: getHeaders(),
+          body: JSON.stringify({
+            ...newEmployee,
+            businessId: selectedBusiness.businessId,
+          }),
+        }
+      );
+      alert(res.ok ? "Employee updated!" : "Failed to update employee.");
+      setEditingEmployee(null);
+    } else {
+      const res = await fetch(
+        "https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Employee",
+        {
+          method: "POST",
+          headers: getHeaders(),
+          body: JSON.stringify({
+            ...newEmployee,
+            businessId: selectedBusiness.businessId,
+          }),
+        }
+      );
+      alert(res.ok ? "Employee added!" : "Failed to add employee.");
+    }
+    setNewEmployee({ name: "", email: "", role: "" });
+    fetchEmployees(selectedBusiness.businessId);
+  };
+
+  const handleEditEmployee = (employee) => {
+    setEditingEmployee(employee);
+    setNewEmployee({
+      name: employee.name,
+      email: employee.email,
+      role: employee.role,
     });
-    alert(res.ok ? "Category added!" : "Failed to add category.");
-    setNewCategory({ name: "", color: "#000000" });
-    fetchCategories(selectedBusiness.businessId);
+  };
+
+  const deleteEmployee = async (employeeId) => {
+    if (window.confirm("Are you sure you want to delete this employee?")) {
+      const res = await fetch(
+        `https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Employee/${employeeId}`,
+        { method: "DELETE", headers: getHeaders() }
+      );
+      alert(res.ok ? "Employee deleted!" : "Failed to delete employee.");
+      fetchEmployees(selectedBusiness.businessId);
+    }
   };
 
   const sidebarItems = [
-    "Business Info",
-    "Add New Products/Categories",
-    "Edit Current Products",
-    "Product Categories",
-    "Edit Profile/Cover Photo",
-    "Employee Management",
-    "Pending Changes",
-    "Shop Preview",
+    { name: "Business Info", icon: <FaBuilding /> },
+    { name: "Add New Products/Categories", icon: <FaBoxOpen /> },
+    { name: "Edit Current Products", icon: <FaEdit /> },
+    { name: "Product Categories", icon: <FaList /> },
+    { name: "Edit Profile/Cover Photo", icon: <FaUserEdit /> },
+    { name: "Employee Management", icon: <FaUsers /> },
+    { name: "Pending Changes", icon: <FaExclamationTriangle /> },
+    { name: "Shop Preview", icon: <FaEye /> },
+    { name: "Delete Business", icon: <FaTrash /> },
   ];
 
   const renderContent = () => {
@@ -269,11 +351,15 @@ const Settings = () => {
             <h3>Edit Business Info</h3>
             <input
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
             />
             <textarea
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
             />
             <button onClick={saveBusinessInfo}>Save</button>
           </div>
@@ -286,111 +372,272 @@ const Settings = () => {
               <input
                 placeholder="Brand"
                 value={newProduct.brand}
-                onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, brand: e.target.value })
+                }
               />
               <input
                 placeholder="Model"
                 value={newProduct.model}
-                onChange={(e) => setNewProduct({ ...newProduct, model: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, model: e.target.value })
+                }
               />
               <textarea
                 placeholder="Description"
                 value={newProduct.description}
-                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, description: e.target.value })
+                }
               />
-              <input
-                type="number"
-                placeholder="Price"
-                value={newProduct.price}
-                onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-              />
+              <div className="price-input-group">
+                <input
+                  type="number"
+                  placeholder="Price"
+                  value={newProduct.price}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, price: e.target.value })
+                  }
+                />
+              </div>
               <input
                 type="number"
                 placeholder="Quantity"
                 value={newProduct.quantity}
-                onChange={(e) => setNewProduct({ ...newProduct, quantity: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, quantity: e.target.value })
+                }
               />
               <input
-                placeholder="Category (optional)"
+                type="text"
+                placeholder="Category"
                 value={newProduct.category}
-                onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, category: e.target.value })
+                }
               />
               <input
                 placeholder="Picture URL"
                 value={newProduct.pictureUrls}
-                onChange={(e) => setNewProduct({ ...newProduct, pictureUrls: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, pictureUrls: e.target.value })
+                }
               />
               <input
                 placeholder="Colors"
                 value={newProduct.colors}
-                onChange={(e) => setNewProduct({ ...newProduct, colors: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, colors: e.target.value })
+                }
               />
               <select
                 value={newProduct.sizes}
-                onChange={(e) => setNewProduct({ ...newProduct, sizes: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, sizes: e.target.value })
+                }
               >
-                <option value="" disabled>
-                  Select Size
-                </option>
                 <option value="XS">XS</option>
                 <option value="S">S</option>
                 <option value="M">M</option>
                 <option value="L">L</option>
                 <option value="XL">XL</option>
                 <option value="XXL">XXL</option>
-                <option value="Other">Other</option>
               </select>
-              {newProduct.sizes === "Other" && (
-                <input
-                  placeholder="Custom Size"
-                  value={newProduct.customSize}
-                  onChange={(e) =>
-                    setNewProduct({ ...newProduct, customSize: e.target.value })
-                  }
-                />
-              )}
               <input
                 placeholder="Material"
                 value={newProduct.material}
-                onChange={(e) => setNewProduct({ ...newProduct, material: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, material: e.target.value })
+                }
               />
               <button onClick={saveProduct}>Save Product</button>
             </div>
-            <div className="panel">
-              <h3>Add Category</h3>
-              <input
-                placeholder="Category Name"
-                value={newCategory.name}
-                onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-              />
-              <button onClick={saveCategory}>Add Category</button>
-            </div>
           </div>
         );
-      case "Edit Current Products":
-        return (
-          <div className="panel">
-            <h3>Products</h3>
-            <ul className="product-list">
-              {products.map((p) => (
-                <li key={p.ClothingItemId}>
-                  <span>
-                    {p.Brand} - {p.Model} (${p.Price})
-                  </span>
-                  <button
-                    onClick={() => {
-                      setNewProduct(p);
-                      setEditingProductId(p.ClothingItemId);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button onClick={() => deleteProduct(p.ClothingItemId)}>Delete</button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
+
+case "Edit Current Products":
+  const filteredProducts = products.filter((p) =>
+    `${p.brand} ${p.model} ${p.description}`.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div className="panel">
+      <h3>Products</h3>
+      <div style={{ position: 'relative', width: '90%', marginBottom: '12px' }}>
+          <FaSearch
+            style={{
+              position: 'absolute',
+              top: '35%',
+              left: '8px',
+              transform: 'translateY(-50%)',
+              color: '#aaa',
+              pointerEvents: 'none'
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '8px 8px 8px 32px'  
+            }}
+          />
+        </div>
+      <ul className="product-list">
+        {filteredProducts.map((p) => (
+          <li key={p.clothingItemId}>
+            {editingProductId === p.clothingItemId ? (
+              <div className="inline-edit-form">
+                {/* Inline editing form as before */}
+                <input
+                  placeholder="Brand"
+                  value={newProduct.brand}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, brand: e.target.value })
+                  }
+                />
+                <input
+                  placeholder="Model"
+                  value={newProduct.model}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, model: e.target.value })
+                  }
+                />
+                <textarea
+                  placeholder="Description"
+                  value={newProduct.description}
+                  onChange={(e) =>
+                    setNewProduct({
+                      ...newProduct,
+                      description: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  type="number"
+                  placeholder="Price"
+                  value={newProduct.price}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, price: e.target.value })
+                  }
+                />
+                <input
+                  type="number"
+                  placeholder="Quantity"
+                  value={newProduct.quantity}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, quantity: e.target.value })
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Category"
+                  value={newProduct.category}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, category: e.target.value })
+                  }
+                />
+                <input
+                  placeholder="Picture URL"
+                  value={newProduct.pictureUrls}
+                  onChange={(e) =>
+                    setNewProduct({
+                      ...newProduct,
+                      pictureUrls: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  placeholder="Colors"
+                  value={newProduct.colors}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, colors: e.target.value })
+                  }
+                />
+                <select
+                  value={newProduct.sizes}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, sizes: e.target.value })
+                  }
+                >
+                  <option value="XS">XS</option>
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                  <option value="XXL">XXL</option>
+                </select>
+                <input
+                  placeholder="Material"
+                  value={newProduct.material}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, material: e.target.value })
+                  }
+                />
+                <button onClick={saveProduct}>Save</button>
+                <button
+                  onClick={() => {
+                    setEditingProductId(null);
+                    setNewProduct({
+                      description: "",
+                      price: "",
+                      quantity: "",
+                      category: "",
+                      brand: "",
+                      model: "",
+                      pictureUrls: "",
+                      colors: "",
+                      sizes: "XS",
+                      material: "",
+                    });
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div className="product-display">
+                <span>
+                  {p.brand} - {p.model} (${p.price})
+                </span>
+                <button
+                  onClick={() => {
+                    setNewProduct({
+                      description: p.description,
+                      price: p.price.toString(),
+                      quantity: p.quantity.toString(),
+                      category: p.category,
+                      brand: p.brand,
+                      model: p.model,
+                      pictureUrls:
+                        p.pictureUrls && p.pictureUrls[0]
+                          ? p.pictureUrls[0]
+                          : "",
+                      colors: p.colors,
+                      sizes:
+                        typeof p.sizes === "number"
+                          ? reverseSizeMapping[p.sizes] || "XS"
+                          : p.sizes,
+                      material: p.material,
+                    });
+                    setEditingProductId(p.clothingItemId);
+                  }}
+                >
+                  Edit
+                </button>
+                <button onClick={() => deleteProduct(p.clothingItemId)}>
+                  Delete
+                </button>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+
       case "Product Categories":
         return (
           <div className="panel">
@@ -422,18 +669,73 @@ const Settings = () => {
           </div>
         );
       case "Employee Management":
-        return (
-          <div className="panel">
-            <h3>Employees</h3>
-            <ul>
-              {employees.map((emp) => (
-                <li key={emp.id}>
-                  {emp.name} ({emp.email})
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
+  return (
+    <div className="panel">
+  <h3>Employee Management</h3>
+  <div className="employee-management-container">
+    {/* Left: Add New Employee */}
+    <div className="employee-add-section">
+      <h4>Add New Employee</h4>
+      <form onSubmit={handleEmployeeSubmit} className="employee-form">
+        <input
+          type="text"
+          placeholder="Name"
+          value={newEmployee.name}
+          onChange={(e) =>
+            setNewEmployee({ ...newEmployee, name: e.target.value })
+          }
+          required
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          value={newEmployee.email}
+          onChange={(e) =>
+            setNewEmployee({ ...newEmployee, email: e.target.value })
+          }
+          required
+        />
+        <input
+          type="text"
+          placeholder="Role"
+          value={newEmployee.role}
+          onChange={(e) =>
+            setNewEmployee({ ...newEmployee, role: e.target.value })
+          }
+          required
+        />
+        <button type="submit">
+          {editingEmployee ? "Update Employee" : "Add Employee"}
+        </button>
+      </form>
+    </div>
+
+    {/* Right: Existing Employees */}
+    <div className="employee-list-section">
+      <h4>Existing Employees</h4>
+      {employees.length > 0 ? (
+        <ul>
+          {employees.map((emp) => (
+            <li key={emp.id} className="employee-item">
+              <span>
+                {emp.name} ({emp.email})
+              </span>
+              <div className="employee-actions">
+                <button onClick={() => handleEditEmployee(emp)}>Edit</button>
+                <button onClick={() => deleteEmployee(emp.id)}>Delete</button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No employees found.</p>
+      )}
+    </div>
+  </div>
+</div>
+
+  );
+
       case "Pending Changes":
         return (
           <div className="panel">
@@ -460,8 +762,28 @@ const Settings = () => {
                 style={{ border: "none" }}
               ></iframe>
             ) : (
-              <p>Shop preview unavailable. Please update your business shop settings.</p>
+              <p>
+                Shop preview unavailable. Please update your business shop
+                settings.
+              </p>
             )}
+          </div>
+        );
+      case "Delete Business":
+        return (
+          <div className="panel">
+            <h3>Delete Business</h3>
+            <p>
+              Warning: This action cannot be undone. All business data will be
+              permanently removed.
+            </p>
+            <button
+              onClick={deleteBusiness}
+              style={{ backgroundColor: "red", color: "white" }}
+              className="delete-button"
+            >
+              Delete Business
+            </button>
           </div>
         );
       default:
@@ -491,11 +813,14 @@ const Settings = () => {
             <ul>
               {sidebarItems.map((item) => (
                 <li
-                  key={item}
-                  onClick={() => setSelectedCategory(item)}
-                  className={selectedCategory === item ? "active" : ""}
+                  key={item.name}
+                  onClick={() => setSelectedCategory(item.name)}
+                  className={`${
+                    selectedCategory === item.name ? "active" : ""
+                  } ${item.name === "Delete Business" ? "delete-sidebar" : ""}`}
                 >
-                  {item}
+                  <span className="sidebar-icon">{item.icon}</span>
+                  {item.name}
                 </li>
               ))}
             </ul>

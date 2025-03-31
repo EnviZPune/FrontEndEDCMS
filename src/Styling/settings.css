@@ -270,8 +270,261 @@
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
 }
 
+.price-input-group {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+}
 
-/* Responsive Adjustments */
+.price-input-group input {
+  width: 100%;
+  padding: 10px 90px 10px 10px; /* Extra right padding for the select */
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.price-input-group select {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding: 0 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Sidebar Icon Styling */
+.sidebar-icon {
+  position: relative;
+  top: 2px;
+  margin-right: 8px;
+  font-size: 1.2rem;
+  vertical-align: middle;
+}
+
+/* Sidebar Delete Business (Red) */
+.delete-sidebar {
+  color: red;
+}
+
+.delete-sidebar:hover,
+.delete-sidebar:active {
+  color: red;
+}
+
+
+/* Existing styles for your Settings page (example) */
+.settings-component {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.settings-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-wrapper {
+  display: flex;
+}
+
+.settings-sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-right: 1px solid #e0e0e0;
+}
+
+.settings-sidebar select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.settings-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.settings-sidebar li {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.settings-sidebar li:hover {
+  background-color: #f0f0f0;
+}
+
+.settings-sidebar li.active {
+  background-color: #e0f7fa;
+  font-weight: bold;
+}
+
+.settings-content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Delete Business Button Styling */
+.delete-button {
+  background-color: red;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.delete-button:hover {
+  background-color: rgb(124, 8, 8);
+  transform: translateY(-2px);
+
+}
+
+/* Other panel styles */
+.panel {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+.dual-panel {
+  display: flex;
+  gap: 20px;
+}
+
+.dual-panel .panel {
+  flex: 1;
+}
+
+/* Force Employee Management to be two columns side-by-side */
+.employee-management-container {
+  position: relative;
+  top: 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: nowrap; /* Prevent wrapping */
+}
+
+.employee-add-section,
+.employee-list-section {
+  position: relative;
+  bottom: 10px;
+  flex: 1;
+  min-width: 0; /* Prevent overflow issues */
+  background-color: #fff;
+  border: 1px solid var(--lighter-border);
+  border-radius: 6px;
+  padding: 16px;
+}
+
+/* Optionally, you can force each column to take up 50% width */
+.employee-add-section {
+  width: 50%;
+}
+
+.employee-list-section {
+  width: 50%;
+}
+
+/* Headings inside each section */
+.employee-add-section h4,
+.employee-list-section h4 {
+  position: relative;
+  bottom: 25px;
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 6px;
+}
+
+/* Form styling for adding an employee */
+.employee-add-section form input,
+.employee-add-section form button {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid var(--light-border);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.employee-add-section form button {
+  background-color: var(--primary-color);
+  color: var(--white);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.employee-add-section form button:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Styling for the employee list */
+.employee-list-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.employee-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--lighter-border);
+}
+
+.employee-item:last-child {
+  border-bottom: none;
+}
+
+.employee-actions button {
+  margin-left: 8px;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.employee-actions button:first-child {
+  background-color: var(--success-color);
+  color: var(--white);
+}
+
+.employee-actions button:first-child:hover {
+  background-color: var(--success-hover);
+}
+
+.employee-actions button:last-child {
+  background-color: var(--danger-color);
+  color: var(--white);
+}
+
+.employee-actions button:last-child:hover {
+  background-color: var(--danger-hover);
+}
+
+
+
 @media (max-width: 768px) {
   .settings-component .settings-wrapper {
     flex-direction: column;

@@ -157,7 +157,7 @@ const Navbar = () => {
                       </Link>
                     )}
                     <Link to="/settings" className="dropdown-item">
-                      ⚙️ Settings
+                      ⚙️ Bussiness Settings
                     </Link>
                     <button onClick={handleLogout} className="dropdown-item logout-button">
                       🚪 Logout

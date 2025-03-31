@@ -1,7 +1,7 @@
 /* Search Bar Container */
 .search-bar-container {
   position: relative;
-  width: 100%;
+  width: 50%;
   max-width: 800px;
   margin: 0 auto;
 }
@@ -9,8 +9,7 @@
 /* Input Field */
 .search-input {
   width: 100%;
-  padding: 10px 15px;
-  font-size: 16px;
+  padding: 8px 50px 8px 32px; /* Left padding for left icon, right padding for right icons */
   border: 1px solid #ddd;
   border-radius: 5px;
   outline: none;
@@ -33,23 +32,22 @@
   cursor: pointer;
 }
 
+/* Move search icon to left */
 .search-icon {
-  right: 40px;
+  left: 10px;
+  pointer-events: none; /* so input focus remains on click */
 }
 
+/* Microphone stays on the right */
 .microphone-icon {
   right: 10px;
 }
 
-.microphone-icon.Listening {
-  color: #007bff;
-}
-
-/* Clear Button */
+/* Clear Button stays on the right, between the input and the microphone */
 .clear-button {
   position: absolute;
   top: 50%;
-  right: 70px;
+  right: 50px;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -151,19 +149,18 @@
   font-weight: bold;
 }
 
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .search-input {
     font-size: 14px;
-    padding: 8px 10px;
+    padding: 8px 10px 8px 40px;
   }
-
+  
   .search-icon,
   .microphone-icon {
     font-size: 16px;
   }
-
+  
   .search-category li {
     font-size: 12px;
   }

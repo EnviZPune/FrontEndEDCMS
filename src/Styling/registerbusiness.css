@@ -1,40 +1,80 @@
+/* Register Business Form Container */
 .register-business-form-container {
   max-width: 600px;
+  width: 90%;
   margin: 40px auto;
-  padding: 20px;
-  background-color: #f4f4f4;
-  border-radius: 8px;
-  box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
 }
 
+.register-business-form-container:hover {
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Form Layout */
 .register-business-form {
   display: flex;
   flex-direction: column;
+  gap: 15px;
 }
 
+/* Input, Textarea, and File Inputs */
 .register-business-form input[type="text"],
 .register-business-form textarea,
 .register-business-form input[type="file"] {
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  width: 90%;
+  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #333;
+  transition: border-color 0.3s ease;
 }
 
+.register-business-form input[type="text"]:focus,
+.register-business-form textarea:focus,
+.register-business-form input[type="file"]:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+/* Textarea specific styling */
+.register-business-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Submit Button */
 .register-business-form .submit-button {
   background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
+  color: #fff;
+  padding: 12px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  text-align: center;
 }
 
 .register-business-form .submit-button:hover {
-  background-color: #45a049;
+  background-color: #43a047;
+  transform: translateY(-2px);
 }
 
-.register-business-form textarea {
-  resize: vertical;
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .register-business-form-container {
+    padding: 20px;
+    margin: 20px auto;
+  }
+
+  .register-business-form .submit-button {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
 }

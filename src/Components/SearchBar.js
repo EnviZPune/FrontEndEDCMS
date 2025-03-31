@@ -1,34 +1,66 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaSearch, FaMicrophone } from "react-icons/fa";
 import "../Styling/searchbar.css";
-import allshops from "../Mock_DataBase/Mock_Shops"; // Adjust the path to your database file
 
 const SearchBar = ({ onNavigate }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isListening, setIsListening] = useState(false);
+  const [shops, setShops] = useState([]);
+
+  // Fetch live shops from your backend
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    const fetchShops = async () => {
+      try {
+        const response = await fetch(
+          "https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Business",
+          {
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          }
+        );
+        if (!response.ok) {
+          console.error("Failed to fetch shops.");
+          return;
+        }
+        const data = await response.json();
+        setShops(data);
+      } catch (error) {
+        console.error("Error fetching shops:", error);
+      }
+    };
+    fetchShops();
+  }, []);
 
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-
+  
     if (query.trim() === "") {
       setSearchResults([]);
       return;
     }
-
+  
+    console.log("Searching for:", query);
+    console.log("Shops:", shops);
+  
     // Search for shops
-    const shops = allshops
-      .filter((shop) => shop.name.toLowerCase().includes(query))
+    const filteredShops = shops
+      .filter((shop) => shop.name && shop.name.toLowerCase().includes(query))
       .map((shop) => ({ name: shop.name, slug: shop.slug }));
-
-    // Search for clothing items
-    const clothingItems = allshops.flatMap((shop) =>
-      shop.clothingItems
+    console.log("Filtered Shops:", filteredShops);
+  
+    // Search for clothing items inside each shop, if available
+    const clothingItems = shops.flatMap((shop) =>
+      (shop.clothingItems || [])
         .filter(
           (item) =>
-            item.name.toLowerCase().includes(query) ||
-            item.category.toLowerCase().includes(query)
+            item.name && item.name.toLowerCase().includes(query) ||
+            item.category && item.category.toLowerCase().includes(query)
         )
         .map((item) => ({
           ...item,
@@ -36,9 +68,10 @@ const SearchBar = ({ onNavigate }) => {
           shopSlug: shop.slug,
         }))
     );
-
+    console.log("Clothing Items:", clothingItems);
+  
     setSearchResults([
-      { category: "Shops", results: shops },
+      { category: "Shops", results: filteredShops },
       {
         category: "Clothing Items",
         results: clothingItems.map((item) => ({
@@ -49,9 +82,10 @@ const SearchBar = ({ onNavigate }) => {
       },
     ]);
   };
+  
 
   const highlightQuery = (text, query) => {
-    const parts = text.split(new RegExp(`(${query})`, 'gi'));
+    const parts = text.split(new RegExp(`(${query})`, "gi"));
     return parts.map((part, index) =>
       part.toLowerCase() === query.toLowerCase() ? (
         <span key={index} className="highlight">
@@ -68,7 +102,6 @@ const SearchBar = ({ onNavigate }) => {
     setSearchResults([]);
   };
 
-  // UPDATED: Use product slug for navigation for clothing items
   const handleNavigation = (selectedItem) => {
     if (selectedItem.slug) {
       // It's a shop
@@ -87,7 +120,6 @@ const SearchBar = ({ onNavigate }) => {
       alert("Voice search is not supported in your browser.");
       return;
     }
-
     const recognition = new window.webkitSpeechRecognition();
     recognition.lang = "en-US";
     recognition.continuous = false;
@@ -116,26 +148,32 @@ const SearchBar = ({ onNavigate }) => {
 
   return (
     <div className="search-bar-container">
-      <input
-        type="text"
-        placeholder="Search shops, clothing items ..."
-        value={searchQuery}
-        onChange={handleSearch}
-        className="search-input"
-      />
-      <FaSearch className="search-icon" />
-      <FaMicrophone
-        className={`microphone-icon ${isListening ? "Listening" : ""}`}
-        onClick={startVoiceSearch}
-      />
-      {searchQuery && (
-        <button className="clear-button" onClick={clearSearch}>
-          ✕
-        </button>
-      )}
+      <div className="search-input-container">
+        <input
+          type="text"
+          placeholder="Search shops, clothing items ..."
+          value={searchQuery}
+          onChange={handleSearch}
+          className="search-input"
+        />
+        <FaSearch className="search-icon" />
+        <FaMicrophone
+          className={`microphone-icon ${isListening ? "Listening" : ""}`}
+          onClick={startVoiceSearch}
+        />
+        {searchQuery && (
+          <button className="clear-button" onClick={clearSearch}>
+            ✕
+          </button>
+        )}
+      </div>
 
       {searchResults.length > 0 && (
-        <div className={`search-dropdown ${searchResults.length > 0 ? "active" : ""}`}>
+        <div
+          className={`search-dropdown ${
+            searchResults.length > 0 ? "active" : ""
+          }`}
+        >
           {searchResults.map((group, index) => (
             <div key={index} className="search-category">
               <h4>{group.category}</h4>

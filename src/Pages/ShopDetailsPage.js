@@ -8,63 +8,71 @@ const ShopDetailsPage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [shop, setShop] = useState(null);
+  const [clothingItems, setClothingItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-
-    // Retrieve token and log it for debugging
     const storedToken = localStorage.getItem('token');
-    console.log("Raw token from localStorage:", storedToken);
-
     if (!storedToken) {
       setError("Unauthorized access. Please log in.");
       setLoading(false);
       return;
     }
-
-    // Parse the token if it's stored as a JSON string
     let token;
     try {
       const parsedData = JSON.parse(storedToken);
-      token = parsedData.token || parsedData; // Some apps store { token: "..." }
-    } catch (error) {
-      token = storedToken; // If parsing fails, assume it's stored as plain string
+      token = parsedData.token || parsedData;
+    } catch (err) {
+      token = storedToken;
     }
 
-    console.log("Final token used for request:", token);
+    const fetchShopAndProducts = async () => {
+      try {
+        const shopRes = await fetch(
+          `https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Business/name/${slug}`,
+          {
+            headers: { 
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
 
-    // Update the endpoint to use slug instead of name.
-    const apiUrl = `https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Business/name/${slug}`;
-    console.log("Fetching shop from:", apiUrl);
-
-    fetch(apiUrl, {
-      headers: { 
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        console.log("API Response Status:", response.status);
-        if (!response.ok) {
-          return response.text().then(text => { 
-            throw new Error(`Failed to fetch shop: ${response.status} - ${text}`);
-          });
+        if (!shopRes.ok) {
+          const text = await shopRes.text();
+          throw new Error(`Failed to fetch shop: ${shopRes.status} - ${text}`);
         }
-        return response.json();
-      })
-      .then(data => {
-        console.log("Fetched Shop Data:", data);
-        setShop(data);
+
+        const shopData = await shopRes.json();
+        setShop(shopData);
+
+        if (shopData.businessId) {
+          const ciRes = await fetch(
+            `https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/ClothingItem/business/${shopData.businessId}`,
+            {
+              headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+          if (ciRes.ok) {
+            const ciData = await ciRes.json();
+            setClothingItems(ciData);
+          } else {
+            console.error("Failed to fetch clothing items");
+          }
+        }
         setLoading(false);
-      })
-      .catch(error => {
-        console.error('Fetch error:', error.message);
-        setError(error.message);
+      } catch (err) {
+        console.error("Fetch error:", err.message);
+        setError(err.message);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchShopAndProducts();
   }, [slug]);
 
   if (loading) {
@@ -107,20 +115,22 @@ const ShopDetailsPage = () => {
 
         <div className="sd-products-section">
           <h2>Clothing Items</h2>
-          {shop.clothingItems?.length > 0 ? (
+          {clothingItems.length > 0 ? (
             <ul className="sd-product-list">
-              {shop.clothingItems.map((item) => (
+              {clothingItems.map((item) => (
                 <li key={item.clothingItemId} className="sd-product-card">
                   <img
-                    src={item.pictureUrls[0] || '/default-product.jpg'}
-                    alt={item.name}
+                    src={
+                      item.pictureUrls
+                        ? JSON.parse(item.pictureUrls)[0] || '/default-product.jpg'
+                        : '/default-product.jpg'
+                    }
+                    alt={item.model}
                     className="sd-product-image"
                   />
                   <h3>{item.brand} - {item.model}</h3>
                   <p>{item.description}</p>
                   <p><strong>Price:</strong> ${item.price}</p>
-                  <p><strong>Size:</strong> {item.sizes}</p>
-                  <p><strong>Colors:</strong> {item.colors}</p>
                 </li>
               ))}
             </ul>

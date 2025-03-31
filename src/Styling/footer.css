@@ -1,79 +1,78 @@
-/* footer.css */
-
 /* Footer Container */
 .footer {
-  position: absolute;
-  width: 90%;
-    background-color: #212529;
-    color: #f8f9fa;
-    padding: 20px 0;
-    font-family: 'Roboto', sans-serif;
-    height: 200px;
-  }
-  
+  /* Remove absolute positioning */
+  width: 100%;
+  background-color: #212529;
+  color: #f8f9fa;
+  padding: 20px 0;
+  font-family: 'Roboto', sans-serif;
+  height: 200px;
+  margin-top: auto; /* Push footer to the bottom of flex container */
+}
+
+/* Footer Inner Container */
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+/* Footer Sections */
+.footer-section {
+  flex: 1;
+  min-width: 250px;
+}
+
+.footer-section h2,
+.footer-section h3 {
+  color: lightgreen;
+  margin-bottom: 10px;
+}
+
+.footer-section p {
+  margin: 5px 0;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 5px;
+}
+
+.footer-section ul li a {
+  color: #f8f9fa;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+  color: #ffc107;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  border-top: 1px solid #343a40;
+  padding-top: 10px;
+  font-size: 14px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
   .footer-container {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 0 20px;
-  }
-  
-  .footer-section {
-    flex: 1;
-    min-width: 250px;
-  }
-  
-  .footer-section h2,
-  .footer-section h3 {
-    color: lightgreen;
-    margin-bottom: 10px;
-  }
-  
-  .footer-section p {
-    margin: 5px 0;
-  }
-  
-  .footer-section ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .footer-section ul li {
-    margin-bottom: 5px;
-  }
-  
-  .footer-section ul li a {
-    color: #f8f9fa;
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  
-  .footer-section ul li a:hover {
-    color: #ffc107;
-  }
-  
-  /* Footer Bottom */
-  .footer-bottom {
-    position: relative;
-    bottom: 10px;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    margin-top: 20px;
-    border-top: 1px solid #343a40;
-    padding-top: 10px;
-    font-size: 14px;
   }
-  @media (max-width: 768px) {
-    .footer-container {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-  
-    .footer-section {
-      margin-bottom: 20px;
-    }
+  .footer-section {
+    margin-bottom: 20px;
   }
-    
+}
