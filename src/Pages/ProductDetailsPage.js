@@ -1,212 +1,137 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
-import MockShops from '../Mock_DataBase/Mock_Shops';
 import '../Styling/productdetails.css';
 
-const ProductDetailsPage = () => {
-  const { slug, productSlug } = useParams();
-  const [shop, setShop] = useState(null);
-  const [product, setProduct] = useState(null);
+const getToken = () => {
+  const raw = localStorage.getItem('token') || localStorage.getItem('authToken');
+  if (!raw || raw.trim() === '') return null;
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed.token || parsed;
+  } catch {
+    return raw;
+  }
+};
 
-  // Track which image is currently shown
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+const getHeaders = () => ({
+  'Content-Type': 'application/json',
+  Authorization: `Bearer ${getToken()}`,
+});
+
+const ProductDetailsPage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [product, setProduct] = useState(null);
+  const [mainImage, setMainImage] = useState(null);
+  const [shopSlug, setShopSlug] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Find the shop based on its slug
-    const foundShop = MockShops.find((shop) => shop.slug === slug);
-    if (foundShop) {
-      // Find the product using its unique slug
-      const foundProduct = foundShop.clothingItems.find(
-        (item) => item.slug === productSlug
-      );
-      setShop(foundShop);
-      setProduct(foundProduct);
-      setCurrentImageIndex(0); // Reset to first image
-    }
-  }, [slug, productSlug]);
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`http://77.242.26.150:8000/api/ClothingItem/item/${id}`, {
+          headers: getHeaders(),
+        });
+        const data = await res.json();
+        setProduct(data);
 
-  if (!shop || !product) {
-    return <p>Product not found.</p>;
+        let parsedImages = [];
+        if (Array.isArray(data.pictureUrls)) {
+          parsedImages = data.pictureUrls;
+        } else {
+          try {
+            parsedImages = JSON.parse(data.pictureUrls || '[]');
+          } catch {
+            parsedImages = [];
+          }
+        }
+
+        if (parsedImages.length > 0) setMainImage(parsedImages[0]);
+
+        // Fetch slug for "Back to Shop" if businessId is available
+        if (data.businessId) {
+          const shopRes = await fetch(`http://77.242.26.150:8000/api/Business/${data.businessId}`, {
+            headers: getHeaders(),
+          });
+          const shopData = await shopRes.json();
+          setShopSlug(shopData.slug);
+        }
+      } catch (error) {
+        console.error('Failed to load product:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) return <div>Loading...</div>;
+  if (!product) return <div>Product not found.</div>;
+
+  let parsedImages = [];
+  try {
+    parsedImages = Array.isArray(product.pictureUrls)
+      ? product.pictureUrls
+      : JSON.parse(product.pictureUrls || '[]');
+  } catch {
+    parsedImages = [];
   }
 
-  // Products in the same category (excluding the current product)
-  const categoryProducts = shop.clothingItems.filter(
-    (item) => item.category === product.category && item.slug !== product.slug
-  );
-
-  // Products from the same shop in different categories
-  const shopDiffProducts = shop.clothingItems.filter(
-    (item) => item.slug !== product.slug && item.category !== product.category
-  );
-
-  // All other products from the shop (for "Users also searched")
-  const storeProducts = shop.clothingItems.filter(
-    (item) => item.slug !== product.slug
-  );
-
-  // Functions to navigate the images array
-  const handlePrevImage = () => {
-    if (!product.images) return;
-    setCurrentImageIndex((prevIndex) =>
-      (prevIndex - 1 + product.images.length) % product.images.length
-    );
-  };
-
-  const handleNextImage = () => {
-    if (!product.images) return;
-    setCurrentImageIndex((prevIndex) =>
-      (prevIndex + 1) % product.images.length
-    );
-  };
+  const handleThumbnailClick = (url) => setMainImage(url);
 
   return (
-    <div>
+    <>
       <Navbar />
-      <div className="product-details-page">
-        {/* Main product details */}
-        <div className="product-details-main">
-          <div className="product-image-section">
-            {product.images && product.images.length > 0 ? (
-              <div className="carousel-container">
-                {/* Only show arrows if there is more than one image */}
-                {product.images.length > 1 && (
-                  <button
-                    className="arrow left-arrow"
-                    onClick={handlePrevImage}
-                  >
-                    &lt;
-                  </button>
-                )}
+      <div className="product-detail-container">
+        <div className="top-back-button-wrapper">
+          <button
+            className="back-to-shop-button"
+            onClick={() => navigate(shopSlug ? `/shops/${shopSlug}` : '/')}
+          >
+            ← Back to Shop
+          </button>
+        </div>
+
+        <div className="product-main">
+          <div className="product-images">
+            {mainImage && (
+              <img src={mainImage} alt="Main product" className="main-image" />
+            )}
+            <div className="thumbnail-list">
+              {parsedImages.slice(0, 10).map((url, index) => (
                 <img
-                  src={product.images[currentImageIndex]}
-                  alt={`${product.name} angle ${currentImageIndex + 1}`}
+                  key={index}
+                  src={url}
+                  alt={`Thumbnail ${index}`}
+                  className={`thumbnail ${mainImage === url ? 'active' : ''}`}
+                  onClick={() => handleThumbnailClick(url)}
                 />
-                {product.images.length > 1 && (
-                  <button
-                    className="arrow right-arrow"
-                    onClick={handleNextImage}
-                  >
-                    &gt;
-                  </button>
-                )}
-              </div>
-            ) : (
-              <img src={product.imageUrl} alt={product.name} />
-            )}
+              ))}
+            </div>
           </div>
-          <div className="product-info-section">
-            <h1>{product.name}</h1>
-            <p className="product-description">
-              {product.info || 'No description available.'}
-            </p>
-            <p className="product-price">
-              Price: ${product.price.toFixed(2)}
-            </p>
-            {/* Availability Stats */}
-            {product.available ? (
-              <div className="product-stats available">
-                <span className="availability-status">
-                  Available On Shop
-                </span>
-                <span className="stock-left">
-                  | Stock Left: {product.stockLeft}
-                </span>
-              </div>
-            ) : (
-              <div className="product-stats unavailable">
-                <span className="availability-status">
-                  Not Currently Available On This Shop
-                </span>
-              </div>
-            )}
-            <button
-              type="submit"
-              className="add-to-cart-btn"
-              disabled={!product.available}
-            >
-              Reserve
-            </button>
-            <Link to={`/${shop.slug}`}>
-              <button type="submit" className='go-back-pd'>Go Back</button>
-            </Link>
+
+          <div className="product-info">
+            <h1>{product.brand} - {product.model}</h1>
+            <p><strong>Description:</strong> {product.description}</p>
+            <p><strong>Price:</strong> ${product.price}</p>
+            <p><strong>Quantity:</strong> {product.quantity}</p>
+            <p><strong>Category:</strong> {product.category}</p>
+            <p><strong>Material:</strong> {product.material}</p>
+            <p><strong>Colors:</strong> {product.colors}</p>
+            <p><strong>Sizes:</strong> {
+              typeof product.sizes === 'number'
+                ? ['XS', 'S', 'M', 'L', 'XL', 'XXL'][product.sizes]
+                : product.sizes
+            }</p>
+            <button className="rezerve-button">Rezervë</button>
           </div>
-        </div>
-
-        {/* More on this category */}
-        <div className="more-category">
-          <h2>More on this category</h2>
-          {categoryProducts.length > 0 ? (
-            <ul>
-              {categoryProducts.map((item) => (
-                <li key={item.slug}>
-                  <Link to={`/${shop.slug}/${item.slug}`}>
-                    <img src={item.imageUrl} alt={item.name} />
-                  </Link>
-                  <h3>{item.name}</h3>
-                  <p className="product-card-price">
-                    ${item.price.toFixed(2)}
-                  </p>
-                  <Link
-                    to={`/${shop.slug}/${item.slug}`}>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No other products in this category.</p>
-          )}
-        </div>
-
-        {/* More From this Shop (different categories) */}
-        <div className="more-shop">
-          <h2>More From this Shop</h2>
-          {shopDiffProducts.length > 0 ? (
-            <ul>
-              {shopDiffProducts.map((item) => (
-                <li key={item.slug}>
-                  <Link to={`/${shop.slug}/${item.slug}`}>
-                    <img src={item.imageUrl} alt={item.name} />
-                  </Link>
-                  <h3>{item.name}</h3>
-                  <p className="product-card-price">
-                    ${item.price.toFixed(2)}
-                  </p>
-                  <Link to={`/${shop.slug}/${item.slug}`}></Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No other products from this shop.</p>
-          )}
-        </div>
-
-        {/* Users also searched (Optional) */}
-        <div className="users-searched">
-          <h2>Users also searched</h2>
-          {storeProducts.length > 0 ? (
-            <ul>
-              {storeProducts.map((item) => (
-                <li key={item.slug}>
-                  <Link to={`/${shop.slug}/${item.slug}`}>
-                    <img src={item.imageUrl} alt={item.name} />
-                  </Link>
-                  <h3>{item.name}</h3>
-                  <p className="product-card-price">
-                    ${item.price.toFixed(2)}
-                  </p>
-                  <Link to={`/${shop.slug}/${item.slug}`}></Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No suggestions available.</p>
-          )}
         </div>
       </div>
       <Footer />
-    </div>
+    </>
   );
 };
 

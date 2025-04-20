@@ -20,28 +20,20 @@
 .sd-shop-hero {
   position: relative;
   height: 280px;
+  background-color: #f5f5f5; /* fallback background */
   background-size: cover;
-  background-position: center;
+  background-repeat: no-repeat;
+  background-position: center center;
   border-radius: 16px;
   margin-bottom: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
   overflow: hidden;
 }
 
-.sd-shop-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(2px);
-  border-radius: 16px;
-  z-index: 1;
-}
-
-/* Hero Content & Logo Centered Overlay */
+/* Hero Content Positioned at Bottom */
 .sd-shop-hero-content {
   position: absolute;
   bottom: -60px;
@@ -52,21 +44,27 @@
   animation: fadeInUp 0.6s ease forwards;
 }
 
-/* Profile Picture (Logo) */
+/* Profile Picture (Shop Logo) */
 .sd-shop-logo {
   width: 120px;
   height: 120px;
+  object-fit: cover;
   border-radius: 50%;
   border: 6px solid #fff;
-  object-fit: cover;
-  background-color: #fff;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8), 0 6px 18px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
+  background-color: #ffffff;
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.8),
+    0 10px 25px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .sd-shop-logo:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.9),
+    0 12px 30px rgba(0, 0, 0, 0.2);
 }
+
 
 /* Shop Name */
 .sd-shop-name {
@@ -111,51 +109,77 @@
   color: #222;
 }
 
-/* Product List & Cards */
+/* Product List */
 .sd-product-list {
-  width: 70%;
-  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 16px;
   padding: 0;
-  margin: 0;
+  margin: 32px auto;
+  list-style: none;
+  max-width: 1000px;
 }
 
+/* Card Container */
 .sd-product-card {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 18px;
-  margin-bottom: 16px;
-  background-color: #f9f9f9;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+  width: 100%;
+  max-width: 600px;
+  min-height: 100px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .sd-product-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
 }
 
+/* Clickable area */
+.sd-product-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  padding: 10px;
+  gap: 16px;
+}
+
+/* Image */
 .sd-product-image {
-  width: 90px;
-  height: 90px;
-  border-radius: 8px;
+  width: 100px;
+  height: 80px;
   object-fit: cover;
+  border-radius: 6px;
   border: 1px solid #ccc;
+  flex-shrink: 0;
 }
 
-.sd-product-card h3 {
-  font-size: 1.2rem;
-  margin: 0 0 6px 0;
-  color: #111;
+/* Info Row */
+.sd-product-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  font-size: 0.85rem;
+  gap: 10px;
+  overflow: hidden;
 }
 
-.sd-product-card p {
-  margin: 2px 0;
-  font-size: 14px;
-  color: #555;
+.sd-product-inline span {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
+
 
 /* Loading Spinner */
 .loading-container {
@@ -175,6 +199,21 @@
   animation: spin 1.5s linear infinite;
   margin-bottom: 16px;
 }
+
+.shop-status {
+  position: relative;
+  padding: 4px 10px;
+  font-weight: bold;
+  border-radius: 12px;
+  background-color: green;
+  color: white;
+  display: inline-block;
+}
+
+.shop-status.closed {
+  background-color: red;
+}
+
 
 @keyframes spin {
   0% {

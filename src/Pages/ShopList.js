@@ -25,7 +25,7 @@ const ShopList = () => {
                 const parsedTokenData = JSON.parse(tokenData);
                 const token = parsedTokenData.token || parsedTokenData;
 
-                const response = await fetch(`https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Business/ViewAllBusinesses`);
+                const response = await fetch(`http://77.242.26.150:8000/api/Business/ViewAllBusinesses`);
             
 
                 if (!response.ok) {

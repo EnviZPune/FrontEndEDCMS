@@ -40,7 +40,7 @@ const ProfilePage = () => {
           throw new Error("No valid user ID found.");
         }
         const response = await fetch(
-          `https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/User/${loggedInUserId}`
+          `http://77.242.26.150:8000/api/User/${loggedInUserId}`
         );
         if (!response.ok) {
           throw new Error(`User not found. Status: ${response.status}`);
@@ -74,7 +74,7 @@ const ProfilePage = () => {
     const fetchBusinessData = async () => {
       try {
         const res = await fetch(
-          `https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Business`,
+          `http://77.242.26.150:8000/api/Business`,
           {
             headers: {
               "Content-Type": "application/json",

@@ -36,7 +36,7 @@ export default function App() {
             {/* ✅ Fixed ShopList and ShopDetailPage Routes */}
             <Route path="/shops" element={<ShopList />} />
             <Route path="/shops/:slug" element={<ShopDetailsPage />} />
-            <Route path="/shops/:businessId/products/:productId" element={<ProductDetailsPage />} />
+            <Route path="/product/:id" element={<ProductDetailsPage />} />
 
             {/* ✅ Fixed ShopProductsPage Route */}
             <Route path="/shops/:businessId/products" element={<ShopProductsPage />} />

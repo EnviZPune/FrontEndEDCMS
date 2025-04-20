@@ -15,7 +15,7 @@ const SearchBar = ({ onNavigate }) => {
     const fetchShops = async () => {
       try {
         const response = await fetch(
-          "https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Business",
+          "http://77.242.26.150:8000/api/Business",
           {
             headers: {
               "Authorization": `Bearer ${token}`,

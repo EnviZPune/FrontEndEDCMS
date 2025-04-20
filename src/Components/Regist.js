@@ -51,7 +51,7 @@ function RegisterFormUser() {
     // Map role to the appropriate integer value
     const roleMap = {
       '0': 0, // BusinessOwner
-      '1': 1, // Admin
+      '1': 1, // Employee
       '2': 2  // User
     };
 
@@ -64,7 +64,7 @@ function RegisterFormUser() {
     };
 
     try {
-      const response = await fetch('https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Register', {
+      const response = await fetch('http://77.242.26.150:8000/api/Register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,8 +105,7 @@ function RegisterFormUser() {
     setLoading(true);
     setError(null);
     try {
-      // Send the Google credential to your backend registration endpoint
-      const response = await fetch('https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/GoogleRegister', {
+      const response = await fetch('http://77.242.26.150:8000/api/GoogleRegister', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

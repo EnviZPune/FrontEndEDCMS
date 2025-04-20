@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
 import '../Styling/log_user.css';
-import { FaGoogle } from 'react-icons/fa';
 import { GoogleLogin } from '@react-oauth/google';
 import {jwtDecode} from 'jwt-decode';
 
 function LoginComponent() {
+  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Handler for traditional username/password login
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch('https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/Login', {
+      const response = await fetch('http://77.242.26.150:8000/api/Login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,8 +46,7 @@ function LoginComponent() {
     setLoading(true);
     setError(null);
     try {
-      // Send the Google credential token to your backend for login/registration
-      const response = await fetch('https://urchin-app-lpasr-rhik3.ondigitalocean.app/api/GoogleLogin', {
+      const response = await fetch('http://77.242.26.150:8000/api/GoogleLogin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -62,10 +60,8 @@ function LoginComponent() {
 
       const data = await response.json();
       
-      // Optional: Decode token for verification
       const decoded = jwtDecode(data.token || data);
       console.log('Decoded token:', decoded);
-      // For instance, log the email:
       console.log('Logged in email:', decoded.email);
 
       localStorage.setItem('token', JSON.stringify(data));
@@ -124,7 +120,6 @@ function LoginComponent() {
             {loading ? 'Logging in...' : 'Done'}
           </button>
 
-          {/* Google Login Section */}
           <div className="google-login-container">
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
