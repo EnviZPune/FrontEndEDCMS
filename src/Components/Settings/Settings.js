@@ -87,7 +87,7 @@ const Settings = () => {
     category: "",
     brand: "",
     model: "",
-    pictureUrls: "",
+    pictureUrls: [],
     colors: "",
     sizes: "XS",
     material: "",
@@ -344,31 +344,46 @@ const Settings = () => {
     }
   };
 
-  const findUserByEmail = async () => {
-    if (!newEmployee.email) {
-      alert("Please enter an email to search.");
+  
+  const API_BASE = "http://77.242.26.150:8000";
+
+const findUserByEmail = async () => {
+  const email = newEmployee.email.trim().toLowerCase();
+  if (!email) {
+    alert("Please enter an email to search.");
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      `${API_BASE}/api/User/email/${encodeURIComponent(email)}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
+
+    if (res.status === 404) {
+      setFoundUser(null);
+      alert("User not found.");
       return;
     }
-  
-    try {
-      const res = await fetch(
-        `http://77.242.26.150:8000/api/User/email/${encodeURIComponent(newEmployee.email)}`,
-        { headers: getHeaders() }
-      );
-  
-      const data = await safeParseJson(res);
-      if (res.ok && data?.userId) {
-        setFoundUser(data);
-        alert(`User found: ${data.name}`);
-      } else {
-        alert("User not found.");
-        setFoundUser(null);
-      }
-    } catch (error) {
-      console.error("Lookup failed:", error);
-      alert("Failed to search for user.");
+    if (!res.ok) {
+      throw new Error(`Server error: ${res.status}`);
     }
-  };
+
+    const user = await res.json();
+    setFoundUser(user);
+    setNewEmployee(prev => ({ ...prev, name: user.name || "" }));
+    alert(`User has been found: ${user.name}`);
+  } catch (err) {
+    console.error("Error searching user:", err);
+    alert("Network or server error when searching for user.");
+  }
+};
+
   
 
   const handleEmployeeSubmit = async (e) => {
@@ -571,21 +586,46 @@ const Settings = () => {
                 value={newProduct.category}
                 onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
               />
-              <input
+               <label><b>Upload Product Photos (max 10)</b></label>
+                  <input
                     type="file"
                     accept="image/*"
+                    multiple
                     onChange={async (e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                      const url = await uploadImageToGCS(file);
-                        if (url) {
-                          setNewProduct({ ...newProduct, pictureUrls: url });
-                        } else {
-                          alert("Failed to upload image.");
-                        }
+                      const files = Array.from(e.target.files);
+                      const currentUrls = Array.isArray(newProduct.pictureUrls) ? [...newProduct.pictureUrls] : [];
+
+                      for (const file of files) {
+                        if (currentUrls.length >= 10) break;
+                        const url = await uploadImageToGCS(file);
+                        if (url) currentUrls.push(url);
                       }
+
+                      setNewProduct({ ...newProduct, pictureUrls: currentUrls });
                     }}
                   />
+
+                  {/* Preview and remove */}
+                  <div className="product-photo-preview">
+                    {Array.isArray(newProduct.pictureUrls) &&
+                      newProduct.pictureUrls.map((url, idx) => (
+                        <div key={idx} className="product-photo-container">
+                          <img src={url} alt={`Uploaded ${idx}`} />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setNewProduct({
+                                ...newProduct,
+                                pictureUrls: newProduct.pictureUrls.filter((_, i) => i !== idx),
+                              })
+                            }
+                            className="remove-photo-button"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                  </div>
               <input
                 placeholder="Colors"
                 value={newProduct.colors}
@@ -739,7 +779,7 @@ const Settings = () => {
                               category: p.category,
                               brand: p.brand,
                               model: p.model,
-                              pictureUrls: p.pictureUrls && p.pictureUrls[0] ? p.pictureUrls[0] : "",
+                              pictureUrls: Array.isArray(p.pictureUrls) ? p.pictureUrls : [p.pictureUrls],
                               colors: p.colors,
                               sizes:
                                 typeof p.sizes === "number"

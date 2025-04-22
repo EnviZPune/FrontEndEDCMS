@@ -509,6 +509,42 @@
   transform: translateY(-2px);
 }
 
+ /* Add Product Section . Imagr preview */
+
+ .product-photo-preview {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.product-photo-container {
+  position: relative;
+}
+
+.product-photo-container img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.remove-photo-button {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: transparent !important;
+  color: black !important;
+  border: none !important;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 !important;
+  width: auto;
+  height: auto;
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
   .settings-component .settings-wrapper {
