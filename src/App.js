@@ -17,6 +17,10 @@ import Unauthorized from './Pages/Unauthorized';
 import ShopProductsPage from './Pages/ShopProductsPage';
 import ComingSoon from './Pages/ComingSoon';
 import UserSettingsPage from './Pages/UserSettings';
+import About from './Pages/about';
+import Policy from './Pages/PrivatePolicy';
+import TermsAndConditions from './Pages/TermAndConditions';
+import OwnerGuide from './Pages/ShopOwnerGuide';
 
 export default function App() {
   return (
@@ -32,7 +36,11 @@ export default function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/notifications" element={<NotificationDropdown />} />
             <Route path="/map" element={<Map />} />
-            
+            <Route path="/about" element={<About />} />
+            <Route path="/privacy" element={<Policy />} />
+            <Route path="/terms" element={<TermsAndConditions />} />
+            <Route path="/owner-guide" element={<OwnerGuide />} />
+
             {/* ✅ Fixed ShopList and ShopDetailPage Routes */}
             <Route path="/shops" element={<ShopList />} />
             <Route path="/shops/:slug" element={<ShopDetailsPage />} />

@@ -3,31 +3,37 @@ import '../Styling/footer.css';
 
 const Footer = () => {
   return (
-    <footer className="footer">
-      <div className="footer-container">
-        {/* Logo and About Section */}
-        <div className="footer-section">
-          <h2>Envi</h2>
-          <p>Hesape, hesape, me shum hesape</p>
+    <footer className="custom-footer">
+      <div className="footer-content">
+        <div className="footer-logo-section">
+          <img
+            src={`${process.env.PUBLIC_URL}/Assets/edlogo.png`}
+            alt="E & D Logo"
+            className="footer-logo"
+          />
+          <p className="footer-slogan">E & D — Albania’s First Real-Time Online Shopping Mall. Connecting real shops with real people.</p>
         </div>
 
-        {/* Quick Links */}
-        <div className="footer-section">
-          <h3>Quick Links</h3>
-          <ul>
-            <li><a href="/about">About Us</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/terms">Terms of Service</a></li>
-            <li><a href="/privacy">Privacy Policy</a></li>
-          </ul>
-        </div>
+        <div className="footer-links">
+          <div className="footer-column">
+            <h4>Company</h4>
+            <a href="/about">About Us</a>
+            <a href="/terms">Terms & Conditions</a>
+            <a href="/privacy">Privacy Policy</a>
+          </div>
 
-        {/* Contact Info */}
-        <div className="footer-section">
-          <h3>Contact Us</h3>
-          <p>Email: envieshtpenismadh@gmail.com</p>
-          <p>Phone: +123 456 7890</p>
-          <p>Location: Coffee Brunch, Myslym Shyri</p>
+          <div className="footer-column">
+            <h4>Explore</h4>
+            <a href="/shops">Find Shops</a>
+            <a href="/map">Map</a>
+          </div>
+
+          <div className="footer-column">
+            <h4>Contact</h4>
+            <p>Email: support@edmall.al</p>
+            <p>Phone: +355 69 123 4567</p>
+            <p>Location: Tirana, Albania</p>
+          </div>
         </div>
       </div>
 

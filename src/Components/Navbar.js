@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaUser, FaCaretDown } from "react-icons/fa";
 import "../Styling/navbar.css";
-// Using the named export from jwt-decode; adjust if necessary.
 import { jwtDecode } from "jwt-decode";
 import Notification from "../Components/NotificationDropdown";
 import { Link } from "react-router-dom";
@@ -13,29 +12,23 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // On mount, retrieve the token from localStorage and decode it
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log("Token from localStorage in Navbar:", token);
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        console.log("Decoded token:", decoded);
         setLoggedUser(decoded);
       } catch (err) {
         console.error("Token decoding failed:", err);
         localStorage.removeItem("token");
       }
-    } else {
-      console.log("No token found in localStorage");
     }
   }, []);
 
-  // Determine if the user is an owner (if token includes a "role" claim with value "Owner")
   const isOwner =
     loggedUser &&
-    loggedUser.role &&
-    loggedUser.role.toLowerCase() === "owner";
+    (loggedUser.role?.toLowerCase?.() === "owner" ||
+     loggedUser["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]?.toLowerCase?.() === "owner");
 
   const toggleDropdown = (e) => {
     e.stopPropagation();
@@ -49,11 +42,10 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token")
+    localStorage.removeItem("token");
     window.location.href = "/preview";
   };
 
-  // Close dropdown if clicking outside the user menu
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -80,7 +72,6 @@ const Navbar = () => {
           <h3>E & D Corporation</h3>
         </div>
 
-        {/* Hamburger Menu */}
         <button
           className={`hamburger ${isMenuOpen ? "is-active" : ""}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -91,7 +82,6 @@ const Navbar = () => {
           <span></span>
         </button>
 
-        {/* Navigation Links */}
         <ul className={`nav-links ${isMenuOpen ? "open" : ""}`}>
           <li>
             <Link to="/preview">Preview</Link>
@@ -112,7 +102,6 @@ const Navbar = () => {
               <li className="user-menu" ref={dropdownRef}>
                 <button className="user-menu-button" onClick={toggleDropdown}>
                   <FaUser className="user-icon" />
-                  {/* Display username from token (using the "sub" claim) */}
                   <span>{loggedUser.sub}</span>
                   <FaCaretDown
                     className={`caret-icon ${isDropdownVisible ? "rotate" : ""}`}
@@ -121,7 +110,6 @@ const Navbar = () => {
 
                 {isDropdownVisible && (
                   <div className="dropdown-menu">
-                    {/* My Profile Submenu */}
                     <div className="dropdown-submenu">
                       <button className="dropdown-item-dropdown-toggle" onClick={toggleSubmenu}>
                         <span className="dropdown-icon-myprofile">👤</span>
@@ -135,11 +123,15 @@ const Navbar = () => {
                           <Link to="/profile" className="dropdown-item">
                             - View Profile
                           </Link>
+                          {isOwner && (
+                            <Link to="/owner-guide" className="dropdown-item">
+                              - Owners Guide
+                            </Link>
+                          )}
                         </div>
                       )}
                     </div>
 
-                    {/* Role-based options */}
                     {!isOwner && (
                       <Link to="/create-shop" className="dropdown-item">
                         🏬 Create Your Shop
@@ -161,7 +153,6 @@ const Navbar = () => {
               </li>
             </>
           ) : (
-            // If no token is found, show Login and Register buttons.
             <div className="auth-buttons">
               <button onClick={() => window.location.href = "/login"} className="login-button">
                 Login

@@ -1,78 +1,90 @@
-/* Footer Container */
-.footer {
-  /* Remove absolute positioning */
-  width: 100%;
-  background-color: #212529;
-  color: #f8f9fa;
-  padding: 20px 0;
+.custom-footer {
+  background-color: #0f0f0f;
+  color: #f1f1f1;
+  padding: 40px 20px 20px;
   font-family: 'Roboto', sans-serif;
-  height: 200px;
-  margin-top: auto; /* Push footer to the bottom of flex container */
+  border-top: 2px solid #2ecc71;
 }
 
-/* Footer Inner Container */
-.footer-container {
-  max-width: 1100px;
+.footer-content {
+  height: 200px;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 20px;
-  padding: 0 20px;
+  align-items: flex-start;
+  gap: 40px;
 }
 
-/* Footer Sections */
-.footer-section {
-  flex: 1;
-  min-width: 250px;
+.footer-logo-section {
+  flex: 1 1 250px;
+  text-align: left;
 }
 
-.footer-section h2,
-.footer-section h3 {
-  color: lightgreen;
+.footer-logo {
+  width: 140px;
   margin-bottom: 10px;
 }
 
-.footer-section p {
-  margin: 5px 0;
+.footer-slogan {
+  font-size: 14px;
+  color: #cccccc;
+  max-width: 300px;
 }
 
-.footer-section ul {
-  list-style: none;
-  padding: 0;
+.footer-links {
+  display: flex;
+  gap: 120px;
+  flex-wrap: wrap;
+  flex: 2 1 600px;
 }
 
-.footer-section ul li {
-  margin-bottom: 5px;
+.footer-column {
+  min-width: 150px;
 }
 
-.footer-section ul li a {
-  color: #f8f9fa;
+.footer-column h4 {
+  color: #2ecc71;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.footer-column a {
+  display: block;
+  color: #e0e0e0;
+  margin-bottom: 6px;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
-.footer-section ul li a:hover {
-  color: #ffc107;
+.footer-column a:hover {
+  color: #2ecc71;
 }
 
-/* Footer Bottom */
 .footer-bottom {
+  margin-top: 40px;
   text-align: center;
-  margin-top: 20px;
-  border-top: 1px solid #343a40;
-  padding-top: 10px;
-  font-size: 14px;
+  font-size: 13px;
+  color: #999;
+  border-top: 1px solid #2c2c2c;
+  padding-top: 15px;
 }
 
-/* Responsive Adjustments */
+/* Responsive */
 @media (max-width: 768px) {
-  .footer-container {
+  .footer-content {
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
-  .footer-section {
-    margin-bottom: 20px;
+
+  .footer-links {
+    justify-content: center;
+    gap: 40px; /* Slightly smaller gap for narrow screens */
+  }
+
+  .footer-logo-section {
+    text-align: center;
   }
 }

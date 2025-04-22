@@ -148,7 +148,7 @@ const ShopDetailsPage = () => {
           <p><strong>Phone:</strong> {shop.businessPhoneNumber}</p>
           <p><strong>Opening Hours:</strong> {shop.openingHours}</p>
           <p>
-            <strong>Shop is now : </strong>{' '}
+            <strong>Shop is now :</strong>{' '}
             <span className={`shop-status ${isOpen ? 'open' : 'closed'}`}>
               {isOpen ? 'Open' : 'Closed'}
             </span>
