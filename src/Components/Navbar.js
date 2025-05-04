@@ -69,7 +69,7 @@ const Navbar = () => {
               alt="E & D Corporation Logo"
             />
           </Link>
-          <h3>E & D Corporation</h3>
+          <h3>E & D</h3>
         </div>
 
         <button
@@ -138,13 +138,15 @@ const Navbar = () => {
                       </Link>
                     )}
                     {isOwner && (
-                      <Link to="/my-shops" className="dropdown-item">
-                        📋 My Shops
+                      <Link to="/create-shop" className="dropdown-item">
+                        🏬 Create Another Shop
                       </Link>
                     )}
+                    {isOwner && (
                     <Link to="/settings" className="dropdown-item">
                       ⚙️ Bussiness Settings
                     </Link>
+                    )}
                     <button onClick={handleLogout} className="dropdown-item logout-button">
                       🚪 Logout
                     </button>

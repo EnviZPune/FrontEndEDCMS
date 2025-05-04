@@ -16,7 +16,7 @@ const ShopList = () => {
             const tokenData = localStorage.getItem('token');
 
             if (!tokenData) {
-                setError("Unauthorized access. Please log in.");
+                setError(" Log in or create an account to see the shop list");
                 setLoading(false);
                 return;
             }

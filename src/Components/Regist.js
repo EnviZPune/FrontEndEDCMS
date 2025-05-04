@@ -24,14 +24,12 @@ function RegisterFormUser() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handler for standard registration submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     setSuccess(null);
 
-    // Validate required fields
     const requiredFields = ["firstName", "lastName", "dateOfBirth", "username", "phoneNumber", "email", "createPassword", "confirmPassword"];
     for (let field of requiredFields) {
       if (!formData[field]) {
@@ -41,14 +39,12 @@ function RegisterFormUser() {
       }
     }
 
-    // Ensure passwords match
     if (formData.createPassword !== formData.confirmPassword) {
       setError("Passwords do not match.");
       setLoading(false);
       return;
     }
 
-    // Map role to the appropriate integer value
     const roleMap = {
       '0': 0, // BusinessOwner
       '1': 1, // Employee
@@ -119,14 +115,11 @@ function RegisterFormUser() {
 
       const data = await response.json();
 
-      // Optionally decode token for debugging
       const decoded = jwtDecode(data.token || data);
       console.log("Decoded token:", decoded);
 
-      // Store token if you want to automatically log the user in
       localStorage.setItem('token', JSON.stringify(data));
 
-      // Redirect to preview or your desired page after registration
       window.location.href = 'http://localhost:3000/preview';
     } catch (err) {
       setError(err.message);
