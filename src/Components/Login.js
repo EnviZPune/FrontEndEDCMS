@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import '../Styling/log_user.css';
 import { GoogleLogin } from '@react-oauth/google';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode'; 
 
 function LoginComponent() {
-  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -17,7 +16,7 @@ function LoginComponent() {
     setError(null);
 
     try {
-      const response = await fetch('http://77.242.26.150:8000/api/Login', {
+      const response = await fetch('http://77.242.26.150:8000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,47 +31,52 @@ function LoginComponent() {
       }
 
       const data = await response.json();
-      localStorage.setItem('token', JSON.stringify(data));
-      window.location.href = 'http://localhost:3000/preview';
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  };
+      // unwrap the raw JWT string (API may return { token: "..." } or just "...")
+      const token = typeof data === 'string' ? data : data.token;
 
-  // Handler for successful Google login
-  const handleGoogleSuccess = async (credentialResponse) => {
-    console.log('Google login successful:', credentialResponse.credential);
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch('http://77.242.26.150:8000/api/GoogleLogin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ token: credentialResponse.credential })
-      });
+      // decode immediately to inspect payload
+      const payload = jwtDecode(token);
+      console.log('Decoded JWT payload:', payload);
 
-      if (!response.ok) {
-        throw new Error(' Google login failed on the server.');
-      }
+      // store the raw token string (no JSON.stringify)
+      localStorage.setItem('token', token);
 
-      const data = await response.json();
-      
-      const decoded = jwtDecode(data.token || data);
-      console.log('Decoded token:', decoded);
-      console.log('Logged in email:', decoded.email);
-
-      localStorage.setItem('token', JSON.stringify(data));
-      window.location.href = 'http://localhost:3000/preview';
+      // redirect
+      window.location.href = '/preview';
     } catch (err) {
       setError(err.message);
       setLoading(false);
     }
   };
 
-  // Handler for Google login errors
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('http://77.242.26.150:8000/api/GoogleLogin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: credentialResponse.credential }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Google login failed on the server.');
+      }
+
+      const data = await response.json();
+      const token = typeof data === 'string' ? data : data.token;
+      const payload = jwtDecode(token);
+      console.log('Decoded Google JWT payload:', payload);
+
+      localStorage.setItem('token', token);
+      window.location.href = '/preview';
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
   const handleGoogleError = () => {
     setError('Google login failed. Please try again.');
   };
@@ -81,7 +85,7 @@ function LoginComponent() {
     <div className='log_main_div'>
       <form onSubmit={handleSubmit}>
         <div className='log_user'>
-          <a href='http://localhost:3000/preview'>
+          <a href='/preview'>
             <img src={`${process.env.PUBLIC_URL}/Assets/logo.png`} id='logo_login' alt='Logo' />
           </a>
           <p id='head_log'>Log in to see our fullest extent!</p>
@@ -103,9 +107,7 @@ function LoginComponent() {
             id='pass_input'
           />
 
-          <a href='http://localhost:3000/forgot_password' id='forgot_pw'>
-            Forgot Password?
-          </a>
+          <a href='/forgot_password' id='forgot_pw'>Forgot Password?</a>
 
           <div className='remember_me'>
             <input

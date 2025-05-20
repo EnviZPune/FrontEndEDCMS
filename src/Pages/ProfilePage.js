@@ -1,144 +1,108 @@
-import React, { useState, useEffect } from "react";
-import "../Styling/profilepage.css";
-import UserDashboard from "../Components/UserDashboard";
-import Navbar from "../Components/Navbar";
-import {jwtDecode} from "jwt-decode";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import Navbar from '../Components/Navbar';
+import '../Styling/myprofile.css';
 
-const getDecodedToken = () => {
+const getToken = () => {
+  const raw = localStorage.getItem('token');
+  if (!raw || raw.trim() === '') return null;
   try {
-    const jwt = localStorage.getItem("token");
-    if (jwt) {
-      const parsedToken = JSON.parse(jwt);
-      if (parsedToken.token) {
-        return {
-          decoded: jwtDecode(parsedToken.token),
-          token: parsedToken.token,
-        };
-      }
-    }
-  } catch (error) {
-    console.error("Error decoding token:", error);
+    const parsed = JSON.parse(raw);
+    return parsed.token || parsed;
+  } catch {
+    return raw;
   }
-  return { decoded: null, token: null };
 };
 
-const { decoded, token } = getDecodedToken();
-const loggedInUserId = decoded?.UserId || "";
+export default function ProfilePage() {
+  const { userId: paramUserId } = useParams();
+  const navigate = useNavigate();
+  const token = getToken();
 
-const ProfilePage = () => {
-  const [userData, setUserData] = useState("");
-  const [lastSeen, setLastSeen] = useState("");
-  const [timeSpent, setTimeSpent] = useState(0);
-  const [result, setResult] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  console.log(result, "resulttttt");
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        if (!loggedInUserId) {
-          throw new Error("No valid user ID found.");
-        }
-        const response = await fetch(
-          `http://77.242.26.150:8000/api/User/${loggedInUserId}`
-        );
-        if (!response.ok) {
-          throw new Error(`User not found. Status: ${response.status}`);
-        }
-        const contentType = response.headers.get("Content-Type");
-        if (contentType && contentType.includes("application/json")) {
-          const data = await response.json();
-          console.log(data);
-          setUserData(data);
-          setLastSeen(new Date().toLocaleString());
-        } else {
-          const text = await response.text();
-          throw new Error("Expected JSON but got: " + text);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-
-    // Update time spent on profile every minute
-    const interval = setInterval(() => {
-      setTimeSpent((prevTime) => prevTime + 1);
-    }, 60000);
-
-    return () => clearInterval(interval);
-  }, [loggedInUserId]);
-
-  useEffect(() => {
-    const fetchBusinessData = async () => {
-      try {
-        const res = await fetch(
-          `http://77.242.26.150:8000/api/Business`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
-            },
-          }
-        );
-        if (!res.ok) {
-          throw new Error(`HTTP error: ${res.status}`);
-        }
-        const data = await res.json();
-        setResult(data);
-      } catch (err) {
-        console.error("Error fetching business data:", err);
-      }
-    };
-
-    if (loggedInUserId && token) {
-      fetchBusinessData();
+  let tokenUserId = null;
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      tokenUserId =
+        decoded.UserId || decoded.sub || decoded.nameid || decoded.user_id || decoded.id || null;
+    } catch (e) {
+      console.error('JWT decode error:', e);
     }
-  }, [loggedInUserId, token]);
+  }
 
-  if (!userData) {
+  const effectiveUserId = paramUserId || tokenUserId;
+
+  useEffect(() => {
+    if (!effectiveUserId) {
+      setError('Invalid or missing user ID.');
+      setLoading(false);
+      return;
+    }
+
+    (async () => {
+      try {
+        const res = await fetch(`http://77.242.26.150:8000/api/User/${effectiveUserId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!res.ok) throw new Error(`User not found (${res.status})`);
+
+        const data = await res.json();
+        setProfile(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [effectiveUserId]);
+
+  if (loading) {
     return (
-      <div className="loading-container">
+      <div className="profile-page-container" style={{ textAlign: 'center' }}>
         <div className="loading-spinner"></div>
-        <p>Loading user data...</p>
+        <p>Loading profile...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="profile-page-container" style={{ textAlign: 'center' }}>
+        <p style={{ color: 'red' }}>{error}</p>
+        <button onClick={() => navigate('/preview')}>Go Back Home</button>
       </div>
     );
   }
 
   return (
-    <div>
+    <>
       <Navbar />
       <div className="profile-page-container">
         <div className="profile-header">
-          <div className="profile-picture">
-            <img
-              src={userData.profileImage || "/Assets/default_avatar.png"}
-              alt="Profile"
-            />
-          </div>
+          <img
+            src={profile.profilePictureUrl || '/default-avatar.jpg'}
+            alt="Profile"
+            className="profile-picture"
+          />
           <div className="profile-info">
-            <h1>{userData.name}</h1>
-            <p>{userData.bio || "No bio available"}</p>
-            <p>
-              <strong>Role:</strong> {userData.role}
-            </p>
-            <p>
-              <strong>Last Seen:</strong> {lastSeen}
-            </p>
-            <p>
-              <strong>Time Spent on Profile:</strong> {timeSpent} minutes
-            </p>
-            <p>
-              <strong>Businesses Owned :</strong>{" "}
-              {result ? JSON.stringify(result.name) : "No businesses"}
-            </p>
+            <h1>{profile.name}</h1>
+            <p>{profile.email}</p>
           </div>
         </div>
-        <UserDashboard userData={userData} />
-      </div>
-    </div>
-  );
-};
 
-export default ProfilePage;
+        <button className="save-button" onClick={() => navigate('/profile-settings')}>
+          Edit Profile
+        </button>
+      </div>
+    </>
+  );
+}

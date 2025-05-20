@@ -120,7 +120,7 @@ const Navbar = () => {
                       </button>
                       {isSubmenuVisible && (
                         <div className="dropdown-submenu-content">
-                          <Link to="/profile" className="dropdown-item">
+                          <Link to="/my-profile" className="dropdown-item">
                             - View Profile
                           </Link>
                           {isOwner && (

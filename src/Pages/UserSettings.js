@@ -13,9 +13,7 @@ const uploadImageToGCS = async (file) => {
   try {
     const imageRes = await fetch(uploadUrl, {
       method: "PUT",
-      headers: {
-        "Content-Type": file.type,
-      },
+      headers: { "Content-Type": file.type },
       body: file,
     });
 
@@ -23,9 +21,7 @@ const uploadImageToGCS = async (file) => {
 
     const txtRes = await fetch(txtUrl, {
       method: "PUT",
-      headers: {
-        "Content-Type": "text/plain",
-      },
+      headers: { "Content-Type": "text/plain" },
       body: uploadUrl,
     });
 
@@ -40,13 +36,13 @@ const uploadImageToGCS = async (file) => {
 
 const SettingsPage = () => {
   const token = localStorage.getItem("token");
-  let userId;
+  let userId = null;
   if (token) {
     try {
       const decoded = jwtDecode(token);
       userId = decoded.UserId || decoded.id || decoded.sub;
     } catch (err) {
-      console.error("Error decoding token:", err);
+      console.error("JWT decode error:", err);
     }
   }
 
@@ -63,48 +59,47 @@ const SettingsPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://77.242.26.150:8000/api/User/${userId}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
+        const res = await fetch(`http://77.242.26.150:8000/api/User/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` }
         });
-        if (!response.ok) throw new Error(`Error fetching user data: ${response.status}`);
-        const data = await response.json();
+        if (!res.ok) throw new Error("User not found.");
+        const data = await res.json();
+
         setUserData(data);
         setUsername(data.name || '');
-        setBio(data.bio || '');
         setEmail(data.email || '');
-        setPassword(data.password || '');
+        setBio(data.bio || '');
         setBirthday(data.birthday ? data.birthday.split('T')[0] : '');
         setProfileImage(data.profileImage || '');
         setImagePreviewUrl(data.profileImage || '');
         setWordCount(data.bio ? data.bio.split(/\s+/).filter(Boolean).length : 0);
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error("Fetch error:", err);
       }
     };
+
     if (userId) fetchUserData();
   }, [userId, token]);
 
+  const handleBioChange = (e) => {
+    const words = e.target.value.split(/\s+/).filter(Boolean);
+    if (words.length <= 100) {
+      setBio(words.join(" "));
+      setWordCount(words.length);
+    } else {
+      alert("Bio cannot exceed 100 words.");
+    }
+  };
+
   const handleImageChange = async (e) => {
-    e.preventDefault();
     const file = e.target.files[0];
     if (!file) return;
-
     const url = await uploadImageToGCS(file);
     if (url) {
       setProfileImage(url);
       setImagePreviewUrl(url);
     } else {
-      alert("Failed to upload image.");
-    }
-  };
-
-  const handleBioChange = (event) => {
-    const words = event.target.value.split(/\s+/).filter(Boolean);
-    if (words.length <= 100) {
-      setBio(words.join(" "));
-      setWordCount(words.length);
-    } else {
-      alert('Bio cannot exceed 100 words.');
+      alert("Image upload failed.");
     }
   };
 
@@ -112,51 +107,47 @@ const SettingsPage = () => {
     e.preventDefault();
     const updatedUser = {
       name: username,
-      bio,
       email,
+      bio,
       birthday,
-      ...(password && { password }),
-      profileImage
+      profileImage,
+      ...(password && { password })
     };
 
     try {
-      const response = await fetch(`http://77.242.26.150:8000/api/User/${userId}`, {
-        method: 'PUT',
+      const res = await fetch(`http://77.242.26.150:8000/api/User/${userId}`, {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(updatedUser)
       });
-      if (!response.ok) throw new Error(`Error updating profile: ${response.status}`);
-      const data = await response.json();
-      alert('Profile updated successfully!');
-      setUserData(data);
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      alert('Error updating profile');
+      if (!res.ok) throw new Error("Update failed");
+      alert("Profile updated successfully!");
+    } catch (err) {
+      console.error("Update error:", err);
+      alert("Update failed.");
     }
   };
 
   const handleDeleteAccount = async () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this account?");
-    if (confirmDelete) {
-      try {
-        const parsedRes = JSON.parse(token);
-        await fetch(`http://77.242.26.150:8000/api/User/${userId}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${parsedRes.token}`,
-          }
-        });
-        localStorage.removeItem("token");
-        alert('Your account has been deleted.');
-        window.location.href = '/preview';
-      } catch (error) {
-        console.error('Error deleting account:', error);
-        alert(`Error deleting account: ${error.message}`);
-      }
+    const confirmed = window.confirm("Are you sure you want to delete your account?");
+    if (!confirmed) return;
+    try {
+      const res = await fetch(`http://77.242.26.150:8000/api/User/${userId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (!res.ok) throw new Error("Delete failed");
+      localStorage.removeItem("token");
+      window.location.href = "/preview";
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("Failed to delete account.");
     }
   };
 
@@ -167,43 +158,33 @@ const SettingsPage = () => {
       <Navbar />
       <div className="settings-container">
         <form onSubmit={handleSubmit}>
-          <label id="label-profile-picture">
-            Profile Image:
-            <input type="file" id="profile-picture-input" onChange={handleImageChange} />
+          <label>Profile Image:
+            <input type="file" onChange={handleImageChange} />
             {imagePreviewUrl && (
-              <img
-                src={imagePreviewUrl}
-                alt="Profile Preview"
-                style={{
-                  width: '100px',
-                  height: '100px',
-                  position: "relative",
-                  left: "460px",
-                  bottom: "90px"
-                }}
-              />
+              <img src={imagePreviewUrl} alt="Preview" style={{
+                width: "100px",
+                height: "100px",
+                position: "relative",
+                left: "460px",
+                bottom: "90px"
+              }} />
             )}
           </label>
           <label>Username:
             <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
           </label>
           <label>Password:
-            <input
-              type="password"
-              placeholder="Leave blank if you don't want to change your password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
-          </label>
-          <label>Bio:
-            <textarea value={bio} onChange={handleBioChange} />
-            <div className="word-count">{wordCount}/100</div>
+            <input type="password" placeholder="Leave blank to keep current password" value={password} onChange={e => setPassword(e.target.value)} />
           </label>
           <label>Email:
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
           </label>
           <label>Birthday:
             <input type="date" value={birthday} onChange={e => setBirthday(e.target.value)} />
+          </label>
+          <label>Bio:
+            <textarea value={bio} onChange={handleBioChange} />
+            <div className="word-count">{wordCount}/100</div>
           </label>
           <button type="submit">Update Profile</button>
         </form>

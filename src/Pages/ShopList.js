@@ -1,122 +1,131 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
 import '../Styling/shoplist.css';
 
-const ShopList = () => {
-    const [shops, setShops] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const carouselRef = useRef(null);
+function ShopList() {
+  const [shops, setShops] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
 
+  const itemsPerPage = 3;
+  const carouselRef = useRef(null);
 
-    useEffect(() => {
-        const fetchShops = async () => {
-            const tokenData = localStorage.getItem('token');
+  useEffect(() => {
+    fetchShops();
+  }, []);
 
-            if (!tokenData) {
-                setError(" Log in or create an account to see the shop list");
-                setLoading(false);
-                return;
-            }
-
-            try {
-                const parsedTokenData = JSON.parse(tokenData);
-                const token = parsedTokenData.token || parsedTokenData;
-
-                const response = await fetch(`http://77.242.26.150:8000/api/Business/ViewAllBusinesses`);
-            
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                console.log("Fetched Shops:", data);
-
-                setShops(data);
-            } catch (error) {
-                console.error('Failed to fetch shops:', error);
-                setError(`Failed to load data: ${error.message}`);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchShops();
-    }, []);
-
-    // Carousel scrolling logic
-    const scrollLeft = () => {
-        if (carouselRef.current) {
-            carouselRef.current.scrollBy({ left: -250, behavior: "smooth" });
-        }
-    };
-
-    const scrollRight = () => {
-        if (carouselRef.current) {
-            carouselRef.current.scrollBy({ left: 250, behavior: "smooth" });
-        }
-    };
-
-    if (loading) {
-        return (
-          <div className="loading-container">
-            <div className="loading-spinner"></div>
-            <p>Loading all shops</p>
-          </div>
-        );
+  const fetchShops = async () => {
+    try {
+      const res = await fetch('http://77.242.26.150:8000/api/Business');
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Failed to fetch shops: ${res.status} ${res.statusText}. Response: ${text}`);
       }
-
-    if (error) {
-        return <div className="shoplist-error">Error: {error}</div>;
+      const data = await res.json();
+      setShops(data);
+    } catch (err) {
+      console.error('Failed to fetch shops:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return (
-        <>
-            <Navbar />
-            <div className="shoplist-container">
-                <h1 className="shoplist-title">Available Shops</h1>
+  const scrollToPage = (index) => {
+    const scrollAmount = index * (carouselRef.current.clientWidth + 20);
+    carouselRef.current.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+    setCurrentPage(index);
+  };
 
-                {/* ✅ Carousel Container */}
-                <div className="shop-carousel-container">
-                    <button className="carousel-arrow left-arrow" onClick={scrollLeft}>&#9664;</button>
-                    
-                    <div className="shop-carousel" ref={carouselRef}>
-                        {shops.length > 0 ? (
-                            shops.map(shop => (
-                                <div key={shop.businessId} className="shop-card">
-                                    <img
-                                        src={shop.logoImage || '/default-shop.jpg'}
-                                        alt={`${shop.name} Logo`}
-                                        className="shoplist-logo"
-                                    />
-                                    <h2>{shop.name}</h2>
-                                    <p>{shop.description || "No description available."}</p>
-                                    <Link to={`/shops/${shop.name}`} className="view-details-link">
-                                        View Details
-                                    </Link>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="shoplist-no-data">No shops available.</p>
-                        )}
-                    </div>
+  const scrollLeft = () => {
+    if (currentPage > 0) scrollToPage(currentPage - 1);
+  };
 
-                    <button className="carousel-arrow right-arrow" onClick={scrollRight}>&#9654;</button>
+  const scrollRight = () => {
+    if ((currentPage + 1) * itemsPerPage < shops.length) scrollToPage(currentPage + 1);
+  };
+
+  const totalPages = Math.ceil(shops.length / itemsPerPage);
+
+  return (
+    <>
+      <Navbar />
+      <div className="shop-carousel-container">
+        <h2 style={{ textAlign: 'center', marginBottom: '16px' }}>Browse Shops</h2>
+
+        {loading ? (
+          <div className="loading-spinner"></div>
+        ) : error ? (
+          <p>Error loading shops: {error}</p>
+        ) : (
+          <>
+            <div className="shop-carousel" ref={carouselRef}>
+              {shops.map((shop) => (
+                <div className="shop-card" key={shop.businessId}>
+                  {shop.profilePictureUrl ? (
+                    <img
+                      src={shop.profilePictureUrl}
+                      alt={`${shop.name} Logo`}
+                      style={{
+                        width: '100%',
+                        height: '140px',
+                        objectFit: 'cover',
+                        borderRadius: '6px',
+                        marginBottom: '10px',
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        height: '140px',
+                        backgroundColor: '#eee',
+                        marginBottom: '10px',
+                        borderRadius: '6px',
+                      }}
+                    ></div>
+                  )}
+                  <h2>{shop.name}</h2>
+                  <p>{shop.description}</p>
+
+                  <Link className="view-details-link" to={`/shops/${shop.businessId}`}>
+                  View Details
+                  </Link>
                 </div>
-
-                {/* Pagination Dots */}
-                <div className="pagination-dots">
-                    {shops.map((_, index) => (
-                        <span key={index} className="dot"></span>
-                    ))}
-                </div>
+              ))}
             </div>
-            <Footer />
-        </>
-    );
-};
+
+            <div className="carousel-controls">
+              <button className="carousel-arrow" onClick={scrollLeft} disabled={currentPage === 0}>
+                &lt;
+              </button>
+
+              <div className="pagination-dots">
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <span
+                    key={i}
+                    className={`dot ${i === currentPage ? 'active' : ''}`}
+                    onClick={() => scrollToPage(i)}
+                  ></span>
+                ))}
+              </div>
+
+              <button
+                className="carousel-arrow"
+                onClick={scrollRight}
+                disabled={(currentPage + 1) * itemsPerPage >= shops.length}
+              >
+                &gt;
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+      <Footer />
+    </>
+  );
+}
 
 export default ShopList;

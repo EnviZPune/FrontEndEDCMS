@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import Navbar from "../Navbar";
 import "../../Styling/settings.css";
 import { FaSearch } from "react-icons/fa";
@@ -75,6 +76,8 @@ const uploadImageToGCS = async (file) => {
 
 
 const Settings = () => {
+  const [authorized, setAuthorized] = useState(false);
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("Business Info");
   const [userBusinesses, setUserBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
@@ -111,9 +114,6 @@ const Settings = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [profilePhoto, setProfilePhoto] = useState("");
   const [coverPhoto, setCoverPhoto] = useState("");
-
-  const navigate = useNavigate();
-
   const getHeaders = () => ({
     "Content-Type": "application/json",
     Authorization: `Bearer ${getToken()}`,
@@ -129,15 +129,54 @@ const Settings = () => {
   };
 
   useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      navigate('/unauthorized');
+      return;
+    }
+  
+    try {
+      const decoded = jwtDecode(token);
+      console.log("🔍 Decoded JWT:", decoded);
+  
+      // Extract role from the correct claim
+      const roleClaim = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+      const rawRole = decoded[roleClaim];
+      console.log("👤 Raw role:", rawRole);
+  
+      const userRole = rawRole?.toLowerCase(); // Should become "owner"
+  
+      if (userRole !== "owner") {
+        console.warn("❌ Unauthorized role:", userRole);
+        navigate("/unauthorized");
+        return;
+      }
+  
+      setAuthorized(true);
+    } catch (err) {
+      console.error("JWT decode error:", err);
+      navigate("/unauthorized");
+    }
+  }, [navigate]);
+  
+  
+  useEffect(() => {
+    if (!authorized) return; 
+  
     const fetchBusinesses = async () => {
-      const res = await fetch("http://77.242.26.150:8000/api/Business", { headers: getHeaders() });
-      const data = (await safeParseJson(res)) || [];
+      const res   = await fetch(
+        "http://77.242.26.150:8000/api/Business",
+        { headers: getHeaders() }
+      );
+      const data  = (await safeParseJson(res)) || [];
       setUserBusinesses(data);
       if (data.length > 0) fetchBusinessDetails(data[0].businessId);
       setIsLoading(false);
     };
+  
     fetchBusinesses();
-  }, []);
+  }, [authorized]);
+  
 
   const fetchBusinessDetails = async (businessId) => {
     const res = await fetch(`http://77.242.26.150:8000/api/Business/${businessId}`, { headers: getHeaders() });
@@ -286,7 +325,7 @@ const Settings = () => {
       category: "",
       brand: "",
       model: "",
-      pictureUrls: "",
+      pictureUrls: [],
       colors: "",
       sizes: "XS",
       material: "",
@@ -438,17 +477,20 @@ const findUserByEmail = async () => {
     });
   };
   
-  const deleteEmployee = async (userId) => {
-    if (!userId) {
+  const deleteEmployee = async (employeeId) => {
+    if (!employeeId) {
       alert("Invalid employee selected.");
       return;
     }
   
     if (window.confirm("Are you sure you want to delete this employee?")) {
-      const res = await fetch(`http://77.242.26.150:8000/api/Employee/${userId}`, {
-        method: "DELETE",
-        headers: getHeaders(),
-      });
+      const res = await fetch(
+        `http://77.242.26.150:8000/api/Employee/${employeeId}`,
+        {
+          method: "DELETE",
+          headers: getHeaders(),
+        }
+      );
   
       if (res.ok) {
         alert("Employee deleted!");
@@ -459,8 +501,7 @@ const findUserByEmail = async () => {
         alert("Failed to delete employee.");
       }
     }
-  };
-  
+  };  
 
   // Sidebar items
   const sidebarItems = [
@@ -759,6 +800,7 @@ const findUserByEmail = async () => {
                               colors: "",
                               sizes: "XS",
                               material: "",
+                              pictureUrls: [],
                             });
                           }}
                         >

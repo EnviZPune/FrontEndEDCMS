@@ -1,24 +1,33 @@
+// src/Components/Unauthorized.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../Components/Navbar";
 import "../Styling/unauthorized.css";
-import Navbar from '../Components/Navbar';
 
 const Unauthorized = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
-        <Navbar />
-    <div className="unauthorized-container">
-      <div className="unauthorized-content">
-        <h2 className="unauthorized-subtitle">Unauthorized Access</h2>
-        <p className="unauthorized-message">
-          Sorry, you do not have permission to access this page.
-        </p>
-        <button className="unauthorized-button"><a href="http://localhost:3000/preview">Go Back Home</a></button>
+    <>
+      <Navbar />
+      <div className="unauthorized-page">
+        <div className="shopcard unauthorized-card">
+          {/* Optional icon from your ShopList header */}
+          <div className="unauthorized-icon">🚫</div>
+
+          <h2 className="unauthorized-title">403 — Unauthorized</h2>
+          <p className="unauthorized-text">
+            Sorry, you don’t have permission to view this page.
+          </p>
+          <button
+            className="btn btn-primary unauthorized-btn"
+            onClick={() => navigate("/")}
+          >
+            Back to Home
+          </button>
+        </div>
       </div>
-    </div>
-    </div>
+    </>
   );
 };
 

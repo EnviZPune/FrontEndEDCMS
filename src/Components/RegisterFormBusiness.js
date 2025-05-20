@@ -1,148 +1,171 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styling/registerbusiness.css';
-import Navbar from '../Components/Navbar';
-import { parseToken } from '../utils/parseToken';
+
+const API_BASE = 'http://77.242.26.150:8000/api';
+const GCS_BUCKET = 'https://storage.googleapis.com/ecdms_bucked';
+
+const getToken = () => {
+  const raw = localStorage.getItem("token");
+  if (!raw || raw.trim() === "") return null;
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed.token || parsed;
+  } catch {
+    return raw;
+  }
+};
 
 const uploadImageToGCS = async (file) => {
   if (!file) return null;
   const timestamp = Date.now();
   const fileName = `${timestamp}-${file.name}`;
-  const uploadUrl = `https://storage.googleapis.com/ecdms_bucked/${fileName}`;
+  const uploadUrl = `${GCS_BUCKET}/${fileName}`;
   const txtUrl = `${uploadUrl}.txt`;
 
-  try {
-    const imageRes = await fetch(uploadUrl, {
-      method: "PUT",
-      headers: {
-        "Content-Type": file.type,
-      },
-      body: file,
-    });
+  const imageRes = await fetch(uploadUrl, {
+    method: "PUT",
+    headers: { "Content-Type": file.type },
+    body: file,
+  });
+  if (!imageRes.ok) return null;
 
-    if (!imageRes.ok) throw new Error("Image upload failed");
+  const textRes = await fetch(txtUrl, {
+    method: "PUT",
+    headers: { "Content-Type": "text/plain" },
+    body: uploadUrl,
+  });
+  if (!textRes.ok) return null;
 
-    const textRes = await fetch(txtUrl, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "text/plain",
-      },
-      body: uploadUrl,
-    });
-
-    if (!textRes.ok) throw new Error("Text file upload failed");
-
-    return uploadUrl;
-  } catch (err) {
-    console.error("Upload error:", err);
-    return null;
-  }
+  return uploadUrl;
 };
 
-const RegisterBusinessForm = () => {
-  const [businessData, setBusinessData] = useState({
+function RegisterFormBusiness() {
+  const [business, setBusiness] = useState({
     name: '',
     description: '',
-    nipt: '',
     address: '',
     location: '',
-    openingHours: '',
-    businessPhoneNumber: ''
+    businessPhoneNumber: '',
+    nipt: ''
   });
-  const [coverPicture, setCoverPicture] = useState(null);
-  const [profilePicture, setProfilePicture] = useState(null);
-  const [error, setError] = useState('');
+
+  const [profilePhoto, setProfilePhoto] = useState('');
+  const [coverPhoto, setCoverPhoto] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setBusinessData({ ...businessData, [e.target.name]: e.target.value });
+    setBusiness({ ...business, [e.target.name]: e.target.value });
   };
 
-  const handleFileUpload = async (e, setter) => {
+  const handleFileUpload = async (e, setPhoto) => {
     const file = e.target.files[0];
-    if (file) {
-      const url = await uploadImageToGCS(file);
-      if (url) setter(url);
-      else alert('Failed to upload image.');
-    }
+    if (!file) return;
+    setLoading(true);
+    const url = await uploadImageToGCS(file);
+    if (url) setPhoto(url);
+    else setError("Image upload failed.");
+    setLoading(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError(null);
+    setSuccess(null);
+    setLoading(true);
 
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setError("You must be logged in to create a business.");
+    if (!profilePhoto || !coverPhoto) {
+      setError("Both profile and cover photos are required.");
+      setLoading(false);
       return;
     }
 
-    const tokenParsed = parseToken(token);
+    const payload = {
+      name: business.name,
+      description: business.description,
+      address: business.address,
+      location: business.location,
+      businessPhoneNumber: business.businessPhoneNumber,
+      nipt: business.nipt,
+      profilePhoto: [profilePhoto],
+      coverPhoto: [coverPhoto],
+      profilePictureUrl: profilePhoto,
+      coverPictureUrl: coverPhoto
+    };    
 
     try {
-      const response = await fetch('http://77.242.26.150:8000/api/Business', {
-        method: 'POST',
+      const res = await fetch(`${API_BASE}/Business`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${tokenParsed}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`
         },
-        body: JSON.stringify({
-          name: businessData.name,
-          description: businessData.description,
-          NIPT: businessData.nipt,
-          Address: businessData.address,
-          Location: businessData.location,
-          OpeningHours: businessData.openingHours,
-          BusinessPhoneNumber: businessData.businessPhoneNumber,
-          CoverPictureUrl: coverPicture,
-          ProfilePictureUrl: profilePicture
-        })
+        body: JSON.stringify(payload)
+      });      
+
+      if (!res.ok) {
+        const msg = await res.text();
+        throw new Error(msg || "Business registration failed.");
+      }
+
+      const created = await res.json();
+
+      setSuccess("Business registered successfully.");
+
+      setBusiness({
+        name: '',
+        description: '',
+        address: '',
+        location: '',
+        businessPhoneNumber: '',
+        nipt: ''
       });
+      setProfilePhoto('');
+      setCoverPhoto('');
 
-      if (response.status === 401) {
-        setError("Your session has expired or you are unauthorized. Please log in again.");
-        return;
+      if (created.businessId) {
+        navigate(`/shops/${created.businessId}`);
+      } else {
+        console.warn("No businessId returned, cannot redirect.");
       }
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || `Server returned status ${response.status}`);
-      }
-
-      const data = await response.json();
-      navigate(`/shops/name/${data.businessId}`);
-    } catch (error) {
-      console.error('Error creating shop:', error);
-      setError(error.message);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <Navbar />
-      <div className="register-business-form-container">
-        <h2>Create Your Shop</h2>
-        <form onSubmit={handleSubmit} className="register-business-form">
-          <input type="text" name="name" placeholder="Shop Name" value={businessData.name} onChange={handleChange} required />
-          <textarea name="description" placeholder="Shop Description" value={businessData.description} onChange={handleChange} required></textarea>
-          <input type="text" name="nipt" placeholder="NIPT" value={businessData.nipt} onChange={handleChange} required />
-          <input type="text" name="address" placeholder="Address" value={businessData.address} onChange={handleChange} required />
-          <input type="text" name="location" placeholder="Location" value={businessData.location} onChange={handleChange} required />
-          <input type="text" name="openingHours" placeholder="Opening Hours" value={businessData.openingHours} onChange={handleChange} required />
+    <form className="register-business-form" onSubmit={handleSubmit}>
+      <h2>Register a New Business</h2>
 
-          <label htmlFor="cover-picture">Upload A Cover Picture</label>
-          <input type="file" id="cover-picture" accept="image/*" onChange={(e) => handleFileUpload(e, setCoverPicture)} required />
+      <input type="text" name="name" placeholder="Business Name" required value={business.name} onChange={handleChange} />
+      <textarea name="description" placeholder="Description" required value={business.description} onChange={handleChange} />
+      <input type="text" name="address" placeholder="Address" required value={business.address} onChange={handleChange} />
+      <input type="text" name="location" placeholder="Location" required value={business.location} onChange={handleChange} />
+      <input type="text" name="businessPhoneNumber" placeholder="Phone Number" required value={business.businessPhoneNumber} onChange={handleChange} />
+      <input type="text" name="nipt" placeholder="NIPT" required value={business.nipt} onChange={handleChange} />
 
-          <label htmlFor="profile-picture">Upload A Profile Picture</label>
-          <input type="file" id="profile-picture" accept="image/*" onChange={(e) => handleFileUpload(e, setProfilePicture)} required />
+      <label>Upload Profile Photo</label>
+      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, setProfilePhoto)} />
+      {profilePhoto && <img src={profilePhoto} alt="Profile Preview" width={100} style={{ marginBottom: 10 }} />}
 
-          <input type="text" name="businessPhoneNumber" placeholder="Business Phone Number" value={businessData.businessPhoneNumber} onChange={handleChange} required />
-          <button type="submit" className="submit-button">Create Shop</button>
-          {error && <p className="error-message">{error}</p>}
-        </form>
-      </div>
-    </div>
+      <label>Upload Cover Photo</label>
+      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, setCoverPhoto)} />
+      {coverPhoto && <img src={coverPhoto} alt="Cover Preview" width={150} style={{ marginBottom: 10 }} />}
+
+      <button type="submit" disabled={loading}>{loading ? "Submitting..." : "Register Business"}</button>
+
+      {error && <p className="error">{error}</p>}
+      {success && <p className="success">{success}</p>}
+    </form>
   );
-};
+}
 
-export default RegisterBusinessForm;
+export default RegisterFormBusiness;
