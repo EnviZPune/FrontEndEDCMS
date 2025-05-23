@@ -1,8 +1,6 @@
-// src/App.js
 import React from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
 import Home from './Pages/Home';
 import Log from './Pages/Log';
 import Register from './Pages/Register';
@@ -25,6 +23,8 @@ import TermsAndConditions from './Pages/TermAndConditions';
 import OwnerGuide from './Pages/ShopOwnerGuide';
 import EmailConfirmation from './Pages/EmailConfirmation';
 import PublicProfilePage from './Pages/PublicProfilePage';
+import UserPage from './Components/UserPage';
+import AllShops from './Pages/AllShops';
 
 export default function App() {
   return (
@@ -45,17 +45,18 @@ export default function App() {
           <Route path="/privacy" element={<Policy />} />
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/owner-guide" element={<OwnerGuide />} />
+          <Route path="/user-search" element={<UserPage />} />
 
           {/* Shop routes */}
           <Route path="/shops" element={<ShopList />} />
           <Route path="/shops/:businessId" element={<ShopDetailsPage />} />
           <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route path="/shops/:businessId/products" element={<ShopProductsPage />} />
-
           <Route path="/create-shop" element={<RegisterBusinessForm />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="/profile-settings" element={<UserSettingsPage />} />
           <Route path="/confirm-email" element={<EmailConfirmation />} />
+          <Route path="/allshops" element={<AllShops />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>

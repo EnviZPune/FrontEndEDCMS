@@ -1,0 +1,105 @@
+/* src/Styling/AllShops.css */
+.shops-container {
+    position: relative;
+    top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: flex-start;
+  }
+  
+  .shop-card-link {
+    text-decoration: none;
+    display: block;
+  }
+  
+  .shop-card {
+    position: relative;
+    width: 270px;      
+    height: 180px;     
+    border-radius: 10px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .shop-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .shop-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+  }
+  
+  .shop-card-content {
+    position: relative;
+    color: #fff;
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  
+  .shop-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .shop-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    margin-right: 8px;
+  }
+  
+  .shop-name {
+    margin: 0;
+    font-size: 1rem;
+  }
+  
+  .shop-description {
+    margin: 0;
+    font-size: 0.8rem;
+  }
+  
+  .pagination {
+    position: relative;
+    top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    gap: 5px;
+  }
+  
+  .page-button {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .page-button:hover:not([disabled]) {
+    background-color: #f0f0f0;
+  }
+  
+  .page-button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  
+  .page-button.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+  }

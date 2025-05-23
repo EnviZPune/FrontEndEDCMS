@@ -25,6 +25,7 @@ const Footer = () => {
           <div className="footer-column">
             <h4>Explore</h4>
             <a href="/shops">Find Shops</a>
+            <a href="/user-search">Find Users</a>
             <a href="/map">Map</a>
           </div>
 

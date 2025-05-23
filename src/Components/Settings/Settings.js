@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Navbar from "../Navbar";
 import "../../Styling/settings.css";
@@ -96,6 +96,12 @@ const Settings = () => {
     material: "",
   });
   const [editingProductId, setEditingProductId] = useState(null);
+  const [myShopsPage, setMyShopsPage] = useState(1);
+  const SHOPS_PER_PAGE = 10;
+
+  useEffect(() => {
+  setMyShopsPage(1);
+}, [userBusinesses]);
 
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState({ name: "", color: "#000000" });
@@ -511,7 +517,7 @@ const findUserByEmail = async () => {
     { name: "Edit Profile/Cover Photo", icon: <FaUserEdit /> },
     { name: "Employee Management", icon: <FaUsers /> },
     { name: "Pending Changes", icon: <FaExclamationTriangle /> },
-    { name: "Shop Preview", icon: <FaEye /> },
+    { name: "My Shops", icon: <FaEye /> },
     { name: "Delete Business", icon: <FaTrash /> },
   ];
 
@@ -998,22 +1004,74 @@ const findUserByEmail = async () => {
             </ul>
           </div>
         );
-      case "Shop Preview":
-        return (
-          <div className="panel">
-            {selectedBusiness.slug ? (
-              <iframe
-                src={`${window.location.origin}/shops/${selectedBusiness.slug}`}
-                title="Shop Preview"
-                width="100%"
-                height="600px"
-                style={{ border: "none" }}
-              ></iframe>
-            ) : (
-              <p>Shop preview unavailable. Please update your business shop settings.</p>
-            )}
-          </div>
-        );
+      
+        case "My Shops": {
+          const totalPages = Math.ceil(userBusinesses.length / SHOPS_PER_PAGE);
+          const startIdx   = (myShopsPage - 1) * SHOPS_PER_PAGE;
+          const pageShops  = userBusinesses.slice(startIdx, startIdx + SHOPS_PER_PAGE);
+        
+          return (
+            <>
+              <div className="settings-myshops-container">
+                {pageShops.map(shop => (
+                  <Link
+                    to={`/shops/${shop.businessId}`}
+                    key={shop.businessId}
+                    className="settings-myshops-card-link"
+                  >
+                    <div
+                      className="settings-myshops-card"
+                      style={{ backgroundImage: `url(${shop.coverPictureUrl})` }}
+                    >
+                      <div className="settings-myshops-overlay" />
+                      <div className="settings-myshops-content">
+                        <div className="settings-myshops-header">
+                          <h3 className="settings-myshops-name">{shop.name}</h3>
+                        </div>
+                        {shop.description && (
+                          <p className="settings-myshops-description">
+                            {shop.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+        
+              <div className="settings-myshops-pagination">
+                <button
+                  className="settings-myshops-page-button"
+                  onClick={() => setMyShopsPage(p => p - 1)}
+                  disabled={myShopsPage === 1}
+                >
+                  Prev
+                </button>
+        
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    className={`settings-myshops-page-button${
+                      myShopsPage === i + 1 ? " active" : ""
+                    }`}
+                    onClick={() => setMyShopsPage(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+        
+                <button
+                  className="settings-myshops-page-button"
+                  onClick={() => setMyShopsPage(p => p + 1)}
+                  disabled={myShopsPage === totalPages}
+                >
+                  Next
+                </button>
+              </div>
+            </>
+          );
+        }        
+        
       case "Delete Business":
         return (
           <div className="panel">

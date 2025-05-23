@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Navbar from '../Components/Navbar';
+import Footer from '../Components/Footer';
 import '../Styling/publicprofile.css'
 
 const PublicProfilePage = () => {
@@ -26,6 +28,8 @@ const PublicProfilePage = () => {
   if (!profile) return <div className="profile-error">Loading profile...</div>;
 
   return (
+    <div>
+      <Navbar />
     <div className="profile-container">
       <div className="profile-card">
         <img
@@ -42,6 +46,8 @@ const PublicProfilePage = () => {
           </p>
         )}
       </div>
+    </div>
+    <Footer />
     </div>
   );
 };

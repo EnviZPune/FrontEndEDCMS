@@ -87,6 +87,7 @@ export default function ProfilePage() {
     <>
       <Navbar />
       <div className="profile-page-container">
+      <div className="profile-banner" />
         <div className="profile-header">
           <img
             src={profile.profilePictureUrl || '/default-avatar.jpg'}

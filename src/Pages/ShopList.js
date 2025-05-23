@@ -1,3 +1,4 @@
+// src/Pages/ShopList.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
@@ -55,6 +56,7 @@ function ShopList() {
       <Navbar />
       <div className="shop-carousel-container">
         <h2 style={{ textAlign: 'center', marginBottom: '16px' }}>Browse Shops</h2>
+        <Link className="view-all-shops" to="/allshops">View All Shops</Link>
 
         {loading ? (
           <div className="loading-spinner"></div>
@@ -64,41 +66,34 @@ function ShopList() {
           <>
             <div className="shop-carousel" ref={carouselRef}>
               {shops.map((shop) => (
-                <div className="shop-card" key={shop.businessId}>
-                  {shop.profilePictureUrl ? (
-                    <img
-                      src={shop.profilePictureUrl}
-                      alt={`${shop.name} Logo`}
-                      style={{
-                        width: '100%',
-                        height: '140px',
-                        objectFit: 'cover',
-                        borderRadius: '6px',
-                        marginBottom: '10px',
-                      }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        height: '140px',
-                        backgroundColor: '#eee',
-                        marginBottom: '10px',
-                        borderRadius: '6px',
-                      }}
-                    ></div>
-                  )}
-                  <h2>{shop.name}</h2>
-                  <p>{shop.description}</p>
-
-                  <Link className="view-details-link" to={`/shops/${shop.businessId}`}>
-                  View Details
-                  </Link>
-                </div>
+                <Link
+                  to={`/shops/${shop.businessId}`}
+                  key={shop.businessId}
+                  className="shop-card-link"
+                >
+                  <div className="shop-card">
+                    {shop.profilePictureUrl ? (
+                      <img
+                        src={shop.profilePictureUrl}
+                        alt={`${shop.name} Logo`}
+                        className="shop-card-image"
+                      />
+                    ) : (
+                      <div className="shop-card-placeholder" />
+                    )}
+                    <h2 className="shop-card-title">{shop.name}</h2>
+                    <p className="shop-card-desc">{shop.description}</p>
+                  </div>
+                </Link>
               ))}
             </div>
 
             <div className="carousel-controls">
-              <button className="carousel-arrow" onClick={scrollLeft} disabled={currentPage === 0}>
+              <button
+                className="carousel-arrow"
+                onClick={scrollLeft}
+                disabled={currentPage === 0}
+              >
                 &lt;
               </button>
 
@@ -108,7 +103,7 @@ function ShopList() {
                     key={i}
                     className={`dot ${i === currentPage ? 'active' : ''}`}
                     onClick={() => scrollToPage(i)}
-                  ></span>
+                  />
                 ))}
               </div>
 
