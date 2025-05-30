@@ -7,7 +7,7 @@ import Register from './Pages/Register';
 import Forgot_password from './Pages/Forgot_password';
 import ProfilePage from './Pages/ProfilePage';            // <-- renamed import
 import Settings from './Components/Settings/Settings';
-import NotificationDropdown from './Components/NotificationDropdown';
+import Notifications from './Components/Notifications';
 import Map from './Pages/MapPage';
 import ShopList from './Pages/ShopList';
 import ShopDetailsPage from './Pages/ShopDetailsPage';
@@ -39,7 +39,7 @@ export default function App() {
           <Route path="/my-profile" element={<ProfilePage />} />
           <Route path="/profile/:userId" element={<PublicProfilePage />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/notifications" element={<NotificationDropdown />} />
+          <Route path="/notifications" element={<Notifications />} />
           <Route path="/map" element={<Map />} />
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<Policy />} />

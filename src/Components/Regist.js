@@ -14,7 +14,7 @@ function RegisterFormUser() {
     createPassword: '',
     confirmPassword: '',
     profilePictureUrl: '',
-    role: '2' // Default to Owner
+    role: '2' 
   });
 
   const [loading, setLoading] = useState(false);
@@ -23,37 +23,6 @@ function RegisterFormUser() {
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const timestamp = Date.now();
-    const fileName = `${timestamp}-${file.name}`;
-    const uploadUrl = `https://storage.googleapis.com/ecdms_bucked/${fileName}`;
-    const txtUrl = `https://storage.googleapis.com/ecdms_bucked/${fileName}.txt`;
-
-    try {
-      const res = await fetch(uploadUrl, {
-        method: 'PUT',
-        headers: { 'Content-Type': file.type },
-        body: file,
-      });
-
-      if (!res.ok) throw new Error('Image upload failed');
-
-      await fetch(txtUrl, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'text/plain' },
-        body: uploadUrl,
-      });
-
-      setFormData((prev) => ({ ...prev, profilePictureUrl: uploadUrl }));
-    } catch (err) {
-      console.error('Upload failed:', err);
-      setError('Failed to upload image.');
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -196,31 +165,6 @@ function RegisterFormUser() {
           <input type="email" name="email" placeholder="Email" required value={formData.email} onChange={handleInputChange} />
           <input type="password" name="createPassword" placeholder="Create a Password" required value={formData.createPassword} onChange={handleInputChange} />
           <input type="password" name="confirmPassword" placeholder="Confirm Password" required value={formData.confirmPassword} onChange={handleInputChange} />
-          <label htmlFor="profilePicture" style={{ marginTop: '10px', fontWeight: 'bold' }}>
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            id="profilePicture"
-            onChange={handleImageUpload}
-            style={{ marginBottom: '10px' }}
-          />
-          {formData.profilePictureUrl && (
-            <div style={{ marginBottom: '10px' }}>
-              <p style={{ fontSize: '14px' }}>Preview:</p>
-              <img
-                src={formData.profilePictureUrl}
-                alt="Profile Preview"
-                style={{
-                  width: '100px',
-                  height: '100px',
-                  objectFit: 'cover',
-                  borderRadius: '8px',
-                  border: '1px solid #ccc'
-                }}
-              />
-            </div>
-          )}
         </div>
 
         <button id="button_register" type="submit" disabled={loading}>

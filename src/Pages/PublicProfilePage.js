@@ -33,8 +33,7 @@ const PublicProfilePage = () => {
     <div className="profile-container">
       <div className="profile-card">
         <img
-          src={profile.profilePictureUrl || '/Assets/default-profile.png'}
-          alt={`${profile.name}'s profile`}
+          src={profile.profilePictureUrl || 'Assets/default-avatar.jpg'}
           className="profile-picture"
         />
         <h2 className="profile-name">{profile.name}</h2>

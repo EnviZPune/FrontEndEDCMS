@@ -106,26 +106,21 @@ const Settings = () => {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState({ name: "", color: "#000000" });
   const [editingCategory, setEditingCategory] = useState(null);
-
-  // Employee management states
   const [employees, setEmployees] = useState([]);
   const [newEmployee, setNewEmployee] = useState({ name: "", email: "", role: "" });
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [foundUser, setFoundUser] = useState(null);
-
-
-  // Other states
   const [pendingChanges, setPendingChanges] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [profilePhoto, setProfilePhoto] = useState("");
   const [coverPhoto, setCoverPhoto] = useState("");
+  
   const getHeaders = () => ({
     "Content-Type": "application/json",
     Authorization: `Bearer ${getToken()}`,
   });
 
-  // Mapping for sizes
   const sizeMapping = { XS: 0, S: 1, M: 2, L: 3, XL: 4, XXL: 5 };
   const reverseSizeMapping = { 0: "XS", 1: "S", 2: "M", 3: "L", 4: "XL", 5: "XXL" };
 
@@ -191,7 +186,7 @@ const Settings = () => {
     setFormData({ name: data.name, description: data.description });
     fetchProducts(businessId);
     fetchCategories(businessId);
-    fetchEmployees(businessId);
+    fetchBusinessEmployees(businessId);
     fetchPendingChanges();
   };
 
@@ -201,6 +196,22 @@ const Settings = () => {
     });
     const data = (await safeParseJson(res)) || [];
     setProducts(data);
+  };
+
+  const fetchBusinessEmployees = async (businessId) => {
+    const res = await fetch(
+      `http://77.242.26.150:8000/api/Business/${businessId}`,
+      { headers: getHeaders() }
+    );
+    if (!res.ok) {
+      console.error("Failed to load business for employees", res.status);
+      return;
+    }
+    const biz = (await safeParseJson(res)) || {};
+    const approved = (biz.businessEmployees || [])
+      .filter(be => be.isApproved && be.role === "Employee")
+      .map(be => be.user);
+    setEmployees(approved);
   };
 
   // --- CATEGORY API calls (unchanged) ---
@@ -250,15 +261,6 @@ const Settings = () => {
     }
   };
   // --- End Category API calls ---
-
-  const fetchEmployees = async (businessId) => {
-    // Use endpoint based on businessId
-    const res = await fetch(`http://77.242.26.150:8000/api/Employee/business/${businessId}`, {
-      headers: getHeaders(),
-    });
-    const data = (await safeParseJson(res)) || [];
-    setEmployees(data);
-  };
 
   const fetchPendingChanges = async () => {
     const res = await fetch("http://77.242.26.150:8000/api/ProposedChange", { headers: getHeaders() });
@@ -430,84 +432,56 @@ const findUserByEmail = async () => {
 };
 
   
+const handleEmployeeSubmit = async (e) => {
+  e.preventDefault();
+  if (!selectedBusiness) {
+    alert("Select a business first.");
+    return;
+  }
+  if (!foundUser?.userId) {
+    alert("Find a user by email first.");
+    return;
+  }
 
-  const handleEmployeeSubmit = async (e) => {
-    e.preventDefault();
-  
-    if (!selectedBusiness) {
-      alert("Please select a business first.");
-      return;
-    }
-  
-    if (!foundUser?.userId) {
-      alert("Please find a user first using their email.");
-      return;
-    }
-  
-    const res = await fetch(
-      `http://77.242.26.150:8000/api/User/${foundUser.userId}`,
-      {
-        method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify({
-          userId: foundUser.userId,
-          name: newEmployee.name,
-          email: newEmployee.email,
-          role: "Employee",
-          businessId: selectedBusiness.businessId,
-        }),
-      }
-    );
-  
-    if (res.ok) {
-      alert("User promoted to Employee!");
-      await fetchEmployees(selectedBusiness.businessId);
-    } else {
-      const err = await res.text();
-      console.error("Promotion failed:", err);
-      alert("Failed to promote user.");
-    }
-  
-    setFoundUser(null);
-    setNewEmployee({ name: "", email: "", role: "" });
-    setEditingEmployee(null);
-  };
-  
-  
-  const handleEditEmployee = (employee) => {
-    setEditingEmployee(employee);
-    setNewEmployee({
-      name: employee.name || "",
-      email: employee.email || "",
-      role: employee.role || "",
-    });
-  };
-  
-  const deleteEmployee = async (employeeId) => {
-    if (!employeeId) {
-      alert("Invalid employee selected.");
-      return;
-    }
-  
-    if (window.confirm("Are you sure you want to delete this employee?")) {
-      const res = await fetch(
-        `http://77.242.26.150:8000/api/Employee/${employeeId}`,
-        {
-          method: "DELETE",
-          headers: getHeaders(),
-        }
-      );
-  
-      if (res.ok) {
-        alert("Employee deleted!");
-        await fetchEmployees(selectedBusiness.businessId);
-      } else {
-        const err = await res.text();
-        console.error("Delete error:", err);
-        alert("Failed to delete employee.");
-      }
-    }
-  };  
+  const res = await fetch(
+    `${API_BASE}/api/Business/${selectedBusiness.businessId}/assign/${foundUser.userId}`,
+    { method: "POST", headers: getHeaders() }
+  );
+  if (res.ok) {
+    alert("Invitation sent!");
+    await fetchBusinessEmployees(selectedBusiness.businessId);
+  } else {
+    console.error("Invite failed:", await res.text());
+    alert("Failed to invite.");
+  }
+
+  setFoundUser(null);
+  setNewEmployee({ name: "", email: "", role: "" });
+};
+
+// Edit button (not implemented server-side, kept for UI consistency)
+const handleEditEmployee = (emp) => {
+  setEditingEmployee(emp);
+  setNewEmployee({ name: emp.name || "", email: emp.email || "", role: emp.role || "" });
+};
+
+// Remove an employee
+const deleteEmployee = async (userId) => {
+  if (!userId || !selectedBusiness) return alert("Invalid employee.");
+  if (!window.confirm("Remove this employee?")) return;
+
+  const res = await fetch(
+    `${API_BASE}/api/Business/${selectedBusiness.businessId}/employees/${userId}`,
+    { method: "DELETE", headers: getHeaders() }
+  );
+  if (res.ok) {
+    alert("Employee removed.");
+    await fetchBusinessEmployees(selectedBusiness.businessId);
+  } else {
+    console.error("Remove failed:", await res.text());
+    alert("Failed to remove employee.");
+  }
+};
 
   // Sidebar items
   const sidebarItems = [

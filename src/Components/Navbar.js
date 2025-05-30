@@ -1,34 +1,73 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaUser, FaCaretDown } from "react-icons/fa";
+import { FaUser, FaCaretDown, FaBell, } from "react-icons/fa";
 import "../Styling/navbar.css";
 import { jwtDecode } from "jwt-decode";
-import Notification from "../Components/NotificationDropdown";
+import Notification from "../Components/Notifications";
 import { Link } from "react-router-dom";
+
+const API_BASE = "http://77.242.26.150:8000";
+
+const getToken = () => {
+  const raw = localStorage.getItem("token") || localStorage.getItem("authToken");
+  if (!raw || raw.trim() === "") return null;
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed.token || parsed;
+  } catch {
+    return raw;
+  }
+};
+
+const getHeaders = () => ({
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${getToken()}`,
+});
 
 const Navbar = () => {
   const [loggedUser, setLoggedUser] = useState(null);
+  const [myBusinesses, setMyBusinesses] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [isSubmenuVisible, setIsSubmenuVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
     if (token) {
       try {
         const decoded = jwtDecode(token);
         setLoggedUser(decoded);
-      } catch (err) {
-        console.error("Token decoding failed:", err);
+      } catch {
         localStorage.removeItem("token");
       }
     }
   }, []);
 
+  useEffect(() => {
+    const loadMyBusinesses = async () => {
+      const token = getToken();
+      if (!token) return;
+      try {
+        const res = await fetch(
+          `${API_BASE}/api/Business/my/businesses`,
+          { headers: getHeaders() }
+        );
+        if (!res.ok) return;
+        const list = await res.json();
+        setMyBusinesses(list);
+      } catch (err) {
+        console.error("Failed to load user businesses:", err);
+      }
+    };
+    loadMyBusinesses();
+  }, []);
+
   const isOwner =
     loggedUser &&
     (loggedUser.role?.toLowerCase?.() === "owner" ||
-     loggedUser["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]?.toLowerCase?.() === "owner");
+      loggedUser[
+        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+      ]?.toLowerCase?.() === "owner");
 
   const toggleDropdown = (e) => {
     e.stopPropagation();
@@ -64,10 +103,7 @@ const Navbar = () => {
       <nav className="navbar">
         <div className="logo-container">
           <Link to="/preview">
-            <img
-              src={`${process.env.PUBLIC_URL}/Assets/edlogo.png`}
-              alt="E & D Corporation Logo"
-            />
+            <img src={`${process.env.PUBLIC_URL}/Assets/edlogo.png`} />
           </Link>
           <h3>E & D</h3>
         </div>
@@ -95,27 +131,31 @@ const Navbar = () => {
 
           {loggedUser ? (
             <>
-              <li>
-                <Notification isLoggedIn={true} />
-              </li>
-
+              <Notification />
               <li className="user-menu" ref={dropdownRef}>
                 <button className="user-menu-button" onClick={toggleDropdown}>
                   <FaUser className="user-icon" />
                   <span>{loggedUser.sub}</span>
                   <FaCaretDown
-                    className={`caret-icon ${isDropdownVisible ? "rotate" : ""}`}
+                    className={`caret-icon ${
+                      isDropdownVisible ? "rotate" : ""
+                    }`}
                   />
                 </button>
 
                 {isDropdownVisible && (
                   <div className="dropdown-menu">
                     <div className="dropdown-submenu">
-                      <button className="dropdown-item-dropdown-toggle" onClick={toggleSubmenu}>
+                      <button
+                        className="dropdown-item-dropdown-toggle"
+                        onClick={toggleSubmenu}
+                      >
                         <span className="dropdown-icon-myprofile">👤</span>
                         My Profile
                         <FaCaretDown
-                          className={`submenu-caret ${isSubmenuVisible ? "rotate" : ""}`}
+                          className={`submenu-caret ${
+                            isSubmenuVisible ? "rotate" : ""
+                          }`}
                         />
                       </button>
                       {isSubmenuVisible && (
@@ -142,12 +182,15 @@ const Navbar = () => {
                         🏬 Create Another Shop
                       </Link>
                     )}
-                    {isOwner && (
-                    <Link to="/settings" className="dropdown-item">
-                      ⚙️ Bussiness Settings
-                    </Link>
+                    {(isOwner || myBusinesses.length > 0) && (
+                      <Link to="/settings" className="dropdown-item">
+                        ⚙️ Business Settings
+                      </Link>
                     )}
-                    <button onClick={handleLogout} className="dropdown-item logout-button">
+                    <button
+                      onClick={handleLogout}
+                      className="dropdown-item logout-button"
+                    >
                       🚪 Logout
                     </button>
                   </div>
@@ -156,10 +199,16 @@ const Navbar = () => {
             </>
           ) : (
             <div className="auth-buttons">
-              <button onClick={() => window.location.href = "/login"} className="login-button">
+              <button
+                onClick={() => (window.location.href = "/login")}
+                className="login-button"
+              >
                 Login
               </button>
-              <button onClick={() => window.location.href = "/register"} className="register-button">
+              <button
+                onClick={() => (window.location.href = "/register")}
+                className="register-button"
+              >
                 Register
               </button>
             </div>

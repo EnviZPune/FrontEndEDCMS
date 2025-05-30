@@ -90,7 +90,7 @@ export default function ProfilePage() {
       <div className="profile-banner" />
         <div className="profile-header">
           <img
-            src={profile.profilePictureUrl || '/default-avatar.jpg'}
+            src={profile.profilePictureUrl || 'Assets/default-avatar.jpg'}
             alt="Profile"
             className="profile-picture"
           />
