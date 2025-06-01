@@ -84,6 +84,7 @@ const Settings = () => {
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [formData, setFormData] = useState({ name: "", description: "" });
   const [products, setProducts] = useState([]);
+  const [pendingChanges, setPendingChanges] = useState([]);
   const [newProduct, setNewProduct] = useState({
     name: "",
     description: "",
@@ -112,7 +113,6 @@ const Settings = () => {
   const [newEmployee, setNewEmployee] = useState({ name: "", email: "", role: "" });
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [foundUser, setFoundUser] = useState(null);
-  const [pendingChanges, setPendingChanges] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [profilePhoto, setProfilePhoto] = useState("");
@@ -131,7 +131,7 @@ const Settings = () => {
     if (business) fetchBusinessDetails(business.businessId);
   };
 
-  useEffect(() => {
+   useEffect(() => {
     const token = getToken();
     if (!token) {
       navigate("/unauthorized");
@@ -146,7 +146,7 @@ const Settings = () => {
       const rawRole = decoded[roleClaim]?.toLowerCase();
 
       if (rawRole === "owner" || rawRole === "employee") {
-        setUserRole(rawRole);     // store into state
+        setUserRole(rawRole);  
         setAuthorized(true);
       } else {
         navigate("/unauthorized");
@@ -157,7 +157,6 @@ const Settings = () => {
     }
   }, [navigate]);
 
-  
   
   useEffect(() => {
     if (!authorized) return; 
@@ -198,20 +197,17 @@ const Settings = () => {
 
   const fetchBusinessEmployees = async (businessId) => {
     const res = await fetch(
-      `http://77.242.26.150:8000/api/Business/${businessId}`,
+      `http://77.242.26.150:8000/api/Business/${businessId}/employees`,
       { headers: getHeaders() }
     );
     if (!res.ok) {
-      console.error("Failed to load business for employees", res.status);
+      console.error("Failed to load employees", res.status);
       return;
     }
-    const biz = (await safeParseJson(res)) || {};
-    const approved = (biz.businessEmployees || [])
-      .filter(be => be.isApproved && be.role === "Employee")
-      .map(be => be.user);
-    setEmployees(approved);
+    const data = (await safeParseJson(res)) || [];
+    setEmployees(data);
   };
-
+  
   // --- CATEGORY API calls (unchanged) ---
   const fetchCategories = async (businessId) => {
     const res = await fetch(`http://77.242.26.150:8000/api/Category/business/${businessId}`, {
@@ -260,11 +256,56 @@ const Settings = () => {
   };
   // --- End Category API calls ---
 
-  const fetchPendingChanges = async () => {
-    const res = await fetch("http://77.242.26.150:8000/api/ProposedChange", { headers: getHeaders() });
-    const data = (await safeParseJson(res)) || [];
-    setPendingChanges(data);
-  };
+const fetchPendingChanges = async () => {
+  if (!selectedBusiness) return;
+
+  const res = await fetch(
+    `http://77.242.26.150:8000/api/Business/${selectedBusiness.businessId}/pending-changes`,
+    { headers: getHeaders() }
+  );
+  const data = (await safeParseJson(res)) || [];
+  console.log("pendingChanges payload:", data);
+  setPendingChanges(data);
+};
+
+const approveChange = async (changeId) => {
+  try {
+    await fetch(
+      `http://77.242.26.150:8000/api/ProposedChanges/${changeId}?approve=true`,
+      {
+        method: "PUT",
+        headers: getHeaders(),
+      }
+    );
+    fetchPendingChanges();
+  } catch (err) {
+    console.error("Error approving change:", err);
+    alert("Failed to approve change.");
+  }
+};
+
+const rejectChange = async (changeId) => {
+  try {
+    await fetch(
+      `http://77.242.26.150:8000/api/ProposedChanges/${changeId}?approve=false`,
+      {
+        method: "PUT",
+        headers: getHeaders(),
+      }
+    );
+    fetchPendingChanges();
+  } catch (err) {
+    console.error("Error rejecting change:", err);
+    alert("Failed to reject change.");
+  }
+};
+
+useEffect(() => {
+  if (selectedCategory === "Pending Changes" && selectedBusiness) {
+    fetchPendingChanges();
+  }
+}, [selectedCategory, selectedBusiness]);
+
 
   const saveBusinessInfo = async () => {
     const res = await fetch(
@@ -279,35 +320,94 @@ const Settings = () => {
   };
 
   const saveProduct = async () => {
+    if (userRole === "employee") {
+      const dto = {
+        businessId: selectedBusiness.businessId,
+        type: editingProductId ? "Update" : "Create",
+        itemDto: {
+          clothingItemId: editingProductId || 0,
+          name: newProduct.name,
+          businessIds: [selectedBusiness.businessId],
+          description: newProduct.description,
+          price: parseFloat(newProduct.price),
+          quantity: parseInt(newProduct.quantity),
+          category: newProduct.category,
+          brand: newProduct.brand,
+          model: newProduct.model,
+          pictureUrls:
+            typeof newProduct.pictureUrls === "string"
+              ? [newProduct.pictureUrls]
+              : newProduct.pictureUrls,
+          colors: newProduct.colors,
+          sizes:
+            typeof newProduct.sizes === "number"
+              ? newProduct.sizes
+              : sizeMapping[newProduct.sizes],
+          material: newProduct.material,
+        },
+      };
+  
+      try {
+        await fetch(
+          "http://77.242.26.150:8000/api/ProposedChanges",
+          {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify(dto),
+          }
+        );
+        alert(
+          "Your change has been proposed. Please wait for an owner to approve or reject."
+        );
+        setNewProduct({
+          name: "",
+          description: "",
+          price: "",
+          quantity: "",
+          category: "",
+          brand: "",
+          model: "",
+          pictureUrls: [],
+          colors: "",
+          sizes: "XS",
+          material: "",
+        });
+        setEditingProductId(null);
+        fetchProducts(selectedBusiness.businessId);
+      } catch (err) {
+        console.error("Failed to propose change:", err);
+        alert("Network error when proposing change.");
+      }
+  
+      return;
+    }
+  
     const method = editingProductId ? "PUT" : "POST";
     const url = editingProductId
-      ? `http://77.242.26.150:8000/api/ClothingItem/item/${editingProductId}`
+      ? `http://77.242.26.150:8000/api/ClothingItem/${editingProductId}`
       : "http://77.242.26.150:8000/api/ClothingItem";
-
-      const body = {
-        Name: newProduct.name,
-        BusinessIds: [selectedBusiness.businessId],
-        Description: newProduct.description,
-        Price: parseFloat(newProduct.price),
-        Quantity: parseInt(newProduct.quantity),
-        Category: newProduct.category,
-        Brand: newProduct.brand,
-        Model: newProduct.model,
-        PictureUrls:
-          typeof newProduct.pictureUrls === "string"
-            ? [newProduct.pictureUrls]
-            : newProduct.pictureUrls,
-        Colors: newProduct.colors,
-        Sizes:
-          typeof newProduct.sizes === "number"
-            ? newProduct.sizes
-            : sizeMapping[newProduct.sizes],
-        Material: newProduct.material,
-      };      
-
-      console.log("📦 PUT Payload:", body);
-      
-
+  
+    const body = {
+      name: newProduct.name,
+      businessIds: [selectedBusiness.businessId],
+      description: newProduct.description,
+      price: parseFloat(newProduct.price),
+      quantity: parseInt(newProduct.quantity),
+      category: newProduct.category,
+      brand: newProduct.brand,
+      model: newProduct.model,
+      pictureUrls:
+        typeof newProduct.pictureUrls === "string"
+          ? [newProduct.pictureUrls]
+          : newProduct.pictureUrls,
+      colors: newProduct.colors,
+      sizes:
+        typeof newProduct.sizes === "number"
+          ? newProduct.sizes
+          : sizeMapping[newProduct.sizes],
+      material: newProduct.material,
+    };
+  
     try {
       const res = await fetch(url, {
         method,
@@ -324,12 +424,9 @@ const Settings = () => {
       console.error("Fetch error:", error);
       alert("Network error when attempting to save product.");
     }
-
-    console.log("🚀 Headers:", getHeaders());
-    console.log("🔑 Token:", getToken());
-
-
+  
     setNewProduct({
+      name: "",
       description: "",
       price: "",
       quantity: "",
@@ -343,7 +440,7 @@ const Settings = () => {
     });
     setEditingProductId(null);
     fetchProducts(selectedBusiness.businessId);
-  };
+  };  
 
   const saveProfileCoverPhotos = async () => {
     if (!profilePhoto && !coverPhoto) {
@@ -372,12 +469,55 @@ const Settings = () => {
   };
 
   const deleteProduct = async (clothingItemId) => {
-    await fetch(`http://77.242.26.150:8000/api/ClothingItem/item/${clothingItemId}`, {
+    if (userRole === "employee") {
+      const dto = {
+        businessId: selectedBusiness.businessId,
+        type: "Delete",
+        itemDto: {
+          clothingItemId,
+          businessIds: [selectedBusiness.businessId],
+          name: "",        
+          description: "",
+          price: 0,
+          quantity: 0,
+          category: "",
+          brand: "",
+          model: "",
+          pictureUrls: [],
+          colors: "",
+          sizes: 0,
+          material: "",
+        },
+      };
+  
+      try {
+        await fetch(
+          "http://77.242.26.150:8000/api/ProposedChanges",
+          {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify(dto),
+          }
+        );
+        alert(
+          "Your delete request has been proposed. Please wait for an owner to approve or reject."
+        );
+        fetchProducts(selectedBusiness.businessId);
+      } catch (err) {
+        console.error("Failed to propose delete:", err);
+        alert("Network error when proposing delete.");
+      }
+  
+      return;
+    }
+
+    await fetch(`http://77.242.26.150:8000/api/ClothingItem/${clothingItemId}`, {
       method: "DELETE",
       headers: getHeaders(),
     });
     fetchProducts(selectedBusiness.businessId);
   };
+  
 
   const deleteBusiness = async () => {
     if (window.confirm("Are you sure you want to delete this business? This action cannot be undone.")) {
@@ -465,7 +605,7 @@ const handleEmployeeSubmit = async (e) => {
 // Edit button (not implemented server-side, kept for UI consistency)
 const handleEditEmployee = (emp) => {
   setEditingEmployee(emp);
-  setNewEmployee({ name: emp.name || "", email: emp.email || "", role: emp.role || "" });
+  setNewEmployee({ name: emp.name || "", email: emp.email || ""});
 };
 
 // Remove an employee
@@ -700,7 +840,7 @@ const deleteEmployee = async (userId) => {
       case "Edit Current Products/Categories":
         // Filter products based on search query
         const filteredProducts = products.filter((p) =>
-          `${p.brand} ${p.model} ${p.description}`.toLowerCase().includes(searchQuery.toLowerCase())
+          `${p.name} ${p.brand} ${p.model} ${p.description}`.toLowerCase().includes(searchQuery.toLowerCase())
         );
         return (
           <div className="panel merged-panel">
@@ -800,6 +940,7 @@ const deleteEmployee = async (userId) => {
                           onClick={() => {
                             setEditingProductId(null);
                             setNewProduct({
+                              name: "",
                               description: "",
                               price: "",
                               quantity: "",
@@ -820,7 +961,7 @@ const deleteEmployee = async (userId) => {
                     ) : (
                       <div className="product-display">
                         <span>
-                          {p.brand} - {p.model} (${p.price})
+                          {p.name} - {p.model} (${p.price})
                         </span>
                         <button
                           onClick={() => {
@@ -956,15 +1097,6 @@ const deleteEmployee = async (userId) => {
                     }
                     required
                   />
-                  <input
-                    type="text"
-                    placeholder="Role"
-                    value={newEmployee.role}
-                    onChange={(e) =>
-                      setNewEmployee({ ...newEmployee, role: e.target.value })
-                    }
-                    required
-                  />
                   <button type="button" onClick={findUserByEmail}>
                     Find User by Email
                   </button>
@@ -976,39 +1108,64 @@ const deleteEmployee = async (userId) => {
               <div className="employee-list-section">
                 <h4>Existing Employees</h4>
                 {employees.length > 0 ? (
-                  <ul>
-                    {employees.map((emp) => (
-                      <li key={emp.employeeId} className="employee-item">
-                        <span>
-                          {emp.name} ({emp.email})
-                        </span>
-                        <div className="employee-actions">
-                          <button onClick={() => handleEditEmployee(emp)}>Edit</button>
-                          <button onClick={() => deleteEmployee(emp.employeeId)}>Delete</button>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>No employees found.</p>
-                )}
+                <ul>
+                  {employees.map((emp) => (
+                    <li key={emp.userId} className="employee-item">
+                      <span>
+                        {emp.name} ({emp.email})
+                      </span>
+                      <div className="employee-actions">
+                        <button onClick={() => handleEditEmployee(emp)}>Edit</button>
+                        <button onClick={() => deleteEmployee(emp.userId)}>Delete</button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No employees found.</p>
+              )}
               </div>
             </div>
           </div>
         );
-      case "Pending Changes":
-        return (
-          <div className="panel">
-            <h3>Pending Changes</h3>
-            <ul>
-              {pendingChanges.map((change) => (
-                <li key={change.id}>
-                  <strong>{change.type}</strong>: {change.description} — <em>Status: {change.status}</em>
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
+        case "Pending Changes":
+  return (
+    <div className="panel">
+      <h3>Pending Changes</h3>
+      {pendingChanges.length === 0 ? (
+        <p>No pending changes.</p>
+      ) : (
+        <ul className="pending-list">
+          {pendingChanges.map((change) => (
+            <li key={change.proposedChangeId} className="pending-item">
+              <div>
+                <strong>{change.operationType}</strong> on item{" "}
+                <em>{change.clothingItemId || "(new item)"}</em>
+                <br />
+                <small>Details: {change.changeDetails}</small>
+                <br />
+                <small>By Employee ID: {change.employeeId}</small>
+                <br />
+                <small>
+                  Requested At:{" "}
+                  {new Date(change.createdAt).toLocaleString()}
+                </small>
+              </div>
+              <div className="pending-actions">
+                <button onClick={() => approveChange(change.proposedChangeId)}>
+                  Approve
+                </button>
+                <button onClick={() => rejectChange(change.proposedChangeId)}>
+                  Reject
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+
       
         case "My Shops": {
           const totalPages = Math.ceil(userBusinesses.length / SHOPS_PER_PAGE);
