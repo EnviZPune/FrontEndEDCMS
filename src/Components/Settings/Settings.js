@@ -78,12 +78,14 @@ const uploadImageToGCS = async (file) => {
 const Settings = () => {
   const [authorized, setAuthorized] = useState(false);
   const navigate = useNavigate();
+  const [userRole, setUserRole] = useState(null); 
   const [selectedCategory, setSelectedCategory] = useState("Business Info");
   const [userBusinesses, setUserBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [formData, setFormData] = useState({ name: "", description: "" });
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
+    name: "",
     description: "",
     price: "",
     quantity: "",
@@ -118,7 +120,7 @@ const Settings = () => {
   
   const getHeaders = () => ({
     "Content-Type": "application/json",
-    Authorization: `Bearer ${getToken()}`,
+    Authorization: `Bearer ${getToken()}`, 
   });
 
   const sizeMapping = { XS: 0, S: 1, M: 2, L: 3, XL: 4, XXL: 5 };
@@ -132,33 +134,29 @@ const Settings = () => {
   useEffect(() => {
     const token = getToken();
     if (!token) {
-      navigate('/unauthorized');
+      navigate("/unauthorized");
       return;
     }
-  
+
     try {
       const decoded = jwtDecode(token);
       console.log("🔍 Decoded JWT:", decoded);
-  
-      // Extract role from the correct claim
+
       const roleClaim = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
-      const rawRole = decoded[roleClaim];
-      console.log("👤 Raw role:", rawRole);
-  
-      const userRole = rawRole?.toLowerCase(); // Should become "owner"
-  
-      if (userRole !== "owner") {
-        console.warn("❌ Unauthorized role:", userRole);
+      const rawRole = decoded[roleClaim]?.toLowerCase();
+
+      if (rawRole === "owner" || rawRole === "employee") {
+        setUserRole(rawRole);     // store into state
+        setAuthorized(true);
+      } else {
         navigate("/unauthorized");
-        return;
       }
-  
-      setAuthorized(true);
     } catch (err) {
       console.error("JWT decode error:", err);
       navigate("/unauthorized");
     }
   }, [navigate]);
+
   
   
   useEffect(() => {
@@ -287,6 +285,7 @@ const Settings = () => {
       : "http://77.242.26.150:8000/api/ClothingItem";
 
       const body = {
+        Name: newProduct.name,
         BusinessIds: [selectedBusiness.businessId],
         Description: newProduct.description,
         Price: parseFloat(newProduct.price),
@@ -325,6 +324,10 @@ const Settings = () => {
       console.error("Fetch error:", error);
       alert("Network error when attempting to save product.");
     }
+
+    console.log("🚀 Headers:", getHeaders());
+    console.log("🔑 Token:", getToken());
+
 
     setNewProduct({
       description: "",
@@ -483,7 +486,6 @@ const deleteEmployee = async (userId) => {
   }
 };
 
-  // Sidebar items
   const sidebarItems = [
     { name: "Business Info", icon: <FaBuilding /> },
     { name: "Add New Products/Categories", icon: <FaBoxOpen /> },
@@ -494,6 +496,24 @@ const deleteEmployee = async (userId) => {
     { name: "My Shops", icon: <FaEye /> },
     { name: "Delete Business", icon: <FaTrash /> },
   ];
+
+    let visibleSidebarItems;
+    if (userRole === "owner") {
+      visibleSidebarItems = sidebarItems;
+    } else {
+      visibleSidebarItems = sidebarItems.filter((item) =>
+        [
+          "Add New Products/Categories",
+          "Edit Current Products/Categories",
+          "Edit Profile/Cover Photo",
+          "My Shops",
+        ].includes(item.name)
+      );
+      if (!visibleSidebarItems.some((i) => i.name === selectedCategory)) {
+        setSelectedCategory(visibleSidebarItems[0]?.name || "");
+      }
+    }
+  
 
   const renderContent = () => {
     if (!selectedBusiness) return <p>Please select a business to manage.</p>;
@@ -572,6 +592,11 @@ const deleteEmployee = async (userId) => {
           <div className="dual-panel">
             <div className="panel">
               <h3>Add Product</h3>
+              <input
+                placeholder="Name"
+                value={newProduct.name || ""}
+                onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+              />
               <input
                 placeholder="Brand"
                 value={newProduct.brand}
@@ -707,6 +732,11 @@ const deleteEmployee = async (userId) => {
                     {editingProductId === p.clothingItemId ? (
                       <div className="inline-edit-form">
                         <input
+                            placeholder="Name"
+                            value={newProduct.name || ""}
+                            onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                          />
+                        <input
                           placeholder="Brand"
                           value={newProduct.brand}
                           onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })}
@@ -795,6 +825,7 @@ const deleteEmployee = async (userId) => {
                         <button
                           onClick={() => {
                             setNewProduct({
+                              name: p.name || "",
                               description: p.description,
                               price: p.price.toString(),
                               quantity: p.quantity.toString(),
@@ -1087,7 +1118,7 @@ const deleteEmployee = async (userId) => {
               ))}
             </select>
             <ul>
-              {sidebarItems.map((item) => (
+              {visibleSidebarItems.map((item) => (
                 <li
                   key={item.name}
                   onClick={() => setSelectedCategory(item.name)}
