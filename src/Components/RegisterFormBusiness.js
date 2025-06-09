@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styling/registerbusiness.css';
+import Navbar from '../Components/Navbar';
 
 const API_BASE   = 'http://77.242.26.150:8000/api';
-const GCS_BUCKET = 'https://storage.googleapis.com/ecdms_bucked';
+const GCS_BUCKET = 'https://storage.googleapis.com/edcms_bucket';
 
 const getToken = () => {
   const raw = localStorage.getItem('token');
@@ -134,6 +135,8 @@ function RegisterFormBusiness() {
   };
 
   return (
+    <div>
+      <Navbar />
     <div className="register-business-form-container">
       <form className="register-business-form" onSubmit={handleSubmit}>
         <h2>Register a New Business</h2>
@@ -179,6 +182,7 @@ function RegisterFormBusiness() {
         {error   && <p className="error">{error}</p>}
         {success && <p className="success">{success}</p>}
       </form>
+    </div>
     </div>
   );
 }

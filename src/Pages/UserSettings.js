@@ -5,7 +5,7 @@ import Navbar from '../Components/Navbar';
 import { jwtDecode } from 'jwt-decode';
 
 const API_BASE   = 'http://77.242.26.150:8000';
-const GCS_BUCKET = 'https://storage.googleapis.com/ecdms_bucked';
+const GCS_BUCKET = 'https://storage.googleapis.com/edcms_bucket';
 
 const getToken = () => {
   const raw = localStorage.getItem('token') || localStorage.getItem('authToken');

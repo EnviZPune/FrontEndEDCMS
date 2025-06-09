@@ -1,6 +1,8 @@
+// Notifications.js
 import React, { useState, useEffect, useRef } from 'react';
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { FaBell } from 'react-icons/fa';
+import { jwtDecode } from 'jwt-decode';
 
 const API_BASE = 'http://77.242.26.150:8000';
 
@@ -21,10 +23,11 @@ const getHeaders = () => ({
 });
 
 export default function Notifications() {
-  const [invites, setInvites] = useState([]);   
+  const [invites, setInvites] = useState([]); // Pending employee invites
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
 
+  // 1) Load pending employee invites (for the current user)
   useEffect(() => {
     const loadPending = async () => {
       const token = getToken();
@@ -36,11 +39,13 @@ export default function Notifications() {
         );
         if (!res.ok) return;
         const pending = await res.json();
-        setInvites(pending.map(be => ({
-          businessId:   be.businessId,
-          businessName: be.businessName,
-          invitedAt:    be.invitedAt
-        })));
+        setInvites(
+          pending.map(be => ({
+            businessId:   be.businessId,
+            businessName: be.name,
+            invitedAt:    be.requestedAt,
+          }))
+        );
       } catch (err) {
         console.error('Error loading pending invites:', err);
       }
@@ -48,6 +53,7 @@ export default function Notifications() {
     loadPending();
   }, []);
 
+  // 2) Establish a SignalR connection to receive live invitations
   useEffect(() => {
     const token = getToken();
     if (!token) return;
@@ -58,7 +64,9 @@ export default function Notifications() {
       .withAutomaticReconnect()
       .build();
 
-    connection.start().catch(err => console.error('SignalR connect failed:', err));
+    connection
+      .start()
+      .catch(err => console.error('SignalR connect failed:', err));
 
     connection.on('ReceiveEmployeeInvitation', inv => {
       setInvites(prev => [
@@ -66,14 +74,15 @@ export default function Notifications() {
         {
           businessId:   inv.businessId,
           businessName: inv.businessName,
-          invitedAt:    inv.invitedAt
-        }
+          invitedAt:    inv.invitedAt,
+        },
       ]);
     });
 
-    return () => connection.stop();
+    return () => connection.stop().catch(err => console.error('SignalR stop failed:', err));
   }, []);
 
+  // 3) Close dropdown if clicking outside
   useEffect(() => {
     const handleClickOutside = e => {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
@@ -84,16 +93,17 @@ export default function Notifications() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // 4) Accept a pending invite (uses the new “respond” endpoint)
   const acceptInvite = async businessId => {
     try {
       const res = await fetch(
-        `${API_BASE}/api/Business/${businessId}/employees/respond?approve=true`,
+        `${API_BASE}/api/Business/employees/respond/${businessId}?approve=true`,
         { method: 'PUT', headers: getHeaders() }
       );
       if (res.ok) {
         setInvites(prev => prev.filter(inv => inv.businessId !== businessId));
       } else {
-        alert('Failed to accept invitation.');
+        alert('Failed to accept invitation. (Status ' + res.status + ')');
       }
     } catch (err) {
       console.error('Error accepting invitation:', err);
@@ -101,16 +111,17 @@ export default function Notifications() {
     }
   };
 
+  // 5) Decline a pending invite
   const declineInvite = async businessId => {
     try {
       const res = await fetch(
-        `${API_BASE}/api/Business/${businessId}/employees/respond?approve=false`,
+        `${API_BASE}/api/Business/employees/respond/${businessId}?approve=false`,
         { method: 'PUT', headers: getHeaders() }
       );
       if (res.ok) {
         setInvites(prev => prev.filter(inv => inv.businessId !== businessId));
       } else {
-        alert('Failed to decline invitation.');
+        alert('Failed to decline invitation. (Status ' + res.status + ')');
       }
     } catch (err) {
       console.error('Error declining invitation:', err);
@@ -140,7 +151,7 @@ export default function Notifications() {
             color: '#fff',
             borderRadius: '50%',
             padding: '2px 6px',
-            fontSize: '0.75em'
+            fontSize: '0.75em',
           }}
         >
           {invites.length}
@@ -159,7 +170,7 @@ export default function Notifications() {
             borderRadius: 4,
             width: 260,
             zIndex: 1000,
-            padding: 8
+            padding: 8,
           }}
         >
           {invites.length === 0 ? (
@@ -173,12 +184,12 @@ export default function Notifications() {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   padding: '4px 0',
-                  borderBottom: '1px solid #eee'
+                  borderBottom: '1px solid #eee',
                 }}
               >
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: '0.9em' }}>
-                    <strong>{inv.businessName}</strong>
+                    <strong>Work Invitation From {inv.businessName}</strong>
                   </div>
                   <div style={{ fontSize: '0.75em', color: '#555' }}>
                     Invited at {new Date(inv.invitedAt).toLocaleString()}

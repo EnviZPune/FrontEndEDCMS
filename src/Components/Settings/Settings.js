@@ -36,13 +36,12 @@ const safeParseJson = async (res) => {
   }
 };
 
-
 const uploadImageToGCS = async (file) => {
   if (!file) return null;
   const timestamp = Date.now();
   const fileName = `${timestamp}-${file.name}`;
-  const uploadUrl = `https://storage.googleapis.com/ecdms_bucked/${fileName}`;
-  const txtUrl = `https://storage.googleapis.com/ecdms_bucked/${fileName}.txt`;
+  const uploadUrl = `https://storage.googleapis.com/edcms_bucket/${fileName}`;
+  const txtUrl = `https://storage.googleapis.com/edcms_bucket/${fileName}.txt`;
 
   try {
     // Upload image
@@ -74,13 +73,36 @@ const uploadImageToGCS = async (file) => {
   }
 };
 
+const updateBusinessPhotos = async (businessId, updatedUrls) => {
+  try {
+    const token = localStorage.getItem('token'); // adjust this if stored elsewhere
+
+    const res = await fetch(`http://77.242.26.150:8000/api/Business/${businessId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(updatedUrls)
+    });
+
+    if (!res.ok) throw new Error('Failed to update photos');
+    console.log('✅ Photo URLs updated on server');
+  } catch (err) {
+    console.error('Failed to save photo URLs:', err);
+  }
+};
+
+
 
 const Settings = () => {
   const [authorized, setAuthorized] = useState(false);
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState(null); 
+  const [userRole, setUserRole] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("Business Info");
   const [userBusinesses, setUserBusinesses] = useState([]);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState('');
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [formData, setFormData] = useState({ name: "", description: "" });
   const [products, setProducts] = useState([]);
@@ -97,14 +119,14 @@ const Settings = () => {
     colors: "",
     sizes: "XS",
     material: "",
-  });
+});
   const [editingProductId, setEditingProductId] = useState(null);
   const [myShopsPage, setMyShopsPage] = useState(1);
   const SHOPS_PER_PAGE = 10;
 
   useEffect(() => {
-  setMyShopsPage(1);
-}, [userBusinesses]);
+    setMyShopsPage(1);
+  }, [userBusinesses]);
 
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState({ name: "", color: "#000000" });
@@ -117,10 +139,10 @@ const Settings = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [profilePhoto, setProfilePhoto] = useState("");
   const [coverPhoto, setCoverPhoto] = useState("");
-  
+
   const getHeaders = () => ({
     "Content-Type": "application/json",
-    Authorization: `Bearer ${getToken()}`, 
+    Authorization: `Bearer ${getToken()}`,
   });
 
   const sizeMapping = { XS: 0, S: 1, M: 2, L: 3, XL: 4, XXL: 5 };
@@ -131,7 +153,7 @@ const Settings = () => {
     if (business) fetchBusinessDetails(business.businessId);
   };
 
-   useEffect(() => {
+  useEffect(() => {
     const token = getToken();
     if (!token) {
       navigate("/unauthorized");
@@ -142,11 +164,12 @@ const Settings = () => {
       const decoded = jwtDecode(token);
       console.log("🔍 Decoded JWT:", decoded);
 
+      // Normalize the role claim to lowercase
       const roleClaim = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
-      const rawRole = decoded[roleClaim]?.toLowerCase();
+      const rawRole = (decoded[roleClaim] || "").toLowerCase();
 
       if (rawRole === "owner" || rawRole === "employee") {
-        setUserRole(rawRole);  
+        setUserRole(rawRole);
         setAuthorized(true);
       } else {
         navigate("/unauthorized");
@@ -157,27 +180,26 @@ const Settings = () => {
     }
   }, [navigate]);
 
-  
   useEffect(() => {
-    if (!authorized) return; 
-  
+    if (!authorized) return;
+
     const fetchBusinesses = async () => {
-      const res   = await fetch(
-        "http://77.242.26.150:8000/api/Business",
-        { headers: getHeaders() }
-      );
-      const data  = (await safeParseJson(res)) || [];
+      const res = await fetch("http://77.242.26.150:8000/api/Business", {
+        headers: getHeaders(),
+      });
+      const data = (await safeParseJson(res)) || [];
       setUserBusinesses(data);
       if (data.length > 0) fetchBusinessDetails(data[0].businessId);
       setIsLoading(false);
     };
-  
+
     fetchBusinesses();
   }, [authorized]);
-  
 
   const fetchBusinessDetails = async (businessId) => {
-    const res = await fetch(`http://77.242.26.150:8000/api/Business/${businessId}`, { headers: getHeaders() });
+    const res = await fetch(`http://77.242.26.150:8000/api/Business/${businessId}`, {
+      headers: getHeaders(),
+    });
     const data = (await safeParseJson(res)) || {};
     setSelectedBusiness(data);
     setFormData({ name: data.name, description: data.description });
@@ -188,9 +210,12 @@ const Settings = () => {
   };
 
   const fetchProducts = async (businessId) => {
-    const res = await fetch(`http://77.242.26.150:8000/api/ClothingItem/business/${businessId}`, {
-      headers: getHeaders(),
-    });
+    const res = await fetch(
+      `http://77.242.26.150:8000/api/ClothingItem/business/${businessId}`,
+      {
+        headers: getHeaders(),
+      }
+    );
     const data = (await safeParseJson(res)) || [];
     setProducts(data);
   };
@@ -207,12 +232,15 @@ const Settings = () => {
     const data = (await safeParseJson(res)) || [];
     setEmployees(data);
   };
-  
+
   // --- CATEGORY API calls (unchanged) ---
   const fetchCategories = async (businessId) => {
-    const res = await fetch(`http://77.242.26.150:8000/api/Category/business/${businessId}`, {
-      headers: getHeaders(),
-    });
+    const res = await fetch(
+      `http://77.242.26.150:8000/api/Category/business/${businessId}`,
+      {
+        headers: getHeaders(),
+      }
+    );
     const data = (await safeParseJson(res)) || [];
     setCategories(data);
   };
@@ -246,27 +274,30 @@ const Settings = () => {
 
   const deleteCategory = async (categoryId) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
-      const res = await fetch(`http://77.242.26.150:8000/api/Category/${categoryId}`, {
-        method: "DELETE",
-        headers: getHeaders(),
-      });
+      const res = await fetch(
+        `http://77.242.26.150:8000/api/Category/${categoryId}`,
+        {
+          method: "DELETE",
+          headers: getHeaders(),
+        }
+      );
       alert(res.ok ? "Category deleted!" : "Failed to delete category.");
       fetchCategories(selectedBusiness.businessId);
     }
   };
   // --- End Category API calls ---
 
-const fetchPendingChanges = async () => {
-  if (!selectedBusiness) return;
+  const fetchPendingChanges = async () => {
+    if (!selectedBusiness) return;
 
-  const res = await fetch(
-    `http://77.242.26.150:8000/api/Business/${selectedBusiness.businessId}/pending-changes`,
-    { headers: getHeaders() }
-  );
-  const data = (await safeParseJson(res)) || [];
-  console.log("pendingChanges payload:", data);
-  setPendingChanges(data);
-};
+    const res = await fetch(
+      `http://77.242.26.150:8000/api/Business/${selectedBusiness.businessId}/pending-changes`,
+      { headers: getHeaders() }
+    );
+    const data = (await safeParseJson(res)) || [];
+    console.log("pendingChanges payload:", data);
+    setPendingChanges(data);
+  };
 
 const approveChange = async (changeId) => {
   try {
@@ -277,35 +308,38 @@ const approveChange = async (changeId) => {
         headers: getHeaders(),
       }
     );
+
     fetchPendingChanges();
+    fetchProducts(selectedBusiness.businessId);
   } catch (err) {
     console.error("Error approving change:", err);
     alert("Failed to approve change.");
   }
 };
 
-const rejectChange = async (changeId) => {
-  try {
-    await fetch(
-      `http://77.242.26.150:8000/api/ProposedChanges/${changeId}?approve=false`,
-      {
-        method: "PUT",
-        headers: getHeaders(),
-      }
-    );
-    fetchPendingChanges();
-  } catch (err) {
-    console.error("Error rejecting change:", err);
-    alert("Failed to reject change.");
-  }
-};
 
-useEffect(() => {
-  if (selectedCategory === "Pending Changes" && selectedBusiness) {
-    fetchPendingChanges();
-  }
-}, [selectedCategory, selectedBusiness]);
+  const rejectChange = async (changeId) => {
+    try {
+      await fetch(
+        `http://77.242.26.150:8000/api/ProposedChanges/${changeId}?approve=false`,
+        {
+          method: "PUT",
+          headers: getHeaders(),
+        }
+      );
+      fetchPendingChanges();
+      fetchProducts(selectedBusiness.businessId);
+    } catch (err) {
+      console.error("Error rejecting change:", err);
+      alert("Failed to reject change.");
+    }
+  };
 
+  useEffect(() => {
+    if (selectedCategory === "Pending Changes" && selectedBusiness) {
+      fetchPendingChanges();
+    }
+  }, [selectedCategory, selectedBusiness]);
 
   const saveBusinessInfo = async () => {
     const res = await fetch(
@@ -338,7 +372,10 @@ useEffect(() => {
             typeof newProduct.pictureUrls === "string"
               ? [newProduct.pictureUrls]
               : newProduct.pictureUrls,
-          colors: newProduct.colors,
+              colors:
+              typeof newProduct.colors === "string"
+                ? newProduct.colors.split(",").map((c) => c.trim())
+                : newProduct.colors,
           sizes:
             typeof newProduct.sizes === "number"
               ? newProduct.sizes
@@ -346,16 +383,13 @@ useEffect(() => {
           material: newProduct.material,
         },
       };
-  
+
       try {
-        await fetch(
-          "http://77.242.26.150:8000/api/ProposedChanges",
-          {
-            method: "POST",
-            headers: getHeaders(),
-            body: JSON.stringify(dto),
-          }
-        );
+        await fetch("http://77.242.26.150:8000/api/ProposedChanges/submit", {
+          method: "POST",
+          headers: getHeaders(),
+          body: JSON.stringify(dto),
+        });
         alert(
           "Your change has been proposed. Please wait for an owner to approve or reject."
         );
@@ -378,36 +412,41 @@ useEffect(() => {
         console.error("Failed to propose change:", err);
         alert("Network error when proposing change.");
       }
-  
+
       return;
     }
-  
+
     const method = editingProductId ? "PUT" : "POST";
     const url = editingProductId
       ? `http://77.242.26.150:8000/api/ClothingItem/${editingProductId}`
       : "http://77.242.26.150:8000/api/ClothingItem";
-  
-    const body = {
-      name: newProduct.name,
-      businessIds: [selectedBusiness.businessId],
-      description: newProduct.description,
-      price: parseFloat(newProduct.price),
-      quantity: parseInt(newProduct.quantity),
-      category: newProduct.category,
-      brand: newProduct.brand,
-      model: newProduct.model,
-      pictureUrls:
-        typeof newProduct.pictureUrls === "string"
-          ? [newProduct.pictureUrls]
-          : newProduct.pictureUrls,
-      colors: newProduct.colors,
-      sizes:
-        typeof newProduct.sizes === "number"
-          ? newProduct.sizes
-          : sizeMapping[newProduct.sizes],
-      material: newProduct.material,
-    };
-  
+
+      const body = {
+        name: newProduct.name,
+        businessIds: [selectedBusiness.businessId],
+        description: newProduct.description,
+        price: parseFloat(newProduct.price),
+        quantity: parseInt(newProduct.quantity),
+        category: newProduct.category,
+        brand: newProduct.brand,
+        model: newProduct.model,
+        pictureUrls:
+          typeof newProduct.pictureUrls === "string"
+            ? [newProduct.pictureUrls]
+            : newProduct.pictureUrls,
+        colors: typeof newProduct.colors === "string"
+          ? newProduct.colors.split(",").map((c) => c.trim())
+          : Array.isArray(newProduct.colors)
+          ? newProduct.colors
+          : [],
+        sizes:
+          typeof newProduct.sizes === "number"
+            ? newProduct.sizes
+            : sizeMapping[newProduct.sizes],
+        material: newProduct.material,
+      };
+      
+
     try {
       const res = await fetch(url, {
         method,
@@ -424,7 +463,7 @@ useEffect(() => {
       console.error("Fetch error:", error);
       alert("Network error when attempting to save product.");
     }
-  
+
     setNewProduct({
       name: "",
       description: "",
@@ -440,32 +479,97 @@ useEffect(() => {
     });
     setEditingProductId(null);
     fetchProducts(selectedBusiness.businessId);
-  };  
+  };
 
   const saveProfileCoverPhotos = async () => {
+    console.log(
+      "saveProfileCoverPhotos called → userRole:",
+      userRole,
+      "profilePhoto:",
+      profilePhoto,
+      "coverPhoto:",
+      coverPhoto
+    );
+
     if (!profilePhoto && !coverPhoto) {
       alert("Please enter at least one image URL to update.");
       return;
     }
+
+    // Build a small object containing only the new URLs:
     const photoPayload = {};
     if (profilePhoto) {
-      photoPayload.profilePhoto = [profilePhoto];
-      photoPayload.profilePictureUrl = profilePhoto;
+      photoPayload.profilePhotoUrl = profilePhoto;
     }
     if (coverPhoto) {
-      photoPayload.coverPhoto = [coverPhoto];
-      photoPayload.coverPictureUrl = coverPhoto;
+      photoPayload.coverPhotoUrl = coverPhoto;
     }
-    const updatedBusiness = { ...selectedBusiness, ...photoPayload };
-    const res = await fetch(
-      `http://77.242.26.150:8000/api/Business/${selectedBusiness.businessId}`,
-      {
-        method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify(updatedBusiness),
+
+    
+    if (userRole === "employee") {
+      try {
+        const dto = {
+          businessId: selectedBusiness.businessId,
+          type: "UpdatePhotos",
+          itemDto: {
+            clothingItemId: 0,
+            name: "",
+            businessIds: [selectedBusiness.businessId],
+            description: "",
+            price: 0,
+            quantity: 0,
+            category: "",
+            brand: "",
+            model: "",
+            pictureUrls: [],
+            colors: [],
+            sizes: 0,
+            material: "",
+            profilePhotoUrl: profilePhoto,
+            coverPhotoUrl:   coverPhoto
+          }
+        };
+    
+        await fetch("http://77.242.26.150:8000/api/ProposedChanges/submit", {
+          method: "POST",
+          headers: getHeaders(),
+          body: JSON.stringify(dto),
+        });
+    
+        alert(
+          "Your photo‐change request has been submitted. Please wait for an owner to approve or reject."
+        );
+        setProfilePhoto("");
+        setCoverPhoto("");
+        if (selectedCategory === "Pending Changes") {
+          fetchPendingChanges();
+        }
+      } catch (err) {
+        console.error("Network error when proposing photo change:", err);
+        alert("Failed to propose photo change.");
       }
-    );
-    alert(res.ok ? "Profile updated!" : "Failed to update profile.");
+      return;
+    }    
+
+    try {
+      const updatedBusiness = {
+        ...selectedBusiness,
+        ...photoPayload,
+      };
+      const res = await fetch(
+        `http://77.242.26.150:8000/api/Business/${selectedBusiness.businessId}`,
+        {
+          method: "PUT",
+          headers: getHeaders(),
+          body: JSON.stringify(updatedBusiness),
+        }
+      );
+      alert(res.ok ? "Profile updated!" : "Failed to update profile.");
+      if (res.ok) fetchBusinessDetails(selectedBusiness.businessId);
+    } catch (err) {
+      console.error("Network error when updating business:", err);
+      alert("Failed to update profile due to network error.");
+    }
   };
 
   const deleteProduct = async (clothingItemId) => {
@@ -476,7 +580,7 @@ useEffect(() => {
         itemDto: {
           clothingItemId,
           businessIds: [selectedBusiness.businessId],
-          name: "",        
+          name: "",
           description: "",
           price: 0,
           quantity: 0,
@@ -484,21 +588,18 @@ useEffect(() => {
           brand: "",
           model: "",
           pictureUrls: [],
-          colors: "",
+          colors: [],
           sizes: 0,
           material: "",
         },
       };
-  
+
       try {
-        await fetch(
-          "http://77.242.26.150:8000/api/ProposedChanges",
-          {
-            method: "POST",
-            headers: getHeaders(),
-            body: JSON.stringify(dto),
-          }
-        );
+        await fetch("http://77.242.26.150:8000/api/ProposedChanges/submit", {
+          method: "POST",
+          headers: getHeaders(),
+          body: JSON.stringify(dto),
+        });
         alert(
           "Your delete request has been proposed. Please wait for an owner to approve or reject."
         );
@@ -507,124 +608,131 @@ useEffect(() => {
         console.error("Failed to propose delete:", err);
         alert("Network error when proposing delete.");
       }
-  
+
       return;
     }
 
-    await fetch(`http://77.242.26.150:8000/api/ClothingItem/${clothingItemId}`, {
-      method: "DELETE",
-      headers: getHeaders(),
-    });
-    fetchProducts(selectedBusiness.businessId);
-  };
-  
-
-  const deleteBusiness = async () => {
-    if (window.confirm("Are you sure you want to delete this business? This action cannot be undone.")) {
-      const res = await fetch(`http://77.242.26.150:8000/api/Business/${selectedBusiness.businessId}`, {
+    await fetch(
+      `http://77.242.26.150:8000/api/ClothingItem/${clothingItemId}`,
+      {
         method: "DELETE",
         headers: getHeaders(),
-      });
+      }
+    );
+    fetchProducts(selectedBusiness.businessId);
+  };
+
+  const deleteBusiness = async () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this business? This action cannot be undone."
+      )
+    ) {
+      const res = await fetch(
+        `http://77.242.26.150:8000/api/Business/${selectedBusiness.businessId}`,
+        {
+          method: "DELETE",
+          headers: getHeaders(),
+        }
+      );
       if (res.ok) {
         alert("Business deleted successfully.");
-        navigate("/dashboard");
+        navigate("/preview");
       } else {
         alert("Failed to delete business. Error " + res.status);
       }
     }
   };
 
-  
   const API_BASE = "http://77.242.26.150:8000";
 
-const findUserByEmail = async () => {
-  const email = newEmployee.email.trim().toLowerCase();
-  if (!email) {
-    alert("Please enter an email to search.");
-    return;
-  }
-
-  try {
-    const res = await fetch(
-      `${API_BASE}/api/User/email/${encodeURIComponent(email)}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      }
-    );
-
-    if (res.status === 404) {
-      setFoundUser(null);
-      alert("User not found.");
+  const findUserByEmail = async () => {
+    const email = newEmployee.email.trim().toLowerCase();
+    if (!email) {
+      alert("Please enter an email to search.");
       return;
     }
-    if (!res.ok) {
-      throw new Error(`Server error: ${res.status}`);
+
+    try {
+      const res = await fetch(
+        `${API_BASE}/api/User/email/${encodeURIComponent(email)}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+
+      if (res.status === 404) {
+        setFoundUser(null);
+        alert("User not found.");
+        return;
+      }
+      if (!res.ok) {
+        throw new Error(`Server error: ${res.status}`);
+      }
+
+      const user = await res.json();
+      setFoundUser(user);
+      setNewEmployee((prev) => ({ ...prev, name: user.name || "" }));
+      alert(`User has been found: ${user.name}`);
+    } catch (err) {
+      console.error("Error searching user:", err);
+      alert("Network or server error when searching for user.");
+    }
+  };
+
+  const handleEmployeeSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedBusiness) {
+      alert("Select a business first.");
+      return;
+    }
+    if (!foundUser?.userId) {
+      alert("Find a user by email first.");
+      return;
     }
 
-    const user = await res.json();
-    setFoundUser(user);
-    setNewEmployee(prev => ({ ...prev, name: user.name || "" }));
-    alert(`User has been found: ${user.name}`);
-  } catch (err) {
-    console.error("Error searching user:", err);
-    alert("Network or server error when searching for user.");
-  }
-};
+    const res = await fetch(
+      `${API_BASE}/api/Business/${selectedBusiness.businessId}/assign/${foundUser.userId}`,
+      { method: "POST", headers: getHeaders() }
+    );
+    if (res.ok) {
+      alert("Invitation sent!");
+      await fetchBusinessEmployees(selectedBusiness.businessId);
+    } else {
+      console.error("Invite failed:", await res.text());
+      alert("Failed to invite.");
+    }
 
-  
-const handleEmployeeSubmit = async (e) => {
-  e.preventDefault();
-  if (!selectedBusiness) {
-    alert("Select a business first.");
-    return;
-  }
-  if (!foundUser?.userId) {
-    alert("Find a user by email first.");
-    return;
-  }
+    setFoundUser(null);
+    setNewEmployee({ name: "", email: "", role: "" });
+  };
 
-  const res = await fetch(
-    `${API_BASE}/api/Business/${selectedBusiness.businessId}/assign/${foundUser.userId}`,
-    { method: "POST", headers: getHeaders() }
-  );
-  if (res.ok) {
-    alert("Invitation sent!");
-    await fetchBusinessEmployees(selectedBusiness.businessId);
-  } else {
-    console.error("Invite failed:", await res.text());
-    alert("Failed to invite.");
-  }
+  // Edit button (not implemented server-side, kept for UI consistency)
+  const handleEditEmployee = (emp) => {
+    setEditingEmployee(emp);
+    setNewEmployee({ name: emp.name || "", email: emp.email || "" });
+  };
 
-  setFoundUser(null);
-  setNewEmployee({ name: "", email: "", role: "" });
-};
+  // Remove an employee
+  const deleteEmployee = async (userId) => {
+    if (!userId || !selectedBusiness) return alert("Invalid employee.");
+    if (!window.confirm("Remove this employee?")) return;
 
-// Edit button (not implemented server-side, kept for UI consistency)
-const handleEditEmployee = (emp) => {
-  setEditingEmployee(emp);
-  setNewEmployee({ name: emp.name || "", email: emp.email || ""});
-};
-
-// Remove an employee
-const deleteEmployee = async (userId) => {
-  if (!userId || !selectedBusiness) return alert("Invalid employee.");
-  if (!window.confirm("Remove this employee?")) return;
-
-  const res = await fetch(
-    `${API_BASE}/api/Business/${selectedBusiness.businessId}/employees/${userId}`,
-    { method: "DELETE", headers: getHeaders() }
-  );
-  if (res.ok) {
-    alert("Employee removed.");
-    await fetchBusinessEmployees(selectedBusiness.businessId);
-  } else {
-    console.error("Remove failed:", await res.text());
-    alert("Failed to remove employee.");
-  }
-};
+    const res = await fetch(
+      `${API_BASE}/api/Business/${selectedBusiness.businessId}/employees/${userId}`,
+      { method: "DELETE", headers: getHeaders() }
+    );
+    if (res.ok) {
+      alert("Employee removed.");
+      await fetchBusinessEmployees(selectedBusiness.businessId);
+    } else {
+      console.error("Remove failed:", await res.text());
+      alert("Failed to remove employee.");
+    }
+  };
 
   const sidebarItems = [
     { name: "Business Info", icon: <FaBuilding /> },
@@ -637,96 +745,125 @@ const deleteEmployee = async (userId) => {
     { name: "Delete Business", icon: <FaTrash /> },
   ];
 
-    let visibleSidebarItems;
-    if (userRole === "owner") {
-      visibleSidebarItems = sidebarItems;
-    } else {
-      visibleSidebarItems = sidebarItems.filter((item) =>
-        [
-          "Add New Products/Categories",
-          "Edit Current Products/Categories",
-          "Edit Profile/Cover Photo",
-          "My Shops",
-        ].includes(item.name)
-      );
-      if (!visibleSidebarItems.some((i) => i.name === selectedCategory)) {
-        setSelectedCategory(visibleSidebarItems[0]?.name || "");
-      }
+  let visibleSidebarItems;
+  if (userRole === "owner") {
+    visibleSidebarItems = sidebarItems;
+  } else {
+    visibleSidebarItems = sidebarItems.filter((item) =>
+      [
+        "Add New Products/Categories",
+        "Edit Current Products/Categories",
+        "My Shops",
+      ].includes(item.name)
+    );
+    if (!visibleSidebarItems.some((i) => i.name === selectedCategory)) {
+      setSelectedCategory(visibleSidebarItems[0]?.name || "");
     }
-  
+  }
 
   const renderContent = () => {
     if (!selectedBusiness) return <p>Please select a business to manage.</p>;
 
     switch (selectedCategory) {
       case "Business Info":
-  return (
-    <div className="panel">
-      <h3>Edit Business Info</h3>
-      <label><b>Business Name</b></label>
-      <input
-        type="text"
-        value={formData.name}
-        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-      />
-      
-      <label><b>Description</b></label>
-      <textarea
-        value={formData.description}
-        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-      />
+        return (
+          <div className="panel">
+            <h3>Edit Business Info</h3>
+            <label>
+              <b>Business Name</b>
+            </label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+            />
 
-      <label><b>NIPT</b></label>
-      <input
-        type="text"
-        value={selectedBusiness.nipt || ""}
-        onChange={(e) =>
-          setSelectedBusiness({ ...selectedBusiness, nipt: e.target.value })
-        }
-      />
+            <label>
+              <b>Description</b>
+            </label>
+            <textarea
+              value={formData.description}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
+            />
 
-      <label><b>Adress</b></label>
-      <input
-        type="text"
-        value={selectedBusiness.address || ""}
-        onChange={(e) =>
-          setSelectedBusiness({ ...selectedBusiness, address: e.target.value })
-        }
-      />
+            <label>
+              <b>NIPT</b>
+            </label>
+            <input
+              type="text"
+              value={selectedBusiness.nipt || ""}
+              onChange={(e) =>
+                setSelectedBusiness({
+                  ...selectedBusiness,
+                  nipt: e.target.value,
+                })
+              }
+            />
 
-      <label><b>Location</b></label>
-      <input
-        type="text"
-        value={selectedBusiness.location || ""}
-        onChange={(e) =>
-          setSelectedBusiness({ ...selectedBusiness, location: e.target.value })
-        }
-      />
+            <label>
+              <b>Adress</b>
+            </label>
+            <input
+              type="text"
+              value={selectedBusiness.address || ""}
+              onChange={(e) =>
+                setSelectedBusiness({
+                  ...selectedBusiness,
+                  address: e.target.value,
+                })
+              }
+            />
 
-      <label><b>Opening Hours</b></label>
-      <input
-        type="text"
-        value={selectedBusiness.openingHours || ""}
-        onChange={(e) =>
-          setSelectedBusiness({ ...selectedBusiness, openingHours: e.target.value })
-        }
-      />
+            <label>
+              <b>Location</b>
+            </label>
+            <input
+              type="text"
+              value={selectedBusiness.location || ""}
+              onChange={(e) =>
+                setSelectedBusiness({
+                  ...selectedBusiness,
+                  location: e.target.value,
+                })
+              }
+            />
 
-      <label><b>Business Phone Number</b></label>
-      <input
-        type="text"
-        value={selectedBusiness.businessPhoneNumber || ""}
-        onChange={(e) =>
-          setSelectedBusiness({
-            ...selectedBusiness,
-            businessPhoneNumber: e.target.value,
-          })
-        }
-      />
+            <label>
+              <b>Opening Hours</b>
+            </label>
+            <input
+              type="text"
+              value={selectedBusiness.openingHours || ""}
+              onChange={(e) =>
+                setSelectedBusiness({
+                  ...selectedBusiness,
+                  openingHours: e.target.value,
+                })
+              }
+            />
 
-      <button onClick={saveBusinessInfo}>Save</button>
-    </div>
-  );
+            <label>
+              <b>Business Phone Number</b>
+            </label>
+            <input
+              type="text"
+              value={selectedBusiness.businessPhoneNumber || ""}
+              onChange={(e) =>
+                setSelectedBusiness({
+                  ...selectedBusiness,
+                  businessPhoneNumber: e.target.value,
+                })
+              }
+            />
+
+            <button onClick={saveBusinessInfo}>Save</button>
+          </div>
+        );
+
       case "Add New Products/Categories":
         return (
           <div className="dual-panel">
@@ -735,91 +872,114 @@ const deleteEmployee = async (userId) => {
               <input
                 placeholder="Name"
                 value={newProduct.name || ""}
-                onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, name: e.target.value })
+                }
               />
               <input
                 placeholder="Brand"
                 value={newProduct.brand}
-                onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, brand: e.target.value })
+                }
               />
               <input
                 placeholder="Model"
                 value={newProduct.model}
-                onChange={(e) => setNewProduct({ ...newProduct, model: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, model: e.target.value })
+                }
               />
               <textarea
                 placeholder="Description"
                 value={newProduct.description}
-                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, description: e.target.value })
+                }
               />
               <div className="price-input-group">
                 <input
                   type="number"
                   placeholder="Price"
                   value={newProduct.price}
-                  onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                  onChange={(e) =>
+                    setNewProduct({ ...newProduct, price: e.target.value })
+                  }
                 />
               </div>
               <input
                 type="number"
                 placeholder="Quantity"
                 value={newProduct.quantity}
-                onChange={(e) => setNewProduct({ ...newProduct, quantity: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, quantity: e.target.value })
+                }
               />
               <input
                 type="text"
                 placeholder="Category"
                 value={newProduct.category}
-                onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, category: e.target.value })
+                }
               />
-               <label><b>Upload Product Photos (max 10)</b></label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={async (e) => {
-                      const files = Array.from(e.target.files);
-                      const currentUrls = Array.isArray(newProduct.pictureUrls) ? [...newProduct.pictureUrls] : [];
+              <label>
+                <b>Upload Product Photos (max 10)</b>
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={async (e) => {
+                  const files = Array.from(e.target.files);
+                  const currentUrls = Array.isArray(newProduct.pictureUrls)
+                    ? [...newProduct.pictureUrls]
+                    : [];
 
-                      for (const file of files) {
-                        if (currentUrls.length >= 10) break;
-                        const url = await uploadImageToGCS(file);
-                        if (url) currentUrls.push(url);
-                      }
+                  for (const file of files) {
+                    if (currentUrls.length >= 10) break;
+                    const url = await uploadImageToGCS(file);
+                    if (url) currentUrls.push(url);
+                  }
 
-                      setNewProduct({ ...newProduct, pictureUrls: currentUrls });
-                    }}
-                  />
+                  setNewProduct({ ...newProduct, pictureUrls: currentUrls });
+                }}
+              />
 
-                  {/* Preview and remove */}
-                  <div className="product-photo-preview">
-                    {Array.isArray(newProduct.pictureUrls) &&
-                      newProduct.pictureUrls.map((url, idx) => (
-                        <div key={idx} className="product-photo-container">
-                          <img src={url} alt={`Uploaded ${idx}`} />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setNewProduct({
-                                ...newProduct,
-                                pictureUrls: newProduct.pictureUrls.filter((_, i) => i !== idx),
-                              })
-                            }
-                            className="remove-photo-button"
-                          >
-                            ×
-                          </button>
-                        </div>
-                      ))}
-                  </div>
+              <div className="product-photo-preview">
+                {Array.isArray(newProduct.pictureUrls) &&
+                  newProduct.pictureUrls.map((url, idx) => (
+                    <div key={idx} className="product-photo-container">
+                      <img src={url} alt={`Uploaded ${idx}`} />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setNewProduct({
+                            ...newProduct,
+                            pictureUrls: newProduct.pictureUrls.filter(
+                              (_, i) => i !== idx
+                            ),
+                          })
+                        }
+                        className="remove-photo-button"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+              </div>
               <input
                 placeholder="Colors"
                 value={newProduct.colors}
-                onChange={(e) => setNewProduct({ ...newProduct, colors: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, colors: e.target.value })
+                }
               />
               <select
                 value={newProduct.sizes}
-                onChange={(e) => setNewProduct({ ...newProduct, sizes: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, sizes: e.target.value })
+                }
               >
                 <option value="XS">XS</option>
                 <option value="S">S</option>
@@ -831,23 +991,32 @@ const deleteEmployee = async (userId) => {
               <input
                 placeholder="Material"
                 value={newProduct.material}
-                onChange={(e) => setNewProduct({ ...newProduct, material: e.target.value })}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, material: e.target.value })
+                }
               />
               <button onClick={saveProduct}>Save Product</button>
             </div>
           </div>
         );
+
       case "Edit Current Products/Categories":
-        // Filter products based on search query
         const filteredProducts = products.filter((p) =>
-          `${p.name} ${p.brand} ${p.model} ${p.description}`.toLowerCase().includes(searchQuery.toLowerCase())
+          `${p.name} ${p.brand} ${p.model} ${p.description}`
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
         );
         return (
           <div className="panel merged-panel">
-            {/* PRODUCTS SECTION */}
             <div className="product-section">
               <h3>Products</h3>
-              <div style={{ position: "relative", width: "90%", marginBottom: "12px" }}>
+              <div
+                style={{
+                  position: "relative",
+                  width: "90%",
+                  marginBottom: "12px",
+                }}
+              >
                 <FaSearch
                   style={{
                     position: "absolute",
@@ -872,56 +1041,82 @@ const deleteEmployee = async (userId) => {
                     {editingProductId === p.clothingItemId ? (
                       <div className="inline-edit-form">
                         <input
-                            placeholder="Name"
-                            value={newProduct.name || ""}
-                            onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                          />
+                          placeholder="Name"
+                          value={newProduct.name || ""}
+                          onChange={(e) =>
+                            setNewProduct({ ...newProduct, name: e.target.value })
+                          }
+                        />
                         <input
                           placeholder="Brand"
                           value={newProduct.brand}
-                          onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })}
+                          onChange={(e) =>
+                            setNewProduct({ ...newProduct, brand: e.target.value })
+                          }
                         />
                         <input
                           placeholder="Model"
                           value={newProduct.model}
-                          onChange={(e) => setNewProduct({ ...newProduct, model: e.target.value })}
+                          onChange={(e) =>
+                            setNewProduct({ ...newProduct, model: e.target.value })
+                          }
                         />
                         <textarea
                           placeholder="Description"
                           value={newProduct.description}
-                          onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                          onChange={(e) =>
+                            setNewProduct({
+                              ...newProduct,
+                              description: e.target.value,
+                            })
+                          }
                         />
                         <input
                           type="number"
                           placeholder="Price"
                           value={newProduct.price}
-                          onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                          onChange={(e) =>
+                            setNewProduct({ ...newProduct, price: e.target.value })
+                          }
                         />
                         <input
                           type="number"
                           placeholder="Quantity"
                           value={newProduct.quantity}
-                          onChange={(e) => setNewProduct({ ...newProduct, quantity: e.target.value })}
+                          onChange={(e) =>
+                            setNewProduct({ ...newProduct, quantity: e.target.value })
+                          }
                         />
                         <input
                           type="text"
                           placeholder="Category"
                           value={newProduct.category}
-                          onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                          onChange={(e) =>
+                            setNewProduct({ ...newProduct, category: e.target.value })
+                          }
                         />
                         <input
                           placeholder="Picture URL"
                           value={newProduct.pictureUrls}
-                          onChange={(e) => setNewProduct({ ...newProduct, pictureUrls: e.target.value })}
+                          onChange={(e) =>
+                            setNewProduct({
+                              ...newProduct,
+                              pictureUrls: e.target.value,
+                            })
+                          }
                         />
                         <input
                           placeholder="Colors"
                           value={newProduct.colors}
-                          onChange={(e) => setNewProduct({ ...newProduct, colors: e.target.value })}
+                          onChange={(e) =>
+                            setNewProduct({ ...newProduct, colors: e.target.value })
+                          }
                         />
                         <select
                           value={newProduct.sizes}
-                          onChange={(e) => setNewProduct({ ...newProduct, sizes: e.target.value })}
+                          onChange={(e) =>
+                            setNewProduct({ ...newProduct, sizes: e.target.value })
+                          }
                         >
                           <option value="XS">XS</option>
                           <option value="S">S</option>
@@ -933,7 +1128,9 @@ const deleteEmployee = async (userId) => {
                         <input
                           placeholder="Material"
                           value={newProduct.material}
-                          onChange={(e) => setNewProduct({ ...newProduct, material: e.target.value })}
+                          onChange={(e) =>
+                            setNewProduct({ ...newProduct, material: e.target.value })
+                          }
                         />
                         <button onClick={saveProduct}>Save</button>
                         <button
@@ -973,7 +1170,9 @@ const deleteEmployee = async (userId) => {
                               category: p.category,
                               brand: p.brand,
                               model: p.model,
-                              pictureUrls: Array.isArray(p.pictureUrls) ? p.pictureUrls : [p.pictureUrls],
+                              pictureUrls: Array.isArray(p.pictureUrls)
+                                ? p.pictureUrls
+                                : [p.pictureUrls],
                               colors: p.colors,
                               sizes:
                                 typeof p.sizes === "number"
@@ -995,14 +1194,18 @@ const deleteEmployee = async (userId) => {
                 ))}
               </ul>
             </div>
-            {/* CATEGORIES SECTION */}
             <div className="category-section" style={{ marginTop: "24px" }}>
               <h3>Categories</h3>
               <ul className="category-list">
                 {categories.map((cat) => (
                   <li key={cat.id}>
                     <span>{cat.name}</span>
-                    <button onClick={() => setEditingCategory(cat) || setNewCategory({ name: cat.name, color: cat.color || "#000000" })}>
+                    <button
+                      onClick={() => (
+                        setEditingCategory(cat),
+                        setNewCategory({ name: cat.name, color: cat.color || "#000000" })
+                      )}
+                    >
                       Edit
                     </button>
                     <button onClick={() => deleteCategory(cat.id)}>Delete</button>
@@ -1032,45 +1235,90 @@ const deleteEmployee = async (userId) => {
             </div>
           </div>
         );
-      case "Edit Profile/Cover Photo":
-        return (
-          <div className="panel">
-            <h3>Edit Profile/Cover Photo</h3>
-            <label>Profile Photo</label>
-            <input
-                type="file"
-                accept="image/*"
-                onChange={async (e) => {
-                  const file = e.target.files[0];
-                  if (file) {
-                    const url = await uploadImageToGCS(file); 
-                    if (url) {
-                      setProfilePhoto(url); 
-                    } else {
-                      alert("Failed to upload image.");
-                    }
-                  }
-                }}
-              />
-            <label>Cover Photo</label>
-            <input
-                type="file"
-                accept="image/*"
-                onChange={async (e) => {
-                  const file = e.target.files[0];
-                  if (file) {
-                    const url = await uploadImageToGCS(file);
-                    if (url) {
-                      setCoverPhoto(url); 
-                    } else {
-                      alert("Failed to upload image.");
-                    }
-                  }
-                }}
-              />
-            <button onClick={saveProfileCoverPhotos}>Update Photos</button>
+
+        case 'Edit Profile/Cover Photo':
+  return (
+    <div className="panel">
+      <h3>Edit Profile/Cover Photo</h3>
+
+      <label>Profile Photo</label>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={async (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const url = await uploadImageToGCS(file);
+            if (url) {
+              setProfilePhotoUrl(url);
+            } else {
+              alert('Failed to upload profile photo.');
+            }
+          }
+        }}
+      />
+
+      <label>Cover Photo</label>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={async (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const url = await uploadImageToGCS(file);
+            if (url) {
+              setCoverPhotoUrl(url);
+            } else {
+              alert('Failed to upload cover photo.');
+            }
+          }
+        }}
+      />
+
+      <div style={{ marginTop: '1rem', display: 'flex', gap: '16px' }}>
+        {profilePhotoUrl && (
+          <div>
+            <p>Profile Preview:</p>
+            <img src={profilePhotoUrl} alt="Profile" width="120" />
           </div>
-        );
+        )}
+        {coverPhotoUrl && (
+          <div>
+            <p>Cover Preview:</p>
+            <img src={coverPhotoUrl} alt="Cover" width="120" />
+          </div>
+        )}
+      </div>
+
+      <button
+        style={{ marginTop: '1rem' }}
+        onClick={async () => {
+          const updatedData = {
+            ...selectedBusiness,
+            profilePictureUrl: profilePhotoUrl || selectedBusiness.profilePictureUrl,
+            coverPictureUrl: coverPhotoUrl || selectedBusiness.coverPictureUrl,
+            name: selectedBusiness.name,
+            description: selectedBusiness.description,
+            address: selectedBusiness.address,
+            location: selectedBusiness.location,
+            businessPhoneNumber: selectedBusiness.businessPhoneNumber,
+            nipt: selectedBusiness.nipt,
+            openingHours: selectedBusiness.openingHours
+          };
+
+          const success = await updateBusinessPhotos(selectedBusiness.businessId, updatedData);
+          if (success !== false) {
+            alert('Photos updated successfully.');
+          } else {
+            alert('Update failed.');
+          }
+        }}
+      >
+        Save Changes
+      </button>
+    </div>
+  );
+
       case "Employee Management":
         return (
           <div className="panel">
@@ -1108,65 +1356,121 @@ const deleteEmployee = async (userId) => {
               <div className="employee-list-section">
                 <h4>Existing Employees</h4>
                 {employees.length > 0 ? (
-                <ul>
-                  {employees.map((emp) => (
-                    <li key={emp.userId} className="employee-item">
-                      <span>
-                        {emp.name} ({emp.email})
-                      </span>
-                      <div className="employee-actions">
-                        <button onClick={() => handleEditEmployee(emp)}>Edit</button>
-                        <button onClick={() => deleteEmployee(emp.userId)}>Delete</button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No employees found.</p>
-              )}
+                  <ul>
+                    {employees.map((emp) => (
+                      <li key={emp.userId} className="employee-item">
+                        <span>
+                          {emp.name} ({emp.email})
+                        </span>
+                        <div className="employee-actions">
+                          <button onClick={() => handleEditEmployee(emp)}>
+                            Edit
+                          </button>
+                          <button onClick={() => deleteEmployee(emp.userId)}>
+                            Delete
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No employees found.</p>
+                )}
               </div>
             </div>
           </div>
         );
-        case "Pending Changes":
-  return (
-    <div className="panel">
-      <h3>Pending Changes</h3>
-      {pendingChanges.length === 0 ? (
-        <p>No pending changes.</p>
-      ) : (
-        <ul className="pending-list">
-          {pendingChanges.map((change) => (
-            <li key={change.proposedChangeId} className="pending-item">
-              <div>
-                <strong>{change.operationType}</strong> on item{" "}
-                <em>{change.clothingItemId || "(new item)"}</em>
-                <br />
-                <small>Details: {change.changeDetails}</small>
-                <br />
-                <small>By Employee ID: {change.employeeId}</small>
-                <br />
-                <small>
-                  Requested At:{" "}
-                  {new Date(change.createdAt).toLocaleString()}
-                </small>
-              </div>
-              <div className="pending-actions">
-                <button onClick={() => approveChange(change.proposedChangeId)}>
-                  Approve
-                </button>
-                <button onClick={() => rejectChange(change.proposedChangeId)}>
-                  Reject
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
 
-      
+      case "Pending Changes":
+        return (
+          <div className="panel">
+            <h3>Pending Changes</h3>
+            {pendingChanges.length === 0 ? (
+              <p>No pending changes.</p>
+            ) : (
+              <ul className="pending-list">
+                {pendingChanges.map((change) => {
+                  let photoData = null;
+                  if (change.operationType === "UpdatePhotos") {
+                    try {
+                      photoData = JSON.parse(change.changeDetails);
+                    } catch {
+                      photoData = null;
+                    }
+                  }
+
+                  return (
+                    <li
+                      key={change.proposedChangeId}
+                      className="pending-item"
+                    >
+                      <div>
+                        <strong>
+                          {change.operationType === "UpdatePhotos"
+                            ? "Photo Update"
+                            : change.operationType}
+                        </strong>
+
+                        {change.operationType === "UpdatePhotos" &&
+                        photoData ? (
+                          <>
+                            <br />
+                            <small>
+                              Profile URL: {photoData.profilePhotoUrl}
+                            </small>
+                            <br />
+                            <small>
+                              Cover URL: {photoData.coverPhotoUrl}
+                            </small>
+                            <br />
+                          </>
+                        ) : null}
+
+                        {change.operationType !== "UpdatePhotos" && (
+                          <>
+                            <br />
+                            <small>
+                              On item ID: {change.clothingItemId}
+                            </small>
+                            <br />
+                            <small>
+                              Details: {change.changeDetails}
+                            </small>
+                            <br />
+                          </>
+                        )}
+
+                        <small>By Employee ID: {change.employeeId}</small>
+                        <br />
+                        <small>
+                          Requested At:{" "}
+                          {new Date(change.createdAt).toLocaleString()}
+                        </small>
+                      </div>
+                      <div className="pending-actions">
+                        <button
+                          onClick={() =>
+                            approveChange(change.proposedChangeId)
+                          }
+                        >
+                          Approve
+                        </button>
+                        <button
+                          onClick={() =>
+                            rejectChange(change.proposedChangeId)
+                          }
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        );
+
         case "My Shops": {
           const totalPages = Math.ceil(userBusinesses.length / SHOPS_PER_PAGE);
           const startIdx   = (myShopsPage - 1) * SHOPS_PER_PAGE;
@@ -1233,13 +1537,14 @@ const deleteEmployee = async (userId) => {
             </>
           );
         }        
-        
+
       case "Delete Business":
         return (
           <div className="panel">
             <h3>Delete Business</h3>
             <p>
-              Warning: This action cannot be undone. All business data will be permanently removed.
+              Warning: This action cannot be undone. All business data will
+              be permanently removed.
             </p>
             <button
               onClick={deleteBusiness}
@@ -1250,6 +1555,7 @@ const deleteEmployee = async (userId) => {
             </button>
           </div>
         );
+
       default:
         return <p>Invalid section.</p>;
     }
@@ -1263,7 +1569,9 @@ const deleteEmployee = async (userId) => {
           <div className="settings-sidebar">
             <select
               value={selectedBusiness?.businessId || ""}
-              onChange={(e) => handleSelectBusiness(parseInt(e.target.value))}
+              onChange={(e) =>
+                handleSelectBusiness(parseInt(e.target.value, 10))
+              }
             >
               <option value="" disabled>
                 -- Choose Business --
@@ -1279,7 +1587,9 @@ const deleteEmployee = async (userId) => {
                 <li
                   key={item.name}
                   onClick={() => setSelectedCategory(item.name)}
-                  className={`${selectedCategory === item.name ? "active" : ""} ${
+                  className={`${
+                    selectedCategory === item.name ? "active" : ""
+                  } ${
                     item.name === "Delete Business" ? "delete-sidebar" : ""
                   }`}
                 >
