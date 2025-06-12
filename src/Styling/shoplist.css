@@ -24,6 +24,7 @@
   display: block;
   text-decoration: none;
   color: inherit;
+  height: 220px;
 }
 
 /* Shop card */
@@ -79,6 +80,8 @@
 }
 
 .shop-card-desc {
+  position: relative;
+  bottom: 10px;
   margin: 0.5rem 0;
   font-size: 0.9rem;
 }

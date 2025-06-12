@@ -289,9 +289,9 @@ const Settings = () => {
 
   const fetchPendingChanges = async () => {
     if (!selectedBusiness) return;
-
+  
     const res = await fetch(
-      `http://77.242.26.150:8000/api/Business/${selectedBusiness.businessId}/pending-changes`,
+      `http://77.242.26.150:8000/api/ProposedChanges/pending/${selectedBusiness.businessId}`,
       { headers: getHeaders() }
     );
     const data = (await safeParseJson(res)) || [];
@@ -299,41 +299,38 @@ const Settings = () => {
     setPendingChanges(data);
   };
 
-const approveChange = async (changeId) => {
-  try {
-    await fetch(
-      `http://77.242.26.150:8000/api/ProposedChanges/${changeId}?approve=true`,
-      {
-        method: "PUT",
-        headers: getHeaders(),
-      }
-    );
+const approveChange = async (change) => {
+  const { proposedChangeId, operationType, clothingItemId } = change;
 
-    fetchPendingChanges();
+  if (operationType === "Delete") {
+    if (!window.confirm("Remove this item permanently?")) return;
+    await fetch(`http://77.242.26.150:8000/api/ClothingItem/${clothingItemId}`, {
+      method: "DELETE", headers: getHeaders()
+    });
+    setPendingChanges((pcs) =>
+      pcs.filter((pc) => pc.proposedChangeId !== proposedChangeId)
+    );
     fetchProducts(selectedBusiness.businessId);
-  } catch (err) {
-    console.error("Error approving change:", err);
-    alert("Failed to approve change.");
+    return;
   }
+
+  await fetch(
+    `http://77.242.26.150:8000/api/ProposedChanges/${proposedChangeId}?approve=true`,
+    { method: "PUT", headers: getHeaders() }
+  );
+  fetchPendingChanges();
+  fetchProducts(selectedBusiness.businessId);
 };
 
-
-  const rejectChange = async (changeId) => {
-    try {
-      await fetch(
-        `http://77.242.26.150:8000/api/ProposedChanges/${changeId}?approve=false`,
-        {
-          method: "PUT",
-          headers: getHeaders(),
-        }
-      );
-      fetchPendingChanges();
-      fetchProducts(selectedBusiness.businessId);
-    } catch (err) {
-      console.error("Error rejecting change:", err);
-      alert("Failed to reject change.");
-    }
-  };
+const rejectChange = async (change) => {
+  const { proposedChangeId } = change;
+  await fetch(
+    `http://77.242.26.150:8000/api/ProposedChanges/${proposedChangeId}?approve=false`,
+    { method: "PUT", headers: getHeaders() }
+  );
+  fetchPendingChanges();
+  fetchProducts(selectedBusiness.businessId);
+};
 
   useEffect(() => {
     if (selectedCategory === "Pending Changes" && selectedBusiness) {
@@ -573,54 +570,74 @@ const approveChange = async (changeId) => {
   };
 
   const deleteProduct = async (clothingItemId) => {
+    // EMPLOYEE: submit a Delete proposal
     if (userRole === "employee") {
+      // grab the original item so we can include its name and businessIds
+      const original =
+        products.find((p) => p.clothingItemId === clothingItemId) || {};
+  
       const dto = {
         businessId: selectedBusiness.businessId,
         type: "Delete",
         itemDto: {
           clothingItemId,
-          businessIds: [selectedBusiness.businessId],
-          name: "",
-          description: "",
-          price: 0,
-          quantity: 0,
-          category: "",
-          brand: "",
-          model: "",
-          pictureUrls: [],
-          colors: [],
-          sizes: 0,
-          material: "",
+          name: original.name || "",                          // required
+          businessIds:                                     // required
+            Array.isArray(original.businessIds) &&
+            original.businessIds.length > 0
+              ? original.businessIds
+              : [selectedBusiness.businessId],
         },
       };
-
+  
       try {
-        await fetch("http://77.242.26.150:8000/api/ProposedChanges/submit", {
-          method: "POST",
-          headers: getHeaders(),
-          body: JSON.stringify(dto),
-        });
-        alert(
-          "Your delete request has been proposed. Please wait for an owner to approve or reject."
+        const res = await fetch(
+          `http://77.242.26.150:8000/api/ProposedChanges/submit`,
+          {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify(dto),
+          }
         );
-        fetchProducts(selectedBusiness.businessId);
+        if (!res.ok) throw new Error(`Status ${res.status}`);
+  
+        alert(
+          "Your delete request has been submitted. Please wait for an owner to approve or reject."
+        );
+        fetchPendingChanges(); // so owner sees it right away
       } catch (err) {
         console.error("Failed to propose delete:", err);
         alert("Network error when proposing delete.");
       }
-
+  
       return;
     }
-
-    await fetch(
-      `http://77.242.26.150:8000/api/ClothingItem/${clothingItemId}`,
-      {
-        method: "DELETE",
-        headers: getHeaders(),
+  
+    // OWNER: confirm & hard delete
+    if (
+      window.confirm(
+        "Are you sure you want to permanently delete this product?"
+      )
+    ) {
+      try {
+        const res = await fetch(
+          `http://77.242.26.150:8000/api/ClothingItem/${clothingItemId}`,
+          {
+            method: "DELETE",
+            headers: getHeaders(),
+          }
+        );
+        if (!res.ok) throw new Error(`Status ${res.status}`);
+  
+        alert("Product deleted successfully.");
+        fetchProducts(selectedBusiness.businessId);
+      } catch (err) {
+        console.error("Failed to delete product:", err);
+        alert("Network error when deleting product.");
       }
-    );
-    fetchProducts(selectedBusiness.businessId);
+    }
   };
+  
 
   const deleteBusiness = async () => {
     if (
@@ -850,7 +867,7 @@ const approveChange = async (changeId) => {
               <b>Business Phone Number</b>
             </label>
             <input
-              type="text"
+              type="tel"
               value={selectedBusiness.businessPhoneNumber || ""}
               onChange={(e) =>
                 setSelectedBusiness({
@@ -1095,16 +1112,48 @@ const approveChange = async (changeId) => {
                             setNewProduct({ ...newProduct, category: e.target.value })
                           }
                         />
-                        <input
-                          placeholder="Picture URL"
-                          value={newProduct.pictureUrls}
-                          onChange={(e) =>
-                            setNewProduct({
-                              ...newProduct,
-                              pictureUrls: e.target.value,
-                            })
-                          }
-                        />
+                        <label>
+                      <b>Add/Remove Product Photos</b>
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={async (e) => {
+                        const files = Array.from(e.target.files);
+                        const currentUrls = Array.isArray(newProduct.pictureUrls)
+                          ? [...newProduct.pictureUrls]
+                          : [];
+
+                        for (const file of files) {
+                          if (currentUrls.length >= 10) break;
+                          const url = await uploadImageToGCS(file);
+                          if (url) currentUrls.push(url);
+                        }
+
+                        setNewProduct({ ...newProduct, pictureUrls: currentUrls });
+                      }}
+                    />
+                    <div className="product-photo-preview">
+                      {Array.isArray(newProduct.pictureUrls) &&
+                        newProduct.pictureUrls.map((url, idx) => (
+                          <div key={idx} className="product-photo-container">
+                            <img src={url} alt={`Uploaded ${idx}`} />
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setNewProduct({
+                                  ...newProduct,
+                                  pictureUrls: newProduct.pictureUrls.filter((_, i) => i !== idx),
+                                })
+                              }
+                              className="remove-photo-button"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                    </div>
                         <input
                           placeholder="Colors"
                           value={newProduct.colors}
@@ -1381,96 +1430,198 @@ const approveChange = async (changeId) => {
           </div>
         );
 
-      case "Pending Changes":
-        return (
-          <div className="panel">
-            <h3>Pending Changes</h3>
-            {pendingChanges.length === 0 ? (
-              <p>No pending changes.</p>
-            ) : (
-              <ul className="pending-list">
-                {pendingChanges.map((change) => {
-                  let photoData = null;
-                  if (change.operationType === "UpdatePhotos") {
+        case "Pending Changes":
+          return (
+            <div className="panel">
+              <h3>Pending Changes</h3>
+              {pendingChanges.length === 0 ? (
+                <p>No pending changes.</p>
+              ) : (
+                <ul className="pending-list">
+                  {pendingChanges.map((change) => {
+                    let parsed = {};
                     try {
-                      photoData = JSON.parse(change.changeDetails);
-                    } catch {
-                      photoData = null;
+                      parsed = JSON.parse(change.changeDetails);
+                    } catch {}
+        
+                    const norm = {};
+                    Object.entries(parsed).forEach(([k, v]) => {
+                      const lk = k.charAt(0).toLowerCase() + k.slice(1);
+                      norm[lk] = v;
+                    });
+        
+                    if (change.operationType === "UpdatePhotos") {
+                      const photos = norm.itemDto || norm;
+                      const { profilePhotoUrl, coverPhotoUrl } = photos;
+                      return (
+                        <li
+                          key={change.proposedChangeId}
+                          className="pending-item styled-box"
+                        >
+                          <div className="pending-item-header">
+                            <strong>Photo Update</strong>
+                          </div>
+                          <div className="pending-item-meta">
+                            <small>
+                              <strong>Requested By:</strong>{" "}
+                              {
+                                employees.find((e) => e.userId === change.employeeId)
+                                  ?.name || "Unknown"
+                              }
+                            </small>
+                            <br />
+                            <small>
+                              <strong>Requested At:</strong>{" "}
+                              {new Date(change.createdAt).toLocaleString()}
+                            </small>
+                          </div>
+        
+                          <div className="photo-details-container">
+                            <h4 className="change-details-title">
+                              Photo Update Details
+                            </h4>
+                            <div className="photo-update-grid">
+                              {profilePhotoUrl && (
+                                <div className="photo-item">
+                                  <span className="photo-label">Profile Photo</span>
+                                  <img
+                                    src={profilePhotoUrl}
+                                    alt="Requested Profile"
+                                    className="photo-preview"
+                                  />
+                                </div>
+                              )}
+                              {coverPhotoUrl && (
+                                <div className="photo-item">
+                                  <span className="photo-label">Cover Photo</span>
+                                  <img
+                                    src={coverPhotoUrl}
+                                    alt="Requested Cover"
+                                    className="photo-preview"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          </div>
+        
+                          <div className="pending-item-actions">
+                          <button
+                        className="approve-btn"
+                        onClick={() => approveChange(change)}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        className="reject-btn"
+                        onClick={() => rejectChange(change)}
+                      >
+                        Reject
+                      </button>
+                          </div>
+                        </li>
+                      );
                     }
-                  }
-
-                  return (
-                    <li
-                      key={change.proposedChangeId}
-                      className="pending-item"
-                    >
-                      <div>
-                        <strong>
-                          {change.operationType === "UpdatePhotos"
-                            ? "Photo Update"
-                            : change.operationType}
-                        </strong>
-
-                        {change.operationType === "UpdatePhotos" &&
-                        photoData ? (
-                          <>
-                            <br />
-                            <small>
-                              Profile URL: {photoData.profilePhotoUrl}
-                            </small>
-                            <br />
-                            <small>
-                              Cover URL: {photoData.coverPhotoUrl}
-                            </small>
-                            <br />
-                          </>
-                        ) : null}
-
-                        {change.operationType !== "UpdatePhotos" && (
-                          <>
-                            <br />
-                            <small>
-                              On item ID: {change.clothingItemId}
-                            </small>
-                            <br />
-                            <small>
-                              Details: {change.changeDetails}
-                            </small>
-                            <br />
-                          </>
+                      const original =
+                      products.find(
+                        (p) => p.clothingItemId === change.clothingItemId
+                      ) || {};
+                    const fields = [
+                      "name",
+                      "description",
+                      "price",
+                      "quantity",
+                      "category",
+                      "brand",
+                      "model",
+                      "material",
+                    ];
+                    const diffs = fields
+                      .map((key) => {
+                        const oldVal = original[key];
+                        const newVal = norm[key];
+                        if (newVal != null && String(oldVal) !== String(newVal)) {
+                          return { key, oldVal, newVal };
+                        }
+                        return null;
+                      })
+                      .filter(Boolean);
+        
+                    return (
+                      <li
+                        key={change.proposedChangeId}
+                        className="pending-item styled-box"
+                      >
+                        <div className="pending-item-header">
+                          <strong>{change.operationType}</strong>
+                        </div>
+                        <div className="pending-item-meta">
+                          <small>
+                            <strong>Requested By:</strong>{" "}
+                            {
+                              employees.find((e) => e.userId === change.employeeId)
+                                ?.name || "Unknown"
+                            }
+                          </small>
+                          <br />
+                          <small>
+                            <strong>Requested At:</strong>{" "}
+                            {new Date(change.createdAt).toLocaleString()}
+                          </small>
+                        </div>
+        
+                        {diffs.length > 0 && (
+                          <div className="change-details-container">
+                            <h4 className="change-details-title">
+                              Requested Changes:
+                            </h4>
+                            <table className="diff-table">
+                              <thead>
+                                <tr>
+                                  <th>Field</th>
+                                  <th>Current Value</th>
+                                  <th>Requested Value</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {diffs.map(({ key, oldVal, newVal }) => {
+                                  const label = key
+                                    .replace(/([A-Z])/g, " $1")
+                                    .replace(/^./, (s) => s.toUpperCase());
+                                  return (
+                                    <tr key={key}>
+                                      <td><strong>{label}</strong></td>
+                                      <td>{String(oldVal)}</td>
+                                      <td>{String(newVal)}</td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
                         )}
-
-                        <small>By Employee ID: {change.employeeId}</small>
-                        <br />
-                        <small>
-                          Requested At:{" "}
-                          {new Date(change.createdAt).toLocaleString()}
-                        </small>
-                      </div>
-                      <div className="pending-actions">
-                        <button
-                          onClick={() =>
-                            approveChange(change.proposedChangeId)
-                          }
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() =>
-                            rejectChange(change.proposedChangeId)
-                          }
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
-        );
-
+        
+                        <div className="pending-item-actions">
+                          <button
+                            className="approve-btn"
+                            onClick={() => approveChange(change)}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="reject-btn"
+                            onClick={() => rejectChange(change)}
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          );        
+        
         case "My Shops": {
           const totalPages = Math.ceil(userBusinesses.length / SHOPS_PER_PAGE);
           const startIdx   = (myShopsPage - 1) * SHOPS_PER_PAGE;

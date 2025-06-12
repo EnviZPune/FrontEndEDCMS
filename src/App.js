@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Pages/Home';
 import Log from './Pages/Log';
 import Register from './Pages/Register';
-import Forgot_password from './Pages/Forgot_password';
 import ProfilePage from './Pages/ProfilePage';            // <-- renamed import
 import Settings from './Components/Settings/Settings';
 import Notifications from './Components/Notifications';
@@ -25,6 +24,8 @@ import EmailConfirmation from './Pages/EmailConfirmation';
 import PublicProfilePage from './Pages/PublicProfilePage';
 import UserPage from './Components/UserPage';
 import AllShops from './Pages/AllShops';
+import ForgotPasswordPage from './Pages/ForgotPasswordPage';
+import ResetPasswordPage from './Pages/ResetPasswordPage';
 
 export default function App() {
   return (
@@ -35,7 +36,6 @@ export default function App() {
           <Route path="/preview" element={<Home />} />
           <Route path="/login" element={<Log />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/forgot_password" element={<Forgot_password />} />
           <Route path="/my-profile" element={<ProfilePage />} />
           <Route path="/profile/:userId" element={<PublicProfilePage />} />
           <Route path="/settings" element={<Settings />} />
@@ -46,6 +46,8 @@ export default function App() {
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/owner-guide" element={<OwnerGuide />} />
           <Route path="/user-search" element={<UserPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
 
           {/* Shop routes */}
           <Route path="/shops" element={<ShopList />} />

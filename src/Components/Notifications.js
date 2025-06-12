@@ -1,8 +1,7 @@
-// Notifications.js
 import React, { useState, useEffect, useRef } from 'react';
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { FaBell } from 'react-icons/fa';
-import { jwtDecode } from 'jwt-decode';
+import '../Styling/Notifications.css';
 
 const API_BASE = 'http://77.242.26.150:8000';
 
@@ -23,13 +22,13 @@ const getHeaders = () => ({
 });
 
 export default function Notifications() {
-  const [invites, setInvites] = useState([]); // Pending employee invites
+  const [invites, setInvites] = useState([]);             
+  const [notifications, setNotifications] = useState([]); 
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
 
-  // 1) Load pending employee invites (for the current user)
   useEffect(() => {
-    const loadPending = async () => {
+    (async () => {
       const token = getToken();
       if (!token) return;
       try {
@@ -39,21 +38,34 @@ export default function Notifications() {
         );
         if (!res.ok) return;
         const pending = await res.json();
-        setInvites(
-          pending.map(be => ({
-            businessId:   be.businessId,
-            businessName: be.name,
-            invitedAt:    be.requestedAt,
-          }))
-        );
+        setInvites(pending.map(inv => ({
+          businessId:   inv.businessId,
+          businessName: inv.name,
+          invitedAt:    inv.requestedAt,
+        })));
       } catch (err) {
         console.error('Error loading pending invites:', err);
       }
-    };
-    loadPending();
+    })();
   }, []);
 
-  // 2) Establish a SignalR connection to receive live invitations
+  useEffect(() => {
+    (async () => {
+      const token = getToken();
+      if (!token) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/Notification`, {
+          headers: getHeaders(),
+        });
+        if (!res.ok) return;
+        const notes = await res.json();
+        setNotifications(notes);
+      } catch (err) {
+        console.error('Error loading notifications:', err);
+      }
+    })();
+  }, []);
+
   useEffect(() => {
     const token = getToken();
     if (!token) return;
@@ -64,25 +76,28 @@ export default function Notifications() {
       .withAutomaticReconnect()
       .build();
 
-    connection
-      .start()
-      .catch(err => console.error('SignalR connect failed:', err));
+    connection.start().catch(err => console.error('SignalR connect failed:', err));
 
     connection.on('ReceiveEmployeeInvitation', inv => {
       setInvites(prev => [
         ...prev,
-        {
-          businessId:   inv.businessId,
-          businessName: inv.businessName,
-          invitedAt:    inv.invitedAt,
-        },
+        { businessId: inv.businessId, businessName: inv.businessName, invitedAt: inv.invitedAt }
       ]);
     });
 
-    return () => connection.stop().catch(err => console.error('SignalR stop failed:', err));
+    connection.on('ReceiveNotification', note => {
+      console.log('⏰ Received notification:', note);
+      setNotifications(prev => [
+        { id: note.Id, message: note.Message, createdAt: note.CreatedAt },
+        ...prev
+      ]);
+    });
+
+    return () => {
+      connection.stop().catch(err => console.error('SignalR stop failed:', err));
+    };
   }, []);
 
-  // 3) Close dropdown if clicking outside
   useEffect(() => {
     const handleClickOutside = e => {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
@@ -93,124 +108,108 @@ export default function Notifications() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // 4) Accept a pending invite (uses the new “respond” endpoint)
-  const acceptInvite = async businessId => {
+  const respondInvite = async (businessId, approve) => {
     try {
       const res = await fetch(
-        `${API_BASE}/api/Business/employees/respond/${businessId}?approve=true`,
+        `${API_BASE}/api/Business/employees/respond/${businessId}?approve=${approve}`,
         { method: 'PUT', headers: getHeaders() }
       );
       if (res.ok) {
         setInvites(prev => prev.filter(inv => inv.businessId !== businessId));
       } else {
-        alert('Failed to accept invitation. (Status ' + res.status + ')');
+        alert(`Failed to ${approve ? 'accept' : 'decline'} invitation.`);
       }
     } catch (err) {
-      console.error('Error accepting invitation:', err);
-      alert('Failed to accept invitation.');
+      console.error('Error responding to invitation:', err);
+      alert(`Failed to ${approve ? 'accept' : 'decline'} invitation.`);
     }
   };
 
-  // 5) Decline a pending invite
-  const declineInvite = async businessId => {
+  const clearNotifications = async () => {
     try {
-      const res = await fetch(
-        `${API_BASE}/api/Business/employees/respond/${businessId}?approve=false`,
-        { method: 'PUT', headers: getHeaders() }
+      await Promise.all(
+        notifications.map(n =>
+          fetch(
+            `${API_BASE}/api/Notification/${n.id}/read`,
+            { method: 'PUT', headers: getHeaders() }
+          )
+        )
       );
-      if (res.ok) {
-        setInvites(prev => prev.filter(inv => inv.businessId !== businessId));
-      } else {
-        alert('Failed to decline invitation. (Status ' + res.status + ')');
-      }
+      setNotifications([]);
     } catch (err) {
-      console.error('Error declining invitation:', err);
-      alert('Failed to decline invitation.');
+      console.error('Error clearing notifications:', err);
+      alert('Failed to clear notifications.');
     }
   };
+
+  const totalCount = invites.length + notifications.length;
 
   return (
-    <div
-      ref={wrapperRef}
-      className="notification-wrapper"
-      style={{ position: 'relative', display: 'inline-block' }}
-    >
+    <div ref={wrapperRef} className="notification-wrapper">
       <FaBell
-        className="bell-icon"
+        className="notification-bell"
         onClick={() => setOpen(o => !o)}
-        style={{ cursor: 'pointer', fontSize: '1.4em', color: '#fff' }}
       />
-      {invites.length > 0 && (
-        <span
-          className="badge"
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            background: 'red',
-            color: '#fff',
-            borderRadius: '50%',
-            padding: '2px 6px',
-            fontSize: '0.75em',
-          }}
-        >
-          {invites.length}
-        </span>
+      {totalCount > 0 && (
+        <span className="badge">{totalCount}</span>
       )}
 
       {open && (
-        <div
-          className="notifications-panel"
-          style={{
-            position: 'absolute',
-            top: '2em',
-            right: 0,
-            background: '#fff',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-            borderRadius: 4,
-            width: 260,
-            zIndex: 1000,
-            padding: 8,
-          }}
-        >
-          {invites.length === 0 ? (
-            <div style={{ padding: 8 }}>No invitations</div>
-          ) : (
-            invites.map(inv => (
-              <div
-                key={inv.businessId}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '4px 0',
-                  borderBottom: '1px solid #eee',
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '0.9em' }}>
-                    <strong>Work Invitation From {inv.businessName}</strong>
+        <div className="notifications-panel">
+          {notifications.length > 0 && (
+            <div className="clear-all">
+              <button onClick={clearNotifications} className="clear-all-btn">
+                Clear All
+              </button>
+            </div>
+          )}
+
+          {invites.length > 0 && (
+            <div className="invitations-section">
+              <div className="section-title">Invitations</div>
+              {invites.map(inv => (
+                <div key={inv.businessId} className="invitation-item">
+                  <div className="invitation-content">
+                    <div>Invitation from {inv.businessName}</div>
+                    <div className="invitation-time">
+                      {new Date(inv.invitedAt).toLocaleString()}
+                    </div>
                   </div>
-                  <div style={{ fontSize: '0.75em', color: '#555' }}>
-                    Invited at {new Date(inv.invitedAt).toLocaleString()}
+                  <div>
+                    <button
+                      onClick={() => respondInvite(inv.businessId, true)}
+                      className="invite-action-btn"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => respondInvite(inv.businessId, false)}
+                      className="invite-action-btn"
+                    >
+                      Decline
+                    </button>
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: '4px' }}>
-                  <button
-                    onClick={() => acceptInvite(inv.businessId)}
-                    style={{ padding: '4px 8px', fontSize: '0.75em' }}
-                  >
-                    Accept
-                  </button>
-                  <button
-                    onClick={() => declineInvite(inv.businessId)}
-                    style={{ padding: '4px 8px', fontSize: '0.75em' }}
-                  >
-                    Decline
-                  </button>
+              ))}
+            </div>
+          )}
+
+          {notifications.length > 0 && (
+            <div className="notifications-section">
+              <div className="section-title">Notifications</div>
+              {notifications.map(n => (
+                <div key={n.id} className="notification-item">
+                  <div className="notification-message">{n.message}</div>
+                  <div className="notification-time">
+                    {new Date(n.createdAt).toLocaleString()}
+                  </div>
                 </div>
-              </div>
-            ))
+              ))}
+            </div>
+          )}
+
+          {invites.length === 0 && notifications.length === 0 && (
+            <div className="no-items">No New Notifications</div>
           )}
         </div>
       )}

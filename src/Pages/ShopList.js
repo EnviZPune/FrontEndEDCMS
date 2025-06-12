@@ -10,7 +10,6 @@ function ShopList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
-
   const itemsPerPage = 3;
   const carouselRef = useRef(null);
 
@@ -82,7 +81,6 @@ function ShopList() {
                       <div className="shop-card-placeholder" />
                     )}
                     <h2 className="shop-card-title">{shop.name}</h2>
-                    <p className="shop-card-desc">{shop.description}</p>
                   </div>
                 </Link>
               ))}

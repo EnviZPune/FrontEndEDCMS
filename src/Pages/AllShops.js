@@ -61,9 +61,6 @@ export default function AllShops() {
                   />
                   <h3 className="shop-name">{shop.name}</h3>
                 </div>
-                {shop.description && (
-                  <p className="shop-description">{shop.description}</p>
-                )}
               </div>
             </div>
           </Link>

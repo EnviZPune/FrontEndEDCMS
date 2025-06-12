@@ -107,7 +107,7 @@ function LoginComponent() {
             id='pass_input'
           />
 
-          <a href='/forgot_password' id='forgot_pw'>Forgot Password?</a>
+          <a href='/forgot-password' id='forgot_pw'>Forgot Password?</a>
 
           <div className='remember_me'>
             <input

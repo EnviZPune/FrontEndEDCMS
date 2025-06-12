@@ -31,12 +31,17 @@ const ProductDetailsPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`http://77.242.26.150:8000/api/ClothingItem/item/${id}`, {
+        const res = await fetch(`http://77.242.26.150:8000/api/ClothingItem/${id}`, {
           headers: getHeaders(),
         });
+    
+        if (!res.ok) {
+          throw new Error(`Product fetch failed with status ${res.status}`);
+        }
+    
         const data = await res.json();
         setProduct(data);
-
+    
         let parsedImages = [];
         if (Array.isArray(data.pictureUrls)) {
           parsedImages = data.pictureUrls;
@@ -47,23 +52,27 @@ const ProductDetailsPage = () => {
             parsedImages = [];
           }
         }
-
+    
         if (parsedImages.length > 0) setMainImage(parsedImages[0]);
-
-        // Fetch slug for "Back to Shop" if businessId is available
+    
         if (data.businessId) {
           const shopRes = await fetch(`http://77.242.26.150:8000/api/Business/${data.businessId}`, {
             headers: getHeaders(),
           });
-          const shopData = await shopRes.json();
-          setShopSlug(shopData.slug);
+    
+          if (shopRes.ok) {
+            const shopData = await shopRes.json();
+            setShopSlug(shopData.slug);
+          }
         }
+    
       } catch (error) {
         console.error('Failed to load product:', error);
+        setProduct(null); // explicitly mark it as not found
       } finally {
         setLoading(false);
       }
-    };
+    };    
 
     fetchProduct();
   }, [id]);
