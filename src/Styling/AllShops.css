@@ -1,105 +1,132 @@
 /* src/Styling/AllShops.css */
+
+/* ===== Shops Grid ===== */
 .shops-container {
-    position: relative;
-    top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: flex-start;
-  }
-  
-  .shop-card-link {
-    text-decoration: none;
-    display: block;
-  }
-  
-  .shop-card {
-    position: relative;
-    width: 270px;      
-    height: 180px;     
-    border-radius: 10px;
-    overflow: hidden;
-    background-size: cover;
-    background-position: center;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .shop-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.2);
-  }
-  
-  .shop-card-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-  }
-  
-  .shop-card-content {
-    position: relative;
-    color: #fff;
-    height: 100%;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-  
-  .shop-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-  
-  .shop-logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #fff;
-    margin-right: 8px;
-  }
-  
-  .shop-name {
-    margin: 0;
-    font-size: 1rem;
-  }
-  
-  .shop-description {
-    margin: 0;
-    font-size: 0.8rem;
-  }
-  
-  .pagination {
-    position: relative;
-    top: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0;
-    gap: 5px;
-  }
-  
-  .page-button {
-    border: 1px solid #ccc;
-    background-color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .page-button:hover:not([disabled]) {
-    background-color: #f0f0f0;
-  }
-  
-  .page-button:disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
-  
-  .page-button.active {
-    background-color: #007bff;
-    color: #fff;
-    border-color: #007bff;
-  }
+  position: relative;
+  top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: flex-start;
+}
+
+.shop-card-link {
+  text-decoration: none;
+  display: block;
+}
+
+.shop-card {
+  position: relative;
+  width: 270px;
+  height: 180px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.shop-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 4px 4px 15px rgba(0,0,0,0.2);
+}
+
+.shop-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+}
+
+.shop-card-content {
+  position: relative;
+  color: #fff;
+  height: 100%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.shop-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.shop-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  margin-right: 8px;
+}
+
+.shop-name {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.shop-description {
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+/* ===== Pagination (shared component) ===== */
+nav[aria-label="Pagination"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 40px 0 20px;
+  font-family: sans-serif;
+}
+
+nav[aria-label="Pagination"] button {
+  border: 1px solid #007bff;
+  background-color: #fff;
+  color: #007bff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  font-size: 0.9rem;
+}
+
+nav[aria-label="Pagination"] button:hover:not(:disabled) {
+  background-color: #0056b3;
+  color: #fff;
+}
+
+nav[aria-label="Pagination"] button[aria-current="page"] {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+nav[aria-label="Pagination"] button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ===== Loading & Error ===== */
+.loading-spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1.5s linear infinite;
+  margin: 40px auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-text {
+  text-align: center;
+  color: #c00;
+  padding: 2rem;
+}

@@ -1,47 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
+import Footer from '../Components/Footer';
+import Pagination from '../Components/Pagination.tsx';
 import '../Styling/AllShops.css';
 
-const API_URL = 'http://77.242.26.150:8000/api/Business';
-const ITEMS_PER_PAGE = 50;
+const API_URL    = 'http://77.242.26.150:8000/api/Business';
+const PAGE_SIZE  = 4;
 
 export default function AllShops() {
-  const [shops, setShops] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [shops, setShops]           = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [page, setPage]             = useState(1);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState(null);
 
   useEffect(() => {
-    fetch(API_URL)
-      .then(res => {
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json();
-      })
-      .then(data => setShops(data))
-      .catch(err => setError(err))
-      .finally(() => setLoading(false));
-  }, []);
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+
+    (async () => {
+      try {
+        const res = await fetch(
+          `${API_URL}/paginated?pageNumber=${page}&pageSize=${PAGE_SIZE}`
+        );
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || res.statusText);
+        }
+        const data = await res.json();
+        if (!cancelled) {
+          setShops(data.items);
+          setTotalCount(data.totalCount);
+        }
+      } catch (err) {
+        if (!cancelled) setError(err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [page]);
 
   if (loading) return <p>Loading shops…</p>;
   if (error)   return <p>Error loading shops: {error.message}</p>;
 
-  const totalPages = Math.ceil(shops.length / ITEMS_PER_PAGE);
-  const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentShops = shops.slice(startIdx, startIdx + ITEMS_PER_PAGE);
-
-  const goToPage = page => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
     <>
-    <div>
-        <Navbar />
+      <Navbar />
+
       <div className="shops-container">
-        {currentShops.map(shop => (
+        {shops.map((shop) => (
           <Link
             to={`/shops/${shop.businessId}`}
             key={shop.businessId}
@@ -56,6 +69,7 @@ export default function AllShops() {
                 <div className="shop-header">
                   <img
                     src={shop.profilePictureUrl}
+                    alt={`${shop.name} logo`}
                     className="shop-logo"
                   />
                   <h3 className="shop-name">{shop.name}</h3>
@@ -66,34 +80,14 @@ export default function AllShops() {
         ))}
       </div>
 
-      <div className="pagination">
-        <button
-          className="page-button"
-          onClick={() => goToPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Prev
-        </button>
+      <Pagination
+        page={page}
+        pageSize={PAGE_SIZE}
+        totalCount={totalCount}
+        onPageChange={setPage}
+      />
 
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-          <button
-            key={page}
-            className={`page-button${page === currentPage ? ' active' : ''}`}
-            onClick={() => goToPage(page)}
-          >
-            {page}
-          </button>
-        ))}
-
-        <button
-          className="page-button"
-          onClick={() => goToPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
-      </div>
+      <Footer />
     </>
   );
 }
