@@ -202,8 +202,6 @@ namespace Application.Services
                 be.IsApproved);
         }
 
-        // --------------------------------------------------------------------
-        // paginated list of DTOs
         public async Task<PaginatedResult<ClothingItemDTO>> GetPaginatedClothingItems(
             PaginationRequest paginationRequest,
             int businessId)
@@ -235,9 +233,7 @@ namespace Application.Services
                 paginationRequest.PageSize
             );
         }
-
-        // --------------------------------------------------------------------
-        // grouped by a key (only "Category" supported)
+        
         public async Task<GroupByResult<ClothingItemDTO>> GetGroupByItems(
             int businessId,
             string key,
@@ -276,6 +272,6 @@ namespace Application.Services
                 pageNumber: paginationRequest.PageNumber,
                 pageSize:   paginationRequest.PageSize
             );
-        }cd
+        }
     }
 }
