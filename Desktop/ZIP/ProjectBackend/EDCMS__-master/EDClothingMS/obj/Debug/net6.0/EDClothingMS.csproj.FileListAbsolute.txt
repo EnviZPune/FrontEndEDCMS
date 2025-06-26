@@ -1,0 +1,1477 @@
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/BCrypt.Net.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/EDClothingMS.sourcelink.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/appsettings.json
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Application.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Domain.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Application.pdb
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CopyComplete
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.Win32.SystemEvents.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Stripe.net.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Configuration.ConfigurationManager.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Drawing.Common.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Security.Cryptography.ProtectedData.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Security.Permissions.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Windows.Extensions.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/unix/lib/net6.0/System.Drawing.Common.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Drawing.Common.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Microsoft.Win32.SystemEvents.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Stripe.net.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/System.Configuration.ConfigurationManager.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/System.Drawing.Common.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/System.Security.Cryptography.ProtectedData.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/System.Security.Permissions.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/System.Windows.Extensions.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/runtimes/unix/lib/net6.0/System.Drawing.Common.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Drawing.Common.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.Win32.SystemEvents.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Stripe.net.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Configuration.ConfigurationManager.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Drawing.Common.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Security.Cryptography.ProtectedData.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Security.Permissions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Windows.Extensions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/unix/lib/net6.0/System.Drawing.Common.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Drawing.Common.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.sourcelink.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.sourcelink.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/appsettings.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.exe
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Microsoft.Win32.SystemEvents.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Stripe.net.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Configuration.ConfigurationManager.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Drawing.Common.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Security.Cryptography.ProtectedData.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Security.Permissions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/System.Windows.Extensions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/unix/lib/net6.0/System.Drawing.Common.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Drawing.Common.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Application.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Application.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.EDClothingMS.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.build.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.EDClothingMS.props
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/staticwebassets.pack.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothi.146F3E34.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/appsettings.json
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.Win32.SystemEvents.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Stripe.net.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Configuration.ConfigurationManager.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Drawing.Common.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Security.Cryptography.ProtectedData.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Security.Permissions.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Windows.Extensions.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/unix/lib/net6.0/System.Drawing.Common.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Drawing.Common.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Application.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Domain.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Application.pdb
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CopyComplete
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/appsettings.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.Win32.SystemEvents.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Stripe.net.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Configuration.ConfigurationManager.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Drawing.Common.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Security.Cryptography.ProtectedData.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Security.Permissions.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Windows.Extensions.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/unix/lib/net6.0/System.Drawing.Common.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Drawing.Common.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Application.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Domain.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Application.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CopyComplete
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/appsettings.Development.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/appsettings.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS.deps.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS.runtimeconfig.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/EDClothingMS.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/BCrypt.Net-Next.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Humanizer.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Design.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Logging.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.IdentityModel.Tokens.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.OpenApi.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Microsoft.Win32.SystemEvents.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Newtonsoft.Json.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Npgsql.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Stripe.net.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.Swagger.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Configuration.ConfigurationManager.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Drawing.Common.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Security.Cryptography.ProtectedData.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Security.Permissions.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/System.Windows.Extensions.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/unix/lib/net6.0/System.Drawing.Common.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Drawing.Common.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Application.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Domain.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Infrastructure.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Application.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Domain.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/bin/Debug/net6.0/Infrastructure.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.AssemblyReference.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.GeneratedMSBuildEditorConfig.editorconfig
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfoInputs.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.AssemblyInfo.cs
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CoreCompileInputs.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cs
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.MvcApplicationPartsAssemblyInfo.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/staticwebassets.build.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/staticwebassets.development.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/scopedcss/bundle/EDClothingMS.styles.css
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.csproj.CopyComplete
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/refint/EDClothingMS.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/EDClothingMS.genruntimeconfig.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/EDClothingMS/obj/Debug/net6.0/ref/EDClothingMS.dll

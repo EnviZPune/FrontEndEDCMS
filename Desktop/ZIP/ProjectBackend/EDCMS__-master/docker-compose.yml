@@ -1,0 +1,44 @@
+services:
+
+  edcms_postgres:
+    image: postgres:13
+    container_name: edcms_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER:     admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB:       edcms_db
+    ports:
+      - "8080:5432"      # ← expose container’s 5432 on host 8080
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - edclothing_net
+
+  edcms_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: edcms_dotnet_image
+    container_name: edcms_dotnet
+    depends_on:
+      - edcms_postgres
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:5000
+      ConnectionStrings__DefaultConnection: >
+        Host=edcms_postgres;
+        Port=5432;
+        Database=edcms_db;
+        Username=admin;
+        Password=admin
+    ports:
+      - "8000:5000"     # ← expose container’s 5000 on host 8000
+    networks:
+      - edclothing_net
+
+volumes:
+  postgres_data:
+
+networks:
+  edclothing_net:
+    driver: bridge

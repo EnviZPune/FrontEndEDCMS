@@ -1,0 +1,462 @@
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/obj/Debug/net6.0/Infrastructure.sourcelink.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Domain.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Domain.pdb
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CopyComplete
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/bin/Debug/net6.0/Domain.dll
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/bin/Debug/net6.0/Domain.pdb
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CopyComplete
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.sourcelink.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.sourcelink.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastr.15EFFBFE.Up2Date
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Domain.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Domain.pdb
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CopyComplete
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Domain.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Domain.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CopyComplete
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Infrastructure.deps.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Infrastructure.runtimeconfig.json
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Infrastructure.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Infrastructure.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Domain.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/bin/Debug/net6.0/Domain.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfoInputs.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.AssemblyInfo.cs
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CoreCompileInputs.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.CopyComplete
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/refint/Infrastructure.dll
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.pdb
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/Infrastructure.genruntimeconfig.cache
+/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(3)/EDCMS__-master/Infrastructure/obj/Debug/net6.0/ref/Infrastructure.dll
