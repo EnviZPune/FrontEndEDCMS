@@ -1,0 +1,47 @@
+<project version="4">
+  <component name="ExternalSourceService">
+    <option name="paths">
+      <list>
+        <option value="$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache" />
+        <option value="$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache" />
+        <option value="$USER_HOME$/.local/share/Symbols/src" />
+      </list>
+    </option>
+  </component>
+  <component name="JSRemoteModulesUsagesDetector">
+    <modules>
+      <module url="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.3/angular.min.js" />
+      <module url="https://code.jquery.com/jquery-2.2.0.min.js" />
+      <module url="https://unpkg.com/cliui@7.0.1/index.mjs" />
+      <module url="https://unpkg.com/yargs-parser@19.0.0/browser.js" />
+    </modules>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths>
+      <path value="$USER_HOME$/.cache/typescript/5.8/package.json" />
+      <path value="$USER_HOME$/.nvm/package.json" />
+      <path value="$USER_HOME$/.nvm/test/fast/Unit tests/mocks/project_dirs/nested-both/package.json" />
+      <path value="$USER_HOME$/.nvm/test/fast/Unit tests/mocks/project_dirs/nested-pkg/package.json" />
+      <path value="$USER_HOME$/.nvm/test/fast/Unit tests/mocks/project_dirs/no-nesting-both/package.json" />
+      <path value="$USER_HOME$/.nvm/test/fast/Unit tests/mocks/project_dirs/no-nesting-pkg/package.json" />
+      <path value="$USER_HOME$/.nvm/test/slow/nvm reinstall-packages/test-npmlink/package.json" />
+      <path value="$PROJECT_DIR$/../../FrontEndEDCMS/package.json" />
+      <path value="$USER_HOME$/FrontEndEDCMS/package.json" />
+    </packageJsonPaths>
+  </component>
+  <component name="RestoreUpdateTree"><![CDATA[{}]]></component>
+  <component name="VcsDirectoryMappingCache">
+    <option name="roots">
+      <set>
+        <option value="$USER_HOME$" />
+      </set>
+    </option>
+    <option name="vcsName" value="Git" />
+  </component>
+</project>

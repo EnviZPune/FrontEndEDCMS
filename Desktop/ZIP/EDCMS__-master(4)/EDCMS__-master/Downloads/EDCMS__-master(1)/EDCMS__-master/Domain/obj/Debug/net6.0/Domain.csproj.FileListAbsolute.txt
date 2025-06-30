@@ -1,0 +1,284 @@
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/source/repos/EDClothingMS/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Updated_EDCMS_With_Many_To_Many/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Complete_EDCMS_With_All_Entities/edcms/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Fixed/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Project_Final_Patched/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/ProjectBackEnd/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/FinalProjectBackEnd/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/FixedFinalProjectBackEnd/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDClothingMS/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Validated_Updated_Project_EDCMS/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_FINAL_UPDATED/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/Final_Corrected_EDCMS_Project/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_PROGRESS_FINAL_SECURE_FIXED_V2/EDCMS_PROGRESS/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Domain/obj/Debug/net6.0/Domain.sourcelink.json
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS__/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_solution_updated/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/obj/Debug/net6.0/ref/Domain.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Domain/bin/Debug/net6.0/Domain.deps.json
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Domain/bin/Debug/net6.0/Domain.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Domain/bin/Debug/net6.0/Domain.pdb
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Domain/obj/Debug/net6.0/refint/Domain.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.pdb
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Domain/obj/Debug/net6.0/ref/Domain.dll
+/home/denishonestsolutions/Desktop/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.csproj.AssemblyReference.cache
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.csproj.AssemblyReference.cache
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.dll
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/refint/Domain.dll
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.pdb
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Domain/bin/Debug/net6.0/Domain.deps.json
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Domain/bin/Debug/net6.0/Domain.dll
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Domain/bin/Debug/net6.0/Domain.pdb
+/media/denishonestsolutions/EDCMS/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Desktop/EDCMS_Solution_FINAL_1.0/Domain/obj/Debug/net6.0/ref/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.sourcelink.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/bin/Debug/net6.0/Domain.deps.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/bin/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/bin/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.csproj.AssemblyReference.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.sourcelink.json
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/obj/Debug/net6.0/refint/Domain.dll
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/obj/Debug/net6.0/Domain.pdb
+C:/Users/Denis Lilaj/Downloads/EDCMS_Solution_Fixed/EDCMS_Solution/Domain/obj/Debug/net6.0/ref/Domain.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Domain/bin/Debug/net6.0/Domain.deps.json
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Domain/bin/Debug/net6.0/Domain.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Domain/bin/Debug/net6.0/Domain.pdb
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Domain/obj/Debug/net6.0/Domain.csproj.AssemblyReference.cache
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Domain/obj/Debug/net6.0/Domain.AssemblyInfoInputs.cache
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Domain/obj/Debug/net6.0/Domain.AssemblyInfo.cs
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Domain/obj/Debug/net6.0/Domain.csproj.CoreCompileInputs.cache
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Domain/obj/Debug/net6.0/Domain.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Domain/obj/Debug/net6.0/refint/Domain.dll
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Domain/obj/Debug/net6.0/Domain.pdb
+/home/envi-zajmi/Downloads/EDCMS__-master(1)/EDCMS__-master/Domain/obj/Debug/net6.0/ref/Domain.dll

@@ -1,0 +1,17 @@
+# .github/workflows/deploy.yml
+name: CI → Deploy .NET App
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux]
+
+    steps:
+      - name: Run deployment script from absolute path
+        run: |
+          bash /home/deploy/app/deploy.sh
+
