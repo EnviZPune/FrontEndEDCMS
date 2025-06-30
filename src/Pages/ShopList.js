@@ -46,6 +46,7 @@ export default function ShopList() {
       <Navbar />
 
       <div className="shop-list-container">
+        <div className="shop-list-header">
         <h2>Browse Shops</h2>
         <Link className="view-all-shops" to="/allshops">
           View All Shops
@@ -88,6 +89,7 @@ export default function ShopList() {
             />
           </>
         )}
+      </div>
       </div>
 
       <Footer />

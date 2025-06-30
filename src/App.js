@@ -22,7 +22,7 @@ import TermsAndConditions from './Pages/TermAndConditions';
 import OwnerGuide from './Pages/ShopOwnerGuide';
 import EmailConfirmation from './Pages/EmailConfirmation';
 import PublicProfilePage from './Pages/PublicProfilePage';
-import UserPage from './Components/UserPage';
+import UserPage from './Pages/UserPage';
 import AllShops from './Pages/AllShops';
 import ForgotPasswordPage from './Pages/ForgotPasswordPage';
 import ResetPasswordPage from './Pages/ResetPasswordPage';
@@ -56,7 +56,7 @@ export default function App() {
           <Route path="/shops/:businessId/products" element={<ShopProductsPage />} />
           <Route path="/create-shop" element={<RegisterBusinessForm />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="/profile-settings" element={<UserSettingsPage />} />
+          <Route path="/settings/profile" element={<UserSettingsPage />} />
           <Route path="/confirm-email" element={<EmailConfirmation />} />
           <Route path="/allshops" element={<AllShops />} />
         </Routes>

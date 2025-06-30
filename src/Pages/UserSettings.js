@@ -1,282 +1,218 @@
-// src/pages/SettingsPage.jsx
-import React, { useState, useEffect } from 'react';
-import '../Styling/usersettings.css';
-import Navbar from '../Components/Navbar';
-import { jwtDecode } from 'jwt-decode';
+import React, { useState, useEffect } from "react";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
+import "../Styling/usersettings.css";
 
-const API_BASE   = 'http://77.242.26.150:8000';
-const GCS_BUCKET = 'https://storage.googleapis.com/edcms_bucket';
+const API_BASE = "http://77.242.26.150:8000";
 
-const getToken = () => {
-  const raw = localStorage.getItem('token') || localStorage.getItem('authToken');
-  if (!raw || raw.trim() === '') return null;
-  try {
-    const parsed = JSON.parse(raw);
-    return parsed.token || parsed;
-  } catch {
-    return raw;
-  }
-};
-
-const getHeaders = () => ({
-  'Content-Type': 'application/json',
-  Authorization:  `Bearer ${getToken()}`,
-});
-
+// GCS upload helper unchanged
 const uploadImageToGCS = async (file) => {
+  if (!file) return null;
   const timestamp = Date.now();
   const fileName  = `${timestamp}-${file.name}`;
-  const uploadUrl = `${GCS_BUCKET}/${fileName}`;
+  const uploadUrl = `https://storage.googleapis.com/edcms_bucket/${fileName}`;
   const txtUrl    = `${uploadUrl}.txt`;
 
-  let res = await fetch(uploadUrl, {
-    method: 'PUT',
-    headers: { 'Content-Type': file.type },
-    body: file,
-  });
-  if (!res.ok) throw new Error('Image upload failed');
-
-  res = await fetch(txtUrl, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'text/plain' },
-    body: uploadUrl,
-  });
-  if (!res.ok) throw new Error('Text file upload failed');
-
-  return uploadUrl;
+  try {
+    await fetch(uploadUrl, {
+      method: "PUT",
+      headers: { "Content-Type": file.type },
+      body: file,
+    });
+    await fetch(txtUrl, {
+      method: "PUT",
+      headers: { "Content-Type": "text/plain" },
+      body: uploadUrl,
+    });
+    return uploadUrl;
+  } catch (err) {
+    console.error("Upload error:", err);
+    return null;
+  }
 };
 
-export default function SettingsPage() {
-  const token = getToken();
-  let userId = null;
-  if (token) {
-    try {
-      const decoded = jwtDecode(token);
-      userId = decoded.UserId || decoded.id || decoded.sub;
-    } catch {
-      console.error('JWT decode error');
-    }
-  }
+export default function UserSettings() {
+  const [profile, setProfile] = useState({
+    userId:            null,
+    name:              "",
+    email:             "",
+    telephoneNumber:   "",
+    profilePictureUrl: "",
+  });
+  const [newPassword, setNewPassword]         = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError]                     = useState("");
+  const [success, setSuccess]                 = useState("");
 
-  const [userData, setUserData]             = useState(null);
-  const [username, setUsername]             = useState('');
-  const [email, setEmail]                   = useState('');
-  const [bio, setBio]                       = useState('');
-  const [birthday, setBirthday]             = useState('');
-  const [password, setPassword]             = useState('');
+  const token = localStorage.getItem("token");
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization:  `Bearer ${token}`,
+  };
 
-  // this must match the DTO property your backend uses:
-  const [profilePictureUrl, setProfilePictureUrl]   = useState('');
-  const [imagePreviewUrl, setImagePreviewUrl]       = useState('');
-  const [uploading, setUploading]                   = useState(false);
-  const [uploadError, setUploadError]               = useState(null);
-
-  const [wordCount, setWordCount] = useState(0);
-
-  // 1️⃣ Load existing user data
+  // Load user
   useEffect(() => {
-    if (!userId) return;
-    (async () => {
-      const res = await fetch(`${API_BASE}/api/User/${userId}`, {
-        headers: getHeaders()
+    fetch(`${API_BASE}/api/User/me`, { headers })
+      .then(res => res.ok ? res.json() : Promise.reject(res))
+      .then(dto => {
+        setProfile({
+          userId:            dto.userId,
+          name:              dto.name,
+          email:             dto.email,
+          telephoneNumber:   dto.telephoneNumber || "",
+          profilePictureUrl: dto.profilePictureUrl || "",
+        });
+      })
+      .catch(err => {
+        console.error("Failed to load profile:", err);
+        setError("Could not load profile.");
       });
-      if (!res.ok) {
-        console.error('User fetch failed', res.status);
-        return;
-      }
-      const data = await res.json();
-      setUserData(data);
-      setUsername(data.name || '');
-      setEmail(data.email || '');
-      setBio(data.bio || '');
-      setBirthday(data.birthday?.split('T')[0] || '');
-      setProfilePictureUrl(data.profilePictureUrl || '');
-      setImagePreviewUrl(data.profilePictureUrl || '');
-      setWordCount((data.bio || '').split(/\s+/).filter(Boolean).length);
-    })();
-  }, [userId]);
+  }, []);
 
-  const handleBioChange = e => {
-    const words = e.target.value.split(/\s+/).filter(Boolean);
-    if (words.length <= 100) {
-      setBio(words.join(' '));
-      setWordCount(words.length);
-    } else {
-      alert('Bio cannot exceed 100 words.');
-    }
-  };
-
-  const handleFileUpload = async e => {
-    const file = e.target.files?.[0];
+  // Handlers
+  const handleImageChange = async e => {
+    const file = e.target.files[0];
     if (!file) return;
-    setUploading(true);
-    setUploadError(null);
-    try {
-      const url = await uploadImageToGCS(file);
-      setProfilePictureUrl(url);
-      setImagePreviewUrl(url);
-    } catch (err) {
-      console.error('Upload error:', err);
-      setUploadError('Image upload failed.');
-    } finally {
-      setUploading(false);
-    }
+    const url = await uploadImageToGCS(file);
+    if (url) setProfile(p => ({ ...p, profilePictureUrl: url }));
+    else    setError("Image upload failed.");
   };
 
-  // 4️⃣ Remove picture
-  const handleRemoveImage = () => {
-    setProfilePictureUrl('');
-    setImagePreviewUrl('');
-  };
-
-  // 5️⃣ Submit full payload matching your UserDTO
   const handleSubmit = async e => {
     e.preventDefault();
+    setError(""); setSuccess("");
+
+    if (newPassword && newPassword !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     const payload = {
-      name:              username,
-      email,
-      bio,
-      birthday,
-      profilePictureUrl,      // ◀ important: must match DTO
-      // add any other required fields here, e.g.:
-      // phoneNumber:        userData.phoneNumber,
-      // address:            userData.address,
-      ...(password && { password })
+      userId:            profile.userId,
+      name:              profile.name,
+      email:             profile.email,
+      telephoneNumber:   profile.telephoneNumber,
+      profilePictureUrl: profile.profilePictureUrl,
+      ...(newPassword ? { password: newPassword } : {}),
     };
 
-    const res = await fetch(`${API_BASE}/api/User/${userId}`, {
-      method: 'PUT',
-      headers: getHeaders(),
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) {
-      alert('Update failed');
-    } else {
-      alert('Profile updated successfully!');
+    try {
+      const res = await fetch(
+        `${API_BASE}/api/User/${profile.userId}`,
+        { method: "PUT", headers, body: JSON.stringify(payload) }
+      );
+      if (!res.ok) throw new Error();
+      setSuccess("Profile updated!");
+      setNewPassword(""); setConfirmPassword("");
+    } catch {
+      setError("Update failed.");
     }
   };
 
-  if (!userData) return <div>Loading…</div>;
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Delete account?")) return;
+    try {
+      const res = await fetch(
+        `${API_BASE}/api/User/${profile.userId}`,
+        { method: "DELETE", headers }
+      );
+      if (!res.ok) throw new Error();
+      window.location.href = "/login";
+    } catch {
+      alert("Delete failed.");
+    }
+  };
 
   return (
-    <div>
+    <>
       <Navbar />
-      <div className="settings-container">
-        <form onSubmit={handleSubmit}>
-          <label>
-            Profile Image:
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileUpload}
-            />
-          </label>
-          {uploading && <div>Uploading…</div>}
-          {uploadError && <div className="error">{uploadError}</div>}
-          {imagePreviewUrl && (
-            <div className="image-preview">
-              <img
-                src={imagePreviewUrl}
-                alt="Preview"
-                width={100}
-                height={100}
-              />
-              <button type="button" onClick={handleRemoveImage}>
-                Delete Picture
-              </button>
-            </div>
-          )}
+      <div className="user-settings-panel">
+        <h2>My Profile</h2>
+        {error   && <p className="error">{error}</p>}
+        {success && <p className="success">{success}</p>}
 
+        <form onSubmit={handleSubmit}>
+          {/* Profile Picture */}
           <label>
-            Username:
+            Profile Picture
+            <div className="preview-container">
+              {profile.profilePictureUrl && (
+                <img
+                  className="profile-preview"
+                  src={profile.profilePictureUrl}
+                  alt="Profile preview"
+                />
+              )}
+            </div>
+            <input type="file" accept="image/*" onChange={handleImageChange}/>
+          </label>
+
+          {/* Name */}
+          <label>
+            Name
             <input
               type="text"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
+              value={profile.name}
+              onChange={e => setProfile({ ...profile, name: e.target.value })}
+              required
             />
           </label>
 
+          {/* Email */}
           <label>
-            Email:
+            Email
             <input
               type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
+              value={profile.email}
+              onChange={e => setProfile({ ...profile, email: e.target.value })}
+              required
             />
           </label>
 
+          {/* Telephone */}
           <label>
-            Birthday:
-            <input
-              type="date"
-              value={birthday}
-              onChange={e => setBirthday(e.target.value)}
-            />
-          </label>
-
-          <label>
-            Bio:
-            <textarea
-              value={bio}
-              onChange={handleBioChange}
-            />
-            <div className="word-count">{wordCount}/100</div>
-          </label>
-
-          <label>
-            New Password:
-            <input
-              type="password"
-              placeholder="Leave blank to keep current"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
-          </label>
-
-          {/* ↓ If your backend requires additional fields, uncomment and bind them: */}
-          {/* <label>
-            Phone Number:
+            Telephone
             <input
               type="tel"
-              value={userData.phoneNumber || ''}
-              onChange={e => setPhoneNumber(e.target.value)}
+              value={profile.telephoneNumber}
+              onChange={e => setProfile({ ...profile, telephoneNumber: e.target.value })}
             />
-          </label> */}
-          {/* <label>
-            Address:
-            <input
-              type="text"
-              value={userData.address || ''}
-              onChange={e => setAddress(e.target.value)}
-            />
-          </label> */}
+          </label>
 
-          <button type="submit">Update Profile</button>
+          {/* Password */}
+          <label>
+            New Password
+            <input
+              type="password"
+              value={newPassword}
+              onChange={e => setNewPassword(e.target.value)}
+            />
+          </label>
+          <label>
+            Confirm Password
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)}
+            />
+          </label>
+
+          <button type="submit" className="save-button">
+            Save Changes
+          </button>
         </form>
 
-        <div className="delete-account">
-          <label>Account Management</label>
+        <div className="delete-account-section">
+          <h3>Delete Account</h3>
           <button
-            onClick={() => {
-              if (window.confirm('Delete your account?')) {
-                fetch(`${API_BASE}/api/User/${userId}`, {
-                  method: 'DELETE',
-                  headers: getHeaders()
-                }).then(r => {
-                  if (r.ok) {
-                    localStorage.removeItem('token');
-                    window.location.href = '/preview';
-                  } else {
-                    alert('Delete failed.');
-                  }
-                });
-              }
-            }}
+            className="delete-account-button"
+            onClick={handleDeleteAccount}
           >
-            Delete Account
+            Delete My Account
           </button>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }

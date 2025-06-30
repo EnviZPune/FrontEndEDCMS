@@ -123,7 +123,8 @@ const ProductDetailsPage = () => {
           </div>
 
           <div className="product-info">
-            <h1>{product.brand} - {product.model}</h1>
+            <h1>{product.name} - {product.brand}</h1>
+            <p><strong>Model: </strong>{product.model}</p>
             <p><strong>Description:</strong> {product.description}</p>
             <p><strong>Price:</strong> ${product.price}</p>
             <p><strong>Quantity:</strong> {product.quantity}</p>

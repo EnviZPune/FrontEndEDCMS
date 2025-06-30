@@ -66,7 +66,6 @@
     0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
-
 /* Shop Name */
 .sd-shop-name {
   position: relative;
@@ -95,6 +94,40 @@
   animation-delay: 0.2s;
 }
 
+.sd-category-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin: 1rem 0;
+}
+
+.sd-category-pill {
+  padding: .5rem 1rem;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+
+.sd-category-pill.active {
+  background: #0070f3;
+  color: #fff;
+  border-color: #0070f3;
+}
+
+.sd-category-group {
+  margin-bottom: 2rem;
+}
+
+.sd-category-title {
+  font-size: 1.4rem;
+  margin-bottom: .75rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: .25rem;
+}
+
+
 /* Product Section */
 .sd-products-section {
   position: relative;
@@ -110,6 +143,14 @@
   font-weight: 600;
   margin-bottom: 24px;
   color: #222;
+}
+
+/* Category label under each product */
+.sd-product-category {
+  display: block;
+  margin-top: 4px;
+  font-style: italic;
+  color: #666;
 }
 
 /* Product List */
@@ -183,6 +224,17 @@
   text-overflow: ellipsis;
 }
 
+.sd-category-group {
+  margin-bottom: 2rem;
+}
+
+.sd-category-title {
+  font-size: 1.4rem;
+  margin: 1.5rem 0 1rem;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.25rem;
+}
+
 
 /* Loading Spinner */
 .loading-container {
@@ -218,37 +270,15 @@
   background-color: red;
 }
 
-
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
-
 
 /* Fade-in Animation */
 @keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 /* Responsive Design */
@@ -287,3 +317,17 @@
   text-align: center;
   margin-top: 20px;
 }
+
+.sd-category-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;    /* ← add this */
+  position: relative;     /* keep it above the products */
+  z-index: 1;
+}
+
+.sd-products-section {
+  margin-top: 16px;       /* ← and this */
+}
+

@@ -6,10 +6,16 @@
   margin: 0 auto;
 }
 
+/* Input + Icons Wrapper */
+.search-input-container {
+  position: relative;
+  width: 100%;
+}
+
 /* Input Field */
 .search-input {
   width: 100%;
-  padding: 8px 50px 8px 32px; /* Left padding for left icon, right padding for right icons */
+  padding: 8px 50px 8px 32px; /* left for search icon, right for mic & clear */
   border: 1px solid #ddd;
   border-radius: 5px;
   outline: none;
@@ -21,7 +27,7 @@
   border-color: #007bff;
 }
 
-/* Search Icons */
+/* Search & Mic Icons */
 .search-icon,
 .microphone-icon {
   position: absolute;
@@ -32,18 +38,16 @@
   cursor: pointer;
 }
 
-/* Move search icon to left */
 .search-icon {
   left: 10px;
-  pointer-events: none; /* so input focus remains on click */
+  pointer-events: none; /* click falls through to input */
 }
 
-/* Microphone stays on the right */
 .microphone-icon {
   right: 10px;
 }
 
-/* Clear Button stays on the right, between the input and the microphone */
+/* Clear Button */
 .clear-button {
   position: absolute;
   top: 50%;
@@ -56,7 +60,7 @@
   color: #999;
 }
 
-/* Dropdown */
+/* Dropdown (hidden by default) */
 .search-dropdown {
   position: absolute;
   top: 100%;
@@ -66,12 +70,13 @@
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
   margin-top: 5px;
-  overflow: hidden;
   max-height: 300px;
   overflow-y: auto;
-  transition: all 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1000;
 }
 
 .search-dropdown.active {
@@ -79,10 +84,10 @@
   visibility: visible;
 }
 
+/* Scrollbar */
 .search-dropdown::-webkit-scrollbar {
   width: 8px;
 }
-
 .search-dropdown::-webkit-scrollbar-thumb {
   background-color: #ddd;
   border-radius: 10px;
@@ -93,11 +98,9 @@
   padding: 10px 15px;
   border-bottom: 1px solid #eee;
 }
-
 .search-category:last-child {
   border-bottom: none;
 }
-
 .search-category h4 {
   font-size: 14px;
   margin-bottom: 5px;
@@ -120,7 +123,6 @@
   transition: background-color 0.3s ease;
   font-size: 14px;
 }
-
 .search-result-item:hover {
   background-color: #f1f1f1;
 }
@@ -131,7 +133,6 @@
   align-items: center;
   gap: 10px;
 }
-
 .result-image {
   width: 40px;
   height: 40px;
@@ -142,26 +143,35 @@
 
 /* Highlighted text */
 .highlight {
-  background-color: lightgreen;
+  background-color: #fffa8b; /* a softer yellow */
   padding: 2px 4px;
   border-radius: 3px;
   color: #333;
   font-weight: bold;
 }
 
-/* Responsive Design */
+.no-results {
+  color: #888;
+  padding: 10px 15px;
+  font-style: italic;
+}
+
+
+/* Responsive */
 @media (max-width: 768px) {
+  .search-bar-container {
+    width: 100%;
+    padding: 0 10px;
+  }
   .search-input {
     font-size: 14px;
     padding: 8px 10px 8px 40px;
   }
-  
   .search-icon,
   .microphone-icon {
     font-size: 16px;
   }
-  
-  .search-category li {
+  .search-result-item {
     font-size: 12px;
   }
 }

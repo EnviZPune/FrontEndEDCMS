@@ -22,11 +22,12 @@ const getHeaders = () => ({
 });
 
 export default function Notifications() {
-  const [invites, setInvites] = useState([]);             
-  const [notifications, setNotifications] = useState([]); 
+  const [invites, setInvites] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
 
+  // load pending invites
   useEffect(() => {
     (async () => {
       const token = getToken();
@@ -66,6 +67,7 @@ export default function Notifications() {
     })();
   }, []);
 
+  // SignalR realtime updates
   useEffect(() => {
     const token = getToken();
     if (!token) return;
@@ -86,7 +88,6 @@ export default function Notifications() {
     });
 
     connection.on('ReceiveNotification', note => {
-      console.log('⏰ Received notification:', note);
       setNotifications(prev => [
         { id: note.Id, message: note.Message, createdAt: note.CreatedAt },
         ...prev
@@ -108,6 +109,7 @@ export default function Notifications() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // accept/decline invite
   const respondInvite = async (businessId, approve) => {
     try {
       const res = await fetch(
@@ -127,14 +129,11 @@ export default function Notifications() {
 
   const clearNotifications = async () => {
     try {
-      await Promise.all(
-        notifications.map(n =>
-          fetch(
-            `${API_BASE}/api/Notification/${n.id}/read`,
-            { method: 'PUT', headers: getHeaders() }
-          )
-        )
-      );
+      const res = await fetch(`${API_BASE}/api/Notification`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+      });
+      if (!res.ok) throw new Error('Clear all failed');
       setNotifications([]);
     } catch (err) {
       console.error('Error clearing notifications:', err);
@@ -158,7 +157,10 @@ export default function Notifications() {
         <div className="notifications-panel">
           {notifications.length > 0 && (
             <div className="clear-all">
-              <button onClick={clearNotifications} className="clear-all-btn">
+              <button
+                onClick={clearNotifications}
+                className="clear-all-btn"
+              >
                 Clear All
               </button>
             </div>

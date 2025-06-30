@@ -31,17 +31,13 @@ function LoginComponent() {
       }
 
       const data = await response.json();
-      // unwrap the raw JWT string (API may return { token: "..." } or just "...")
       const token = typeof data === 'string' ? data : data.token;
 
-      // decode immediately to inspect payload
       const payload = jwtDecode(token);
       console.log('Decoded JWT payload:', payload);
 
-      // store the raw token string (no JSON.stringify)
       localStorage.setItem('token', token);
 
-      // redirect
       window.location.href = '/preview';
     } catch (err) {
       setError(err.message);

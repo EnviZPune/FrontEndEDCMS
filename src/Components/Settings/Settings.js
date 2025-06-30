@@ -13,7 +13,9 @@ import {
   FaExclamationTriangle,
   FaEye,
   FaTrash,
+  FaBell,
 } from "react-icons/fa";
+
 
 const getToken = () => {
   const raw = localStorage.getItem("token") || localStorage.getItem("authToken");
@@ -96,6 +98,15 @@ const updateBusinessPhotos = async (businessId, updatedUrls) => {
 
 
 const Settings = () => {
+const LoadingOverlay = () => (
+  <div className="loading-overlay">
+    <div className="dots">
+      <div className="dot" />
+      <div className="dot" />
+      <div className="dot" />
+    </div>
+  </div>
+);
   const [authorized, setAuthorized] = useState(false);
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState(null);
@@ -108,18 +119,19 @@ const Settings = () => {
   const [products, setProducts] = useState([]);
   const [pendingChanges, setPendingChanges] = useState([]);
   const [newProduct, setNewProduct] = useState({
-    name: "",
-    description: "",
-    price: "",
-    quantity: "",
-    category: "",
-    brand: "",
-    model: "",
-    pictureUrls: [],
-    colors: "",
-    sizes: "XS",
-    material: "",
+  name: "",
+  description: "",
+  price: "",
+  quantity: "",
+  clothingCategoryId: null,
+  brand: "",
+  model: "",
+  pictureUrls: [],
+  colors: "",
+  sizes: "XS",
+  material: "",
 });
+
   const [editingProductId, setEditingProductId] = useState(null);
   const [myShopsPage, setMyShopsPage] = useState(1);
   const SHOPS_PER_PAGE = 10;
@@ -131,6 +143,7 @@ const Settings = () => {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState({ name: "", color: "#000000" });
   const [editingCategory, setEditingCategory] = useState(null);
+  const [notifications, setNotifications] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [newEmployee, setNewEmployee] = useState({ name: "", email: "", role: "" });
   const [editingEmployee, setEditingEmployee] = useState(null);
@@ -153,6 +166,26 @@ const Settings = () => {
     if (business) fetchBusinessDetails(business.businessId);
   };
 
+
+    useEffect(() => {
+    if (selectedCategory === "Pending Changes" && selectedBusiness) {
+      fetchPendingChanges();
+    }
+  }, [selectedCategory, selectedBusiness]);
+
+  // ── Add this block ──
+  // Refresh categories when you switch into the category panels
+  useEffect(() => {
+    if (
+      selectedBusiness &&
+      (selectedCategory === "Add New Products/Categories" ||
+        selectedCategory === "Edit Current Products/Categories")
+    ) {
+      fetchCategories(selectedBusiness.businessId);
+    }
+  }, [selectedCategory, selectedBusiness]);
+
+
   useEffect(() => {
     const token = getToken();
     if (!token) {
@@ -164,7 +197,6 @@ const Settings = () => {
       const decoded = jwtDecode(token);
       console.log("🔍 Decoded JWT:", decoded);
 
-      // Normalize the role claim to lowercase
       const roleClaim = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
       const rawRole = (decoded[roleClaim] || "").toLowerCase();
 
@@ -179,6 +211,23 @@ const Settings = () => {
       navigate("/unauthorized");
     }
   }, [navigate]);
+
+
+  const fetchNotifications = async () => {
+  const res = await fetch(
+    `http://77.242.26.150:8000/api/Notification/business/${selectedBusiness.businessId}`,
+    { headers: getHeaders() }
+  );
+  if (res.ok) {
+    const data = await res.json();
+    setNotifications(data);
+  }
+};
+
+if (selectedBusiness?.businessId) {
+  fetchNotifications();
+}
+
 
   useEffect(() => {
     if (!authorized) return;
@@ -209,16 +258,21 @@ const Settings = () => {
     fetchPendingChanges();
   };
 
-  const fetchProducts = async (businessId) => {
-    const res = await fetch(
-      `http://77.242.26.150:8000/api/ClothingItem/business/${businessId}`,
-      {
-        headers: getHeaders(),
-      }
-    );
-    const data = (await safeParseJson(res)) || [];
-    setProducts(data);
-  };
+const fetchProducts = async (businessId) => {
+  const res = await fetch(
+    `${API_BASE}/api/ClothingItem/business/${businessId}`,
+    { headers: getHeaders() }
+  );
+  const data = (await safeParseJson(res)) || [];
+
+const norm = data.map(item => ({
+  ...item,
+}));
+
+  setProducts(norm);
+};
+
+
 
   const fetchBusinessEmployees = async (businessId) => {
     const res = await fetch(
@@ -236,7 +290,7 @@ const Settings = () => {
   // --- CATEGORY API calls (unchanged) ---
   const fetchCategories = async (businessId) => {
     const res = await fetch(
-      `http://77.242.26.150:8000/api/Category/business/${businessId}`,
+      `http://77.242.26.150:8000/api/ClothingCategory/business/${businessId}`,
       {
         headers: getHeaders(),
       }
@@ -245,37 +299,47 @@ const Settings = () => {
     setCategories(data);
   };
 
-  const saveCategory = async () => {
-    let url, method;
-    if (editingCategory) {
-      url = `http://77.242.26.150:8000/api/Category/${editingCategory.id}`;
-      method = "PUT";
-    } else {
-      url = "http://77.242.26.150:8000/api/Category";
-      method = "POST";
-    }
-    const body = { ...newCategory, businessId: selectedBusiness.businessId };
-    const res = await fetch(url, {
-      method,
-      headers: getHeaders(),
-      body: JSON.stringify(body),
-    });
-    alert(
-      res.ok
-        ? editingCategory
-          ? "Category updated!"
-          : "Category added!"
-        : "Failed to save category."
-    );
-    fetchCategories(selectedBusiness.businessId);
-    setNewCategory({ name: "", color: "#000000" });
-    setEditingCategory(null);
+ const saveCategory = async () => {
+  let url, method;
+  if (editingCategory) {
+    // use the correct field for the category ID
+    url = `http://77.242.26.150:8000/api/ClothingCategory/${editingCategory.clothingCategoryId}`;
+    method = "PUT";
+  } else {
+    url = "http://77.242.26.150:8000/api/ClothingCategory";
+    method = "POST";
+  }
+
+  const body = {
+    businessId: selectedBusiness.businessId,
+    name: newCategory.name,
+    colorHex: newCategory.color
   };
 
-  const deleteCategory = async (categoryId) => {
+  const res = await fetch(url, {
+    method,
+    headers: getHeaders(),
+    body: JSON.stringify(body),
+  });
+
+  alert(
+    res.ok
+      ? editingCategory
+        ? "Category updated!"
+        : "Category added!"
+      : "Failed to save category."
+  );
+
+  fetchCategories(selectedBusiness.businessId);
+  setNewCategory({ name: "", color: "#000000" });
+  setEditingCategory(null);
+};
+
+
+  const deleteCategory = async (clothingCategoryId) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       const res = await fetch(
-        `http://77.242.26.150:8000/api/Category/${categoryId}`,
+        `http://77.242.26.150:8000/api/ClothingCategory/${clothingCategoryId}`,
         {
           method: "DELETE",
           headers: getHeaders(),
@@ -362,7 +426,7 @@ const rejectChange = async (change) => {
           description: newProduct.description,
           price: parseFloat(newProduct.price),
           quantity: parseInt(newProduct.quantity),
-          category: newProduct.category,
+          clothingCategoryId: newProduct.clothingCategoryId,
           brand: newProduct.brand,
           model: newProduct.model,
           pictureUrls:
@@ -395,7 +459,7 @@ const rejectChange = async (change) => {
           description: "",
           price: "",
           quantity: "",
-          category: "",
+          clothingCategoryId: null,
           brand: "",
           model: "",
           pictureUrls: [],
@@ -406,7 +470,7 @@ const rejectChange = async (change) => {
         setEditingProductId(null);
         fetchProducts(selectedBusiness.businessId);
       } catch (err) {
-        console.error("Failed to propose change:", err);
+        console.error("Failed to propose a change:", err);
         alert("Network error when proposing change.");
       }
 
@@ -424,7 +488,7 @@ const rejectChange = async (change) => {
         description: newProduct.description,
         price: parseFloat(newProduct.price),
         quantity: parseInt(newProduct.quantity),
-        category: newProduct.category,
+        clothingCategoryId: newProduct.clothingCategoryId,
         brand: newProduct.brand,
         model: newProduct.model,
         pictureUrls:
@@ -466,7 +530,7 @@ const rejectChange = async (change) => {
       description: "",
       price: "",
       quantity: "",
-      category: "",
+      clothingCategoryId: null,
       brand: "",
       model: "",
       pictureUrls: [],
@@ -515,7 +579,7 @@ const rejectChange = async (change) => {
             description: "",
             price: 0,
             quantity: 0,
-            category: "",
+            clothingCategoryId: null,
             brand: "",
             model: "",
             pictureUrls: [],
@@ -759,6 +823,7 @@ const rejectChange = async (change) => {
     { name: "Employee Management", icon: <FaUsers /> },
     { name: "Pending Changes", icon: <FaExclamationTriangle /> },
     { name: "My Shops", icon: <FaEye /> },
+    { name: "Notifications", icon: <FaBell />},
     { name: "Delete Business", icon: <FaTrash /> },
   ];
 
@@ -777,6 +842,9 @@ const rejectChange = async (change) => {
       setSelectedCategory(visibleSidebarItems[0]?.name || "");
     }
   }
+    if (isLoading) {
+  return <LoadingOverlay />;
+}
 
   const renderContent = () => {
     if (!selectedBusiness) return <p>Please select a business to manage.</p>;
@@ -882,140 +950,176 @@ const rejectChange = async (change) => {
         );
 
       case "Add New Products/Categories":
-        return (
-          <div className="dual-panel">
-            <div className="panel">
-              <h3>Add Product</h3>
-              <input
-                placeholder="Name"
-                value={newProduct.name || ""}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, name: e.target.value })
-                }
-              />
-              <input
-                placeholder="Brand"
-                value={newProduct.brand}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, brand: e.target.value })
-                }
-              />
-              <input
-                placeholder="Model"
-                value={newProduct.model}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, model: e.target.value })
-                }
-              />
-              <textarea
-                placeholder="Description"
-                value={newProduct.description}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, description: e.target.value })
-                }
-              />
-              <div className="price-input-group">
-                <input
-                  type="number"
-                  placeholder="Price"
-                  value={newProduct.price}
-                  onChange={(e) =>
-                    setNewProduct({ ...newProduct, price: e.target.value })
+  return (
+    <div className="dual-panel">
+      {/* ─── Add Product ─── */}
+      <div className="panel">
+        <h3>Add Product</h3>
+
+        <input
+          placeholder="Name"
+          value={newProduct.name || ""}
+          onChange={e =>
+            setNewProduct({ ...newProduct, name: e.target.value })
+          }
+        />
+
+        <input
+          placeholder="Brand"
+          value={newProduct.brand}
+          onChange={e =>
+            setNewProduct({ ...newProduct, brand: e.target.value })
+          }
+        />
+
+        <input
+          placeholder="Model"
+          value={newProduct.model}
+          onChange={e =>
+            setNewProduct({ ...newProduct, model: e.target.value })
+          }
+        />
+
+        <textarea
+          placeholder="Description"
+          value={newProduct.description}
+          onChange={e =>
+            setNewProduct({ ...newProduct, description: e.target.value })
+          }
+        />
+
+        <div className="price-input-group">
+          <input
+            type="number"
+            placeholder="Price"
+            value={newProduct.price}
+            onChange={e =>
+              setNewProduct({ ...newProduct, price: e.target.value })
+            }
+          />
+        </div>
+
+        <input
+          type="number"
+          placeholder="Quantity"
+          value={newProduct.quantity}
+          onChange={e =>
+            setNewProduct({ ...newProduct, quantity: e.target.value })
+          }
+        />
+
+        <label>
+          Category
+<select
+  value={newProduct.clothingCategoryId ?? ""}
+  onChange={e =>
+    setNewProduct({
+      ...newProduct,
+      clothingCategoryId: e.target.value ? +e.target.value : null
+    })
+  }
+>
+  <option value="">-- Select category --</option>
+  {categories.map(cat => (
+    <option key={cat.clothingCategoryId} value={cat.clothingCategoryId}>
+      {cat.name}
+    </option>
+  ))}
+</select>
+        </label>
+
+        <label>
+          <b>Upload Product Photos (max 10)</b>
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={async e => {
+            const files = Array.from(e.target.files);
+            const current = Array.isArray(newProduct.pictureUrls)
+              ? [...newProduct.pictureUrls]
+              : [];
+            for (const f of files) {
+              if (current.length >= 10) break;
+              const url = await uploadImageToGCS(f);
+              if (url) current.push(url);
+            }
+            setNewProduct({ ...newProduct, pictureUrls: current });
+          }}
+        />
+
+        <div className="product-photo-preview">
+          {Array.isArray(newProduct.pictureUrls) &&
+            newProduct.pictureUrls.map((url, idx) => (
+              <div key={idx} className="product-photo-container">
+                <img src={url} alt={`Uploaded ${idx}`} />
+                <button
+                  type="button"
+                  className="remove-photo-button"
+                  onClick={() =>
+                    setNewProduct({
+                      ...newProduct,
+                      pictureUrls: newProduct.pictureUrls.filter(
+                        (_, i) => i !== idx
+                      )
+                    })
                   }
-                />
+                >
+                  ×
+                </button>
               </div>
-              <input
-                type="number"
-                placeholder="Quantity"
-                value={newProduct.quantity}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, quantity: e.target.value })
-                }
-              />
-              <input
-                type="text"
-                placeholder="Category"
-                value={newProduct.category}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, category: e.target.value })
-                }
-              />
-              <label>
-                <b>Upload Product Photos (max 10)</b>
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={async (e) => {
-                  const files = Array.from(e.target.files);
-                  const currentUrls = Array.isArray(newProduct.pictureUrls)
-                    ? [...newProduct.pictureUrls]
-                    : [];
+            ))}
+        </div>
 
-                  for (const file of files) {
-                    if (currentUrls.length >= 10) break;
-                    const url = await uploadImageToGCS(file);
-                    if (url) currentUrls.push(url);
-                  }
+        <input
+          placeholder="Colors"
+          value={newProduct.colors}
+          onChange={e =>
+            setNewProduct({ ...newProduct, colors: e.target.value })
+          }
+        />
+        <select
+          value={newProduct.sizes}
+          onChange={e =>
+            setNewProduct({ ...newProduct, sizes: e.target.value })
+          }
+        >
+          {["XS", "S", "M", "L", "XL", "XXL"].map(sz => (
+            <option key={sz} value={sz}>
+              {sz}
+            </option>
+          ))}
+        </select>
+        <input
+          placeholder="Material"
+          value={newProduct.material}
+          onChange={e =>
+            setNewProduct({ ...newProduct, material: e.target.value })
+          }
+        />
 
-                  setNewProduct({ ...newProduct, pictureUrls: currentUrls });
-                }}
-              />
+        <button onClick={saveProduct}>Save Product</button>
+      </div>
 
-              <div className="product-photo-preview">
-                {Array.isArray(newProduct.pictureUrls) &&
-                  newProduct.pictureUrls.map((url, idx) => (
-                    <div key={idx} className="product-photo-container">
-                      <img src={url} alt={`Uploaded ${idx}`} />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setNewProduct({
-                            ...newProduct,
-                            pictureUrls: newProduct.pictureUrls.filter(
-                              (_, i) => i !== idx
-                            ),
-                          })
-                        }
-                        className="remove-photo-button"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-              </div>
-              <input
-                placeholder="Colors"
-                value={newProduct.colors}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, colors: e.target.value })
-                }
-              />
-              <select
-                value={newProduct.sizes}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, sizes: e.target.value })
-                }
-              >
-                <option value="XS">XS</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-              </select>
-              <input
-                placeholder="Material"
-                value={newProduct.material}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, material: e.target.value })
-                }
-              />
-              <button onClick={saveProduct}>Save Product</button>
-            </div>
-          </div>
-        );
+      <div className="panel">
+        <h3>{editingCategory ? "Edit" : "Add"} Category</h3>
+
+        <input
+          type="text"
+          placeholder="Category Name"
+          value={newCategory.name}
+          onChange={e =>
+            setNewCategory({ ...newCategory, name: e.target.value })
+          }
+        />
+
+        <button onClick={saveCategory}>
+          {editingCategory ? "Update" : "Add"} Category
+        </button>
+      </div>
+    </div>
+  );
 
       case "Edit Current Products/Categories":
         const filteredProducts = products.filter((p) =>
@@ -1104,14 +1208,25 @@ const rejectChange = async (change) => {
                             setNewProduct({ ...newProduct, quantity: e.target.value })
                           }
                         />
-                        <input
-                          type="text"
-                          placeholder="Category"
-                          value={newProduct.category}
-                          onChange={(e) =>
-                            setNewProduct({ ...newProduct, category: e.target.value })
-                          }
-                        />
+                        <label>
+                  <b>Category</b>
+                <select
+                  value={newProduct.clothingCategoryId ?? ""}
+                  onChange={e =>
+                    setNewProduct({
+                      ...newProduct,
+                      clothingCategoryId: e.target.value ? +e.target.value : null
+                    })
+                  }
+                >
+                  <option value="">— No category —</option>
+                  {categories.map(c => (
+                    <option key={c.clothingCategoryId} value={c.clothingCategoryId}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+                </label>
                         <label>
                       <b>Add/Remove Product Photos</b>
                     </label>
@@ -1190,7 +1305,7 @@ const rejectChange = async (change) => {
                               description: "",
                               price: "",
                               quantity: "",
-                              category: "",
+                              clothingCategoryId: null,
                               brand: "",
                               model: "",
                               pictureUrls: "",
@@ -1211,24 +1326,28 @@ const rejectChange = async (change) => {
                         </span>
                         <button
                           onClick={() => {
-                            setNewProduct({
-                              name: p.name || "",
-                              description: p.description,
-                              price: p.price.toString(),
-                              quantity: p.quantity.toString(),
-                              category: p.category,
-                              brand: p.brand,
-                              model: p.model,
-                              pictureUrls: Array.isArray(p.pictureUrls)
-                                ? p.pictureUrls
-                                : [p.pictureUrls],
-                              colors: p.colors,
-                              sizes:
-                                typeof p.sizes === "number"
-                                  ? reverseSizeMapping[p.sizes] || "XS"
-                                  : p.sizes,
-                              material: p.material,
-                            });
+                                setNewProduct({
+                            name: p.name || "",
+                            description: p.description,
+                            price: p.price.toString(),
+                            quantity: p.quantity.toString(),
+                        clothingCategoryId: Array.isArray(p.clothingCategoryId)
+                          ? p.clothingCategoryId
+                          : p.clothingCategoryId!= null
+                          ? [p.clothingCategoryId]
+                          : [],
+                            brand: p.brand,
+                            model: p.model,
+                            pictureUrls: Array.isArray(p.pictureUrls)
+                              ? p.pictureUrls
+                              : [p.pictureUrls],
+                            colors: p.colors,
+                            sizes:
+                              typeof p.sizes === "number"
+                                ? reverseSizeMapping[p.sizes] || "XS"
+                                : p.sizes,
+                            material: p.material,
+                          });
                             setEditingProductId(p.clothingItemId);
                           }}
                         >
@@ -1245,42 +1364,54 @@ const rejectChange = async (change) => {
             </div>
             <div className="category-section" style={{ marginTop: "24px" }}>
               <h3>Categories</h3>
-              <ul className="category-list">
+             <ul className="category-list">
                 {categories.map((cat) => (
-                  <li key={cat.id}>
-                    <span>{cat.name}</span>
-                    <button
-                      onClick={() => (
-                        setEditingCategory(cat),
-                        setNewCategory({ name: cat.name, color: cat.color || "#000000" })
-                      )}
-                    >
-                      Edit
-                    </button>
-                    <button onClick={() => deleteCategory(cat.id)}>Delete</button>
-                  </li>
+                  <li key={cat.clothingCategoryId}>
+                <span>{cat.name}</span>
+                <button
+                  onClick={() => {
+                    setEditingCategory(cat);
+                    setNewCategory({
+                      name: cat.name,
+                      color: cat.colorHex || "#000000"    // ← pull in the existing color
+                    });
+                  }}
+                >
+                  Edit
+                </button>
+                <button onClick={() => deleteCategory(cat.clothingCategoryId)}>
+                  Delete
+                </button>
+              </li>
                 ))}
               </ul>
+              
+              {editingCategory && (
               <div className="category-form" style={{ marginTop: "12px" }}>
                 <input
                   type="text"
-                  placeholder="New Category Name"
+                  placeholder="Category Name"
                   value={newCategory.name}
-                  onChange={(e) =>
+                  onChange={e =>
                     setNewCategory({ ...newCategory, name: e.target.value })
                   }
                 />
                 <input
                   type="color"
                   value={newCategory.color}
-                  onChange={(e) =>
+                  onChange={e =>
                     setNewCategory({ ...newCategory, color: e.target.value })
                   }
                 />
-                <button onClick={saveCategory}>
-                  {editingCategory ? "Update Category" : "Add Category"}
-                </button>
-              </div>
+                <button onClick={() => { saveCategory(); setEditingCategory(null); }}>
+                  Update Category
+              </button>
+              <button onClick={() => setEditingCategory(null)}>
+                Cancel
+             </button>
+             </div>
+           )}
+
             </div>
           </div>
         );
@@ -1687,7 +1818,30 @@ const rejectChange = async (change) => {
               </div>
             </>
           );
-        }        
+        };
+        
+        case "Notifications":
+    return (
+      <div className="panel notifications-panel">
+        <h3>Notification Logs</h3>
+        <ul className="notification-list">
+          {notifications.length === 0 ? (
+            <li>No notifications yet.</li>
+          ) : (
+            notifications.map((n) => (
+              <li key={n.notificationId} className="notification-entry">
+                <p>{n.message}</p>
+                <small>
+                  {new Date(n.createdAt).toLocaleString()} — {n.type}
+                </small>
+              </li>
+            ))
+          )}
+        </ul>
+      </div>
+    );
+
+        
 
       case "Delete Business":
         return (

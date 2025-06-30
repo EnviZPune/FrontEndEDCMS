@@ -1,222 +1,227 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import Navbar from '../Components/Navbar';
-import Footer from '../Components/Footer';
-import '../Styling/sd-shopdetail.css';
+// src/Pages/ShopDetailsPage.js
 
-const ShopDetailsPage = () => {
-  const { businessId } = useParams();
-  const [shop, setShop] = useState(null);
-  const [clothingItems, setClothingItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+import React, { useState, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import Navbar from '../Components/Navbar'
+import Footer from '../Components/Footer'
+import '../Styling/sd-shopdetail.css'
 
-  // Helper: Extract a valid image URL from maybe‐JSON or plain string
-  const getImageUrl = (data, fallback) => {
-    if (!data) return fallback;
-    if (typeof data === 'string') {
-      if (data.startsWith('https://storage.googleapis.com')) {
-        return data;
-      }
-      try {
-        const parsed = JSON.parse(data);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed[0];
-        }
-      } catch {
-        // Not JSON‐wrapped; return raw string
-        return data;
-      }
-    }
-    if (Array.isArray(data) && data.length > 0) {
-      return data[0];
-    }
-    return fallback;
-  };
+const API_BASE  = 'http://77.242.26.150:8000'
+const PAGE_SIZE = 8
 
-  // Helper: Check "HH:mm-HH:mm" → whether current time is in that range
-  const parseAndCheckOpenStatus = (openingHoursStr) => {
-    if (!openingHoursStr || !openingHoursStr.includes('-')) {
-      return false;
-    }
-    const [startStr, endStr] = openingHoursStr.split('-');
-    const now = new Date();
-    const [startHour, startMin] = startStr.split(':').map(Number);
-    const [endHour, endMin] = endStr.split(':').map(Number);
-    const start = new Date(now);
-    const end = new Date(now);
-    start.setHours(startHour, startMin, 0, 0);
-    end.setHours(endHour, endMin, 0, 0);
-    return now >= start && now <= end;
-  };
+export default function ShopDetailsPage() {
+  const { businessId } = useParams()
 
-  // Same token‐unwrapping logic as in Settings.js
-  const getToken = () => {
-    let raw = localStorage.getItem('token') || localStorage.getItem('authToken');
-    if (!raw || raw.trim() === '') return null;
-    if (raw.startsWith('"') && raw.endsWith('"')) {
-      raw = raw.slice(1, -1);
-    }
-    return raw;
-  };
+  // ── Shop info ─────────────────────────────────────────────
+  const [shop, setShop]     = useState(null)
+  const [isOpen, setIsOpen] = useState(false)
 
+  // ── Categories + items ────────────────────────────────────
+  const [categories, setCategories]                           = useState([])
+  const [selectedCategoryId, setSelectedCategoryId]           = useState(0)
+  const [items, setItems]                                     = useState([])
+
+  // ── Pagination + UI ───────────────────────────────────────
+  const [page, setPage]           = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [loading, setLoading]     = useState(true)
+  const [error, setError]         = useState(null)
+
+  const token = (() => {
+    const raw = localStorage.getItem('token') || localStorage.getItem('authToken')
+    return raw ? raw.replace(/^"|"$/g, '') : null
+  })()
+
+  const parseAndCheckOpen = oh => {
+    if (!oh?.includes('-')) return false
+    const [start, end] = oh.split('-')
+    const now = new Date()
+    const [sh, sm] = start.split(':').map(Number)
+    const [eh, em] = end.split(':').map(Number)
+    const s = new Date(now); s.setHours(sh, sm, 0, 0)
+    const e = new Date(now); e.setHours(eh, em, 0, 0)
+    return now >= s && now <= e
+  }
+
+  // ── Fetch shop, categories & items ONCE ─────────────────────
   useEffect(() => {
-    const token = getToken();
     if (!token) {
-      setError('Unauthorized access. Please log in.');
-      setLoading(false);
-      return;
+      setError('Please log in.')
+      setLoading(false)
+      return
     }
+    const headers = { Authorization: `Bearer ${token}` }
 
-    const fetchShopAndItems = async () => {
+    ;(async () => {
       try {
-        // 1) Fetch shop details
-        const shopRes = await fetch(
-          `http://77.242.26.150:8000/api/Business/${businessId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        if (!shopRes.ok) {
-          throw new Error('Shop not found.');
-        }
-        const shopData = await shopRes.json();
-        setShop(shopData);
+        const [shopRes, catsRes, itemsRes] = await Promise.all([
+          fetch(`${API_BASE}/api/Business/${businessId}`, { headers }),
+          fetch(`${API_BASE}/api/ClothingCategory/business/${businessId}`, { headers }),
+          fetch(`${API_BASE}/api/ClothingItem/business/${businessId}`,   { headers }),
+        ])
+
+        if (!shopRes.ok)  throw new Error(`Shop fetch failed: ${shopRes.status}`)
+        if (!itemsRes.ok) throw new Error(`Items fetch failed: ${itemsRes.status}`)
+
+        const shopData  = await shopRes.json()
+        const catsData  = catsRes.ok  ? await catsRes.json() : []
+        const itemsData = await itemsRes.json()
+
+        // SHOP
+        setShop(shopData)
         setIsOpen(
-          shopData.isManuallyOpen ?? parseAndCheckOpenStatus(shopData.openingHours)
-        );
+          typeof shopData.isManuallyOpen === 'boolean'
+            ? shopData.isManuallyOpen
+            : parseAndCheckOpen(shopData.openingHours)
+        )
 
-        // 2) Fetch all clothing items for that business
-        const itemsRes = await fetch(
-          `http://77.242.26.150:8000/api/ClothingItem/business/${businessId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        if (!itemsRes.ok) {
-          // Even if no items exist, the backend should return 200 with an empty array.
-          throw new Error('Failed to fetch products.');
-        }
-        const itemsData = await itemsRes.json();
-        setClothingItems(itemsData);
+        // CATEGORIES (prepend “All”)
+        setCategories([{ clothingCategoryId: 0, name: 'All' }, ...catsData])
+
+        // ITEMS
+        setItems(itemsData)
       } catch (err) {
-        setError(err.message);
+        console.error(err)
+        setError(err.message)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    })()
+  }, [businessId, token])
 
-    fetchShopAndItems();
-  }, [businessId]);
+  // ── Recompute pagination whenever items change ──────────────
+  useEffect(() => {
+    setTotalPages(Math.ceil(items.length / PAGE_SIZE))
+    setPage(1)
+  }, [items])
 
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Loading shop details...</p>
-      </div>
-    );
-  }
-  if (error) {
-    return <p className="sd-error-message">{error}</p>;
-  }
-  if (!shop) {
-    return <p className="sd-error-message">Shop not found.</p>;
-  }
+  if (loading) return <p>Loading…</p>
+  if (error)   return <p className="sd-error">{error}</p>
+  if (!shop)   return <p className="sd-error">Shop not found</p>
+
+  // ── Prepare paginated “All” slice ─────────────────────────
+  const startIdx     = (page - 1) * PAGE_SIZE
+  const allPageItems = items.slice(startIdx, startIdx + PAGE_SIZE)
+
+  // ── Full list for the selected category ───────────────────
+  const categoryItems =
+    selectedCategoryId === 0
+      ? []
+      : items.filter(item => item.clothingCategoryId === selectedCategoryId)
 
   return (
     <>
       <Navbar />
+
       <div className="sd-shop-details-page">
-        {/* HERO SECTION */}
+
+        {/* HERO */}
         <div
           className="sd-shop-hero"
           style={{
-            backgroundImage: `url(${
-              getImageUrl(shop.coverPhoto || shop.coverPictureUrl, '/default-cover.jpg')
-            })`,
+            backgroundImage: `url(${shop.coverPhoto || shop.coverPictureUrl || '/default-cover.jpg'})`
           }}
         >
           <div className="sd-shop-hero-content">
             <img
-              src={getImageUrl(
-                shop.profilePhoto || shop.profilePictureUrl,
-                '/default-logo.jpg'
-              )}
-              alt={`${shop.name} Logo`}
               className="sd-shop-logo"
+              src={shop.profilePhoto || shop.profilePictureUrl || '/default-logo.jpg'}
+              alt={`${shop.name} Logo`}
             />
             <h1 className="sd-shop-name">{shop.name}</h1>
           </div>
         </div>
 
-        {/* SHOP INFORMATION */}
+        {/* INFO */}
         <div className="sd-shop-info">
+          <p><strong>Description:</strong> {shop.description}</p>
+          <p><strong>Location:</strong> {shop.location}</p>
+          <p><strong>Address:</strong> {shop.address}</p>
+          <p><strong>Phone:</strong> {shop.businessPhoneNumber}</p>
+          <p><strong>Hours:</strong> {shop.openingHours}</p>
           <p>
-            <strong>Description:</strong> {shop.description}
-          </p>
-          <p>
-            <strong>Location:</strong> {shop.location}
-          </p>
-          <p>
-            <strong>Address:</strong> {shop.address}
-          </p>
-          <p>
-            <strong>Phone:</strong> {shop.businessPhoneNumber}
-          </p>
-          <p>
-            <strong>Opening Hours:</strong> {shop.openingHours}
-          </p>
-          <p>
-            <strong>Shop is now:</strong>{' '}
+            <strong>Status:</strong>{' '}
             <span className={`shop-status ${isOpen ? 'open' : 'closed'}`}>
               {isOpen ? 'Open' : 'Closed'}
             </span>
           </p>
         </div>
 
-        {/* PRODUCTS SECTION */}
+        {/* CATEGORY PILLS */}
+        <div className="sd-category-bar">
+          {categories.map(cat => (
+            <button
+              key={cat.clothingCategoryId}
+              className={`sd-category-pill ${
+                selectedCategoryId === cat.clothingCategoryId ? 'active' : ''
+              }`}
+              onClick={() => setSelectedCategoryId(cat.clothingCategoryId)}
+            >
+              {cat.name}
+            </button>
+          ))}
+        </div>
+
+        {/* ── PRODUCTS (All vs. Selected Category) ─────────────── */}
         <div className="sd-products-section">
-          <h2>Clothing Items</h2>
-          {clothingItems.length > 0 ? (
+          <h2>
+            {selectedCategoryId === 0
+              ? 'All Items'
+              : categories.find(c => c.clothingCategoryId === selectedCategoryId)?.name
+            }
+          </h2>
+
+          {(selectedCategoryId === 0 ? allPageItems : categoryItems).length > 0 ? (
             <ul className="sd-product-list">
-              {clothingItems.map((product) => (
-                <li key={product.clothingItemId} className="sd-product-card">
-                  <Link
-                    to={`/product/${product.clothingItemId}`}
-                    className="sd-product-link"
-                  >
+              {(selectedCategoryId === 0 ? allPageItems : categoryItems).map(p => (
+                <li key={p.clothingItemId} className="sd-product-card">
+                  <Link to={`/product/${p.clothingItemId}`} className="sd-product-link">
                     <img
-                      src={getImageUrl(product.pictureUrls, '/default-product.jpg')}
-                      alt={product.model}
+                      src={Array.isArray(p.pictureUrls) ? p.pictureUrls[0] : '/default-product.jpg'}
+                      alt={p.name}
                       className="sd-product-image"
                     />
                     <div className="sd-product-inline">
-                      <span>
-                        {product.name}
-                      </span>
-                      <span>${product.price}</span>
-                      <span>{product.description}</span>
+                      <span>{p.name}</span>
+                      <span>${p.price.toFixed(2)}</span>
+                      <span>{p.description}</span>
                     </div>
                   </Link>
                 </li>
               ))}
             </ul>
           ) : (
-            <p>No products available yet.</p>
+            <p className="sd-no-items">
+              {selectedCategoryId === 0
+                ? 'No items available.'
+                : 'No items in this category.'
+              }
+            </p>
+          )}
+
+          {/* PAGINATION FOR “ALL” ONLY */}
+          {selectedCategoryId === 0 && totalPages > 1 && (
+            <div className="sd-pagination">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage(p => Math.max(p - 1, 1))}
+              >
+                Prev
+              </button>
+              <span>Page {page} of {totalPages}</span>
+              <button
+                disabled={page === totalPages}
+                onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+              >
+                Next
+              </button>
+            </div>
           )}
         </div>
+
       </div>
+
       <Footer />
     </>
-  );
-};
-
-export default ShopDetailsPage;
+  )
+}
