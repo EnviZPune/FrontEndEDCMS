@@ -27,7 +27,6 @@ export default function Notifications() {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
 
-  // load pending invites
   useEffect(() => {
     (async () => {
       const token = getToken();
@@ -67,7 +66,6 @@ export default function Notifications() {
     })();
   }, []);
 
-  // SignalR realtime updates
   useEffect(() => {
     const token = getToken();
     if (!token) return;

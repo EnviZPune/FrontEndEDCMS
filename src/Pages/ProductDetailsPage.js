@@ -68,14 +68,41 @@ const ProductDetailsPage = () => {
     
       } catch (error) {
         console.error('Failed to load product:', error);
-        setProduct(null); // explicitly mark it as not found
+        setProduct(null);
       } finally {
         setLoading(false);
       }
-    };    
+    };
 
     fetchProduct();
   }, [id]);
+
+  const handleThumbnailClick = (url) => setMainImage(url);
+
+  const handleReserve = async () => {
+    if (!product) return;
+    const token = getToken();
+    if (!token) {
+      alert('Please log in to make a reservation.');
+      return;
+    }
+    try {
+      const res = await fetch('http://77.242.26.150:8000/api/Reservation', {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({ clothingItemId: product.clothingItemId }),
+      });
+      if (res.ok) {
+        alert('Product booked successfully!');
+      } else {
+        const errText = await res.text();
+        alert('Booking error: ' + errText);
+      }
+    } catch (e) {
+      console.error('Reservation error:', e);
+      alert('An error occurred while booking.');
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
   if (!product) return <div>Product not found.</div>;
@@ -89,7 +116,17 @@ const ProductDetailsPage = () => {
     parsedImages = [];
   }
 
-  const handleThumbnailClick = (url) => setMainImage(url);
+  // Debug: log JWT claims to console
+  (async () => {
+    const token = getToken();
+    if (!token) return;
+    const res = await fetch('http://77.242.26.150:8000/api/Reservation/claims', {
+      headers: getHeaders(),
+    });
+    if (res.ok) {
+      console.log('Claims:', await res.json());
+    }
+  })();
 
   return (
     <>
@@ -110,11 +147,11 @@ const ProductDetailsPage = () => {
               <img src={mainImage} alt="Main product" className="main-image" />
             )}
             <div className="thumbnail-list">
-              {parsedImages.slice(0, 10).map((url, index) => (
+              {parsedImages.slice(0, 10).map((url, idx) => (
                 <img
-                  key={index}
+                  key={idx}
                   src={url}
-                  alt={`Thumbnail ${index}`}
+                  alt={`Thumbnail ${idx + 1}`}
                   className={`thumbnail ${mainImage === url ? 'active' : ''}`}
                   onClick={() => handleThumbnailClick(url)}
                 />
@@ -123,20 +160,24 @@ const ProductDetailsPage = () => {
           </div>
 
           <div className="product-info">
-            <h1>{product.name} - {product.brand}</h1>
-            <p><strong>Model: </strong>{product.model}</p>
+            <h1>{product.name} – {product.brand}</h1>
+            <p><strong>Model:</strong> {product.model}</p>
             <p><strong>Description:</strong> {product.description}</p>
             <p><strong>Price:</strong> ${product.price}</p>
             <p><strong>Quantity:</strong> {product.quantity}</p>
-            <p><strong>Category:</strong> {product.category}</p>
             <p><strong>Material:</strong> {product.material}</p>
             <p><strong>Colors:</strong> {product.colors}</p>
             <p><strong>Sizes:</strong> {
               typeof product.sizes === 'number'
-                ? ['XS', 'S', 'M', 'L', 'XL', 'XXL'][product.sizes]
+                ? ['XS','S','M','L','XL','XXL'][product.sizes]
                 : product.sizes
             }</p>
-            <button className="rezerve-button">Rezervë</button>
+            <button
+              className="rezerve-button"
+              onClick={handleReserve}
+            >
+              Book Product
+            </button>
           </div>
         </div>
       </div>

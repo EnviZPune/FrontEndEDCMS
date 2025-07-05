@@ -14,6 +14,7 @@ import {
   FaEye,
   FaTrash,
   FaBell,
+  FaCalendar,
 } from "react-icons/fa";
 
 
@@ -27,6 +28,7 @@ const getToken = () => {
     return raw;
   }
 };
+
 
 const safeParseJson = async (res) => {
   const text = await res.text();
@@ -118,6 +120,8 @@ const LoadingOverlay = () => (
   const [formData, setFormData] = useState({ name: "", description: "" });
   const [products, setProducts] = useState([]);
   const [pendingChanges, setPendingChanges] = useState([]);
+  const [history, setHistory] = useState([]);
+  const [reservations, setReservations] = useState([]);
   const [newProduct, setNewProduct] = useState({
   name: "",
   description: "",
@@ -166,6 +170,38 @@ const LoadingOverlay = () => (
     if (business) fetchBusinessDetails(business.businessId);
   };
 
+   
+   useEffect(() => {
+  if (selectedCategory !== "Notification History" || !selectedBusiness?.businessId) {
+    return;
+  }
+
+  const controller = new AbortController();
+  const { signal } = controller;
+
+  const loadHistory = async () => {
+    try {
+      const res = await fetch(
+        `http://77.242.26.150:8000/api/Notification/business/${selectedBusiness.businessId}/history`,
+        { headers: getHeaders(), signal }
+      );
+      if (!res.ok) throw new Error(`Status ${res.status}`);
+      setHistory(await res.json());
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        console.error("Failed to load history:", err);
+        setHistory([]);
+      }
+    }
+  };
+
+  loadHistory();
+
+  return () => {
+    controller.abort();
+  };
+}, [selectedCategory, selectedBusiness?.businessId]);
+
 
     useEffect(() => {
     if (selectedCategory === "Pending Changes" && selectedBusiness) {
@@ -173,8 +209,7 @@ const LoadingOverlay = () => (
     }
   }, [selectedCategory, selectedBusiness]);
 
-  // ── Add this block ──
-  // Refresh categories when you switch into the category panels
+
   useEffect(() => {
     if (
       selectedBusiness &&
@@ -212,21 +247,89 @@ const LoadingOverlay = () => (
     }
   }, [navigate]);
 
-
-  const fetchNotifications = async () => {
-  const res = await fetch(
-    `http://77.242.26.150:8000/api/Notification/business/${selectedBusiness.businessId}`,
-    { headers: getHeaders() }
-  );
-  if (res.ok) {
+  const fetchReservations = async () => {
+  if (!selectedBusiness) return;
+  try {
+    const res = await fetch(
+      `${API_BASE}/api/Reservation/business/${selectedBusiness.businessId}`,
+      { headers: getHeaders() }
+    );
+    if (!res.ok) throw new Error(`Status ${res.status}`);
     const data = await res.json();
-    setNotifications(data);
+    setReservations(data);
+  } catch (err) {
+    console.error('Failed to load reservations:', err);
+    setReservations([]);
   }
 };
 
-if (selectedBusiness?.businessId) {
-  fetchNotifications();
-}
+const handleCompleteReservation = async (id) => {
+  await fetch(`${API_BASE}/api/Reservation/${id}/complete`, {
+    method: 'PUT',
+    headers: getHeaders(),
+  });
+  fetchReservations();
+};
+
+const handleUpdateReservation = async (reservationId, newStatus) => {
+  try {
+    const res = await fetch(
+      `${API_BASE}/api/Reservation/${reservationId}/status`,
+      {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify({ status: newStatus })
+      }
+    );
+    if (!res.ok) {
+      const errText = await res.text();
+      alert('Error updating reservation: ' + errText);
+      return;
+    }
+    alert(
+      `Reservation ${
+        newStatus === 'Confirmed' ? 'approved' : 'rejected'
+      } successfully.`
+    );
+    fetchReservations();
+  } catch (e) {
+    console.error('Update error:', e);
+    alert('Failed to update reservation status.');
+  }
+};
+
+
+useEffect(() => {
+  if (selectedCategory === 'Pending Changes' && selectedBusiness) {
+    fetchPendingChanges();
+  }
+  if (selectedCategory === 'Reservations' && selectedBusiness) {
+    fetchReservations();
+  }
+}, [selectedCategory, selectedBusiness]);
+
+
+
+const fetchNotifications = async () => {
+  const res = await fetch(
+    `http://77.242.26.150:8000/api/Notification`,
+    { headers: getHeaders() }
+  );
+  if (!res.ok) {
+    console.error("Failed to load notifications", res.status);
+    return;
+  }
+  const data = await res.json();
+  setNotifications(data);
+};
+
+
+useEffect(() => {
+  if (selectedBusiness?.businessId) {
+    fetchNotifications();
+  }
+}, [selectedBusiness]);
+
 
 
   useEffect(() => {
@@ -414,133 +517,152 @@ const rejectChange = async (change) => {
     alert(res.ok ? "Business info updated!" : "Failed to update business.");
   };
 
-  const saveProduct = async () => {
-    if (userRole === "employee") {
-      const dto = {
-        businessId: selectedBusiness.businessId,
-        type: editingProductId ? "Update" : "Create",
-        itemDto: {
-          clothingItemId: editingProductId || 0,
-          name: newProduct.name,
-          businessIds: [selectedBusiness.businessId],
-          description: newProduct.description,
-          price: parseFloat(newProduct.price),
-          quantity: parseInt(newProduct.quantity),
-          clothingCategoryId: newProduct.clothingCategoryId,
-          brand: newProduct.brand,
-          model: newProduct.model,
-          pictureUrls:
-            typeof newProduct.pictureUrls === "string"
-              ? [newProduct.pictureUrls]
-              : newProduct.pictureUrls,
-              colors:
-              typeof newProduct.colors === "string"
-                ? newProduct.colors.split(",").map((c) => c.trim())
-                : newProduct.colors,
-          sizes:
-            typeof newProduct.sizes === "number"
-              ? newProduct.sizes
-              : sizeMapping[newProduct.sizes],
-          material: newProduct.material,
-        },
-      };
-
-      try {
-        await fetch("http://77.242.26.150:8000/api/ProposedChanges/submit", {
-          method: "POST",
-          headers: getHeaders(),
-          body: JSON.stringify(dto),
-        });
-        alert(
-          "Your change has been proposed. Please wait for an owner to approve or reject."
-        );
-        setNewProduct({
-          name: "",
-          description: "",
-          price: "",
-          quantity: "",
-          clothingCategoryId: null,
-          brand: "",
-          model: "",
-          pictureUrls: [],
-          colors: "",
-          sizes: "XS",
-          material: "",
-        });
-        setEditingProductId(null);
-        fetchProducts(selectedBusiness.businessId);
-      } catch (err) {
-        console.error("Failed to propose a change:", err);
-        alert("Network error when proposing change.");
-      }
-
-      return;
-    }
-
-    const method = editingProductId ? "PUT" : "POST";
-    const url = editingProductId
-      ? `http://77.242.26.150:8000/api/ClothingItem/${editingProductId}`
-      : "http://77.242.26.150:8000/api/ClothingItem";
-
-      const body = {
+const saveProduct = async () => {
+  // ─── Employee branch: propose a change ───
+  if (userRole === "employee") {
+    const dto = {
+      businessId: selectedBusiness.businessId,
+      type: editingProductId ? "Update" : "Create",
+      itemDto: {
+        clothingItemId: editingProductId || 0,
         name: newProduct.name,
         businessIds: [selectedBusiness.businessId],
         description: newProduct.description,
         price: parseFloat(newProduct.price),
-        quantity: parseInt(newProduct.quantity),
-        clothingCategoryId: newProduct.clothingCategoryId,
+        quantity: parseInt(newProduct.quantity, 10),
+        clothingCategoryId:
+          newProduct.clothingCategoryId != null
+            ? parseInt(newProduct.clothingCategoryId, 10)
+            : null,
         brand: newProduct.brand,
         model: newProduct.model,
         pictureUrls:
           typeof newProduct.pictureUrls === "string"
             ? [newProduct.pictureUrls]
             : newProduct.pictureUrls,
-        colors: typeof newProduct.colors === "string"
-          ? newProduct.colors.split(",").map((c) => c.trim())
-          : Array.isArray(newProduct.colors)
-          ? newProduct.colors
-          : [],
+        colors:
+          typeof newProduct.colors === "string"
+            ? newProduct.colors.split(",").map((c) => c.trim())
+            : Array.isArray(newProduct.colors)
+            ? newProduct.colors
+            : [],
         sizes:
           typeof newProduct.sizes === "number"
             ? newProduct.sizes
             : sizeMapping[newProduct.sizes],
         material: newProduct.material,
-      };
-      
+      },
+    };
 
     try {
-      const res = await fetch(url, {
-        method,
-        headers: getHeaders(),
-        body: JSON.stringify(body),
+      await fetch(
+        "http://77.242.26.150:8000/api/ProposedChanges/submit",
+        {
+          method: "POST",
+          headers: getHeaders(),
+          body: JSON.stringify(dto),
+        }
+      );
+      alert(
+        "Your change has been proposed. Please wait for an owner to approve or reject."
+      );
+      // reset form
+      setNewProduct({
+        name: "",
+        description: "",
+        price: "",
+        quantity: "",
+        clothingCategoryId: null,
+        brand: "",
+        model: "",
+        pictureUrls: [],
+        colors: "",
+        sizes: "XS",
+        material: "",
       });
-      if (!res.ok) {
-        console.error("Failed to save product, status:", res.status);
-        alert("Failed to save product.");
-      } else {
-        alert("Product saved!");
-      }
-    } catch (error) {
-      console.error("Fetch error:", error);
-      alert("Network error when attempting to save product.");
+      setEditingProductId(null);
+      fetchProducts(selectedBusiness.businessId);
+    } catch (err) {
+      console.error("Failed to propose a change:", err);
+      alert("Network error when proposing change.");
     }
+    return;
+  }
 
-    setNewProduct({
-      name: "",
-      description: "",
-      price: "",
-      quantity: "",
-      clothingCategoryId: null,
-      brand: "",
-      model: "",
-      pictureUrls: [],
-      colors: "",
-      sizes: "XS",
-      material: "",
-    });
-    setEditingProductId(null);
-    fetchProducts(selectedBusiness.businessId);
-  };
+  // ─── Owner branch: immediate create/update ───
+  const method = editingProductId ? "PUT" : "POST";
+const url = editingProductId
+  ? `http://77.242.26.150:8000/api/ClothingItem/${editingProductId}`
+  : "http://77.242.26.150:8000/api/ClothingItem";
+
+// build the DTO (no wrapping in { dto: ... })
+const dto = {
+  name: newProduct.name,
+  businessIds: [selectedBusiness.businessId],
+  description: newProduct.description,
+  price: parseFloat(newProduct.price),
+  quantity: parseInt(newProduct.quantity, 10),
+  clothingCategoryId:
+    newProduct.clothingCategoryId != null
+      ? parseInt(newProduct.clothingCategoryId, 10)
+      : null,
+  brand: newProduct.brand,
+  model: newProduct.model,
+  pictureUrls:
+    typeof newProduct.pictureUrls === "string"
+      ? [newProduct.pictureUrls]
+      : Array.isArray(newProduct.pictureUrls)
+      ? newProduct.pictureUrls
+      : [],
+  colors:
+    typeof newProduct.colors === "string"
+      ? newProduct.colors.split(",").map((c) => c.trim())
+      : Array.isArray(newProduct.colors)
+      ? newProduct.colors
+      : [],
+  sizes:
+    typeof newProduct.sizes === "number"
+      ? newProduct.sizes
+      : sizeMapping[newProduct.sizes],
+  material: newProduct.material,
+};
+
+try {
+  const res = await fetch(url, {
+    method,
+    headers: getHeaders(),
+    // ✅ SEND DTO DIRECTLY (no envelope)
+    body: JSON.stringify(dto),
+  });
+
+  if (!res.ok) {
+    console.error("Failed to save product, status:", res.status);
+    alert("Failed to save product.");
+  } else {
+    alert("Product saved!");
+  }
+} catch (error) {
+  console.error("Fetch error:", error);
+  alert("Network error when attempting to save product.");
+}
+
+setNewProduct({
+  name: "",
+  description: "",
+  price: "",
+  quantity: "",
+  clothingCategoryId: null,
+  brand: "",
+  model: "",
+  pictureUrls: [],
+  colors: "",
+  sizes: "XS",
+  material: "",
+});
+setEditingProductId(null);
+fetchProducts(selectedBusiness.businessId);
+};
+
 
   const saveProfileCoverPhotos = async () => {
     console.log(
@@ -823,7 +945,8 @@ const rejectChange = async (change) => {
     { name: "Employee Management", icon: <FaUsers /> },
     { name: "Pending Changes", icon: <FaExclamationTriangle /> },
     { name: "My Shops", icon: <FaEye /> },
-    { name: "Notifications", icon: <FaBell />},
+    { name: "Notification History", icon: <FaBell />},
+    { name: 'Reservations', icon: <FaCalendar /> },
     { name: "Delete Business", icon: <FaTrash /> },
   ];
 
@@ -836,6 +959,7 @@ const rejectChange = async (change) => {
         "Add New Products/Categories",
         "Edit Current Products/Categories",
         "My Shops",
+        "Reservations",
       ].includes(item.name)
     );
     if (!visibleSidebarItems.some((i) => i.name === selectedCategory)) {
@@ -1820,28 +1944,123 @@ const rejectChange = async (change) => {
           );
         };
         
-        case "Notifications":
-    return (
-      <div className="panel notifications-panel">
-        <h3>Notification Logs</h3>
+case "Notification History":
+  return (
+    <div className="panel">
+      <h3>Notification History</h3>
+      {history.length === 0 ? (
+        <p>No notifications ever sent.</p>
+      ) : (
         <ul className="notification-list">
-          {notifications.length === 0 ? (
-            <li>No notifications yet.</li>
-          ) : (
-            notifications.map((n) => (
-              <li key={n.notificationId} className="notification-entry">
-                <p>{n.message}</p>
-                <small>
-                  {new Date(n.createdAt).toLocaleString()} — {n.type}
-                </small>
-              </li>
-            ))
-          )}
+          {history.map(n => (
+            <li key={n.id ?? n.notificationId} className="notification-entry">
+              <p>{n.message}</p>
+              <small>{new Date(n.createdAt).toLocaleString()}</small>
+            </li>
+          ))}
         </ul>
-      </div>
-    );
+      )}
+    </div>
+  );
 
-        
+case "Reservations": {
+  const reserved = reservations.filter(r => r.status === "Confirmed");
+
+  return (
+    <div className="panel">
+      <h3>Product Reservations</h3>
+
+      <section style={{ marginTop: "1rem" }}>
+        <h4>Reserved Products</h4>
+        {reserved.length === 0 ? (
+          <p>No approved reservations.</p>
+        ) : (
+          <table className="reservations-table">
+            <thead>
+              <tr>
+                <th>Reservation ID</th>
+                <th>Product</th>
+                <th>Shop</th>
+                <th>Customer</th>
+                <th>Created At</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reserved.map(r => (
+                <tr key={r.reservationId}>
+                  <td>{r.reservationId}</td>
+                  <td>{r.productName}</td>
+                  <td>{r.shopName}</td>
+                  <td>{r.customerName}</td>
+                  <td>{new Date(r.createdAt).toLocaleString()}</td>
+                  <td>{r.status}</td>
+                  <td>
+                    <button
+                      onClick={() =>
+                        handleCompleteReservation(r.reservationId)
+                      }
+                    >
+                      Mark Completed
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+
+      <section style={{ marginTop: "2rem" }}>
+        <h4>Pending Reservations</h4>
+        {reservations.filter(r => r.status === "Pending").length === 0 ? (
+          <p>No pending reservations.</p>
+        ) : (
+          <table className="reservations-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Product</th>
+                <th>Customer</th>
+                <th>Created At</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reservations
+                .filter(r => r.status === "Pending")
+                .map(r => (
+                  <tr key={r.reservationId}>
+                    <td>{r.reservationId}</td>
+                    <td>{r.productName}</td>
+                    <td>{r.customerName}</td>
+                    <td>{new Date(r.createdAt).toLocaleString()}</td>
+                    <td>
+                      <button
+                        onClick={() =>
+                          handleUpdateReservation(r.reservationId, "Confirmed")
+                        }
+                      >
+                        Approve
+                      </button>{" "}
+                      <button
+                        onClick={() =>
+                          handleUpdateReservation(r.reservationId, "Cancelled")
+                        }
+                      >
+                        Reject
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+    </div>
+  );
+}
 
       case "Delete Business":
         return (

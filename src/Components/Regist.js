@@ -95,7 +95,7 @@ function RegisterFormUser() {
         console.warn("Email confirmation request failed:", errorText);
       }
 
-      setSuccess("User registered successfully! Please check your email to verify your account.");
+      setSuccess("Successfully Registered. Check your email to verify your account !");
       setFormData({
         firstName: '',
         lastName: '',
@@ -149,7 +149,7 @@ function RegisterFormUser() {
   return (
     <form onSubmit={handleSubmit} className="register_main_div">
       <div className="register_user">
-        <a href="http://localhost:3000">
+        <a href="http://localhost:3000/preview">
           <img src="Assets/logo.png" id="logo_ed" alt="logo" />
         </a>
         <h5 id="h_register">- Establish a New Profile -</h5>
@@ -168,7 +168,7 @@ function RegisterFormUser() {
         </div>
 
         <button id="button_register" type="submit" disabled={loading}>
-          {loading ? 'Registering...' : 'Done'}
+          {loading ? 'Registering User...' : 'Done'}
         </button>
 
         <div className="google-login-container">
