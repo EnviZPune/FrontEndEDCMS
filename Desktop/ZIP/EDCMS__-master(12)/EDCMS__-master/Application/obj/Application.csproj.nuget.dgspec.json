@@ -1,0 +1,224 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Application/Application.csproj": {}
+  },
+  "projects": {
+    "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Application/Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Application/Application.csproj",
+        "projectName": "Application",
+        "projectPath": "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Application/Application.csproj",
+        "packagesPath": "/home/envi-zajmi/.nuget/packages/",
+        "outputPath": "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Application/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/envi-zajmi/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Domain/Domain.csproj": {
+                "projectPath": "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Domain/Domain.csproj"
+              },
+              "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Infrastructure/Infrastructure.csproj": {
+                "projectPath": "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Infrastructure/Infrastructure.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.2, )"
+            },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[48.2.0-beta.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/snap/dotnet-sdk/current/sdk/6.0.428/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Domain/Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Domain/Domain.csproj",
+        "projectName": "Domain",
+        "projectPath": "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Domain/Domain.csproj",
+        "packagesPath": "/home/envi-zajmi/.nuget/packages/",
+        "outputPath": "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Domain/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/envi-zajmi/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[48.2.0-beta.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/snap/dotnet-sdk/current/sdk/6.0.428/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Infrastructure/Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Infrastructure/Infrastructure.csproj",
+        "projectName": "Infrastructure",
+        "projectPath": "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Infrastructure/Infrastructure.csproj",
+        "packagesPath": "/home/envi-zajmi/.nuget/packages/",
+        "outputPath": "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/envi-zajmi/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Domain/Domain.csproj": {
+                "projectPath": "/home/envi-zajmi/Desktop/ZIP/EDCMS__-master(12)/EDCMS__-master/Domain/Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.SignalR": {
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[48.2.0-beta.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/snap/dotnet-sdk/current/sdk/6.0.428/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
