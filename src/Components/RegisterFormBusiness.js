@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../Styling/registerbusiness.css';
 import Navbar from '../Components/Navbar';
 
@@ -20,9 +20,9 @@ const getToken = () => {
 const uploadImageToGCS = async (file) => {
   if (!file) return null;
   const timestamp = Date.now();
-  const fileName  = `${timestamp}-${file.name}`;
+  const fileName = `${timestamp}-${file.name}`;
   const uploadUrl = `${GCS_BUCKET}/${fileName}`;
-  const txtUrl    = `${uploadUrl}.txt`;
+  const txtUrl = `${uploadUrl}.txt`;
 
   const imageRes = await fetch(uploadUrl, {
     method: 'PUT',
@@ -51,15 +51,45 @@ function RegisterFormBusiness() {
     openingHours: '',
   });
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
-  const [coverPictureUrl,   setCoverPictureUrl]   = useState('');
+  const [coverPictureUrl, setCoverPictureUrl] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState(null);
+  const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [tokenValid, setTokenValid] = useState(false);
+  const [tokenChecked, setTokenChecked] = useState(false); // control render after validation
 
   const navigate = useNavigate();
+  const { search } = useLocation();
+  const token = new URLSearchParams(search).get('token');
+
+  useEffect(() => {
+    if (!token) {
+      setError('Missing access token. You must pay first.');
+      setTokenValid(false);
+      setTokenChecked(true);
+      return;
+    }
+
+    fetch(`${API_BASE}/payment/validate-token?token=${token}`)
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then((data) => {
+        setTokenValid(data.valid);
+      })
+      .catch(() => {
+        setError('Token expired or invalid.');
+        setTokenValid(false);
+      })
+      .finally(() => setTokenChecked(true));
+  }, [token]);
 
   const handleChange = (e) => {
-    setBusiness(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setBusiness((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleFileUpload = async (e, setter) => {
@@ -69,6 +99,7 @@ function RegisterFormBusiness() {
     setError(null);
     try {
       const url = await uploadImageToGCS(file);
+      if (!url) throw new Error();
       setter(url);
     } catch {
       setError('Image upload failed.');
@@ -95,11 +126,13 @@ function RegisterFormBusiness() {
         coverPictureUrl,
       };
 
-      const res = await fetch(`${API_BASE}/Business`, {
+      const url = `${API_BASE}/Business?token=${encodeURIComponent(token)}`;
+
+      const res = await fetch(url, {
         method: 'POST',
         headers: {
-          'Content-Type':  'application/json',
-          Authorization:   `Bearer ${getToken()}`,
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify(payload),
       });
@@ -124,9 +157,9 @@ function RegisterFormBusiness() {
       setProfilePictureUrl('');
       setCoverPictureUrl('');
 
-      if (created.businessId) {
+      setTimeout(() => {
         navigate(`/shops/${created.businessId}`);
-      }
+      }, 1000);
     } catch (err) {
       setError(err.message || 'Unexpected error occurred.');
     } finally {
@@ -137,52 +170,60 @@ function RegisterFormBusiness() {
   return (
     <div>
       <Navbar />
-    <div className="register-business-form-container">
-      <form className="register-business-form" onSubmit={handleSubmit}>
-        <h2>Register a New Business</h2>
+      <div className="register-business-form-container">
+        {!tokenChecked ? (
+          <p>Validating token...</p>
+        ) : tokenValid ? (
+          <form className="register-business-form" onSubmit={handleSubmit}>
+            <h2>Register a New Business</h2>
 
-        {[
-          ['name',                true,  'Business Name'],
-          ['description',         false, 'Description'],
-          ['address',             true,  'Address'],
-          ['location',            false, 'Location'],
-          ['businessPhoneNumber', false, 'Phone Number'],
-          ['nipt',                false, 'NIPT'],
-          ['openingHours',        false, 'Opening Hours'],
-        ].map(([field, req, placeholder]) => (
-          <input
-            key={field}
-            name={field}
-            type="text"
-            placeholder={placeholder}
-            required={!!req}
-            value={business[field]}
-            onChange={handleChange}
-          />
-        ))}
+            {[
+              ['name', true, 'Business Name'],
+              ['description', false, 'Description'],
+              ['address', true, 'Address'],
+              ['location', false, 'Location'],
+              ['businessPhoneNumber', false, 'Phone Number'],
+              ['nipt', false, 'NIPT'],
+              ['openingHours', false, 'Opening Hours'],
+            ].map(([field, req, placeholder]) => (
+              <input
+                key={field}
+                name={field}
+                type="text"
+                placeholder={placeholder}
+                required={!!req}
+                value={business[field]}
+                onChange={handleChange}
+              />
+            ))}
 
-        <label>Profile Photo</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => handleFileUpload(e, setProfilePictureUrl)}
-        />
+            <label>Profile Photo</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileUpload(e, setProfilePictureUrl)}
+            />
 
-        <label>Cover Photo</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => handleFileUpload(e, setCoverPictureUrl)}
-        />
+            <label>Cover Photo</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileUpload(e, setCoverPictureUrl)}
+            />
 
-        <button type="submit" disabled={loading}>
-          {loading ? 'Submitting...' : 'Register Business'}
-        </button>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Submitting...' : 'Register Business'}
+            </button>
 
-        {error   && <p className="error">{error}</p>}
-        {success && <p className="success">{success}</p>}
-      </form>
-    </div>
+            {error && <p className="error">{error}</p>}
+            {success && <p className="success">{success}</p>}
+          </form>
+        ) : (
+          <div>
+            <p className="error">{error || 'Access denied.'}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

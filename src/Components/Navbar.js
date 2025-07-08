@@ -173,12 +173,12 @@ const Navbar = () => {
                     </div>
 
                     {!isOwner && (
-                      <Link to="/create-shop" className="dropdown-item">
+                      <Link to="/become-owner" className="dropdown-item">
                         🏬 Create Your Shop
                       </Link>
                     )}
                     {isOwner && (
-                      <Link to="/create-shop" className="dropdown-item">
+                      <Link to="/become-owner" className="dropdown-item">
                         🏬 Create Another Shop
                       </Link>
                     )}

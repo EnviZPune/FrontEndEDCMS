@@ -336,9 +336,10 @@ useEffect(() => {
     if (!authorized) return;
 
     const fetchBusinesses = async () => {
-      const res = await fetch("http://77.242.26.150:8000/api/Business", {
-        headers: getHeaders(),
-      });
+      const res = await fetch(
+          `${API_BASE}/api/Business/my/businesses`,
+          { headers: getHeaders() }
+        );
       const data = (await safeParseJson(res)) || [];
       setUserBusinesses(data);
       if (data.length > 0) fetchBusinessDetails(data[0].businessId);

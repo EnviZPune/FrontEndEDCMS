@@ -26,6 +26,10 @@ import UserPage from './Pages/UserPage';
 import AllShops from './Pages/AllShops';
 import ForgotPasswordPage from './Pages/ForgotPasswordPage';
 import ResetPasswordPage from './Pages/ResetPasswordPage';
+import BecomeOwner         from './Pages/BecomeOwner'
+import PaymentSuccess      from './Pages/PaymentSuccess'
+import PaymentCancel       from './Pages/PaymentCancel'
+import OwnerForm           from './Pages/OwnerForm'
 
 export default function App() {
   return (
@@ -59,6 +63,12 @@ export default function App() {
           <Route path="/settings/profile" element={<UserSettingsPage />} />
           <Route path="/confirm-email" element={<EmailConfirmation />} />
           <Route path="/allshops" element={<AllShops />} />
+
+                      {/* Stripe sandbox & one-time token pages */}
+          <Route path="/become-owner" element={<BecomeOwner />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-cancel" element={<PaymentCancel />} />
+          <Route path="/owner-form" element={<OwnerForm />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
