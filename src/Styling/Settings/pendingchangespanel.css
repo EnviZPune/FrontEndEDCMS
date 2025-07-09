@@ -1,0 +1,66 @@
+/* PendingChangesPanel.css */
+
+.pending-changes-panel {
+  background: var(--bg-panel);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.pending-changes-panel h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.pending-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pending-item {
+  background: var(--bg-light);
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pending-item-header {
+  background: var(--secondary);
+  padding: 0.75rem;
+  font-weight: 600;
+}
+
+.pending-item-meta {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.change-details-container {
+  padding: 0.75rem;
+}
+
+.pending-item-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+}
+
+.pending-item-actions button {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.approve-btn {
+  background: var(--primary);
+}
+
+.reject-btn {
+  background: var(--danger);
+}

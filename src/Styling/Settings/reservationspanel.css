@@ -1,0 +1,45 @@
+/* ReservationsPanel.css */
+
+.reservations-panel {
+  background: var(--bg-panel);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.reservations-panel h3,
+.reservations-panel h4 {
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.reservations-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.reservations-table th,
+.reservations-table td {
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.reservations-table th {
+  background: var(--secondary);
+}
+
+.reservations-panel button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reservations-panel button:hover {
+  background: darken(var(--primary),10%);
+}

@@ -1,0 +1,161 @@
+/* employeepanel.css */
+
+.employee-panel {
+  max-width: 900px;
+  margin: 0 auto 24px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  color: #333;
+}
+
+.employee-panel h3 {
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+}
+
+.employee-management-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+/* ─── Form ───────────────────────────────────────────────────────────── */
+
+.employee-form {
+  flex: 1 1 260px;
+  background: #f9f9f9;
+  padding: 16px;
+  border-radius: 6px;
+}
+
+.employee-form h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+}
+
+.employee-form label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.employee-form input {
+  width: 90%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.employee-form-buttons {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.employee-form-buttons button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #0070f3;
+  color: #fff;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+
+.employee-form-buttons button:hover {
+  background: #005bb5;
+}
+
+.employee-form-buttons button[type="button"]:last-child {
+  background: #e0e0e0;
+  color: #333;
+}
+
+/* ─── List ───────────────────────────────────────────────────────────── */
+
+.employee-list {
+  flex: 2 1 400px;
+}
+
+.employee-list h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+}
+
+.employee-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.employee-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.employee-list li:last-child {
+  border-bottom: none;
+}
+
+.employee-list span {
+  font-size: 1rem;
+  color: #444;
+}
+
+.employee-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.employee-actions button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.employee-actions button:first-child {
+  background: #0070f3;
+  color: #fff;
+}
+
+.employee-actions button:first-child:hover {
+  background: #005bb5;
+}
+
+.employee-actions button:last-child {
+  background: #d32f2f;
+  color: #fff;
+}
+
+.employee-actions button:last-child:hover {
+  background: #b71c1c;
+}
+
+/* ─── Loading / Empty states ─────────────────────────────────────────── */
+
+.employee-panel p {
+  text-align: center;
+  color: #666;
+  font-size: 1rem;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────────── */
+
+@media (max-width: 800px) {
+  .employee-management-container {
+    flex-direction: column;
+  }
+}

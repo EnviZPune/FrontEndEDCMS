@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Pages/Home';
 import Log from './Pages/Log';
 import Register from './Pages/Register';
-import ProfilePage from './Pages/ProfilePage';            // <-- renamed import
-import Settings from './Components/Settings/Settings';
+import ProfilePage from './Pages/ProfilePage';  
+import Settings   from './Components/Settings';
 import Notifications from './Components/Notifications';
 import Map from './Pages/MapPage';
 import ShopList from './Pages/ShopList';

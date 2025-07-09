@@ -1,0 +1,157 @@
+/* categorypanel.css */
+
+.category-panel {
+  max-width: 800px;
+  margin: 0 auto 24px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  color: #333;
+}
+
+.category-panel h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.6rem;
+}
+
+/* ─── Category List ─────────────────────────────────────────────────────── */
+
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+}
+
+.category-list li {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.category-list li:last-child {
+  border-bottom: none;
+}
+
+.category-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.category-name {
+  flex: 1;
+  font-size: 1rem;
+  color: #444;
+}
+
+.category-list button {
+  margin-left: 8px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+/* Edit / Delete buttons */
+.category-list button:first-of-type {
+  background: #0070f3;
+  color: #fff;
+}
+.category-list button:first-of-type:hover {
+  background: #005bb5;
+}
+
+.category-list button:last-of-type {
+  background: #d32f2f;
+  color: #fff;
+}
+.category-list button:last-of-type:hover {
+  background: #b71c1c;
+}
+
+/* ─── Category Form ─────────────────────────────────────────────────────── */
+
+.category-form {
+  background: #f9f9f9;
+  padding: 16px;
+  border-radius: 6px;
+}
+
+.category-form h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+}
+
+.category-form label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.category-form input[type="text"],
+.category-form input[type="color"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.category-form .button-group {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.category-form button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+/* Add / Update button */
+.category-form button:first-child {
+  background: #0070f3;
+  color: #fff;
+}
+.category-form button:first-child:hover {
+  background: #005bb5;
+}
+
+/* Cancel button */
+.category-form button:last-child {
+  background: #e0e0e0;
+  color: #333;
+}
+.category-form button:last-child:hover {
+  background: #cacaca;
+}
+
+/* ─── Responsive ───────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .category-list li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .category-list button {
+    margin: 8px 0 0 0;
+  }
+  .category-form .button-group {
+    flex-direction: column;
+  }
+}
