@@ -1,0 +1,333 @@
+/* Layout Wrapper for Sticky Footer */
+.sd-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.sd-content {
+  flex: 1;
+}
+
+/* Main Page Container */
+.sd-shop-details-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Hero Section */
+.sd-shop-hero {
+  position: relative;
+  height: 260px;
+  background-color: #f5f5f5; /* fallback background */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  border-radius: 16px;
+  margin-bottom: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Hero Content Positioned at Bottom */
+.sd-shop-hero-content {
+  position: absolute;
+  bottom: -60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Profile Picture (Shop Logo) */
+.sd-shop-logo {
+  position: relative;
+  top: 60px;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  background-color: #ffffff;
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.8),
+    0 10px 25px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sd-shop-logo:hover {
+  transform: scale(1.08);
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.9),
+    0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Shop Name */
+.sd-shop-name {
+  position: relative;
+  top: 60px;
+  margin-top: 12px;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+}
+
+/* Shop Info Section */
+.sd-shop-info {
+  position: relative;
+  width: 29%;
+  left: 800px;
+  background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+  padding: 24px;
+  margin-top: -40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  font-size: 16px;
+  color: #333;
+  line-height: 1.7;
+  animation: fadeInUp 0.8s ease forwards;
+  animation-delay: 0.2s;
+}
+
+.sd-category-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin: 1rem 0;
+}
+
+.sd-category-pill {
+  padding: .5rem 1rem;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+
+.sd-category-pill.active {
+  background: #0070f3;
+  color: #fff;
+  border-color: #0070f3;
+}
+
+.sd-category-group {
+  margin-bottom: 2rem;
+}
+
+.sd-category-title {
+  font-size: 1.4rem;
+  margin-bottom: .75rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: .25rem;
+}
+
+
+/* Product Section */
+.sd-products-section {
+  position: relative;
+  bottom: 345px;
+  width: 90%;
+  margin-top: 48px;
+  animation: fadeInUp 0.9s ease forwards;
+  animation-delay: 0.3s;
+}
+
+.sd-products-section h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #222;
+}
+
+/* Category label under each product */
+.sd-product-category {
+  display: block;
+  margin-top: 4px;
+  font-style: italic;
+  color: #666;
+}
+
+/* Product List */
+.sd-product-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 0;
+  margin: 32px auto;
+  list-style: none;
+  max-width: 1000px;
+}
+
+/* Card Container */
+.sd-product-card {
+  display: flex;
+  width: 100%;
+  max-width: 600px;
+  min-height: 100px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sd-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Clickable area */
+.sd-product-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  padding: 10px;
+  gap: 16px;
+}
+
+/* Image */
+.sd-product-image {
+  width: 100px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  flex-shrink: 0;
+}
+
+/* Info Row */
+.sd-product-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  font-size: 0.85rem;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.sd-product-inline span {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sd-category-group {
+  margin-bottom: 2rem;
+}
+
+.sd-category-title {
+  font-size: 1.4rem;
+  margin: 1.5rem 0 1rem;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.25rem;
+}
+
+
+/* Loading Spinner */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+.loading-spinner {
+  border: 8px solid #f3f3f3;  /* Light grey */
+  border-top: 8px solid #3498db;  /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1.5s linear infinite;
+  margin-bottom: 16px;
+}
+
+.shop-status {
+  position: relative;
+  left: 3px;
+  padding: 4px 10px;
+  font-weight: bold;
+  border-radius: 12px;
+  background-color: green;
+  color: white;
+  display: inline-block;
+}
+
+.shop-status.closed {
+  background-color: red;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Fade-in Animation */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sd-shop-details-page {
+    padding: 12px;
+  }
+
+  .sd-shop-hero {
+    height: 220px;
+  }
+
+  .sd-shop-logo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .sd-shop-name {
+    font-size: 1.5rem;
+  }
+
+  .sd-product-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sd-product-image {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* Error Message */
+.sd-error-message {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.sd-category-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;    /* ← add this */
+  position: relative;     /* keep it above the products */
+  z-index: 1;
+}
+
+.sd-products-section {
+  margin-top: 16px;       /* ← and this */
+}
+

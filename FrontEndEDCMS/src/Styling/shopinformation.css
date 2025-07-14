@@ -1,0 +1,44 @@
+.shop-infotmation{
+    position: absolute;
+    bottom: -120px;
+    left: 780px;
+    width: 35%;
+    max-height: 280px;
+    border: none;
+    box-shadow: 0 1.5px 2px;
+    padding: 7px;
+  }
+
+.shopinfo-h3 h3{
+    position: relative;
+    bottom: 675px;
+    left: 870px;
+}
+
+@media (min-width: 768px) {
+  .shop-information {
+    position: absolute; /* Using absolute for larger screens */
+    top: 20px; /* Positioned from the top */
+    right: 20px; /* Positioned from the right */
+  }
+}
+
+/* Shop Information Heading */
+.shopinfo-h3 h3 {
+  position: absolute; /* Absolute positioning to control location */
+  top: 20px; /* Positioned from the top */
+  right: 50%; /* Centering from the right half */
+  transform: translateX(50%); /* Adjusting translate to perfectly center */
+  width: auto; /* Auto width based on content size */
+}
+
+@media (max-width: 767px) {
+  .shop-information,
+  .shopinfo-h3 h3 {
+    position: static; /* Static position for mobile devices */
+    width: 100%; /* Full width for small screens */
+    text-align: center; /* Center text for readability */
+    margin-top: 10px; /* Adequate spacing from other elements */
+    padding: 10px; /* Sufficient padding for touch accessibility */
+  }
+}

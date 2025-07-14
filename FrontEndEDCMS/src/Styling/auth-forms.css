@@ -1,0 +1,91 @@
+.auth-container {
+    max-width: 420px;
+    margin: 80px auto;
+    padding: 32px;
+    background: #fefefe;
+    border-radius: 12px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .auth-container h2 {
+    font-size: 28px;
+    text-align: center;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .auth-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .auth-container label {
+    font-size: 14px;
+    color: #444;
+  }
+  
+  .auth-container input {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border 0.3s ease;
+  }
+  
+  .auth-container input:focus {
+    border-color: #0077cc;
+    outline: none;
+  }
+  
+  .auth-container button {
+    padding: 12px;
+    background: #0077cc;
+    color: white;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .auth-container button:hover {
+    background: #005fa3;
+  }
+  
+  .auth-container p {
+    font-size: 14px;
+    text-align: center;
+    color: #e63946;
+  }
+
+  .status-message {
+    margin-top: 16px;
+    font-weight: bold;
+    color: #e74c3c; /* red by default */
+  }
+  
+  .status-message:before {
+    content: "ℹ️ ";
+  }
+  
+  .status-message:contains("successfully") {
+    color: #2ecc71;
+  }
+  
+  
+  @media (max-width: 480px) {
+    .auth-container {
+      margin: 40px 20px;
+      padding: 24px;
+    }
+  
+    .auth-container h2 {
+      font-size: 24px;
+    }
+  }
+  

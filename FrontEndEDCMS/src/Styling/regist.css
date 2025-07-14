@@ -1,0 +1,192 @@
+.register_main_div {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    min-height: 100vh; /* Full height for centering */
+}
+
+.register_user {
+    width: 500px;
+    height: 1050px;
+    margin: 20px; /* Margin for spacing */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    display: flex; /* Use flexbox for centering */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center inputs */
+}
+
+.register_user input {
+    width: 100%; 
+    padding: 10px;
+    height: 40px; 
+    border-radius: 9px;
+    margin: 10px 0; 
+    border: 1px solid silver;
+    outline: none;
+    position: relative;
+    left: -10px;
+    bottom: 120px;
+}
+
+#select_register{
+    position: relative;
+    bottom: 110px;
+    width: 100%;
+    height: 40px;
+    border-radius: 9px;
+    border:  1px solid silver;
+}
+
+
+#regist_b_u{
+    position: relative;
+    bottom: 115px;
+}
+
+.google-login-button {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border: solid 1px lightgray;
+    border-radius: 4px;
+    color: #3c4043;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    height: 40px;
+    padding: 0 12px;
+    transition: background-color 0.2s;
+  }
+  
+  .google-login-button:hover {
+    border: solid 1px darkgrey;
+    background-color: silver;
+    cursor: pointer;
+  }
+  
+  .google-logo {
+    position: relative;
+    top: 1.5px;
+    height: 18px;
+    margin-right: 8px;
+    width: 18px;
+  }
+
+#span_password{
+    color: red;
+}
+.register_user input:focus,
+#select_register:focus {
+    border: 3px solid lightgreen;
+}
+
+#button_register {
+    width: 100%; /* Full width for button */
+    height: 40px;
+    background-color: lightgreen;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 9px;
+    margin-top: 10px; /* Added margin for spacing */
+    position: relative;
+    bottom: 90px;
+}
+
+#button_register:hover {
+    background-color: green;
+}
+
+#h_register {
+    text-align: center;
+    position: relative;
+    bottom: 110px;
+    padding: 10px 0; /* Padding for better spacing */
+}
+
+#own_account {
+    text-align: center; /* Centered for better alignment */
+    font-weight: bold;
+    margin-top: 10px; /* Added margin for spacing */
+    position: relative;
+    bottom: 30px;
+}
+
+#login_register_style {
+    color: purple;
+}
+
+#logo_ed {
+    width: 200px; /* Adjusted logo size */
+    height: auto; /* Maintain aspect ratio */
+    margin: 0 auto; /* Center the logo */
+    position: relative;
+    bottom: 50px;
+}
+
+#underline_regist{
+    width: 520px;
+    height: 0.5px;
+    background-color: rgb(156, 153, 153);
+    position: relative;
+    bottom: 90px;
+}
+
+#underline_regist1{
+    width: 520px;
+    height: 0.5px;
+    background-color: rgb(156, 153, 153);
+    position: relative;
+    bottom: 120px;
+}
+
+.google-login-container{
+    position: relative;
+    bottom: 55px;
+}
+
+#error{
+    position: relative;
+    bottom: 40px;
+    color: red;
+}
+
+#succes{
+    position: relative;
+    bottom: 40px;
+    color: green;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .register_user {
+        width: 90%; /* Adjust width on smaller screens */
+        margin: 10px; /* Reduce margin for smaller screens */
+    }
+}
+
+/* Dark mode styles */
+body.dark-mode, .container.dark-mode, .page-content.dark-mode {
+  background-color: #282828;
+  color: #f0f0f0;
+}
+
+input.dark-mode, textarea.dark-mode, select.dark-mode {
+  background-color: #333;
+  color: #fff;
+  border-color: #777;
+}
+
+button.dark-mode, .button.dark-mode {
+  background-color: #444;
+  color: #fff;
+}
+
+.link.dark-mode, a.dark-mode {
+  color: #4a90e2;
+}

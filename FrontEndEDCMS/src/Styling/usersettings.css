@@ -1,0 +1,125 @@
+/* usersettings.css */
+
+/* Panel */
+.user-settings-panel {
+  max-width: 480px;
+  margin: 3rem auto;
+  padding: 2rem 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+  font-family: 'Inter', sans-serif;
+}
+
+/* Heading */
+.user-settings-panel h2 {
+  font-size: 1.75rem;
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+/* Form */
+.user-settings-panel form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.user-settings-panel label {
+  font-size: 0.95rem;
+  color: #34495e;
+  display: flex;
+  flex-direction: column;
+}
+.user-settings-panel input[type="text"],
+.user-settings-panel input[type="email"],
+.user-settings-panel input[type="tel"],
+.user-settings-panel input[type="password"],
+.user-settings-panel input[type="file"] {
+  margin-top: 0.5rem;
+  padding: 0.65rem 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #bdc3c7;
+  border-radius: 6px;
+  background: #ecf0f1;
+  transition: border-color 0.2s, background 0.2s;
+}
+.user-settings-panel input:focus {
+  outline: none;
+  background: #fff;
+  border-color: #3498db;
+}
+
+/* Preview */
+.preview-container {
+  margin-top: 0.5rem;
+}
+.profile-preview {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ecf0f1;
+}
+
+/* Messages */
+.user-settings-panel .error,
+.user-settings-panel .success {
+  font-size: 0.9rem;
+  margin: -0.5rem 0 0.75rem;
+}
+.user-settings-panel .error {
+  color: #e74c3c;
+}
+.user-settings-panel .success {
+  color: #27ae60;
+}
+
+/* Buttons */
+.save-button {
+  padding: 0.75rem;
+  background: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.save-button:hover {
+  background: #2980b9;
+}
+
+/* Delete section */
+.delete-account-section {
+  margin-top: 2rem;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 1rem;
+  text-align: center;
+}
+.delete-account-section h3 {
+  font-size: 1.1rem;
+  color: #e74c3c;
+  margin-bottom: 0.5rem;
+}
+.delete-account-button {
+  padding: 0.75rem 1.5rem;
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.delete-account-button:hover {
+  background: #c0392b;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .user-settings-panel {
+    margin: 2rem 1rem;
+    padding: 1.5rem;
+  }
+}

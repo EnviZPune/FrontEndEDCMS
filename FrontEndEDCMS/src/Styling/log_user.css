@@ -1,0 +1,200 @@
+.log_main_div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: auto;
+  overflow-x: hidden;
+}
+
+.log_user {
+  width: 450px;
+  height: auto;
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.log_user input {
+  width: 100%;
+  padding: 10px;
+  height: 30px;
+  border-radius: 9px;
+  margin: 10px 0;
+  border: 1px solid silver;
+  outline: none;
+  position: relative;
+  left: 1px;
+  bottom: 80px;
+}
+
+.log_user input::placeholder{
+  color: silver;
+}
+
+#logo_login {
+  width: 200px;
+  height: auto;
+  margin: 0 auto;
+  position: relative;
+  bottom: 50px;
+}
+
+#head_log {
+  text-align: center;
+  position: relative;
+  bottom: 95px;
+  padding: 10px 0;
+}
+
+#button_log {
+  width: 100%;
+  height: 40px;
+  background-color: lightgreen;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 9px;
+  margin-top: 10px;
+  position: relative;
+  bottom: 60px;
+}
+
+#button_log:hover {
+  background-color: green;
+}
+
+.google-login-button {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: solid 1px lightgray;
+  border-radius: 4px;
+  color: #3c4043;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  height: 40px;
+  padding: 0 12px;
+  transition: background-color 0.2s;
+}
+
+.google-login-button:hover {
+  border: solid 1px darkgrey;
+  background-color: silver;
+  cursor: pointer;
+}
+
+.google-logo {
+  position: relative;
+  top: 1.5px;
+  height: 18px;
+  margin-right: 8px;
+  width: 18px;
+}
+
+.google-login-container{
+  position: relative;
+  top: -30px;
+}
+
+.error-message{
+  color: red;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+
+#forgot_pw {
+  color: purple;
+  text-decoration: underline;
+  font-size: 13px;
+  position: relative;
+  right: 165px;
+  bottom: 50px;
+}
+
+.remember_me {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  position: relative;
+  left: 160px;
+  bottom: 89.5px;
+}
+
+.remember_me input {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  position: relative;
+  top: -0.3px;
+}
+
+.remember_me p {
+  color: black;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.log_user input:focus {
+  border: 3px solid lightgreen;
+}
+
+/* Underlines matching register component */
+#underline_log {
+  width: 520px;
+  height: 0.5px;
+  background-color: rgb(156, 153, 153);
+  position: relative;
+  bottom: 90px;
+}
+
+#underline_log1 {
+  width: 520px;
+  height: 0.5px;
+  background-color: rgb(156, 153, 153);
+  position: relative;
+  bottom: 120px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .log_user {
+      width: 90%;
+      margin: 10px;
+  }
+}
+
+/* Dark mode styles */
+body.dark-mode,
+.container.dark-mode,
+.page-content.dark-mode {
+  background-color: #282828;
+  color: #f0f0f0;
+}
+
+input.dark-mode,
+textarea.dark-mode,
+select.dark-mode {
+  background-color: #333;
+  color: #fff;
+  border-color: #777;
+}
+
+button.dark-mode,
+.button.dark-mode {
+  background-color: #444;
+  color: #fff;
+}
+
+.link.dark-mode,
+a.dark-mode {
+  color: #4a90e2;
+}
