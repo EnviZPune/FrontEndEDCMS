@@ -92,6 +92,61 @@ body {
   z-index: 1;
 }
 
+/* ----------------------------------------
+   SPOTLIGHT CAROUSEL: Shopper on Left, Card on Right
+   ---------------------------------------- */
+/* ----------------------------------------
+   WIDER SHOP LIST + ILLUSTRATION LEFT + MORE CARDS
+   ---------------------------------------- */
+.shop-list-container {
+  max-width: 1400px;       /* was 1200px */
+}
+
+/* push illustration to container’s left edge, leave room for carousel */
+.spotlight-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* flush-left */
+  gap: 2rem;                   /* space between illo & carousel */
+  margin-bottom: 3rem;
+  padding-left: 1rem;          /* small inset from container edge */
+}
+
+/* allow the carousel to fill remaining width */
+.spotlight-illustration {
+  flex: 0 0 auto;
+}
+.spotlight-illustration img {
+  width: 260px;
+  height: auto;
+}
+
+/* make carousel fluid and wider */
+.spotlight-carousel {
+  flex: 1;                     /* fill rest of the row */
+  display: flex;
+  overflow: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: -1rem;                   /* consistent gap between cards */
+  padding: 1rem 0;
+}
+
+/* show 7 cards side‑by‑side (subtract 6 gaps of 1rem) */
+.spotlight-slide {
+  /* flex: 0 0 calc((100% - 6rem) / 7); */
+  scroll-snap-align: start;
+  display: flex;
+  justify-content: center;
+}
+
+.spotlight-card {
+  width: 100%;
+  max-width: 280px;
+  min-height: 300px;
+}
+
+
 .shop-list-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -190,10 +245,13 @@ body {
 }
 
 .shop-card-media {
-  position: relative;
-  width: 100%;
+  position: absolute;
+  width: 80%;
   padding-top: 75%; /* 4:3 ratio */
   overflow: hidden;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); 
 }
 .shop-card-media img,
 .shop-card-placeholder {
@@ -211,14 +269,19 @@ body {
 }
 
 .shop-card-title {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   padding: 1rem;
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--text);
   text-align: center;
+  width: 100%; 
 }
 
-.shop-card-placeholder {
+  .shop-card-placeholder {
   background: #f0f0f0;
 }
 
@@ -436,6 +499,61 @@ body {
   width: 2rem;
   height: 2rem;
   border-width: 3px;
+}
+
+
+/* ----------------------------------------
+   ALL-CATEGORIES GRID
+   ---------------------------------------- */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+/* reuse your existing .category-card styles, but override display to block-link */
+.all-category-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  text-align: center;
+  padding: 1rem 0.5rem;
+  text-decoration: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.category-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.15);
+}
+
+.category-card-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.category-card-placeholder {
+  width: 80px;
+  height: 80px;
+  background: #eee;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.category-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
 }
 
 

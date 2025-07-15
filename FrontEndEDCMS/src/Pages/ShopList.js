@@ -1,36 +1,30 @@
 // src/Pages/ShopList.js
 import React, { useEffect, useState, useRef } from 'react';
-import { Link, useNavigate, useLocation }   from 'react-router-dom';
-import Navbar                                from '../Components/Navbar';
-import Footer                                from '../Components/Footer';
-import Search                                from '../Components/SearchBar.js';
-import Pagination                            from '../Components/Pagination.tsx';
+import { Link, useNavigate } from 'react-router-dom';
+import Navbar from '../Components/Navbar';
+import Footer from '../Components/Footer';
+import Search from '../Components/SearchBar.js';
+import Pagination from '../Components/Pagination.tsx';
 import '../Styling/shoplist.css';
 
 export default function ShopList() {
-  // Shops
-  const [shops, setShops]           = useState([]);
+  const [shops, setShops] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading]       = useState(true);
-  const [error, setError]           = useState('');
-  const [page, setPage]             = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [page, setPage] = useState(1);
 
-  // Categories
-  const [categories, setCategories]   = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loadingCats, setLoadingCats] = useState(true);
-  const [errorCats, setErrorCats]     = useState('');
+  const [errorCats, setErrorCats] = useState('');
 
-  const pageSize    = 6;
-  const cardsToShow = 5;
-
-  const carouselRef   = useRef(null);
+  const pageSize = 6;
+  const cardsToShow = 3;
+  const carouselRef = useRef(null);
   const categoriesRef = useRef(null);
-
   const navigate = useNavigate();
-  const location = useLocation();
 
-  // fetch a single biz's categories
-  const fetchBizCategories = async businessId => {
+  const fetchBizCategories = async (businessId) => {
     const r = await fetch(
       `http://77.242.26.150:8000/api/ClothingCategory/business/${businessId}`
     );
@@ -38,10 +32,12 @@ export default function ShopList() {
     return r.json();
   };
 
+  // 1️⃣ load paginated shops
   useEffect(() => {
     let canceled = false;
     (async () => {
-      setLoading(true); setError('');
+      setLoading(true);
+      setError('');
       try {
         const res = await fetch(
           `http://77.242.26.150:8000/api/Business/paginated?pageNumber=${page}&pageSize=${pageSize}`
@@ -65,7 +61,8 @@ export default function ShopList() {
   useEffect(() => {
     let canceled = false;
     (async () => {
-      setLoadingCats(true); setErrorCats('');
+      setLoadingCats(true);
+      setErrorCats('');
       try {
         const bizRes = await fetch(
           `http://77.242.26.150:8000/api/Business/paginated?pageNumber=1&pageSize=10000`
@@ -74,11 +71,11 @@ export default function ShopList() {
         const { items: allBiz } = await bizRes.json();
 
         const arrays = await Promise.all(
-          allBiz.map(b => fetchBizCategories(b.businessId))
+          allBiz.map((b) => fetchBizCategories(b.businessId))
         );
         const flat = arrays.flat();
-        const map  = new Map();
-        flat.forEach(cat => {
+        const map = new Map();
+        flat.forEach((cat) => {
           if (!map.has(cat.clothingCategoryId)) map.set(cat.clothingCategoryId, cat);
         });
         if (!canceled) setCategories(Array.from(map.values()));
@@ -91,7 +88,7 @@ export default function ShopList() {
     return () => { canceled = true; };
   }, []);
 
-  // 3️⃣ auto-scroll shops carousel
+  // 3️⃣ auto‑scroll shops carousel (3 cards at a time)
   useEffect(() => {
     const el = carouselRef.current;
     if (!el || shops.length === 0) return;
@@ -104,18 +101,15 @@ export default function ShopList() {
     return () => clearInterval(iv);
   }, [shops]);
 
-  // 4️⃣ auto-scroll categories carousel
+  // 4️⃣ auto‑scroll categories carousel
   useEffect(() => {
     const el = categoriesRef.current;
-    if (!el || categories.length <= cardsToShow) return;
-
-    // measure one card + gap
+    if (!el || categories.length <= 5) return;
     const card = el.querySelector('.category-card');
-    const cardW = (card?.offsetWidth ?? 120);
-    const gap   = parseInt(getComputedStyle(el).gap) || 16;
-    const step  = cardW + gap;
-    const max   = el.scrollWidth - el.clientWidth;
-
+    const cardW = card?.offsetWidth ?? 120;
+    const gap = parseInt(getComputedStyle(el).gap) || 16;
+    const step = cardW + gap;
+    const max = el.scrollWidth - el.clientWidth;
     let pos = 0;
     const iv = setInterval(() => {
       pos += step;
@@ -125,60 +119,63 @@ export default function ShopList() {
     return () => clearInterval(iv);
   }, [categories]);
 
-  // pagination
-  const handlePageChange = newPage => {
+  const handlePageChange = (newPage) => {
     setPage(newPage);
     carouselRef.current?.scrollTo({ left: 0, behavior: 'auto' });
   };
 
-  // category click
-  const onCategoryClick = catId => {
+  const onCategoryClick = (catId) => {
     navigate(`/category-filter?category=${catId}`);
   };
 
   return (
     <>
-      <Navbar/>
+      <Navbar />
 
       {/* Hero */}
       <div className="hero-banner">
-        <div className="hero-overlay"/>
+        <div className="hero-overlay" />
         <div className="hero-content">
           <h1>Welcome to EDCMS</h1>
           <p>The all-in-one Clothing Business Management System</p>
-          <Search/>
+          <Search />
         </div>
       </div>
 
       <div className="shop-list-container">
         {/* Shops */}
-        <div className="shop-list-header"><h2>Browse Shops</h2></div>
+        <div className="shop-list-header">
+          <h2>Browse Shops</h2>
+        </div>
         {error && <p className="error-text">{error}</p>}
-        {loading && <div className="loading-spinner"/>}
         {!loading && shops.length > 0 && (
-          <div className="browse-shops-wrapper">
-            <div className="browse-carousel" ref={carouselRef}>
-              {[...shops, ...shops].map((shop,i) => (
+          <div className="spotlight-wrapper">
+            {/* Illustration on the left */}
+            <div className="spotlight-illustration">
+              <img src="/Assets/bluze.png" alt="T-Shirt" />
+            </div>
+            {/* 3‑card carousel on the right */}
+            <div className="spotlight-carousel" ref={carouselRef}>
+              {[...shops, ...shops].map((shop, i) => (
                 <Link
                   key={`${shop.businessId}-${i}`}
                   to={`/shops/${shop.businessId}`}
-                  className="carousel-slide"
-                  style={{ flex: `0 0 ${100/cardsToShow}%` }}
+                  className="spotlight-slide"
+                  style={ { flex: '0 0 calc((100% - (2 * 1rem)) / 3)'}}
                 >
-                  <div className="shop-card">
+                  <div className="shop-card spotlight-card">
                     <div className="shop-card-media">
-                      {shop.profilePictureUrl
-                        ? <img src={shop.profilePictureUrl} alt={`${shop.name} Logo`} />
-                        : <div className="shop-card-placeholder"/>}
+                      {shop.profilePictureUrl ? (
+                        <img src={shop.profilePictureUrl} alt={`${shop.name} Logo`} />
+                      ) : (
+                        <div className="shop-card-placeholder" />
+                      )}
                     </div>
                     <h3 className="shop-card-title">{shop.name}</h3>
                   </div>
                 </Link>
               ))}
-              <div className="carousel-end-sentinel"/>
-            </div>
-            <div className="browse-illustration">
-              <img src="/Assets/shopper.png" alt="Shopper" />
+              <div className="carousel-end-sentinel" />
             </div>
           </div>
         )}
@@ -187,26 +184,31 @@ export default function ShopList() {
         <div className="categories-container">
           <h2>Categories</h2>
           {errorCats && <p className="error-text">{errorCats}</p>}
-          {loadingCats
-            ? <div className="loading-spinner small"/>
-            : (
-              <div className="categories-list" ref={categoriesRef}>
-                {categories.map(cat => (
-                  <div
-                    key={cat.clothingCategoryId}
-                    className="category-card"
-                    onClick={() => onCategoryClick(cat.clothingCategoryId)}
-                  >
-                    {cat.iconUrl
-                      ? <img src={cat.iconUrl} alt={cat.name} className="category-card-icon"/>
-                      : <div className="category-card-placeholder"/>}
-                    <p className="category-card-title">{cat.name}</p>
-                  </div>
-                ))}
-                <div className="carousel-end-sentinel"/>
-              </div>
-            )
-          }
+          {loadingCats ? (
+            <div className="loading-spinner small" />
+          ) : (
+            <div className="categories-list" ref={categoriesRef}>
+              {categories.map((cat) => (
+                <div
+                  key={cat.clothingCategoryId}
+                  className="category-card"
+                  onClick={() => onCategoryClick(cat.clothingCategoryId)}
+                >
+                  {cat.iconUrl ? (
+                    <img
+                      src={cat.iconUrl}
+                      alt={cat.name}
+                      className="category-card-icon"
+                    />
+                  ) : (
+                    <div className="category-card-placeholder" />
+                  )}
+                  <p className="category-card-title">{cat.name}</p>
+                </div>
+              ))}
+              <div className="carousel-end-sentinel" />
+            </div>
+          )}
         </div>
 
         {/* Pagination */}
@@ -218,7 +220,7 @@ export default function ShopList() {
         />
       </div>
 
-      <Footer/>
+      <Footer />
     </>
   );
 }

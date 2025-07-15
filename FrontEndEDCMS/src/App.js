@@ -29,6 +29,7 @@ import PaymentSuccess      from './Pages/PaymentSuccess'
 import PaymentCancel       from './Pages/PaymentCancel'
 import OwnerForm           from './Pages/OwnerForm'
 import CategoryFilter from './Pages/categoryfilter';
+import AllCategories from './Pages/AllCategories';
 
 export default function App() {
   return (
@@ -61,6 +62,8 @@ export default function App() {
           <Route path="/confirm-email" element={<EmailConfirmation />} />
           <Route path="/allshops" element={<AllShops />} />
           <Route path="/category-filter" element={<CategoryFilter />} />
+          <Route path="/categories" element={<AllCategories />} />
+
 
                       {/* Stripe sandbox & one-time token pages */}
           <Route path="/become-owner" element={<BecomeOwner />} />

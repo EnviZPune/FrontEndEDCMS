@@ -8,6 +8,8 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@react-google-maps/api": "^2.20.3",
     "@react-oauth/google": "^0.12.1",
+    "@react-three/drei": "^10.5.1",
+    "@react-three/fiber": "^9.2.0",
     "@stripe/stripe-js": "^7.4.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -35,6 +37,7 @@
     "recharts": "^2.15.1",
     "slick-carousel": "^1.8.1",
     "stream-browserify": "^3.0.0",
+    "three": "^0.178.0",
     "vm-browserify": "^1.1.2",
     "web-vitals": "^2.1.4"
   },
