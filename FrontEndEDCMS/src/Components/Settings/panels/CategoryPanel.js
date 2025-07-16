@@ -1,39 +1,50 @@
-
 import React, { useState, useEffect } from 'react'
 import { useApiClient } from '../hooks/useApiClient'
 import '../../../Styling/Settings/categorypanel.css'
 
+// your premade list of names
+const PREMADE_CATEGORIES = [
+  'T-shirt', 'Boots', 'Jackets', 'Hats', 'Socks',
+  'Jeans', 'Shirts', 'Shorts', 'Skirts', 'Dresses'
+]
+
 export default function CategoryPanel({ business }) {
   const { get, post, put, del } = useApiClient()
-  const [categories, setCategories] = useState([])
-  const [newCategory, setNewCategory] = useState({ name: '', color: '#000000' })
+  const [categories, setCategories]           = useState([])
+  const [premadeOptions, setPremadeOptions]   = useState(PREMADE_CATEGORIES)
+  const [showPremade, setShowPremade]         = useState(false)
+
+  const [newCategory, setNewCategory]         = useState({ name: '' })
   const [editingCategory, setEditingCategory] = useState(null)
 
-  // Load categories when business changes
+  // fetch DB categories + update premade options
   useEffect(() => {
-    if (!business) return
+    if (!business?.businessId) return
     fetchCategories()
-  }, [business])
+  }, [business?.businessId])
 
-  const fetchCategories = async () => {
+  async function fetchCategories() {
     try {
-      const data = await get(
-        `/api/ClothingCategory/business/${business.businessId}`
-      )
+      const data = await get(`/api/ClothingCategory/business/${business.businessId}`)
       setCategories(data)
+      // remove any premade that already exist in DB
+      const existingNames = data.map(c => c.name)
+      setPremadeOptions(
+        PREMADE_CATEGORIES.filter(name => !existingNames.includes(name))
+      )
     } catch (err) {
       console.error('Failed to load categories:', err)
       setCategories([])
+      setPremadeOptions(PREMADE_CATEGORIES)
     }
   }
 
+  // add or update a DB category
   const handleSave = async () => {
     const body = {
       businessId: business.businessId,
       name: newCategory.name,
-      colorHex: newCategory.color,
     }
-
     try {
       if (editingCategory) {
         await put(
@@ -45,8 +56,7 @@ export default function CategoryPanel({ business }) {
         await post('/api/ClothingCategory', body)
         alert('Category added!')
       }
-      setNewCategory({ name: '', color: '#000000' })
-      setEditingCategory(null)
+      resetForm()
       fetchCategories()
     } catch (err) {
       console.error('Failed to save category:', err)
@@ -54,22 +64,9 @@ export default function CategoryPanel({ business }) {
     }
   }
 
-  const handleEdit = (cat) => {
-    setEditingCategory(cat)
-    setNewCategory({
-      name: cat.name,
-      color: cat.colorHex || '#000000',
-    })
-  }
-
-  const handleCancel = () => {
-    setEditingCategory(null)
-    setNewCategory({ name: '', color: '#000000' })
-  }
-
+  // delete from DB
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this category?'))
-      return
+    if (!window.confirm('Delete this category?')) return
     try {
       await del(`/api/ClothingCategory/${id}`)
       alert('Category deleted!')
@@ -80,45 +77,101 @@ export default function CategoryPanel({ business }) {
     }
   }
 
+  // start editing
+  const handleEdit = (cat) => {
+    setEditingCategory(cat)
+    setNewCategory({ name: cat.name })
+  }
+
+  // add a premade to DB
+  const handleAddPremade = async (name) => {
+    try {
+      await post('/api/ClothingCategory', {
+        businessId: business.businessId,
+        name,
+      })
+      alert(`’${name}’ added!`)
+      fetchCategories()
+    } catch (err) {
+      console.error('Failed to add premade:', err)
+      alert('Failed to add premade category.')
+    }
+  }
+
+  const resetForm = () => {
+    setEditingCategory(null)
+    setNewCategory({ name: '' })
+  }
+
   return (
     <div className="panel category-panel">
       <h3>Manage Categories</h3>
 
-      <ul className="category-list">
-        {categories.map((cat) => (
-          <li key={cat.clothingCategoryId}>
-            <span
-              className="category-color"
-              style={{ backgroundColor: cat.colorHex }}
-            />
-            <span className="category-name">{cat.name}</span>
-            <button onClick={() => handleEdit(cat)}>Edit</button>
-            <button onClick={() => handleDelete(cat.clothingCategoryId)}>
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <div className="category-form">
-        <h4>{editingCategory ? 'Edit' : 'Add'} Category</h4>
-
-        <label>Name</label>
+      {/* toggle between premade vs manual */}
+      <label className="toggle-premade">
         <input
-          type="text"
-          value={newCategory.name}
-          onChange={(e) =>
-            setNewCategory((nc) => ({ ...nc, name: e.target.value }))
-          }
+          type="checkbox"
+          checked={showPremade}
+          onChange={e => setShowPremade(e.target.checked)}
         />
+        Show premade categories
+      </label>
 
-        <button onClick={handleSave}>
-          {editingCategory ? 'Update' : 'Add'} Category
-        </button>
-        {editingCategory && (
-          <button onClick={handleCancel}>Cancel</button>
-        )}
-      </div>
+      {showPremade ? (
+        // ─── Premade List ────────────────────────────────────────────────
+        <ul className="premade-list">
+          {premadeOptions.length > 0 ? (
+            premadeOptions.map(name => (
+              <li key={name}>
+                <span className="category-name">{name}</span>
+                <button onClick={() => handleAddPremade(name)}>Add</button>
+              </li>
+            ))
+          ) : (
+            <li className="no-results">No premade left to add.</li>
+          )}
+        </ul>
+      ) : (
+        // ─── Manual / DB List + Form ────────────────────────────────────
+        <>
+          <ul className="category-list">
+            {categories.map(cat => (
+              <li key={cat.clothingCategoryId}>
+                <span className="category-name">{cat.name}</span>
+                <button onClick={() => handleEdit(cat)}>Edit</button>
+                <button onClick={() => handleDelete(cat.clothingCategoryId)}>
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <div className="category-form">
+            <h4>{editingCategory ? 'Edit' : 'Add'} Category</h4>
+
+            <label htmlFor="cat-name">Name</label>
+            <input
+              id="cat-name"
+              type="text"
+              value={newCategory.name}
+              onChange={e =>
+                setNewCategory(nc => ({ ...nc, name: e.target.value }))
+              }
+            />
+
+            <div className="form-actions">
+              <button onClick={handleSave}>
+                {editingCategory ? 'Update' : 'Add'} Category
+              </button>
+              {editingCategory && (
+                <button onClick={resetForm} className="cancel">
+                  Cancel
+                </button>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
