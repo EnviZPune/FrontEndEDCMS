@@ -270,6 +270,56 @@
   background-color: red;
 }
 
+/* shop info and location wrapper */
+.sd-shop-info {
+  /* your existing styles… */
+  margin-bottom: 1.5rem;  /* add a bit of breathing room below the info */
+}
+
+/* location container sits immediately below .sd-shop-info */
+.sd-shop-location {
+  max-width: 400px;      
+  position: relative;
+  left: 360px;
+  width: 100%;
+  margin: 0 auto 2rem;     /* center it & add bottom spacing */
+  padding: 1rem;
+  background: #fff;        /* match your card style */
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* heading inside location */
+.sd-shop-location h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* the raw coords / reverse‑geocoded text */
+.sd-location-text {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* the little map thumbnail */
+.sd-location-map {
+  width: 100%;
+  height: 150px;           /* smaller than the previous 200px */
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px #ddd;
+}
+
+/* ensure the <Map> canvas fills its parent */
+.sd-location-map > div {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
