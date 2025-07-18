@@ -1,4 +1,6 @@
+// src/pages/UserSettings.jsx
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import "../Styling/usersettings.css";
@@ -32,6 +34,8 @@ const uploadImageToGCS = async (file) => {
 };
 
 export default function UserSettings() {
+  const navigate = useNavigate();
+
   const [profile, setProfile] = useState({
     userId:            null,
     name:              "",
@@ -53,7 +57,10 @@ export default function UserSettings() {
   // Load user
   useEffect(() => {
     fetch(`${API_BASE}/api/User/me`, { headers })
-      .then(res => res.ok ? res.json() : Promise.reject(res))
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch profile");
+        return res.json();
+      })
       .then(dto => {
         setProfile({
           userId:            dto.userId,
@@ -80,7 +87,8 @@ export default function UserSettings() {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    setError(""); setSuccess("");
+    setError("");
+    setSuccess("");
 
     if (newPassword && newPassword !== confirmPassword) {
       setError("Passwords do not match.");
@@ -101,10 +109,14 @@ export default function UserSettings() {
         `${API_BASE}/api/User/${profile.userId}`,
         { method: "PUT", headers, body: JSON.stringify(payload) }
       );
-      if (!res.ok) throw new Error();
+      if (!res.ok) throw new Error("Update failed");
       setSuccess("Profile updated!");
-      setNewPassword(""); setConfirmPassword("");
-    } catch {
+      setNewPassword("");
+      setConfirmPassword("");
+      // Redirect to "My Profile" page on success
+      navigate("/my-profile");
+    } catch (err) {
+      console.error(err);
       setError("Update failed.");
     }
   };
@@ -116,9 +128,10 @@ export default function UserSettings() {
         `${API_BASE}/api/User/${profile.userId}`,
         { method: "DELETE", headers }
       );
-      if (!res.ok) throw new Error();
+      if (!res.ok) throw new Error("Delete failed");
       window.location.href = "/login";
-    } catch {
+    } catch (err) {
+      console.error(err);
       alert("Delete failed.");
     }
   };

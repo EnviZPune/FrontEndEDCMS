@@ -1,3 +1,4 @@
+// src/pages/AllShops.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
@@ -5,8 +6,16 @@ import Footer from '../Components/Footer';
 import Pagination from '../Components/Pagination.tsx';
 import '../Styling/AllShops.css';
 
-const API_URL    = 'http://77.242.26.150:8000/api/Business';
-const PAGE_SIZE  = 4;
+const API_URL   = 'http://77.242.26.150:8000/api/Business';
+const PAGE_SIZE = 4;
+
+// Fallback slug generator
+const slugify = (str) =>
+  str
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
 
 export default function AllShops() {
   const [shops, setShops]           = useState([]);
@@ -30,10 +39,16 @@ export default function AllShops() {
           throw new Error(text || res.statusText);
         }
         const data = await res.json();
-        if (!cancelled) {
-          setShops(data.items);
-          setTotalCount(data.totalCount);
-        }
+        if (cancelled) return;
+
+        // Ensure each shop has a slug
+        const mapped = data.items.map(shop => ({
+          ...shop,
+          slug: shop.slug || slugify(shop.name),
+        }));
+
+        setShops(mapped);
+        setTotalCount(data.totalCount);
       } catch (err) {
         if (!cancelled) setError(err);
       } finally {
@@ -56,7 +71,7 @@ export default function AllShops() {
       <div className="shops-container">
         {shops.map((shop) => (
           <Link
-            to={`/shops/${shop.businessId}`}
+            to={`/shop/${shop.slug}`}            // use /shops/:slug
             key={shop.businessId}
             className="shop-card-link"
           >

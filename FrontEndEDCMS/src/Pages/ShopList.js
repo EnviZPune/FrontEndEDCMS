@@ -1,38 +1,40 @@
-// src/Pages/ShopList.js
+// src/pages/ShopList.jsx
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
-import Search from '../Components/SearchBar.js';
+import Search from '../Components/SearchBar';
 import Pagination from '../Components/Pagination.tsx';
 import '../Styling/shoplist.css';
 
+const API_BASE = 'http://77.242.26.150:8000/api';
+const PAGE_SIZE = 6;
+
+const toSlug = (str) =>
+  str
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
+
 export default function ShopList() {
-  const [shops, setShops] = useState([]);
+  const [shops, setShops]         = useState([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [page, setPage] = useState(1);
+  const [loading, setLoading]     = useState(true);
+  const [error, setError]         = useState('');
+  const [page, setPage]           = useState(1);
 
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories]   = useState([]);
   const [loadingCats, setLoadingCats] = useState(true);
-  const [errorCats, setErrorCats] = useState('');
+  const [errorCats, setErrorCats]     = useState('');
 
-  const pageSize = 6;
-  const cardsToShow = 3;
+  const navigate    = useNavigate();
   const carouselRef = useRef(null);
   const categoriesRef = useRef(null);
-  const navigate = useNavigate();
 
-  const fetchBizCategories = async (businessId) => {
-    const r = await fetch(
-      `http://77.242.26.150:8000/api/ClothingCategory/business/${businessId}`
-    );
-    if (!r.ok) return [];
-    return r.json();
-  };
+  console.log(shops);
 
-  // 1️⃣ load paginated shops
+  // Load paginated shops
   useEffect(() => {
     let canceled = false;
     (async () => {
@@ -40,12 +42,19 @@ export default function ShopList() {
       setError('');
       try {
         const res = await fetch(
-          `http://77.242.26.150:8000/api/Business/paginated?pageNumber=${page}&pageSize=${pageSize}`
+          `${API_BASE}/Business/paginated?pageNumber=${page}&pageSize=${PAGE_SIZE}`
         );
         if (!res.ok) throw new Error(await res.text() || res.statusText);
         const { items, totalCount: count } = await res.json();
+
+        // Map in slug (either from item.slug or generate from name)
+        const mapped = items.map(shop => ({
+          ...shop,
+          slug: shop.slug || toSlug(shop.name),
+        }));
+
         if (!canceled) {
-          setShops(items);
+          setShops(mapped);
           setTotalCount(count);
         }
       } catch (err) {
@@ -57,28 +66,17 @@ export default function ShopList() {
     return () => { canceled = true; };
   }, [page]);
 
-  // 2️⃣ aggregate all categories once
+  // Fetch all categories once
   useEffect(() => {
     let canceled = false;
     (async () => {
       setLoadingCats(true);
       setErrorCats('');
       try {
-        const bizRes = await fetch(
-          `http://77.242.26.150:8000/api/Business/paginated?pageNumber=1&pageSize=10000`
-        );
-        if (!bizRes.ok) throw new Error(await bizRes.text() || bizRes.statusText);
-        const { items: allBiz } = await bizRes.json();
-
-        const arrays = await Promise.all(
-          allBiz.map((b) => fetchBizCategories(b.businessId))
-        );
-        const flat = arrays.flat();
-        const map = new Map();
-        flat.forEach((cat) => {
-          if (!map.has(cat.clothingCategoryId)) map.set(cat.clothingCategoryId, cat);
-        });
-        if (!canceled) setCategories(Array.from(map.values()));
+        const res = await fetch(`${API_BASE}/ClothingCategory/all`);
+        if (!res.ok) throw new Error(await res.text() || res.statusText);
+        const data = await res.json();
+        if (!canceled) setCategories(data);
       } catch (err) {
         if (!canceled) setErrorCats(err.message);
       } finally {
@@ -88,51 +86,18 @@ export default function ShopList() {
     return () => { canceled = true; };
   }, []);
 
-  // 3️⃣ auto‑scroll shops carousel (3 cards at a time)
-  useEffect(() => {
-    const el = carouselRef.current;
-    if (!el || shops.length === 0) return;
-    const slideW = el.clientWidth / cardsToShow;
-    let idx = 0;
-    const iv = setInterval(() => {
-      idx = (idx + 1) % shops.length;
-      el.scrollTo({ left: idx * slideW, behavior: 'smooth' });
-    }, 3000);
-    return () => clearInterval(iv);
-  }, [shops]);
-
-  // 4️⃣ auto‑scroll categories carousel
-  useEffect(() => {
-    const el = categoriesRef.current;
-    if (!el || categories.length <= 5) return;
-    const card = el.querySelector('.category-card');
-    const cardW = card?.offsetWidth ?? 120;
-    const gap = parseInt(getComputedStyle(el).gap) || 16;
-    const step = cardW + gap;
-    const max = el.scrollWidth - el.clientWidth;
-    let pos = 0;
-    const iv = setInterval(() => {
-      pos += step;
-      if (pos > max) pos = 0;
-      el.scrollTo({ left: pos, behavior: 'smooth' });
-    }, 3000);
-    return () => clearInterval(iv);
-  }, [categories]);
-
   const handlePageChange = (newPage) => {
     setPage(newPage);
     carouselRef.current?.scrollTo({ left: 0, behavior: 'auto' });
   };
 
-  const onCategoryClick = (catId) => {
-    navigate(`/category-filter?category=${catId}`);
+  const onCategoryClick = (categoryName) => {
+    navigate(`/category-filter?category=${encodeURIComponent(categoryName)}`);
   };
 
   return (
     <>
       <Navbar />
-
-      {/* Hero */}
       <div className="hero-banner">
         <div className="hero-overlay" />
         <div className="hero-content">
@@ -143,44 +108,36 @@ export default function ShopList() {
       </div>
 
       <div className="shop-list-container">
-        {/* Shops */}
         <div className="shop-list-header">
           <h2>Browse Shops</h2>
         </div>
+
         {error && <p className="error-text">{error}</p>}
-        {!loading && shops.length > 0 && (
-          <div className="spotlight-wrapper">
-            {/* Illustration on the left */}
-            <div className="spotlight-illustration">
-              <img src="/Assets/bluze.png" alt="T-Shirt" />
-            </div>
-            {/* 3‑card carousel on the right */}
-            <div className="spotlight-carousel" ref={carouselRef}>
-              {[...shops, ...shops].map((shop, i) => (
-                <Link
-                  key={`${shop.businessId}-${i}`}
-                  to={`/shops/${shop.businessId}`}
-                  className="spotlight-slide"
-                  style={ { flex: '0 0 calc((100% - (2 * 1rem)) / 3)'}}
-                >
-                  <div className="shop-card spotlight-card">
-                    <div className="shop-card-media">
-                      {shop.profilePictureUrl ? (
-                        <img src={shop.profilePictureUrl} alt={`${shop.name} Logo`} />
-                      ) : (
-                        <div className="shop-card-placeholder" />
-                      )}
-                    </div>
-                    <h3 className="shop-card-title">{shop.name}</h3>
-                  </div>
-                </Link>
-              ))}
-              <div className="carousel-end-sentinel" />
-            </div>
+
+
+        {loading ? (
+          <div className="loading-spinner" />
+        ) : shops.length > 0 ? (
+          <div className="shop-grid">
+            {shops.map((shop) => (
+              <Link
+                key={shop.businessId}
+                to={`/shop/${shop.slug}`}
+                className="shop-card"
+              >
+                {shop.profilePictureUrl ? (
+                  <img src={shop.profilePictureUrl} alt={shop.name} />
+                ) : (
+                  <div className="shop-placeholder" />
+                )}
+                <h3>{shop.name}</h3>
+              </Link>
+            ))}
           </div>
+        ) : (
+          <p className="no-results">No shops found.</p>
         )}
 
-        {/* Categories */}
         <div className="categories-container">
           <h2>Categories</h2>
           {errorCats && <p className="error-text">{errorCats}</p>}
@@ -188,33 +145,35 @@ export default function ShopList() {
             <div className="loading-spinner small" />
           ) : (
             <div className="categories-list" ref={categoriesRef}>
-              {categories.map((cat) => (
-                <div
-                  key={cat.clothingCategoryId}
-                  className="category-card"
-                  onClick={() => onCategoryClick(cat.clothingCategoryId)}
-                >
-                  {cat.iconUrl ? (
-                    <img
-                      src={cat.iconUrl}
-                      alt={cat.name}
-                      className="category-card-icon"
-                    />
-                  ) : (
-                    <div className="category-card-placeholder" />
-                  )}
-                  <p className="category-card-title">{cat.name}</p>
-                </div>
-              ))}
-              <div className="carousel-end-sentinel" />
+              {categories
+                .filter((cat, idx, self) =>
+                  self.findIndex(c => c.name === cat.name) === idx
+                )
+                .map(cat => (
+                  <div
+                    key={cat.clothingCategoryId}
+                    className="category-card"
+                    onClick={() => onCategoryClick(cat.name)}
+                  >
+                    {cat.iconUrl ? (
+                      <img
+                        src={cat.iconUrl}
+                        alt={cat.name}
+                        className="category-card-icon"
+                      />
+                    ) : (
+                      <div className="category-card-placeholder" />
+                    )}
+                    <p className="category-card-title">{cat.name}</p>
+                  </div>
+                ))}
             </div>
           )}
         </div>
 
-        {/* Pagination */}
         <Pagination
           page={page}
-          pageSize={pageSize}
+          pageSize={PAGE_SIZE}
           totalCount={totalCount}
           onPageChange={handlePageChange}
         />

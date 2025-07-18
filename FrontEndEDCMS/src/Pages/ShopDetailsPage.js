@@ -1,3 +1,4 @@
+// src/pages/ShopDetailsPage.jsx
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Navbar from '../Components/Navbar'
@@ -8,16 +9,16 @@ const API_BASE  = 'http://77.242.26.150:8000'
 const PAGE_SIZE = 8
 
 export default function ShopDetailsPage() {
-  const { businessId } = useParams()
+  const { slug } = useParams()
 
   // ── Shop info ─────────────────────────────────────────────
   const [shop, setShop]     = useState(null)
   const [isOpen, setIsOpen] = useState(false)
 
   // ── Categories + items ────────────────────────────────────
-  const [categories, setCategories]                           = useState([])
-  const [selectedCategoryId, setSelectedCategoryId]           = useState(0)
-  const [items, setItems]                                     = useState([])
+  const [categories, setCategories]                 = useState([])
+  const [selectedCategoryId, setSelectedCategoryId] = useState(0)
+  const [items, setItems]                           = useState([])
 
   // ── Pagination + UI ───────────────────────────────────────
   const [page, setPage]           = useState(1)
@@ -30,7 +31,7 @@ export default function ShopDetailsPage() {
     return raw ? raw.replace(/^"|"$/g, '') : null
   })()
 
-  const parseAndCheckOpen = oh => {
+  const parseAndCheckOpen = (oh) => {
     if (!oh?.includes('-')) return false
     const [start, end] = oh.split('-')
     const now = new Date()
@@ -41,7 +42,7 @@ export default function ShopDetailsPage() {
     return now >= s && now <= e
   }
 
-  // ── Fetch shop, categories & items ONCE ─────────────────────
+  // ── Fetch shop, categories & items via slug ────────────────
   useEffect(() => {
     if (!token) {
       setError('Please log in.')
@@ -52,20 +53,15 @@ export default function ShopDetailsPage() {
 
     ;(async () => {
       try {
-        const [shopRes, catsRes, itemsRes] = await Promise.all([
-          fetch(`${API_BASE}/api/Business/${businessId}`, { headers }),
-          fetch(`${API_BASE}/api/ClothingCategory/business/${businessId}`, { headers }),
-          fetch(`${API_BASE}/api/ClothingItem/business/${businessId}`,   { headers }),
-        ])
-
-        if (!shopRes.ok)  throw new Error(`Shop fetch failed: ${shopRes.status}`)
-        if (!itemsRes.ok) throw new Error(`Items fetch failed: ${itemsRes.status}`)
-
-        const shopData  = await shopRes.json()
-        const catsData  = catsRes.ok  ? await catsRes.json() : []
-        const itemsData = await itemsRes.json()
-
-        // SHOP
+        // 1) fetch the business by slug
+        const shopRes = await fetch(
+          `${API_BASE}/api/Business/slug/${encodeURIComponent(slug)}`,
+          { headers }
+        )
+        if (!shopRes.ok) {
+          throw new Error(`Shop fetch failed: ${shopRes.status}`)
+        }
+        const shopData = await shopRes.json()
         setShop(shopData)
         setIsOpen(
           typeof shopData.isManuallyOpen === 'boolean'
@@ -73,10 +69,23 @@ export default function ShopDetailsPage() {
             : parseAndCheckOpen(shopData.openingHours)
         )
 
-        // CATEGORIES (prepend “All”)
-        setCategories([{ clothingCategoryId: 0, name: 'All' }, ...catsData])
+        // 2) fetch categories & items using returned numeric businessId
+        const bizId = shopData.businessId
+        const [catsRes, itemsRes] = await Promise.all([
+          fetch(
+            `${API_BASE}/api/ClothingCategory/business/${bizId}`,
+            { headers }
+          ),
+          fetch(
+            `${API_BASE}/api/ClothingItem/business/${bizId}`,
+            { headers }
+          ),
+        ])
 
-        // ITEMS
+        const catsData  = catsRes.ok   ? await catsRes.json()  : []
+        const itemsData = itemsRes.ok  ? await itemsRes.json() : []
+
+        setCategories([{ clothingCategoryId: 0, name: 'All' }, ...catsData])
         setItems(itemsData)
       } catch (err) {
         console.error(err)
@@ -85,7 +94,7 @@ export default function ShopDetailsPage() {
         setLoading(false)
       }
     })()
-  }, [businessId, token])
+  }, [slug, token])
 
   // ── Recompute pagination whenever items change ──────────────
   useEffect(() => {
@@ -112,7 +121,6 @@ export default function ShopDetailsPage() {
       <Navbar />
 
       <div className="sd-shop-details-page">
-
         {/* HERO */}
         <div
           className="sd-shop-hero"
@@ -160,7 +168,7 @@ export default function ShopDetailsPage() {
           ))}
         </div>
 
-        {/* ── PRODUCTS (All vs. Selected Category) ─────────────── */}
+        {/* PRODUCTS */}
         <div className="sd-products-section">
           <h2>
             {selectedCategoryId === 0
@@ -216,7 +224,6 @@ export default function ShopDetailsPage() {
             </div>
           )}
         </div>
-
       </div>
 
       <Footer />
