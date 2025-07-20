@@ -1,109 +1,117 @@
-import React, { useState, useEffect, useRef } from "react";
-import { FaUser, FaCaretDown, FaBell, } from "react-icons/fa";
-import "../Styling/navbar.css";
-import { jwtDecode } from "jwt-decode";
-import Notification from "../Components/Notifications";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react"
+import { FaUser, FaCaretDown } from "react-icons/fa"
+import '../Styling/navbar.css'
+import { jwtDecode } from "jwt-decode"
+import Notification from "../Components/Notifications"
+import { Link } from "react-router-dom"
 
-const API_BASE = "http://77.242.26.150:8000";
+const API_BASE = "http://77.242.26.150:8000"
 
 const getToken = () => {
-  const raw = localStorage.getItem("token") || localStorage.getItem("authToken");
-  if (!raw || raw.trim() === "") return null;
+  const raw = localStorage.getItem("token") || localStorage.getItem("authToken")
+  if (!raw || raw.trim() === "") return null
   try {
-    const parsed = JSON.parse(raw);
-    return parsed.token || parsed;
+    const parsed = JSON.parse(raw)
+    return parsed.token || parsed
   } catch {
-    return raw;
+    return raw
   }
-};
+}
 
 const getHeaders = () => ({
   "Content-Type": "application/json",
   Authorization: `Bearer ${getToken()}`,
-});
+})
 
 const Navbar = () => {
-  const [loggedUser, setLoggedUser] = useState(null);
-  const [myBusinesses, setMyBusinesses] = useState([]);
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const [isSubmenuVisible, setIsSubmenuVisible] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [loggedUser, setLoggedUser] = useState(null)
+  const [myBusinesses, setMyBusinesses] = useState([])
+  const [isDropdownVisible, setDropdownVisible] = useState(false)
+  const [isSubmenuVisible, setIsSubmenuVisible] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const dropdownRef = useRef(null)
+
+  // Handle scroll effect for enhanced styling
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   useEffect(() => {
-    const token = getToken();
+    const token = getToken()
     if (token) {
       try {
-        const decoded = jwtDecode(token);
-        setLoggedUser(decoded);
+        const decoded = jwtDecode(token)
+        setLoggedUser(decoded)
       } catch {
-        localStorage.removeItem("token");
+        localStorage.removeItem("token")
       }
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     const loadMyBusinesses = async () => {
-      const token = getToken();
-      if (!token) return;
+      const token = getToken()
+      if (!token) return
       try {
-        const res = await fetch(
-          `${API_BASE}/api/Business/my/businesses`,
-          { headers: getHeaders() }
-        );
-        if (!res.ok) return;
-        const list = await res.json();
-        setMyBusinesses(list);
+        const res = await fetch(`${API_BASE}/api/Business/my/businesses`, {
+          headers: getHeaders(),
+        })
+        if (!res.ok) return
+        const list = await res.json()
+        setMyBusinesses(list)
       } catch (err) {
-        console.error("Failed to load user businesses:", err);
+        console.error("Failed to load user businesses:", err)
       }
-    };
-    loadMyBusinesses();
-  }, []);
+    }
+    loadMyBusinesses()
+  }, [])
 
   const isOwner =
     loggedUser &&
     (loggedUser.role?.toLowerCase?.() === "owner" ||
-      loggedUser[
-        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-      ]?.toLowerCase?.() === "owner");
+      loggedUser["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]?.toLowerCase?.() === "owner")
 
   const toggleDropdown = (e) => {
-    e.stopPropagation();
-    setDropdownVisible(!isDropdownVisible);
-    setIsSubmenuVisible(false);
-  };
+    e.stopPropagation()
+    setDropdownVisible(!isDropdownVisible)
+    setIsSubmenuVisible(false)
+  }
 
   const toggleSubmenu = (e) => {
-    e.stopPropagation();
-    setIsSubmenuVisible(!isSubmenuVisible);
-  };
+    e.stopPropagation()
+    setIsSubmenuVisible(!isSubmenuVisible)
+  }
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/";
-  };
+    localStorage.removeItem("token")
+    window.location.href = "/"
+  }
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownVisible(false);
-        setIsSubmenuVisible(false);
+        setDropdownVisible(false)
+        setIsSubmenuVisible(false)
       }
-    };
-    document.addEventListener("click", handleClickOutside);
+    }
+    document.addEventListener("click", handleClickOutside)
     return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
+      document.removeEventListener("click", handleClickOutside)
+    }
+  }, [])
 
   return (
-    <div className="navbar_container">
-      <nav className="navbar">
+    <div className={`navbar_container ${isScrolled ? "scrolled" : ""}`}>
+      <nav className="navbar" role="navigation" aria-label="Main navigation">
         <div className="logo-container">
-          <Link to="/">
-            <img src={`${process.env.PUBLIC_URL}/Assets/edlogo.png`} />
+          <Link to="/" aria-label="Go to homepage">
+            <img src={`${process.env.PUBLIC_URL}/Assets/edlogo.png`} alt="E & D Logo" />
           </Link>
           <h3>E & D</h3>
         </div>
@@ -112,53 +120,63 @@ const Navbar = () => {
           className={`hamburger ${isMenuOpen ? "is-active" : ""}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle navigation menu"
+          aria-expanded={isMenuOpen}
         >
           <span></span>
           <span></span>
           <span></span>
         </button>
 
-        <ul className={`nav-links ${isMenuOpen ? "open" : ""}`}>
-          <li>
-            <Link to="/map">Map</Link>
+        <ul className={`nav-links ${isMenuOpen ? "open" : ""}`} role="menubar">
+          <li role="none">
+            <Link to="/map" role="menuitem">
+              <span>🗺️</span>
+              Map
+            </Link>
           </li>
 
           {loggedUser ? (
             <>
-              <Notification />
-              <li className="user-menu" ref={dropdownRef}>
-                <button className="user-menu-button" onClick={toggleDropdown}>
+              <li className="notification-container" role="none">
+                <Notification />
+              </li>
+
+              <li className="user-menu-container" ref={dropdownRef} role="none">
+                <button
+                  className="user-menu-button"
+                  onClick={toggleDropdown}
+                  aria-expanded={isDropdownVisible}
+                  aria-haspopup="true"
+                  aria-label="User account menu"
+                  role="menuitem"
+                >
                   <FaUser className="user-icon" />
                   <span>{loggedUser.sub}</span>
-                  <FaCaretDown
-                    className={`caret-icon ${
-                      isDropdownVisible ? "rotate" : ""
-                    }`}
-                  />
+                  <FaCaretDown className={`caret-icon ${isDropdownVisible ? "rotate" : ""}`} />
                 </button>
 
                 {isDropdownVisible && (
-                  <div className="dropdown-menu">
+                  <div className={`dropdown-menu ${isDropdownVisible ? "open" : ""}`} role="menu">
                     <div className="dropdown-submenu">
                       <button
                         className="dropdown-item-dropdown-toggle"
                         onClick={toggleSubmenu}
+                        aria-expanded={isSubmenuVisible}
+                        aria-haspopup="true"
+                        role="menuitem"
                       >
                         <span className="dropdown-icon-myprofile">👤</span>
                         My Profile
-                        <FaCaretDown
-                          className={`submenu-caret ${
-                            isSubmenuVisible ? "rotate" : ""
-                          }`}
-                        />
+                        <FaCaretDown className={`submenu-caret ${isSubmenuVisible ? "rotate" : ""}`} />
                       </button>
+
                       {isSubmenuVisible && (
-                        <div className="dropdown-submenu-content">
-                          <Link to="/my-profile" className="dropdown-item">
+                        <div className={`dropdown-submenu-content ${isSubmenuVisible ? "open" : ""}`} role="menu">
+                          <Link to="/my-profile" className="dropdown-item" role="menuitem">
                             - View Profile
                           </Link>
                           {isOwner && (
-                            <Link to="/owner-guide" className="dropdown-item">
+                            <Link to="/owner-guide" className="dropdown-item" role="menuitem">
                               - Owners Guide
                             </Link>
                           )}
@@ -167,24 +185,24 @@ const Navbar = () => {
                     </div>
 
                     {!isOwner && (
-                      <Link to="/become-owner" className="dropdown-item">
+                      <Link to="/become-owner" className="dropdown-item" role="menuitem">
                         🏬 Create Your Shop
                       </Link>
                     )}
+
                     {isOwner && (
-                      <Link to="/become-owner" className="dropdown-item">
+                      <Link to="/become-owner" className="dropdown-item" role="menuitem">
                         🏬 Create Another Shop
                       </Link>
                     )}
+
                     {(isOwner || myBusinesses.length > 0) && (
-                      <Link to="/settings" className="dropdown-item">
+                      <Link to="/settings" className="dropdown-item" role="menuitem">
                         ⚙️ Business Settings
                       </Link>
                     )}
-                    <button
-                      onClick={handleLogout}
-                      className="dropdown-item logout-button"
-                    >
+
+                    <button onClick={handleLogout} className="dropdown-item logout-button" role="menuitem">
                       🚪 Logout
                     </button>
                   </div>
@@ -196,13 +214,17 @@ const Navbar = () => {
               <button
                 onClick={() => (window.location.href = "/login")}
                 className="login-button"
+                aria-label="Sign in to your account"
               >
+                <span>👤</span>
                 Login
               </button>
               <button
                 onClick={() => (window.location.href = "/register")}
                 className="register-button"
+                aria-label="Create new account"
               >
+                <span>✨</span>
                 Register
               </button>
             </div>
@@ -210,7 +232,7 @@ const Navbar = () => {
         </ul>
       </nav>
     </div>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

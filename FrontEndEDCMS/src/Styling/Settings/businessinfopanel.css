@@ -1,24 +1,15 @@
 /* BusinessInfoPanel.css */
 
-/* Fallback definitions (you can remove these if you set them globally) */
-:root {
-  --bg-panel: #ffffff;
-  --text: #333333;
-  --border: #e0e0e0;
-  --bg-light: #f9f9f9;
-  --primary: #0070f3;
-}
-
 /* Panel container */
 .business-info-panel {
   max-width: 100%;
   margin: 0 auto 24px;
-  background: var(--bg-panel);
+  background: var(--surface-base);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   padding: 16px;
   box-sizing: border-box;
-  color: var(--text);
+  color: var(--neutral-800);
 }
 
 /* Heading */
@@ -32,7 +23,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: var(--text);
+  color: var(--neutral-800);
 }
 
 /* Inputs and textarea */
@@ -41,11 +32,11 @@
   width: 100%;
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--neutral-200);
   border-radius: 4px;
   font-size: 1rem;
-  background: var(--bg-light);
-  color: var(--text);
+  background: var(--neutral-50);
+  color: var(--neutral-800);
 }
 
 .business-info-panel textarea {
@@ -57,7 +48,7 @@
 .business-info-panel button {
   display: inline-block;
   margin-top: 8px;
-  background-color: var(--primary);
+  background-color: var(--primary-500);
   color: #ffffff;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -68,7 +59,7 @@
 }
 
 .business-info-panel button:hover {
-  filter: brightness(0.9);
+  background-color: var(--primary-600);
 }
 
 /* Responsive adjustments */
@@ -79,5 +70,27 @@
   }
   .business-info-panel h3 {
     font-size: 1.75rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .business-info-panel {
+    background: var(--surface-base);
+    color: var(--neutral-100);
+  }
+  .business-info-panel label {
+    color: var(--neutral-100);
+  }
+  .business-info-panel input,
+  .business-info-panel textarea {
+    border-color: var(--neutral-700);
+    background: var(--neutral-800);
+    color: var(--neutral-100);
+  }
+  .business-info-panel button {
+    background-color: var(--primary-600);
+  }
+  .business-info-panel button:hover {
+    background-color: var(--primary-700);
   }
 }

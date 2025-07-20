@@ -1,16 +1,7 @@
-:root {
-  --bg: #fff;
-  --border: #ddd;
-  --primary: #0070f3;
-  --danger: #d32f2f;
-  --text: #333;
-  --muted: #666;
-}
-
 .panel {
-  background: var(--bg);
+  background: var(--surface-base);
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   padding: 16px;
   margin-bottom: 24px;
 }
@@ -20,8 +11,12 @@
   display: grid;
   gap: 12px;
 }
-.two-cols { grid-template-columns: 1fr 1fr; }
-.three-cols { grid-template-columns: 1fr 1fr 1fr; }
+.two-cols {
+  grid-template-columns: 1fr 1fr;
+}
+.three-cols {
+  grid-template-columns: 1fr 1fr 1fr;
+}
 
 /* Inputs, selects, textarea */
 .panel input,
@@ -29,7 +24,7 @@
 .panel textarea {
   width: 100%;
   padding: 8px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--neutral-200);
   border-radius: 4px;
   font-size: 1rem;
   margin-bottom: 12px;
@@ -39,8 +34,8 @@
 .file-btn {
   display: inline-block;
   padding: 8px 12px;
-  background: var(--primary);
-  color: #fff;
+  background: var(--primary-500);
+  color: var(--neutral-0);
   border-radius: 4px;
   position: relative;
   overflow: hidden;
@@ -50,8 +45,10 @@
 }
 .file-btn input[type="file"] {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0;
   cursor: pointer;
 }
@@ -65,23 +62,27 @@
 }
 .thumb {
   position: relative;
-  width: 60px; height: 60px;
-  border: 1px solid var(--border);
+  width: 60px;
+  height: 60px;
+  border: 1px solid var(--neutral-200);
   border-radius: 4px;
   overflow: hidden;
 }
 .thumb img {
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 .thumb button {
   position: absolute;
-  top: 2px; right: 2px;
-  background: rgba(0,0,0,0.6);
-  color: #fff;
+  top: 2px;
+  right: 2px;
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--neutral-0);
   border: none;
   border-radius: 50%;
-  width: 18px; height: 18px;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
 }
 
@@ -99,34 +100,37 @@
   cursor: pointer;
 }
 .actions button:first-child {
-  background: var(--primary);
-  color: #fff;
+  background: var(--primary-500);
+  color: var(--neutral-0);
 }
 .actions .cancel {
-  background: var(--border);
-  color: var(--text);
+  background: var(--neutral-200);
+  color: var(--neutral-800);
 }
 
 /* Product list */
 .product-list .search {
   width: 100%;
   padding: 8px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--neutral-200);
   border-radius: 4px;
   margin-bottom: 12px;
 }
 .product-list ul {
   list-style: none;
-  padding: 0; margin: 0;
+  padding: 0;
+  margin: 0;
 }
 .product-list li {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--neutral-200);
 }
-.product-list li:last-child { border-bottom: none }
+.product-list li:last-child {
+  border-bottom: none;
+}
 .btns button {
   margin-left: 8px;
   padding: 4px 8px;
@@ -136,21 +140,67 @@
   cursor: pointer;
 }
 .btns button:first-child {
-  background: var(--primary);
-  color: #fff;
+  background: var(--primary-500);
+  color: var(--neutral-0);
 }
 .btns button:last-child {
-  background: var(--danger);
-  color: #fff;
+  background: var(--error-500);
+  color: var(--neutral-0);
 }
 .no-results {
   text-align: center;
-  color: var(--muted);
+  color: var(--neutral-600);
   padding: 12px 0;
 }
 
 /* Responsive */
 @media (max-width: 600px) {
   .two-cols,
-  .three-cols { grid-template-columns: 1fr; }
+  .three-cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .panel {
+    background: var(--surface-base);
+    color: var(--neutral-100);
+  }
+  .panel input,
+  .panel select,
+  .panel textarea {
+    border-color: var(--neutral-700);
+    background: var(--neutral-800);
+    color: var(--neutral-100);
+  }
+  .file-btn {
+    background: var(--primary-600);
+  }
+  .thumb {
+    border-color: var(--neutral-700);
+  }
+  .actions button:first-child {
+    background: var(--primary-600);
+  }
+  .actions .cancel {
+    background: var(--neutral-700);
+    color: var(--neutral-100);
+  }
+  .product-list .search {
+    border-color: var(--neutral-700);
+    background: var(--neutral-800);
+    color: var(--neutral-100);
+  }
+  .product-list li {
+    border-bottom-color: var(--neutral-700);
+  }
+  .btns button:first-child {
+    background: var(--primary-600);
+  }
+  .btns button:last-child {
+    background: var(--error-600);
+  }
+  .no-results {
+    color: var(--neutral-400);
+  }
 }

@@ -2,11 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Map, Marker } from 'pigeon-maps';
+import { FaClock, FaPhoneAlt, FaMapMarkerAlt, FaInfoCircle } from 'react-icons/fa';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
 import '../Styling/sd-shopdetail.css';
 
-const API_BASE  = 'http://77.242.26.150:8000';
+const API_BASE = 'http://77.242.26.150:8000';
 const PAGE_SIZE = 8;
 
 export default function ShopDetailsPage() {
@@ -17,21 +18,16 @@ export default function ShopDetailsPage() {
   const [categories, setCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(0);
   const [items, setItems] = useState([]);
-
-  // pagination state
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // grab token cleanly
   const token = (() => {
     const raw = localStorage.getItem('token') || localStorage.getItem('authToken');
     return raw ? raw.replace(/^"|"$/g, '') : null;
   })();
 
-  // helper to auto‑determine open vs closed
   const parseAndCheckOpen = (oh) => {
     if (!oh?.includes('-')) return false;
     const [start, end] = oh.split('-');
@@ -43,7 +39,6 @@ export default function ShopDetailsPage() {
     return now >= s && now <= e;
   };
 
-  // fetch shop + categories + items
   useEffect(() => {
     if (!token) {
       setError('Please log in.');
@@ -53,23 +48,16 @@ export default function ShopDetailsPage() {
     const headers = { Authorization: `Bearer ${token}` };
     (async () => {
       try {
-        // shop
-        const shopRes = await fetch(
-          `${API_BASE}/api/Business/slug/${encodeURIComponent(slug)}`,
-          { headers }
-        );
+        const shopRes = await fetch(`${API_BASE}/api/Business/slug/${encodeURIComponent(slug)}`, { headers });
         if (!shopRes.ok) throw new Error(`Shop fetch failed: ${shopRes.status}`);
         const shopData = await shopRes.json();
         setShop(shopData);
-
-        // open/closed
         setIsOpen(
           typeof shopData.isManuallyOpen === 'boolean'
             ? shopData.isManuallyOpen
             : parseAndCheckOpen(shopData.openingHours)
         );
 
-        // reverse‑geocode
         if (shopData.location?.includes(',')) {
           const [lat, lon] = shopData.location.split(',').map(Number);
           fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
@@ -78,14 +66,14 @@ export default function ShopDetailsPage() {
             .catch(() => setRouteName(shopData.location));
         }
 
-        // categories & items
         const bizId = shopData.businessId;
         const [catsRes, itemsRes] = await Promise.all([
           fetch(`${API_BASE}/api/ClothingCategory/business/${bizId}`, { headers }),
-          fetch(`${API_BASE}/api/ClothingItem/business/${bizId}`,     { headers }),
+          fetch(`${API_BASE}/api/ClothingItem/business/${bizId}`, { headers }),
         ]);
-        const cats  = catsRes.ok   ? await catsRes.json()   : [];
-        const allItems = itemsRes.ok  ? await itemsRes.json()  : [];
+
+        const cats = catsRes.ok ? await catsRes.json() : [];
+        const allItems = itemsRes.ok ? await itemsRes.json() : [];
 
         setCategories([{ clothingCategoryId: 0, name: 'All' }, ...cats]);
         setItems(allItems);
@@ -98,29 +86,24 @@ export default function ShopDetailsPage() {
     })();
   }, [slug, token]);
 
-  // recompute pagination whenever items or category changes
   useEffect(() => {
     const filtered = selectedCategoryId === 0
       ? items
       : items.filter(i => i.clothingCategoryId === selectedCategoryId);
-
     setTotalPages(Math.ceil(filtered.length / PAGE_SIZE) || 1);
     setPage(1);
   }, [items, selectedCategoryId]);
 
   if (loading) return <p>Loading…</p>;
-  if (error)   return <p className="sd-error">{error}</p>;
-  if (!shop)   return <p className="sd-error">Shop not found</p>;
+  if (error) return <p className="sd-error">{error}</p>;
+  if (!shop) return <p className="sd-error">Shop not found</p>;
 
-  // slice out current page of filtered items
   const filteredItems = selectedCategoryId === 0
     ? items
     : items.filter(i => i.clothingCategoryId === selectedCategoryId);
+  const startIdx = (page - 1) * PAGE_SIZE;
+  const pageItems = filteredItems.slice(startIdx, startIdx + PAGE_SIZE);
 
-  const startIdx    = (page - 1) * PAGE_SIZE;
-  const pageItems   = filteredItems.slice(startIdx, startIdx + PAGE_SIZE);
-
-  // map coords
   let coords = null;
   if (shop.location?.includes(',')) {
     const [lat, lon] = shop.location.split(',').map(Number);
@@ -130,9 +113,7 @@ export default function ShopDetailsPage() {
   return (
     <>
       <Navbar />
-
       <div className="sd-page-wrapper">
-        {/* HERO */}
         <div
           className="sd-shop-hero"
           style={{ backgroundImage: `url(${shop.coverPhoto || shop.coverPictureUrl})` }}
@@ -147,9 +128,7 @@ export default function ShopDetailsPage() {
           </div>
         </div>
 
-        {/* BODY */}
         <div className="sd-body-wrapper">
-          {/* MAIN */}
           <main className="sd-main-col">
             <nav className="sd-category-bar" aria-label="Item categories">
               {categories.map(cat => (
@@ -181,9 +160,9 @@ export default function ShopDetailsPage() {
                         alt={p.name}
                       />
                       <div className="sd-product-inline">
-                        <span>{p.name}</span>
-                        <span>${p.price.toFixed(2)}</span>
-                        <span>{p.description}</span>
+                        <span className="product-name">{p.name}</span>
+                        <span className="product-price">${p.price.toFixed(2)}</span>
+                        <span className="product-desc">{p.description}</span>
                       </div>
                     </Link>
                   </li>
@@ -192,53 +171,119 @@ export default function ShopDetailsPage() {
 
               {totalPages > 1 && (
                 <div className="sd-pagination">
-                  <button disabled={page === 1} onClick={() => setPage(p => p - 1)}>
-                    Prev
-                  </button>
+                  <button disabled={page === 1} onClick={() => setPage(p => p - 1)}>Prev</button>
                   <span>Page {page} of {totalPages}</span>
-                  <button disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>
-                    Next
-                  </button>
+                  <button disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>Next</button>
                 </div>
               )}
             </section>
           </main>
 
-          {/* ASIDE */}
           <aside className="sd-info-col">
             <div className="sd-shop-info">
-              <p><strong>Description:</strong> {shop.description}</p>
-              <p><strong>Address:</strong>     {shop.address}</p>
-              <p><strong>Phone:</strong>       {shop.businessPhoneNumber}</p>
-              <p><strong>Hours:</strong>       {shop.openingHours}</p>
-              <p>
-                <strong>Status:</strong>{' '}
-                <span className={`shop-status ${isOpen ? 'open' : 'closed'}`}>
-                  {isOpen ? 'Open' : 'Closed'}
-                </span>
-              </p>
+              <div className="sd-shop-info-section">
+                <h4><FaInfoCircle /> Description</h4>
+                <p>{shop.description}</p>
+              </div>
+              <div className="sd-shop-info-section">
+                <h4><FaPhoneAlt /> Contact</h4>
+                <p><strong>Phone:</strong> {shop.businessPhoneNumber}</p>
+                <p><strong>Address:</strong> {shop.address}</p>
+              </div>
+              <div className="sd-shop-info-section">
+                <h4><FaClock /> Hours</h4>
+                <p><strong>Opening:</strong> {shop.openingHours}</p>
+                <p>
+                  <strong>Status:</strong>{' '}
+                  <span className={`shop-status ${isOpen ? 'open' : 'closed'}`}>
+                    {isOpen ? 'Open' : 'Closed'}
+                  </span>
+                </p>
+              </div>
             </div>
 
             {coords && (
-              <div className="sd-shop-location">
-                <h3>Location on Map</h3>
-                <div className="sd-location-map">
-                  <Map
-                    height={160}
-                    defaultCenter={coords}
-                    defaultZoom={13}
-                    metaWheel
-                    mouseEvents
+              <>
+                <div className="sd-shop-location">
+                  <h3>Location on Map</h3>
+                  <small>{routeName}</small>
+                  <div className="sd-location-map">
+                    <Map
+                      height={260}
+                      defaultCenter={coords}
+                      defaultZoom={13}
+                      metaWheel
+                      mouseEvents
+                    >
+                      <Marker width={40} anchor={coords} />
+                    </Map>
+                  </div>
+                  <a
+                    href={`https://www.google.com/maps?q=${coords[0]},${coords[1]}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="map-link"
                   >
-                    <Marker width={50} anchor={coords} />
-                  </Map>
+                    Open in Google Maps
+                  </a>
                 </div>
-              </div>
+              </>
             )}
-          </aside>
+                <div className="sd-shop-share">
+                  <h3>Share this Shop</h3>
+
+                  <input
+                    type="text"
+                    readOnly
+                    value={window.location.href}
+                    onClick={(e) => e.target.select()}
+                    className="sd-share-input"
+                  />
+                  <button
+                    onClick={() => navigator.clipboard.writeText(window.location.href)}
+                    className="sd-share-btn"
+                  >
+                    Copy Link
+                  </button>
+
+                  <div className="sd-social-buttons">
+                    <a
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sd-social facebook"
+                    >
+                      Share on Facebook
+                    </a>
+                    <a
+                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=Check%20out%20this%20shop!`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sd-social twitter"
+                    >
+                      Share on X
+                    </a>
+                    <a
+                      href={`https://api.whatsapp.com/send?text=${encodeURIComponent("Check out this shop: " + window.location.href)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sd-social whatsapp"
+                    >
+                      Share on WhatsApp
+                    </a>
+                    <a
+                      href={`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=Check%20out%20this%20shop!`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sd-social telegram"
+                    >
+                      Share on Telegram
+                    </a>
+                  </div>
+                </div>
+                                      </aside>
         </div>
       </div>
-
       <Footer />
     </>
   );

@@ -124,7 +124,7 @@ export default function MyMap() {
               <button className="close-overlay" onClick={handleClose}>✕</button>
               <h4>{selected.name}</h4>
               <p><strong>Address:</strong> {selected.address}</p>
-              <Link to={`/shop/${selected.slug}`} className="overlay-button">
+              <Link to={`/shop/${selected.name}`} className="overlay-button">
                 View Shop
               </Link>
               <button onClick={() => getDirections(selected.lat, selected.lng)}>

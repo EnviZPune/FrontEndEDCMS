@@ -1,132 +1,270 @@
 /* src/Styling/AllShops.css */
 
-/* ===== Shops Grid ===== */
+/* ===== Shops Grid Container ===== */
 .shops-container {
   position: relative;
-  top: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: flex-start;
+  top: 65px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Slightly larger cards */
+  gap: var(--space-8); /* Consistent spacing */
+  justify-content: center; /* Center items in the grid */
+  padding: var(--space-8) var(--space-4); /* Add some padding around the grid */
+  max-width: 1200px; /* Max width for content */
+  margin: 0 auto; /* Center the container */
 }
 
+/* ===== Shop Card Styling ===== */
 .shop-card-link {
   text-decoration: none;
   display: block;
+  height: 100%; /* Ensure link fills the card */
 }
 
 .shop-card {
   position: relative;
-  width: 270px;
-  height: 180px;
-  border-radius: 10px;
+  height: 200px; /* Slightly taller cards */
+  border-radius: var(--radius-lg); /* Softer corners */
   overflow: hidden;
+  background-color: var(--neutral-0); /* White background for light mode */
   background-size: cover;
   background-position: center;
-  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow-md); /* Subtle shadow */
+  transition: transform var(--duration-300) var(--ease-in-out), box-shadow var(--duration-300) var(--ease-in-out);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Content at the bottom */
 }
 
 .shop-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 4px 4px 15px rgba(0,0,0,0.2);
+  transform: translateY(-var(--space-1)); /* Lift slightly on hover */
+  box-shadow: var(--shadow-xl); /* More pronounced shadow on hover */
 }
 
 .shop-card-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 50%); /* Gradient overlay */
+  transition: background var(--duration-300) var(--ease-in-out);
+}
+
+.shop-card:hover .shop-card-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.1) 50%); /* Darker on hover */
 }
 
 .shop-card-content {
   position: relative;
-  color: #fff;
-  height: 100%;
-  padding: 10px;
+  z-index: 1; /* Ensure content is above overlay */
+  color: var(--neutral-0); /* White text on dark overlay */
+  padding: var(--space-4); /* Consistent padding */
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  height: 100%;
 }
 
 .shop-header {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
 }
 
 .shop-logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 48px; /* Slightly larger logo */
+  height: 48px;
   object-fit: cover;
-  border: 2px solid #fff;
-  margin-right: 8px;
+  border-radius: var(--radius-full); /* Perfect circle */
+  border: 2px solid var(--neutral-0); /* White border */
+  margin-right: var(--space-3);
+  flex-shrink: 0; /* Prevent logo from shrinking */
 }
 
 .shop-name {
   margin: 0;
-  font-size: 1rem;
+  font-size: var(--text-lg); /* Larger font for name */
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* Subtle text shadow */
 }
 
 .shop-description {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: var(--text-sm);
+  color: var(--neutral-100); /* Slightly off-white for description */
+  line-height: 1.4;
+  opacity: 0.9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* ===== Pagination (shared component) ===== */
+/* ===== Pagination Styling ===== */
 nav[aria-label="Pagination"] {
+  position: relative;
+  top: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  margin: 40px 0 20px;
-  font-family: sans-serif;
+  gap: var(--space-3); /* Tighter spacing */
+  margin: var(--space-10) 0 var(--space-8); /* More vertical space */
+  font-family: var(--font-sans);
 }
 
 nav[aria-label="Pagination"] button {
-  border: 1px solid #007bff;
-  background-color: #fff;
-  color: #007bff;
-  padding: 5px 10px;
-  border-radius: 5px;
+  border: 1px solid var(--primary-500); /* Primary color border */
+  background-color: var(--neutral-0); /* White background */
+  color: var(--primary-500); /* Primary color text */
+  padding: var(--space-2) var(--space-4); /* Consistent padding */
+  border-radius: var(--radius-md); /* Softer corners */
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  font-size: 0.9rem;
+  transition: background-color var(--duration-200) var(--ease-in-out), color var(--duration-200) var(--ease-in-out),
+    border-color var(--duration-200) var(--ease-in-out);
+  font-size: var(--text-sm);
+  min-width: 36px; /* Ensure consistent button width */
+  text-align: center;
 }
 
 nav[aria-label="Pagination"] button:hover:not(:disabled) {
-  background-color: #0056b3;
-  color: #fff;
+  background-color: var(--primary-500); /* Fill with primary on hover */
+  color: var(--neutral-0); /* White text on hover */
+  border-color: var(--primary-500);
 }
 
 nav[aria-label="Pagination"] button[aria-current="page"] {
-  background-color: #007bff;
-  color: #fff;
-  border-color: #007bff;
+  background-color: var(--primary-500); /* Active button filled with primary */
+  color: var(--neutral-0);
+  border-color: var(--primary-500);
+  font-weight: var(--font-weight-semibold);
 }
 
 nav[aria-label="Pagination"] button:disabled {
-  opacity: 0.5;
-  cursor: default;
+  opacity: 0.6; /* Slightly more visible disabled state */
+  cursor: not-allowed;
+  background-color: var(--neutral-100); /* Lighter background for disabled */
+  color: var(--neutral-500); /* Grey text for disabled */
+  border-color: var(--neutral-300);
 }
 
-/* ===== Loading & Error ===== */
+/* ===== Loading & Error States ===== */
 .loading-spinner {
-  border: 8px solid #f3f3f3;
-  border-top: 8px solid #3498db;
-  border-radius: 50%;
+  border: 8px solid var(--neutral-200); /* Light grey border */
+  border-top: 8px solid var(--primary-500); /* Primary color top border */
+  border-radius: var(--radius-full);
   width: 60px;
   height: 60px;
   animation: spin 1.5s linear infinite;
-  margin: 40px auto;
+  margin: var(--space-10) auto; /* Consistent margin */
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .error-text {
   text-align: center;
-  color: #c00;
-  padding: 2rem;
+  color: var(--error-500); /* Error red color */
+  padding: var(--space-8);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 768px) {
+  .shops-container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Smaller cards on mobile */
+    gap: var(--space-6);
+    padding: var(--space-6) var(--space-3);
+  }
+
+  .shop-card {
+    height: 180px;
+  }
+
+  .shop-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .shop-name {
+    font-size: var(--text-base);
+  }
+
+  .shop-description {
+    font-size: var(--text-xs);
+  }
+
+  nav[aria-label="Pagination"] {
+    gap: var(--space-2);
+    margin: var(--space-8) 0 var(--space-6);
+  }
+
+  nav[aria-label="Pagination"] button {
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--text-xs);
+    min-width: 30px;
+  }
+}
+
+/* ===== Dark Mode Adjustments ===== */
+@media (prefers-color-scheme: dark) {
+  .shop-card {
+    background-color: var(--neutral-900); /* Darker background for cards */
+    box-shadow: var(--shadow-xl);
+  }
+
+  .shop-card:hover {
+    box-shadow: var(--shadow-2xl);
+  }
+
+  .shop-card-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 50%);
+  }
+
+  .shop-card:hover .shop-card-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.2) 50%);
+  }
+
+  .shop-card-content {
+    color: var(--neutral-50); /* Lighter text on dark overlay */
+  }
+
+  .shop-logo {
+    border-color: var(--neutral-50); /* Lighter border for logo */
+  }
+
+  .shop-description {
+    color: var(--neutral-200);
+  }
+
+  nav[aria-label="Pagination"] button {
+    border-color: var(--primary-400);
+    background-color: var(--neutral-800);
+    color: var(--primary-400);
+  }
+
+  nav[aria-label="Pagination"] button:hover:not(:disabled) {
+    background-color: var(--primary-400);
+    color: var(--neutral-950);
+  }
+
+  nav[aria-label="Pagination"] button[aria-current="page"] {
+    background-color: var(--primary-400);
+    color: var(--neutral-950);
+    border-color: var(--primary-400);
+  }
+
+  nav[aria-label="Pagination"] button:disabled {
+    background-color: var(--neutral-700);
+    color: var(--neutral-500);
+    border-color: var(--neutral-600);
+  }
+
+  .loading-spinner {
+    border-color: var(--neutral-700);
+    border-top-color: var(--primary-400);
+  }
+
+  .error-text {
+    color: var(--error-400);
+  }
 }

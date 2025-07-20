@@ -147,9 +147,8 @@ export default function CategoryPanel({ business }) {
           </ul>
 
           <div className="category-form">
-            <h4>{editingCategory ? 'Edit' : 'Add'} Category</h4>
+            <h4>{editingCategory ? 'Edit' : 'Create'} Category</h4>
 
-            <label htmlFor="cat-name">Name</label>
             <input
               id="cat-name"
               type="text"
@@ -161,7 +160,7 @@ export default function CategoryPanel({ business }) {
 
             <div className="form-actions">
               <button onClick={handleSave}>
-                {editingCategory ? 'Update' : 'Add'} Category
+                {editingCategory ? 'Update' : 'Create'}
               </button>
               {editingCategory && (
                 <button onClick={resetForm} className="cancel">

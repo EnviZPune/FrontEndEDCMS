@@ -9,6 +9,7 @@ import '../Styling/shoplist.css';
 
 const API_BASE = 'http://77.242.26.150:8000/api';
 const PAGE_SIZE = 6;
+const SPOTLIGHT_SIZE = 7; // Number of shops to show in spotlight
 
 const toSlug = (str) =>
   str
@@ -18,41 +19,70 @@ const toSlug = (str) =>
     .replace(/[^a-z0-9-]/g, '');
 
 export default function ShopList() {
-  const [shops, setShops]         = useState([]);
+  const [shops, setShops] = useState([]);
+  const [spotlightShops, setSpotlightShops] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading]     = useState(true);
-  const [error, setError]         = useState('');
-  const [page, setPage]           = useState(1);
-
-  const [categories, setCategories]   = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [spotlightLoading, setSpotlightLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [page, setPage] = useState(1);
+  const [categories, setCategories] = useState([]);
   const [loadingCats, setLoadingCats] = useState(true);
-  const [errorCats, setErrorCats]     = useState('');
-
-  const navigate    = useNavigate();
+  const [errorCats, setErrorCats] = useState('');
+  
+  const navigate = useNavigate();
   const carouselRef = useRef(null);
+  const spotlightRef = useRef(null);
   const categoriesRef = useRef(null);
 
   console.log(shops);
 
-  // Load paginated shops
+  // Load spotlight shops (featured/top shops)
   useEffect(() => {
     let canceled = false;
+    
     (async () => {
-      setLoading(true);
-      setError('');
+      setSpotlightLoading(true);
       try {
-        const res = await fetch(
-          `${API_BASE}/Business/paginated?pageNumber=${page}&pageSize=${PAGE_SIZE}`
-        );
+        const res = await fetch(`${API_BASE}/Business/paginated?pageNumber=1&pageSize=${SPOTLIGHT_SIZE}`);
         if (!res.ok) throw new Error(await res.text() || res.statusText);
-        const { items, totalCount: count } = await res.json();
-
-        // Map in slug (either from item.slug or generate from name)
+        const { items } = await res.json();
+        
         const mapped = items.map(shop => ({
           ...shop,
           slug: shop.slug || toSlug(shop.name),
         }));
+        
+        if (!canceled) {
+          setSpotlightShops(mapped);
+        }
+      } catch (err) {
+        console.error('Error loading spotlight shops:', err.message);
+      } finally {
+        if (!canceled) setSpotlightLoading(false);
+      }
+    })();
+    
+    return () => { canceled = true; };
+  }, []);
 
+  // Load paginated shops for browse section
+  useEffect(() => {
+    let canceled = false;
+    
+    (async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const res = await fetch(`${API_BASE}/Business/paginated?pageNumber=${page}&pageSize=${PAGE_SIZE}`);
+        if (!res.ok) throw new Error(await res.text() || res.statusText);
+        const { items, totalCount: count } = await res.json();
+        
+        const mapped = items.map(shop => ({
+          ...shop,
+          slug: shop.slug || toSlug(shop.name),
+        }));
+        
         if (!canceled) {
           setShops(mapped);
           setTotalCount(count);
@@ -63,12 +93,14 @@ export default function ShopList() {
         if (!canceled) setLoading(false);
       }
     })();
+    
     return () => { canceled = true; };
   }, [page]);
 
   // Fetch all categories once
   useEffect(() => {
     let canceled = false;
+    
     (async () => {
       setLoadingCats(true);
       setErrorCats('');
@@ -83,6 +115,7 @@ export default function ShopList() {
         if (!canceled) setLoadingCats(false);
       }
     })();
+    
     return () => { canceled = true; };
   }, []);
 
@@ -95,9 +128,53 @@ export default function ShopList() {
     navigate(`/category-filter?category=${encodeURIComponent(categoryName)}`);
   };
 
+  // Auto-scroll functionality for spotlight carousel
+  useEffect(() => {
+    const carousel = spotlightRef.current;
+    if (!carousel || spotlightShops.length === 0) return;
+
+    let scrollInterval;
+    let isUserScrolling = false;
+    let userScrollTimeout;
+
+    const startAutoScroll = () => {
+      scrollInterval = setInterval(() => {
+        if (!isUserScrolling && carousel) {
+          const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+          const currentScroll = carousel.scrollLeft;
+          
+          if (currentScroll >= maxScroll) {
+            carousel.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            carousel.scrollBy({ left: 300, behavior: 'smooth' });
+          }
+        }
+      }, 3000);
+    };
+
+    const handleUserScroll = () => {
+      isUserScrolling = true;
+      clearTimeout(userScrollTimeout);
+      userScrollTimeout = setTimeout(() => {
+        isUserScrolling = false;
+      }, 2000);
+    };
+
+    carousel.addEventListener('scroll', handleUserScroll);
+    startAutoScroll();
+
+    return () => {
+      clearInterval(scrollInterval);
+      clearTimeout(userScrollTimeout);
+      carousel?.removeEventListener('scroll', handleUserScroll);
+    };
+  }, [spotlightShops]);
+
   return (
     <>
       <Navbar />
+      
+      {/* Hero Banner */}
       <div className="hero-banner">
         <div className="hero-overlay" />
         <div className="hero-content">
@@ -108,39 +185,84 @@ export default function ShopList() {
       </div>
 
       <div className="shop-list-container">
-        <div className="shop-list-header">
-          <h2>Browse Shops</h2>
+        {/* Spotlight Section */}
+        <div className="spotlight-wrapper">
+          <div className="spotlight-illustration">
+            <img 
+              src="/placeholder.svg?height=260&width=260" 
+              alt="Shopping illustration" 
+            />
+          </div>
+          
+          <div className="spotlight-carousel" ref={spotlightRef}>
+            {spotlightLoading ? (
+              <div className="loading-spinner small" />
+            ) : (
+              spotlightShops.map((shop, index) => (
+                <div key={shop.businessId} className="spotlight-slide" style={{ flex: `0 0 calc((100% - ${(SPOTLIGHT_SIZE - 1)}rem) / ${SPOTLIGHT_SIZE})` }}>
+                  <Link to={`/shop/${shop.name}`} className="shop-card spotlight-card">
+                    <div className="shop-card-media">
+                      {shop.profilePictureUrl ? (
+                        <img src={shop.profilePictureUrl || "/placeholder.svg"} alt={shop.name} />
+                      ) : (
+                        <div className="shop-card-placeholder" />
+                      )}
+                    </div>
+                    <div className="shop-card-title">{shop.name}</div>
+                  </Link>
+                </div>
+              ))
+            )}
+          </div>
         </div>
 
-        {error && <p className="error-text">{error}</p>}
-
-
-        {loading ? (
-          <div className="loading-spinner" />
-        ) : shops.length > 0 ? (
-          <div className="shop-grid">
-            {shops.map((shop) => (
-              <Link
-                key={shop.businessId}
-                to={`/shop/${shop.slug}`}
-                className="shop-card"
-              >
-                {shop.profilePictureUrl ? (
-                  <img src={shop.profilePictureUrl} alt={shop.name} />
-                ) : (
-                  <div className="shop-placeholder" />
-                )}
-                <h3>{shop.name}</h3>
-              </Link>
-            ))}
+        {/* Browse Shops Section */}
+        <div className="browse-shops-wrapper">
+          <div className="shop-list-header">
+            <h2>Browse All Shops</h2>
           </div>
-        ) : (
-          <p className="no-results">No shops found.</p>
-        )}
 
+          {error && <p className="error-text">{error}</p>}
+          
+          <div className="browse-carousel" ref={carouselRef}>
+            {loading ? (
+              <div className="loading-spinner" />
+            ) : shops.length > 0 ? (
+              <>
+                {shops.map((shop) => (
+                  <div key={shop.businessId} className="carousel-slide" style={{ flex: '0 0 280px' }}>
+                    <Link to={`/shop/${shop.name}`} className="shop-card">
+                      <div className="shop-card-media">
+                        {shop.profilePictureUrl ? (
+                          <img src={shop.profilePictureUrl || "/placeholder.svg"} alt={shop.name} />
+                        ) : (
+                          <div className="shop-card-placeholder" />
+                        )}
+                      </div>
+                      <div className="shop-card-title">{shop.name}</div>
+                    </Link>
+                  </div>
+                ))}
+                <div className="carousel-end-sentinel" />
+              </>
+            ) : (
+              <p className="no-results">No shops found.</p>
+            )}
+          </div>
+
+          <div className="browse-illustration">
+            <img 
+              src="/placeholder.svg?height=200&width=200" 
+              alt="Shopper illustration" 
+            />
+          </div>
+        </div>
+
+        {/* Categories Section */}
         <div className="categories-container">
-          <h2>Categories</h2>
+          <h2>Shop by Categories</h2>
           {errorCats && <p className="error-text">{errorCats}</p>}
+          
           {loadingCats ? (
             <div className="loading-spinner small" />
           ) : (
@@ -157,7 +279,7 @@ export default function ShopList() {
                   >
                     {cat.iconUrl ? (
                       <img
-                        src={cat.iconUrl}
+                        src={cat.iconUrl || "/placeholder.svg"}
                         alt={cat.name}
                         className="category-card-icon"
                       />
@@ -167,10 +289,15 @@ export default function ShopList() {
                     <p className="category-card-title">{cat.name}</p>
                   </div>
                 ))}
+              
+              {/* Add loading spinner for infinite scroll if needed */}
+              {loadingCats && <div className="loading-spinner small" />}
+              <div className="carousel-end-sentinel" />
             </div>
           )}
         </div>
 
+        {/* Pagination */}
         <Pagination
           page={page}
           pageSize={PAGE_SIZE}

@@ -4,10 +4,10 @@
   max-width: 800px;
   margin: 0 auto 24px;
   padding: 24px;
-  background: #fff;
+  background: var(--surface-base);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  color: var(--neutral-800);
 }
 
 .category-panel h3 {
@@ -28,7 +28,7 @@
   display: flex;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--neutral-200);
 }
 
 .category-list li:last-child {
@@ -46,7 +46,7 @@
 .category-name {
   flex: 1;
   font-size: 1rem;
-  color: #444;
+  color: var(--neutral-700);
 }
 
 .category-list button {
@@ -61,32 +61,32 @@
 
 /* Edit / Delete buttons */
 .category-list button:first-of-type {
-  background: #0070f3;
-  color: #fff;
+  background: var(--primary-500);
+  color: var(--neutral-0);
 }
 .category-list button:first-of-type:hover {
-  background: #005bb5;
+  background: var(--primary-600);
 }
 
 .category-list button:last-of-type {
-  background: #d32f2f;
-  color: #fff;
+  background: var(--error-500);
+  color: var(--neutral-0);
 }
 .category-list button:last-of-type:hover {
-  background: #b71c1c;
+  background: var(--error-600);
 }
 
 /* ─── Category Form ─────────────────────────────────────────────────────── */
 
 .category-form {
-  background: #f9f9f9;
+  background: var(--neutral-50);
   padding: 16px;
   border-radius: 6px;
 }
 
 .category-form h4 {
   margin-top: 0;
-  margin-bottom: 12px;
+  margin-bottom: 7px;
   font-size: 1.25rem;
 }
 
@@ -101,7 +101,7 @@
   width: 100%;
   padding: 8px;
   margin-top: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--neutral-300);
   border-radius: 4px;
   font-size: 1rem;
   box-sizing: border-box;
@@ -125,20 +125,20 @@
 
 /* Add / Update button */
 .category-form button:first-child {
-  background: #0070f3;
-  color: #fff;
+  background: var(--primary-500);
+  color: var(--neutral-0);
 }
 .category-form button:first-child:hover {
-  background: #005bb5;
+  background: var(--primary-600);
 }
 
 /* Cancel button */
 .category-form button:last-child {
-  background: #e0e0e0;
-  color: #333;
+  background: var(--neutral-200);
+  color: var(--neutral-800);
 }
 .category-form button:last-child:hover {
-  background: #cacaca;
+  background: var(--neutral-300);
 }
 
 /* ─── Responsive ───────────────────────────────────────────────────────── */
@@ -153,5 +153,61 @@
   }
   .category-form .button-group {
     flex-direction: column;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .category-panel {
+    background: var(--surface-base);
+    color: var(--neutral-100);
+  }
+  .category-panel h3 {
+    color: var(--neutral-100);
+  }
+  .category-list li {
+    border-bottom-color: var(--neutral-700);
+  }
+  .category-name {
+    color: var(--neutral-200);
+  }
+  .category-list button:first-of-type {
+    background: var(--primary-600);
+  }
+  .category-list button:first-of-type:hover {
+    background: var(--primary-700);
+  }
+  .category-list button:last-of-type {
+    background: var(--error-600);
+  }
+  .category-list button:last-of-type:hover {
+    background: var(--error-700);
+  }
+  .category-form {
+    background: var(--neutral-800);
+  }
+  .category-form h4 {
+    color: var(--neutral-100);
+  }
+  .category-form label {
+    color: var(--neutral-200);
+  }
+  .category-form input[type="text"],
+  .category-form input[type="color"] {
+    border-color: var(--neutral-700);
+    background: var(--neutral-900);
+    color: var(--neutral-100);
+  }
+  .category-form button:first-child {
+    background: var(--primary-600);
+  }
+  .category-form button:first-child:hover {
+    background: var(--primary-700);
+  }
+  .category-form button:last-child {
+    background: var(--neutral-700);
+    color: var(--neutral-100);
+  }
+  .category-form button:last-child:hover {
+    background: var(--neutral-600);
   }
 }

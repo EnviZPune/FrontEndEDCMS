@@ -7,7 +7,7 @@ import Pagination from '../Components/Pagination.tsx';
 import '../Styling/AllShops.css';
 
 const API_URL   = 'http://77.242.26.150:8000/api/Business';
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 6;
 
 // Fallback slug generator
 const slugify = (str) =>
@@ -71,7 +71,7 @@ export default function AllShops() {
       <div className="shops-container">
         {shops.map((shop) => (
           <Link
-            to={`/shop/${shop.slug}`}            // use /shops/:slug
+            to={`/shop/${shop.name}`}     
             key={shop.businessId}
             className="shop-card-link"
           >

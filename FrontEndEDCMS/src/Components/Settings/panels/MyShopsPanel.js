@@ -6,10 +6,10 @@ import '../../../Styling/Settings/myshopspanel.css'
 
 export default function MyShopsPanel({ businesses = [] }) {
   const { get } = useApiClient()
-  const SHOPS_PER_PAGE = 10
+  const SHOPS_PER_PAGE = 12;
 
   const [page, setPage]     = useState(1)
-  const [images, setImages] = useState({}) // map of businessId→coverUrl
+  const [images, setImages] = useState({}) // map of businessId → coverUrl
 
   const totalPages = Math.max(1, Math.ceil(businesses.length / SHOPS_PER_PAGE))
   const startIdx   = (page - 1) * SHOPS_PER_PAGE
@@ -21,6 +21,7 @@ export default function MyShopsPanel({ businesses = [] }) {
 
     pageShops.forEach(shop => {
       if (shop.businessId in images) return
+
       get(`/api/Business/${shop.businessId}`)
         .then(detail => {
           if (cancelled) return
@@ -47,13 +48,14 @@ export default function MyShopsPanel({ businesses = [] }) {
 
       <div className="shop-grid">
         {pageShops.map(shop => {
+          const name = shop.name || shop.businessId
           const imageUrl = images[shop.businessId] ||
             'https://via.placeholder.com/400x225?text=No+Image'
 
           return (
             <Link
-              key={shop.businessId}
-              to={`/shops/${shop.businessId}`}
+              key={name}
+              to={`/shop/${name}`}
               className="shop-card"
             >
               <div className="shop-card-image">

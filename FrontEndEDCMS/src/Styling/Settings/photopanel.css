@@ -1,5 +1,5 @@
 .photo-panel {
-  background: #fff;
+  background: var(--surface-base);
   padding: 24px;
   border-radius: 8px;
   max-width: 700px;
@@ -28,8 +28,8 @@
 }
 
 .photo-preview-container {
-  background: #f7f7f7;
-  border: 2px dashed #ddd;
+  background: var(--neutral-50);
+  border: 2px dashed var(--neutral-300);
   border-radius: 6px;
   padding: 1rem;
   position: relative;
@@ -44,7 +44,7 @@
 }
 
 .photo-placeholder {
-  color: #999;
+  color: var(--neutral-500);
   font-size: 0.9rem;
   line-height: 160px;
 }
@@ -53,8 +53,8 @@
   position: absolute;
   bottom: 8px;
   right: 8px;
-  background: #0070f3;
-  color: #fff;
+  background: var(--primary-500);
+  color: var(--neutral-0);
   padding: 0.4rem 0.8rem;
   border: none;
   border-radius: 4px;
@@ -64,8 +64,10 @@
 
 .photo-upload-button input {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0;
   cursor: pointer;
 }
@@ -73,8 +75,8 @@
 .save-button {
   display: block;
   margin: 1.5rem auto 0;
-  background: #0070f3;
-  color: #fff;
+  background: var(--primary-500);
+  color: var(--neutral-0);
   border: none;
   padding: 0.8rem 2rem;
   font-size: 1rem;
@@ -84,10 +86,38 @@
 }
 
 .save-button:hover:not(:disabled) {
-  background: #005bb5;
+  background: var(--primary-600);
 }
 
 .save-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .photo-panel {
+    background: var(--surface-base);
+    color: var(--neutral-100);
+  }
+  .photo-panel h3 {
+    color: var(--neutral-100);
+  }
+  .photo-preview-container {
+    background: var(--neutral-800);
+    border-color: var(--neutral-700);
+  }
+  .photo-placeholder {
+    color: var(--neutral-400);
+  }
+  .photo-upload-button {
+    background: var(--primary-600);
+    color: var(--neutral-0);
+  }
+  .save-button {
+    background: var(--primary-600);
+    color: var(--neutral-0);
+  }
+  .save-button:hover:not(:disabled) {
+    background: var(--primary-700);
+  }
 }

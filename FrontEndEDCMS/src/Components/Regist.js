@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import '../Styling/regist.css';
-import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 
 function RegisterFormUser() {
@@ -67,19 +66,23 @@ function RegisterFormUser() {
 
     try {
       const response = await fetch('http://77.242.26.150:8000/api/Register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      });
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+          });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "An error occurred while registering.");
-      }
+          if (!response.ok) {
+            let errorData;
+            try {
+              errorData = await response.json();
+            } catch {
+              errorData = {};
+            }
+            throw new Error(errorData.message || "An error occurred while registering.");
+          }
 
       // Send email confirmation
       const confirmRes = await fetch('http://77.242.26.150:8000/api/Auth/send-confirmation', {
@@ -116,36 +119,7 @@ function RegisterFormUser() {
     }
   };
 
-  const handleGoogleRegisterSuccess = async (credentialResponse) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch('http://77.242.26.150:8000/api/GoogleRegister', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: credentialResponse.credential })
-      });
-
-      if (!response.ok) {
-        throw new Error("Google registration failed on the server.");
-      }
-
-      const data = await response.json();
-      const decoded = jwtDecode(data.token || data);
-      console.log("Decoded token:", decoded);
-
-      localStorage.setItem('token', JSON.stringify(data));
-      window.location.href = 'http://localhost:3000/';
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleRegisterError = () => {
-    setError("Google registration failed. Please try again.");
-  };
-
+  
   return (
     <form onSubmit={handleSubmit} className="register_main_div">
       <div className="register_user">
@@ -154,7 +128,6 @@ function RegisterFormUser() {
         </a>
         <h5 id="h_register">- Establish a New Profile -</h5>
         <div id='underline_regist1'></div>
-        <p id="regist_b_u">Please fill the registration form!</p>
 
         <div className="form-section">
           <input type="text" name="firstName" placeholder="Firstname" required value={formData.firstName} onChange={handleInputChange} />
@@ -170,13 +143,6 @@ function RegisterFormUser() {
         <button id="button_register" type="submit" disabled={loading}>
           {loading ? 'Registering User...' : 'Done'}
         </button>
-
-        <div className="google-login-container">
-          <GoogleLogin
-            onSuccess={handleGoogleRegisterSuccess}
-            onError={handleGoogleRegisterError}
-          />
-        </div>
 
         {error && <p id="error">{error}</p>}
         {success && <p id="success">{success}</p>}

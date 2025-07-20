@@ -1,16 +1,18 @@
 /* NotificationHistoryPanel.css */
 
 .notification-history-panel {
-  background: var(--bg-panel);
+  background: var(--surface-base);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   padding: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 50px;
 }
+
 
 .notification-history-panel h3 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
+  color: var(--neutral-800);
 }
 
 .notification-list {
@@ -21,7 +23,7 @@
 
 .notification-entry {
   padding: 0.75rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--neutral-200);
 }
 
 .notification-entry:last-child {
@@ -33,5 +35,21 @@
 }
 
 .notification-entry small {
-  color: #666;
+  color: var(--neutral-600);
+}
+
+@media (prefers-color-scheme: dark) {
+  .notification-history-panel {
+    background: var(--surface-base);
+    color: var(--neutral-100);
+  }
+  .notification-history-panel h3 {
+    color: var(--neutral-100);
+  }
+  .notification-entry {
+    border-bottom-color: var(--neutral-700);
+  }
+  .notification-entry small {
+    color: var(--neutral-400);
+  }
 }

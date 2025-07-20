@@ -1,6 +1,8 @@
+// src/Components/Settings/panels/ProductPanel.js
 import React, { useState, useEffect } from 'react'
 import { useApiClient } from '../hooks/useApiClient'
 import { useAuth } from '../hooks/useAuth'
+import Pagination from '../../Pagination.tsx'
 import '../../../Styling/Settings/productpanel.css'
 
 const SIZE_MAP = { XS: 0, S: 1, M: 2, L: 3, XL: 4, XXL: 5 }
@@ -20,33 +22,14 @@ export default function ProductPanel({ business }) {
     photos: [], colors: '', size: 'XS', material: '',
   })
 
-  // ─── Upload helper ──────────────────────────────────────────────────────────
-  const uploadImageToGCS = async (file) => {
-    if (!file) return null
-    const ts   = Date.now()
-    const name = `${ts}-${file.name}`
-    const imgUrl = `https://storage.googleapis.com/edcms_bucket/${name}`
-    const txtUrl = `${imgUrl}.txt`
+  // ─── Pagination state ───────────────────────────────────────────────────────
+  const [page, setPage] = useState(1)
+  const pageSize = 10
 
-    // upload image
-    const imgRes = await fetch(imgUrl, {
-      method: 'PUT',
-      headers: { 'Content-Type': file.type },
-      body: file,
-    })
-    if (!imgRes.ok) throw new Error('Image upload failed')
-
-    // upload URL record
-    const txtRes = await fetch(txtUrl, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'text/plain' },
-      body: imgUrl,
-    })
-    if (!txtRes.ok) throw new Error('Text upload failed')
-
-    return imgUrl
-  }
-  // ────────────────────────────────────────────────────────────────────────────
+  // reset to first page when products or search changes
+  useEffect(() => {
+    setPage(1)
+  }, [searchQuery, products])
 
   // ─── Load products & categories once per businessId ────────────────────────
   useEffect(() => {
@@ -54,7 +37,6 @@ export default function ProductPanel({ business }) {
     if (!id) return
 
     let cancelled = false
-
     ;(async () => {
       try {
         const [prods, cats] = await Promise.all([
@@ -66,8 +48,8 @@ export default function ProductPanel({ business }) {
           setCategories(cats)
         }
       } catch (err) {
+        console.error('Load error:', err)
         if (!cancelled) {
-          console.error('Load error:', err)
           setProducts([])
           setCategories([])
         }
@@ -76,6 +58,32 @@ export default function ProductPanel({ business }) {
 
     return () => { cancelled = true }
   }, [business?.businessId])
+  // ────────────────────────────────────────────────────────────────────────────
+
+  // ─── Upload helper ──────────────────────────────────────────────────────────
+  const uploadImageToGCS = async (file) => {
+    if (!file) return null
+    const ts   = Date.now()
+    const name = `${ts}-${file.name}`
+    const imgUrl = `https://storage.googleapis.com/edcms_bucket/${name}`
+    const txtUrl = `${imgUrl}.txt`
+
+    const imgRes = await fetch(imgUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': file.type },
+      body: file,
+    })
+    if (!imgRes.ok) throw new Error('Image upload failed')
+
+    const txtRes = await fetch(txtUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'text/plain' },
+      body: imgUrl,
+    })
+    if (!txtRes.ok) throw new Error('Text upload failed')
+
+    return imgUrl
+  }
   // ────────────────────────────────────────────────────────────────────────────
 
   const saveProduct = async () => {
@@ -172,12 +180,17 @@ export default function ProductPanel({ business }) {
     })
   }
 
+  // ─── Filter + paginate ─────────────────────────────────────────────────────
   const filtered = products.filter(p =>
     [p.name, p.brand, p.model, p.description]
       .join(' ')
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
   )
+  const totalCount = filtered.length
+  const startIdx   = (page - 1) * pageSize
+  const paginated  = filtered.slice(startIdx, startIdx + pageSize)
+  // ────────────────────────────────────────────────────────────────────────────
 
   return (
     <>
@@ -247,7 +260,7 @@ export default function ProductPanel({ business }) {
 
         <div className="grid two-cols">
           <input
-            placeholder="Colors (csv)"
+            placeholder="Colors (comma separated)"
             value={form.colors}
             onChange={e => setForm(f => ({ ...f, colors: e.target.value }))}
           />
@@ -257,9 +270,10 @@ export default function ProductPanel({ business }) {
             onChange={e => setForm(f => ({ ...f, material: e.target.value }))}
           />
         </div>
-
+        <br></br>
+            
         <label className="file-btn">
-          Upload Photos
+          Upload Some Pictures
           <input
             type="file"
             accept="image/*"
@@ -311,8 +325,9 @@ export default function ProductPanel({ business }) {
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
         />
+
         <ul>
-          {filtered.length > 0 ? filtered.map(p => (
+          {paginated.length > 0 ? paginated.map(p => (
             <li key={p.clothingItemId}>
               <span>{p.name} – {p.model} (${p.price})</span>
               <div className="btns">
@@ -324,6 +339,14 @@ export default function ProductPanel({ business }) {
             <li className="no-results">No products match.</li>
           )}
         </ul>
+
+        <Pagination
+          page={page}
+          pageSize={pageSize}
+          totalCount={totalCount}
+          onPageChange={setPage}
+          maxButtons={5}
+        />
       </div>
     </>
   )

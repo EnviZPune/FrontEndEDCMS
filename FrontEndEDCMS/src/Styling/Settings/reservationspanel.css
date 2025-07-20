@@ -1,9 +1,9 @@
 /* ReservationsPanel.css */
 
 .reservations-panel {
-  background: var(--bg-panel);
+  background: var(--surface-base);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   padding: 16px;
   margin-bottom: 24px;
 }
@@ -11,7 +11,7 @@
 .reservations-panel h3,
 .reservations-panel h4 {
   margin-bottom: 0.75rem;
-  color: var(--text);
+  color: var(--neutral-800);
 }
 
 .reservations-table {
@@ -23,17 +23,17 @@
 .reservations-table th,
 .reservations-table td {
   padding: 0.75rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--neutral-200);
   text-align: left;
 }
 
 .reservations-table th {
-  background: var(--secondary);
+  background: var(--neutral-100);
 }
 
 .reservations-panel button {
-  background: var(--primary);
-  color: #fff;
+  background: var(--primary-500);
+  color: var(--neutral-0);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -41,5 +41,29 @@
 }
 
 .reservations-panel button:hover {
-  background: darken(var(--primary),10%);
+  background: var(--primary-600);
+}
+
+@media (prefers-color-scheme: dark) {
+  .reservations-panel {
+    background: var(--surface-base);
+    color: var(--neutral-100);
+  }
+  .reservations-panel h3,
+  .reservations-panel h4 {
+    color: var(--neutral-100);
+  }
+  .reservations-table th,
+  .reservations-table td {
+    border-color: var(--neutral-700);
+  }
+  .reservations-table th {
+    background: var(--neutral-800);
+  }
+  .reservations-panel button {
+    background: var(--primary-600);
+  }
+  .reservations-panel button:hover {
+    background: var(--primary-700);
+  }
 }

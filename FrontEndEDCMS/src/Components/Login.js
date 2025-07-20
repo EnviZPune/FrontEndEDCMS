@@ -45,37 +45,6 @@ function LoginComponent() {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('http://77.242.26.150:8000/api/GoogleLogin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: credentialResponse.credential }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Google login failed on the server.');
-      }
-
-      const data = await response.json();
-      const token = typeof data === 'string' ? data : data.token;
-      const payload = jwtDecode(token);
-      console.log('Decoded Google JWT payload:', payload);
-
-      localStorage.setItem('token', token);
-      window.location.href = '/';
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleError = () => {
-    setError('Google login failed. Please try again.');
-  };
 
   return (
     <div className='log_main_div'>
@@ -117,13 +86,6 @@ function LoginComponent() {
           <button type='submit' id='button_log' disabled={loading}>
             {loading ? 'Logging in...' : 'Done'}
           </button>
-
-          <div className="google-login-container">
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-            />
-          </div>
 
           {error && <div className='error-message'>Error: {error}</div>}
         </div>
