@@ -1,0 +1,713 @@
+/* ----------------------------------------
+   MY SHOPS PANEL - MODERN DESIGN SYSTEM
+---------------------------------------- */
+
+/* Main Panel Container */
+.my-shops-panel {
+  background: var(--neutral-0);
+  border-radius: var(--radius-3xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--neutral-200);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--space-8);
+}
+
+.my-shops-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Panel Header */
+.my-shops-panel h3 {
+  margin: 0 0 var(--space-8);
+  color: var(--neutral-900);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+  position: relative;
+  padding-bottom: var(--space-4);
+}
+
+.my-shops-panel h3::before {
+  content: "🏪";
+  margin-right: var(--space-3);
+  font-size: var(--text-2xl);
+}
+
+.my-shops-panel h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+  border-radius: var(--radius-full);
+}
+
+/* Shop Grid */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+
+/* Shop Card */
+.shop-card {
+  background: var(--neutral-0);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--neutral-200);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--duration-300) var(--ease-out);
+  position: relative;
+  height: 400px;
+}
+
+.shop-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--success-500), var(--primary-500));
+  transform: scaleX(0);
+  transition: transform var(--duration-300) var(--ease-out);
+}
+
+.shop-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-2xl);
+}
+
+.shop-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Image Container */
+.shop-card-image {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(135deg, var(--neutral-100), var(--primary-50));
+  overflow: hidden;
+}
+
+.shop-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-500) var(--ease-out);
+}
+
+.shop-card:hover .shop-card-image img {
+  transform: scale(1.1);
+}
+
+/* Image Overlay */
+.shop-card-image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+  color: var(--neutral-0);
+  padding: var(--space-6) var(--space-4) var(--space-4);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+/* Card Content */
+.shop-card-content {
+  padding: var(--space-6);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(135deg, var(--neutral-0), var(--neutral-25));
+}
+
+.shop-card-title {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--neutral-900);
+  line-height: 1.3;
+}
+
+.shop-card-desc {
+  margin: 0;
+  color: var(--neutral-600);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Shop Card Footer */
+.shop-card-footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--neutral-100);
+  background: var(--neutral-25);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shop-card-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.shop-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--success-500);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+.shop-card-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.shop-action-btn {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  border: 1px solid var(--neutral-300);
+  background: var(--neutral-0);
+  color: var(--neutral-700);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-200) var(--ease-out);
+  text-decoration: none;
+}
+
+.shop-action-btn:hover {
+  background: var(--primary-500);
+  color: var(--neutral-0);
+  border-color: var(--primary-500);
+  transform: translateY(-1px);
+}
+
+/* Empty State */
+.shops-empty-state {
+  text-align: center;
+  padding: var(--space-20) var(--space-8);
+  background: linear-gradient(135deg, var(--neutral-25), var(--primary-25));
+  border-radius: var(--radius-2xl);
+  border: 2px dashed var(--neutral-300);
+  position: relative;
+  overflow: hidden;
+}
+
+.shops-empty-state::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-500), var(--primary-500));
+}
+
+.empty-state-icon {
+  font-size: 5rem;
+  margin-bottom: var(--space-6);
+  opacity: 0.6;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.empty-state-title {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--neutral-700);
+  margin: 0 0 var(--space-4);
+}
+
+.empty-state-text {
+  font-size: var(--text-lg);
+  color: var(--neutral-600);
+  margin: 0 0 var(--space-8);
+  line-height: 1.6;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.empty-state-btn {
+  background: linear-gradient(135deg, var(--accent-500), var(--primary-500));
+  color: white;
+  border: none;
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-xl);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: all var(--duration-200) var(--ease-out);
+  box-shadow: var(--shadow-lg);
+}
+
+.empty-state-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Pagination */
+.pagination {
+  margin-top: var(--space-8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  background: linear-gradient(135deg, var(--neutral-25), var(--primary-25));
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--neutral-200);
+}
+
+.pagination button {
+  background: var(--neutral-0);
+  border: 1px solid var(--neutral-300);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--duration-200) var(--ease-out);
+  color: var(--neutral-700);
+  min-width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: var(--primary-50);
+  color: var(--primary-600);
+  border-color: var(--primary-300);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.pagination button.active {
+  background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+  color: var(--neutral-0);
+  border-color: var(--primary-500);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-lg);
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background-color: var(--neutral-100);
+  color: var(--neutral-400);
+  border-color: var(--neutral-200);
+}
+
+.pagination-info {
+  font-size: var(--text-sm);
+  color: var(--neutral-600);
+  font-weight: var(--font-weight-medium);
+  margin: 0 var(--space-4);
+}
+
+/* Loading State */
+.shops-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-20);
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 64px;
+  height: 64px;
+  border: 4px solid var(--neutral-200);
+  border-top-color: var(--primary-500);
+  border-radius: var(--radius-full);
+  animation: spin 1s linear infinite;
+  margin-bottom: var(--space-6);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: var(--text-lg);
+  color: var(--neutral-600);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .shop-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .shop-card {
+    height: 380px;
+  }
+}
+
+@media (max-width: 768px) {
+  .my-shops-panel {
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+
+  .my-shops-panel h3 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-6);
+  }
+
+  .shop-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .shop-card {
+    height: 360px;
+  }
+
+  .shop-card-image {
+    height: 200px;
+  }
+
+  .shop-card-image-overlay {
+    font-size: var(--text-lg);
+    padding: var(--space-4) var(--space-3) var(--space-3);
+  }
+
+  .shop-card-content {
+    padding: var(--space-4);
+  }
+
+  .shop-card-title {
+    font-size: var(--text-lg);
+  }
+
+  .shop-card-desc {
+    font-size: var(--text-sm);
+  }
+
+  .pagination {
+    gap: var(--space-2);
+    padding: var(--space-4);
+  }
+
+  .pagination button {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+    min-width: 40px;
+    height: 40px;
+  }
+
+  .pagination-info {
+    font-size: var(--text-xs);
+    margin: 0 var(--space-2);
+  }
+
+  .empty-state-icon {
+    font-size: 4rem;
+  }
+
+  .empty-state-title {
+    font-size: var(--text-2xl);
+  }
+
+  .empty-state-text {
+    font-size: var(--text-base);
+  }
+}
+
+@media (max-width: 480px) {
+  .my-shops-panel {
+    padding: var(--space-4);
+  }
+
+  .my-shops-panel h3 {
+    font-size: var(--text-xl);
+  }
+
+  .shop-card {
+    height: 320px;
+  }
+
+  .shop-card-image {
+    height: 160px;
+  }
+
+  .shop-card-image-overlay {
+    font-size: var(--text-base);
+    padding: var(--space-3) var(--space-2) var(--space-2);
+  }
+
+  .shop-card-content {
+    padding: var(--space-3);
+  }
+
+  .shop-card-title {
+    font-size: var(--text-base);
+  }
+
+  .shop-card-desc {
+    font-size: var(--text-xs);
+  }
+
+  .shop-card-footer {
+    padding: var(--space-3);
+  }
+
+  .shop-action-btn {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
+  }
+
+  .pagination button {
+    min-width: 36px;
+    height: 36px;
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .empty-state-title {
+    font-size: var(--text-xl);
+  }
+
+  .empty-state-text {
+    font-size: var(--text-sm);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .my-shops-panel {
+    background: var(--neutral-900);
+    border-color: var(--neutral-700);
+    box-shadow: var(--shadow-2xl);
+  }
+
+  .my-shops-panel h3 {
+    color: var(--neutral-100);
+  }
+
+  .shop-card {
+    background: var(--neutral-800);
+    border-color: var(--neutral-700);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .shop-card:hover {
+    box-shadow: var(--shadow-2xl);
+  }
+
+  .shop-card-image {
+    background: linear-gradient(135deg, var(--neutral-800), var(--neutral-700));
+  }
+
+  .shop-card-image-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 50%, transparent 100%);
+    color: var(--neutral-50);
+  }
+
+  .shop-card-content {
+    background: linear-gradient(135deg, var(--neutral-800), var(--neutral-750));
+  }
+
+  .shop-card-title {
+    color: var(--neutral-100);
+  }
+
+  .shop-card-desc {
+    color: var(--neutral-400);
+  }
+
+  .shop-card-footer {
+    background: var(--neutral-750);
+    border-top-color: var(--neutral-700);
+  }
+
+  .shop-action-btn {
+    background: var(--neutral-700);
+    border-color: var(--neutral-600);
+    color: var(--neutral-300);
+  }
+
+  .shop-action-btn:hover {
+    background: var(--primary-600);
+    color: var(--neutral-0);
+    border-color: var(--primary-600);
+  }
+
+  .shops-empty-state {
+    background: linear-gradient(135deg, var(--neutral-800), var(--neutral-700));
+    border-color: var(--neutral-600);
+  }
+
+  .empty-state-title {
+    color: var(--neutral-200);
+  }
+
+  .empty-state-text {
+    color: var(--neutral-400);
+  }
+
+  .pagination {
+    background: linear-gradient(135deg, var(--neutral-800), var(--neutral-700));
+    border-color: var(--neutral-600);
+  }
+
+  .pagination button {
+    background: var(--neutral-700);
+    border-color: var(--neutral-600);
+    color: var(--neutral-200);
+  }
+
+  .pagination button:hover:not(:disabled) {
+    background: var(--primary-700);
+    color: var(--neutral-0);
+    border-color: var(--primary-600);
+  }
+
+  .pagination button.active {
+    background: linear-gradient(135deg, var(--primary-600), var(--accent-600));
+    border-color: var(--primary-600);
+  }
+
+  .pagination button:disabled {
+    background-color: var(--neutral-800);
+    color: var(--neutral-500);
+    border-color: var(--neutral-700);
+  }
+
+  .pagination-info {
+    color: var(--neutral-400);
+  }
+
+  .loading-text {
+    color: var(--neutral-400);
+  }
+
+  .loading-spinner {
+    border-color: var(--neutral-700);
+    border-top-color: var(--primary-400);
+  }
+}
+
+/* Animation Delays for Staggered Effect */
+.shop-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.shop-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.shop-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.shop-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.shop-card:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.shop-card:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.shop-card {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+/* Hover Effects Enhancement */
+.shop-card-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left var(--duration-500) var(--ease-out);
+}
+
+.shop-card:hover .shop-card-content::before {
+  left: 100%;
+}

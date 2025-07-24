@@ -1,0 +1,62 @@
+
+.unauthorized-page {
+  display: flex;
+  height: 200px;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* Card wrapper — copy your ShopList card styles exactly */
+.shopcard.unauthorized-card {
+  position: relative;
+  top: 150px;
+  background: #f8f6f6;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 2.5rem 2rem;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+}
+
+/* If your ShopList cards have a header icon style */
+.unauthorized-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* Title matches ShopList card titles */
+.unauthorized-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+  color: #333;
+}
+
+/* Body text */
+.unauthorized-text {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1.75rem;
+  line-height: 1.5;
+}
+
+/* Button — reuse your ShopList primary button */
+.unauthorized-btn {
+  width: 100%;           /* full-width button like in lists */
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 4px;
+}
+
+/* Optional responsive tweaks */
+@media (max-width: 480px) {
+  .shopcard.unauthorized-card {
+    padding: 2rem 1.5rem;
+  }
+  .unauthorized-title {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,1303 @@
+
+.settings-component {
+  font-family: var(--font-sans);
+  background-color: black;
+  color: var(--neutral-800);
+  padding: var(--space-8);
+}
+
+/* Settings Layout */
+.settings-component .settings-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Wrapper for Sidebar and Content */
+.settings-component .settings-wrapper {
+  position: relative;
+  top: var(--space-8);
+  display: flex;
+  flex: 1;
+  gap: var(--space-8);
+}
+
+/* Sidebar Styling */
+.settings-component .settings-sidebar {
+  flex: 0 0 250px;
+  background-color: black;
+  border-right: 1px solid var(--neutral-300);
+  padding: var(--space-8);
+  border-radius: var(--radius-md);
+  transition: all var(--duration-300) var(--ease-in-out);
+}
+
+.settings-component .settings-sidebar select {
+  width: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--neutral-300);
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  transition: border-color var(--duration-200);
+}
+
+.settings-component .settings-sidebar select:focus {
+  outline: none;
+  border-color: var(--primary-500);
+}
+
+.settings-component .settings-sidebar ul {
+  position: relative;
+  top: var(--space-1);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.settings-component .settings-sidebar li {
+  padding: var(--space-3);
+  margin-bottom: var(--space-2);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--duration-200), color var(--duration-200), border-left var(--duration-200);
+}
+
+.settings-component .settings-sidebar li.active {
+  background-color: var(--primary-50);
+  color: var(--primary-500);
+  border-left: 4px solid var(--primary-500);
+}
+
+.settings-component .settings-sidebar li:hover {
+  background-color: var(--primary-50);
+  color: var(--primary-500);
+}
+
+/* Content Area Styling */
+.settings-component .settings-content {
+  flex: 1;
+  background-color: var(--neutral-0);
+  padding: var(--space-8);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  transition: box-shadow var(--duration-300) var(--ease-in-out);
+}
+
+.settings-component .settings-content:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Panels */
+.settings-component .panel {
+  margin-bottom: var(--space-8);
+}
+
+.settings-component .panel h3 {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-xl);
+  border-bottom: 2px solid var(--primary-500);
+  display: inline-block;
+  padding-bottom: var(--space-1);
+}
+
+.settings-component .panel select {
+  width: 96%;
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  transition: border-color var(--duration-200), box-shadow var(--duration-200);
+}
+
+.settings-component .panel select:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 5px var(--primary-100);
+}
+
+.settings-component .panel input,
+.settings-component .panel textarea {
+  width: 90%;
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  transition: border-color var(--duration-200), box-shadow var(--duration-200);
+}
+
+.settings-component .panel input:focus,
+.settings-component .panel textarea:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 5px var(--primary-100);
+}
+
+.settings-component .panel button {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-base);
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: var(--primary-500);
+  color: var(--neutral-0);
+  cursor: pointer;
+  transition: background-color var(--duration-200), transform var(--duration-200);
+}
+
+.settings-component .panel button:hover {
+  background-color: var(--primary-600);
+  transform: translateY(-2px);
+}
+
+/* Dual Panel Layout for Add New Products/Categories */
+.settings-component .dual-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.settings-component .dual-panel .panel {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* Product List Styling */
+.settings-component .product-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.settings-component .product-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--neutral-200);
+  transition: background-color var(--duration-200);
+}
+
+.settings-component .product-list li:hover {
+  background-color: var(--neutral-25);
+}
+
+.settings-component .product-list li span {
+  flex: 1;
+}
+
+.settings-component .product-list li button {
+  margin-left: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-200);
+}
+
+.settings-component .product-list li button:first-of-type {
+  background-color: var(--success-500);
+  color: var(--neutral-0);
+}
+
+.settings-component .product-list li button:first-of-type:hover {
+  background-color: var(--success-600);
+}
+
+.settings-component .product-list li button:last-of-type {
+  background-color: var(--error-500);
+  color: var(--neutral-0);
+}
+
+.settings-component .product-list li button:last-of-type:hover {
+  background-color: var(--error-600);
+}
+
+/* Preview Button Styling */
+.settings-component .preview-button {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-base);
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: var(--accent-500);
+  color: var(--neutral-0);
+  cursor: pointer;
+  transition: background-color var(--duration-200), transform var(--duration-200);
+}
+
+.settings-component .preview-button:hover {
+  background-color: var(--accent-600);
+  transform: translateY(-2px);
+}
+
+/* File Input and Label Styling for Edit Profile/Cover Photo */
+.settings-component .panel label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--neutral-800);
+}
+
+.settings-component .panel input[type="file"] {
+  width: 90%;
+  padding: var(--space-2);
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  transition: border-color var(--duration-200), box-shadow var(--duration-200);
+}
+
+.settings-component .panel input[type="file"]:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 5px var(--primary-100);
+}
+
+.price-input-group {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+}
+
+.price-input-group input {
+  width: 100%;
+  padding: var(--space-3) 90px var(--space-3) var(--space-3);
+  font-size: var(--text-base);
+  box-sizing: border-box;
+}
+
+.price-input-group select {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding: 0 var(--space-3);
+  font-size: var(--text-base);
+  cursor: pointer;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Sidebar Icon Styling */
+.sidebar-icon {
+  position: relative;
+  top: var(--space-px);
+  margin-right: var(--space-2);
+  font-size: var(--text-lg);
+  vertical-align: middle;
+}
+
+/* Sidebar Delete Business (Red) */
+.delete-sidebar {
+  color: var(--error-500);
+}
+
+.delete-sidebar:hover,
+.delete-sidebar:active {
+  color: var(--error-600);
+}
+
+/* Additional Styles for Merged Panel (Products & Categories) */
+.merged-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.product-section,
+.category-section {
+  background-color: var(--neutral-0);
+  padding: var(--space-8);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.category-form {
+  margin-top: var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.category-form input[type="text"] {
+  flex: 1;
+  padding: var(--space-3);
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-sm);
+}
+
+.category-form input[type="color"] {
+  width: 40px;
+  height: 40px;
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+.category-form button {
+  padding: var(--space-3) var(--space-6);
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: var(--primary-500);
+  color: var(--neutral-0);
+  cursor: pointer;
+  transition: background-color var(--duration-200);
+}
+
+.category-form button:hover {
+  background-color: var(--primary-600);
+}
+
+/* Employee Management Styles */
+.employee-management-container {
+  position: relative;
+  top: var(--space-8);
+  display: flex;
+  gap: var(--space-8);
+  flex-wrap: nowrap;
+}
+
+.employee-add-section,
+.employee-list-section {
+  position: relative;
+  bottom: var(--space-3);
+  flex: 1;
+  min-width: 0;
+  background-color: var(--neutral-0);
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+}
+
+.employee-add-section h4,
+.employee-list-section h4 {
+  position: relative;
+  bottom: var(--space-5);
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-4);
+  border-bottom: 2px solid var(--primary-500);
+  padding-bottom: var(--space-2);
+}
+
+.employee-add-section form input,
+.employee-add-section form button {
+  width: 100%;
+  margin-bottom: var(--space-3);
+  padding: var(--space-3);
+  font-size: var(--text-base);
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-sm);
+  box-sizing: border-box;
+}
+
+.employee-add-section form button {
+  background-color: var(--primary-500);
+  color: var(--neutral-0);
+  cursor: pointer;
+  transition: background-color var(--duration-300) var(--ease-in-out);
+}
+
+.employee-add-section form button:hover {
+  background-color: var(--primary-600);
+}
+
+.employee-list-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.employee-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.employee-item:last-child {
+  border-bottom: none;
+}
+
+.employee-list-section ul span {
+  font-size: var(--text-base);
+  color: var(--neutral-700);
+}
+
+.employee-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.employee-actions button {
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-200) var(--ease-in-out);
+}
+
+.employee-actions button:first-child {
+  background-color: var(--success-500);
+  color: var(--neutral-0);
+}
+
+.employee-actions button:first-child:hover {
+  background-color: var(--success-600);
+}
+
+.employee-actions button:last-child {
+  background-color: var(--error-500);
+  color: var(--neutral-0);
+}
+
+.employee-actions button:last-child:hover {
+  background-color: var(--error-600);
+}
+
+/* Delete Business Button Styling */
+.delete-button {
+  background-color: var(--error-500);
+  color: var(--neutral-0);
+  padding: var(--space-3) var(--space-6);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-300) var(--ease-in-out), transform var(--duration-200) var(--ease-in-out);
+}
+
+.delete-button:hover {
+  background-color: var(--error-600);
+  transform: translateY(-2px);
+}
+
+/* Add Product Section . Image preview */
+.product-photo-preview {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: var(--space-3);
+  gap: var(--space-2);
+}
+
+.product-photo-container {
+  position: relative;
+}
+
+.product-photo-container img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.remove-photo-button {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: transparent !important;
+  color: var(--neutral-950) !important;
+  border: none !important;
+  font-size: var(--text-base);
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 !important;
+  width: auto;
+  height: auto;
+}
+
+.pending-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.styled-box {
+  width: 85%;
+  background: var(--neutral-50);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--neutral-300);
+  padding: var(--space-6);
+}
+
+.change-details-container {
+  margin-top: var(--space-4);
+}
+
+.change-details-title {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+}
+
+.diff-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.diff-table th,
+.diff-table td {
+  border: 1px solid var(--neutral-200);
+  padding: var(--space-2) var(--space-3);
+}
+
+.diff-table th {
+  background-color: var(--neutral-50);
+  text-align: left;
+  font-weight: var(--font-weight-medium);
+}
+
+.diff-table tr:nth-child(even) {
+  background-color: var(--neutral-25);
+}
+
+.approve-btn,
+.reject-btn {
+  margin-top: var(--space-4);
+  margin-right: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-weight: var(--font-weight-bold);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.approve-btn {
+  background-color: var(--success-500);
+  color: var(--neutral-0);
+}
+
+.reject-btn {
+  background-color: var(--error-500);
+  color: var(--neutral-0);
+}
+
+.photo-details-container {
+  margin-top: var(--space-4);
+}
+
+.change-details-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-2);
+}
+
+.photo-update-grid {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.photo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.photo-label {
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-px);
+}
+
+.photo-preview {
+  max-width: 120px;
+  max-height: 120px;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .settings-component .settings-wrapper {
+    flex-direction: column;
+  }
+
+  .settings-component .settings-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--neutral-300);
+    margin-bottom: var(--space-8);
+  }
+
+  .settings-component .settings-content {
+    margin-left: 0;
+  }
+}
+
+/* Additional Existing Settings Styles */
+.settings-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-wrapper {
+  position: relative;
+  top: var(--space-16);
+  display: flex;
+}
+
+.settings-sidebar {
+  width: 250px;
+  background-color: rgb(34, 33, 33);
+  padding: var(--space-8);
+  border-right: 1px solid var(--neutral-200);
+}
+
+.settings-sidebar select {
+  width: 100%;
+  padding: var(--space-2);
+  margin-bottom: var(--space-8);
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-sm);
+}
+
+.settings-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.settings-sidebar li {
+  padding: var(--space-3);
+  cursor: pointer;
+  transition: background-color var(--duration-300) var(--ease-in-out);
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.settings-sidebar li:hover {
+  background-color: var(--neutral-100);
+  color: black;
+}
+
+.settings-sidebar li.active {
+  background-color: var(--primary-50);
+  font-weight: var(--font-weight-bold);
+  color: black;
+}
+
+.settings-content {
+  flex: 1;
+  padding: var(--space-8);
+}
+
+/* ——— My Shops panel in Settings ——— */
+.settings-myshops-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-10);
+  margin-top: var(--space-8);
+  justify-content: flex-start;
+}
+
+.settings-myshops-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.settings-myshops-card {
+  position: relative;
+  width: 210px;
+  height: 150px;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--duration-300) var(--ease-in-out), box-shadow var(--duration-300) var(--ease-in-out);
+  cursor: pointer;
+}
+
+.settings-myshops-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.settings-myshops-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.settings-myshops-content {
+  position: relative;
+  height: 100%;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: var(--neutral-0);
+}
+
+.settings-myshops-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.settings-myshops-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  border: 2px solid var(--neutral-0);
+  margin-right: var(--space-2);
+}
+
+.settings-myshops-name {
+  position: relative;
+  left: 45px;
+  font-weight: var(--font-weight-bold);
+  bottom: var(--space-8);
+  margin: 0;
+  font-size: var(--text-base);
+}
+
+.settings-myshops-description {
+  position: relative;
+  bottom: var(--space-12);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  max-height: 2.4em;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.settings-myshops-pagination {
+  position: relative;
+  top: var(--space-8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: var(--space-6);
+  gap: var(--space-2);
+}
+
+.settings-myshops-page-button {
+  border: 1px solid var(--neutral-300);
+  background-color: var(--neutral-0);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-200) var(--ease-in-out);
+}
+
+.settings-myshops-page-button:hover:not(:disabled) {
+  background-color: var(--neutral-100);
+}
+
+.settings-myshops-page-button.active {
+  background-color: var(--primary-500);
+  color: var(--neutral-0);
+  border-color: var(--primary-500);
+}
+
+.notifications-panel {
+  padding: var(--space-8);
+  background-color: var(--neutral-0);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.notification-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notification-entry {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--neutral-200);
+  transition: background var(--duration-200);
+}
+
+.notification-entry:hover {
+  background-color: var(--neutral-50);
+}
+
+.notification-entry p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--neutral-800);
+}
+
+.notification-entry small {
+  color: var(--neutral-600);
+  font-size: var(--text-xs);
+  display: block;
+  margin-top: var(--space-1);
+}
+
+/* ── Panel Container ── */
+.panel {
+  background: var(--neutral-0);
+  padding: var(--space-6);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--space-8);
+}
+
+/* ── Headings ── */
+.panel h3 {
+  font-size: var(--text-xl);
+  color: var(--neutral-800);
+  border-bottom: 3px solid var(--primary-500);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.panel h4 {
+  font-size: var(--text-lg);
+  color: var(--neutral-700);
+  margin: var(--space-6) 0 var(--space-2);
+}
+
+/* ── Table ── */
+.reservations-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--space-2);
+}
+
+.reservations-table th,
+.reservations-table td {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  vertical-align: middle;
+}
+
+.reservations-table th {
+  background-color: var(--neutral-50);
+  color: var(--neutral-700);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--neutral-200);
+}
+
+.reservations-table tbody tr {
+  border-bottom: 1px solid var(--neutral-200);
+  transition: background-color var(--duration-200) var(--ease-in-out);
+}
+
+.reservations-table tbody tr:hover {
+  background-color: var(--neutral-100);
+}
+
+.reservations-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* ── Buttons ── */
+.reservations-table button {
+  font-size: var(--text-sm);
+  padding: var(--space-1) var(--space-2);
+  margin: 0 var(--space-px);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-200) var(--ease-in-out), transform var(--duration-100) var(--ease-in-out);
+  color: var(--neutral-0);
+}
+
+/* Approve = green */
+.reservations-table button:nth-of-type(1) {
+  background-color: var(--success-500);
+}
+
+.reservations-table button:nth-of-type(1):hover {
+  background-color: var(--success-600);
+  transform: translateY(-1px);
+}
+
+/* Reject = red */
+.reservations-table button:nth-of-type(2) {
+  background-color: var(--error-500);
+}
+
+.reservations-table button:nth-of-type(2):hover {
+  background-color: var(--error-600);
+  transform: translateY(-1px);
+}
+
+/* Complete = blue */
+.reservations-table button:last-child {
+  background-color: var(--primary-500);
+}
+
+.reservations-table button:last-child:hover {
+  background-color: var(--primary-600);
+  transform: translateY(-1px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .reservations-table,
+  .reservations-table thead,
+  .reservations-table tbody,
+  .reservations-table th,
+  .reservations-table td,
+  .reservations-table tr {
+    display: block;
+  }
+
+  .reservations-table tr {
+    margin-bottom: var(--space-4);
+  }
+
+  .reservations-table td {
+    padding-left: 50%;
+    position: relative;
+  }
+
+  .reservations-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: var(--space-4);
+    top: var(--space-2);
+    font-weight: var(--font-weight-semibold);
+    color: var(--neutral-600);
+  }
+}
+
+/* Loader overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--surface-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+}
+
+/* Three bouncing dots */
+.dots {
+  display: flex;
+  align-items: flex-end;
+}
+
+.dots .dot {
+  width: var(--space-4);
+  height: var(--space-4);
+  margin: 0 var(--space-2);
+  background: var(--primary-500);
+  border-radius: var(--radius-full);
+  animation: bounce 0.6s infinite ease-in-out;
+}
+
+.dots .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dots .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1rem);
+  }
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  .settings-component {
+    background-color: var(--neutral-950);
+    color: var(--neutral-100);
+  }
+
+  .settings-component .settings-sidebar {
+    background-color: var(--neutral-900);
+    border-right-color: var(--neutral-700);
+  }
+
+  .settings-component .settings-sidebar select {
+    border-color: var(--neutral-700);
+    background: var(--neutral-800);
+    color: var(--neutral-100);
+  }
+
+  .settings-component .settings-sidebar select:focus {
+    border-color: var(--primary-400);
+  }
+
+  .settings-component .settings-sidebar li.active {
+    background-color: var(--primary-900);
+    color: var(--primary-400);
+    border-left-color: var(--primary-400);
+  }
+
+  .settings-component .settings-sidebar li:hover {
+    background-color: var(--primary-900);
+    color: var(--primary-400);
+  }
+
+  .settings-component .settings-content {
+    background-color: var(--neutral-900);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .settings-component .settings-content:hover {
+    box-shadow: var(--shadow-2xl);
+  }
+
+  .settings-component .panel h3 {
+    color: var(--neutral-100);
+    border-bottom-color: var(--primary-400);
+  }
+
+  .settings-component .panel select,
+  .settings-component .panel input,
+  .settings-component .panel textarea {
+    border-color: var(--neutral-700);
+    background: var(--neutral-800);
+    color: var(--neutral-100);
+  }
+
+  .settings-component .panel select:focus,
+  .settings-component .panel input:focus,
+  .settings-component .panel textarea:focus {
+    border-color: var(--primary-400);
+    box-shadow: 0 0 5px var(--primary-900);
+  }
+
+  .settings-component .panel button {
+    background-color: var(--primary-600);
+    color: var(--neutral-0);
+  }
+
+  .settings-component .panel button:hover {
+    background-color: var(--primary-700);
+  }
+
+  .settings-component .product-list li {
+    border-bottom-color: var(--neutral-700);
+  }
+
+  .settings-component .product-list li:hover {
+    background-color: var(--neutral-800);
+  }
+
+  .settings-component .product-list li button:first-of-type {
+    background-color: var(--success-600);
+  }
+
+  .settings-component .product-list li button:first-of-type:hover {
+    background-color: var(--success-700);
+  }
+
+  .settings-component .product-list li button:last-of-type {
+    background-color: var(--error-600);
+  }
+
+  .settings-component .product-list li button:last-of-type:hover {
+    background-color: var(--error-700);
+  }
+
+  .settings-component .preview-button {
+    background-color: var(--accent-600);
+  }
+
+  .settings-component .preview-button:hover {
+    background-color: var(--accent-700);
+  }
+
+  .settings-component .panel label {
+    color: var(--neutral-100);
+  }
+
+  .settings-component .panel input[type="file"] {
+    border-color: var(--neutral-700);
+    background: var(--neutral-800);
+    color: var(--neutral-100);
+  }
+
+  .settings-component .panel input[type="file"]:focus {
+    border-color: var(--primary-400);
+    box-shadow: 0 0 5px var(--primary-900);
+  }
+
+  .remove-photo-button {
+    color: var(--neutral-100) !important;
+  }
+
+  .styled-box {
+    background: var(--neutral-800);
+    border-color: var(--neutral-700);
+  }
+
+  .change-details-container {
+    color: var(--neutral-100);
+  }
+
+  .diff-table th,
+  .diff-table td {
+    border-color: var(--neutral-700);
+  }
+
+  .diff-table th {
+    background-color: var(--neutral-800);
+    color: var(--neutral-100);
+  }
+
+  .diff-table tr:nth-child(even) {
+    background-color: var(--neutral-900);
+  }
+
+  .approve-btn {
+    background-color: var(--success-600);
+  }
+
+  .reject-btn {
+    background-color: var(--error-600);
+  }
+
+  .photo-preview {
+    border-color: var(--neutral-700);
+  }
+
+  .settings-myshops-card {
+    border-color: var(--neutral-700);
+  }
+
+  .settings-myshops-page-button {
+    border-color: var(--neutral-700);
+    background-color: var(--neutral-800);
+    color: var(--neutral-100);
+  }
+
+  .settings-myshops-page-button:hover:not(:disabled) {
+    background-color: var(--neutral-700);
+  }
+
+  .settings-myshops-page-button.active {
+    background-color: var(--primary-600);
+    border-color: var(--primary-600);
+  }
+
+  .notifications-panel {
+    background-color: var(--neutral-900);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .notification-entry {
+    border-bottom-color: var(--neutral-700);
+  }
+
+  .notification-entry:hover {
+    background-color: var(--neutral-800);
+  }
+
+  .notification-entry p {
+    color: var(--neutral-100);
+  }
+
+  .notification-entry small {
+    color: var(--neutral-400);
+  }
+
+  .panel {
+    background: var(--neutral-900);
+  }
+
+  .panel h3,
+  .panel h4 {
+    color: var(--neutral-100);
+  }
+
+  .reservations-table th,
+  .reservations-table td {
+    border-color: var(--neutral-700);
+  }
+
+  .reservations-table th {
+    background-color: var(--neutral-800);
+    color: var(--neutral-100);
+  }
+
+  .reservations-table tbody tr {
+    border-bottom-color: var(--neutral-700);
+  }
+
+  .reservations-table tbody tr:hover {
+    background-color: var(--neutral-800);
+  }
+
+  .reservations-table button:nth-of-type(1) {
+    background-color: var(--success-600);
+  }
+
+  .reservations-table button:nth-of-type(1):hover {
+    background-color: var(--success-700);
+  }
+
+  .reservations-table button:nth-of-type(2) {
+    background-color: var(--error-600);
+  }
+
+  .reservations-table button:nth-of-type(2):hover {
+    background-color: var(--error-700);
+  }
+
+  .reservations-table button:last-child {
+    background-color: var(--primary-600);
+  }
+
+  .reservations-table button:last-child:hover {
+    background-color: var(--primary-700);
+  }
+
+  @media (max-width: 768px) {
+    .reservations-table td::before {
+      color: var(--neutral-400);
+    }
+  }
+
+  .loading-overlay {
+    background: var(--surface-overlay);
+  }
+
+  .dots .dot {
+    background: var(--primary-400);
+  }
+}

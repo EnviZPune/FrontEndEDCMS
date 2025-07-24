@@ -1,0 +1,258 @@
+/* ----------------------------------------
+   NOTIFICATION BELL & PANEL STYLES
+---------------------------------------- */
+
+.notification-wrapper {
+  position: relative;
+  display: inline-block;
+  /* Removed margin-left: 20px; to allow parent flex container to control spacing */
+}
+
+.notification-bell {
+  /* Removed hardcoded top and left for better responsiveness */
+  cursor: pointer;
+  font-size: 1.4em;
+  color: var(--navbar-text); /* Use a variable for better theme integration */
+  transition: color var(--transition-fast);
+}
+
+.notification-bell:hover {
+  color: var(--primary-500); /* Hover effect */
+}
+
+.badge {
+  position: absolute;
+  top: -5px; /* Adjust position relative to the bell */
+  right: -5px; /* Adjust position relative to the bell */
+  background: var(--error-500); /* Use error color for badge */
+  color: var(--neutral-0);
+  border-radius: var(--radius-full);
+  padding: 2px 6px;
+  font-size: 0.75em;
+  min-width: 20px; /* Ensure it's always a circle */
+  text-align: center;
+  line-height: 1;
+  box-shadow: var(--shadow-sm);
+}
+
+.notifications-panel {
+  position: absolute;
+  top: 100%; /* Position below the bell */
+  right: 0; /* Align right edge of panel with right edge of wrapper */
+  background: var(--surface-raised); /* Use surface-raised for background */
+  backdrop-filter: blur(20px) saturate(180%); /* Apply glassmorphism */
+  box-shadow: var(--shadow-xl); /* Stronger shadow */
+  border: 1px solid var(--neutral-200); /* Subtle border */
+  border-radius: var(--radius-xl); /* Rounded corners */
+  width: 330px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: var(--z-dropdown); /* Use z-index variable */
+  padding: var(--space-3);
+  transform-origin: top right;
+  transition: opacity var(--duration-200) var(--ease-out), transform var(--duration-200) var(--ease-out);
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.95) translateY(-10px);
+}
+
+.notifications-panel.open {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1) translateY(0);
+}
+
+.clear-all {
+  text-align: right;
+  margin-bottom: var(--space-2);
+  padding-right: var(--space-2);
+}
+
+.clear-all-btn {
+  background: none;
+  border: none;
+  color: var(--neutral-500);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: color var(--duration-150) var(--ease-out);
+}
+
+.clear-all-btn:hover {
+  color: var(--primary-600);
+  text-decoration: underline;
+}
+
+.section-title {
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+  color: white;
+  font-size: var(--text-base);
+  padding-left: var(--space-2);
+}
+
+.invitations-section,
+.notifications-section {
+  margin-bottom: var(--space-4);
+  border-top: 1px solid var(--neutral-100);
+  padding-top: var(--space-3);
+  color: black;
+}
+
+
+.invitation-item,
+.notification-item {
+  padding: var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--neutral-100);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  transition: background-color var(--duration-150) var(--ease-out);
+  color: black;
+}
+
+.invitation-item:last-child,
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.section-title{
+  color: white;
+}
+
+.invitation-item:hover,
+.notification-item:hover {
+  background-color: var(--neutral-50);
+}
+
+.invitation-content {
+  flex: 1;
+  color: white;
+}
+
+.invitation-time,
+.notification-time {
+  font-size: var(--text-xs);
+  color: var(--neutral-500);
+}
+
+.invite-action-btn {
+  background: var(--primary-500);
+  color: var(--neutral-0);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.4em 0.8em;
+  font-size: 0.75em;
+  margin-left: var(--space-1);
+  cursor: pointer;
+  transition: all var(--duration-150) var(--ease-out);
+}
+
+.invite-action-btn:first-of-type {
+  background: var(--success-500);
+}
+
+.invite-action-btn:last-of-type {
+  background: var(--error-500);
+}
+
+.invite-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.invite-action-btn:first-of-type:hover {
+  background: var(--success-600);
+}
+
+.invite-action-btn:last-of-type:hover {
+  background: var(--error-600);
+}
+
+.notification-message {
+  font-size: var(--text-sm);
+  color:black;
+}
+
+.no-items {
+  padding: var(--space-3);
+  text-align: center;
+  color: var(--neutral-500);
+  font-size: var(--text-sm);
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  .notification-bell {
+    color: var(--navbar-text-dark);
+  }
+
+  .notification-bell:hover {
+    color: var(--primary-400);
+  }
+
+  .notifications-panel {
+    background: var(--neutral-800);
+    border-color: var(--neutral-700);
+  }
+
+  .clear-all-btn {
+    color: var(--neutral-400);
+  }
+
+  .clear-all-btn:hover {
+    color: var(--primary-400);
+  }
+
+  .section-title {
+    color: white;
+  }
+
+  .invitations-section,
+  .notifications-section {
+    border-top-color: var(--neutral-700);
+  }
+
+  .invitation-item,
+  .notification-item {
+    border-bottom-color: var(--neutral-700);
+  }
+
+  .invitation-item:hover,
+  .notification-item:hover {
+    background-color: var(--neutral-700);
+  }
+
+  .invitation-time,
+  .notification-time {
+    color: white;
+  }
+
+  .notification-message {
+    color: white;
+  }
+
+  .notification-message:hover,
+  .notification-time:hover{
+    color: white;
+  }
+
+
+  .no-items {
+    color: var(--neutral-400);
+  }
+}
+
+/* Accessibility & Focus States */
+.notification-bell:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-full);
+}
+
+.clear-all-btn:focus-visible,
+.invite-action-btn:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}

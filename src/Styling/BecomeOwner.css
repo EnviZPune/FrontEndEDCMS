@@ -1,0 +1,74 @@
+.become-owner-page {
+  background: linear-gradient(135deg, #e3f2fd, #fce4ec);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+}
+
+.owner-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px);
+  text-align: center;
+  animation: fadeIn 1s ease;
+}
+
+.owner-title {
+  font-size: 2.5rem;
+  color: #2e7d32;
+  margin-bottom: 15px;
+}
+
+.owner-subtitle {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.owner-description {
+  font-size: 1rem;
+  color: #333;
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+.owner-thankyou {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #1b5e20;
+}
+
+.subscribe-button {
+  margin-top: 30px;
+  background: linear-gradient(135deg, #66bb6a, #43a047);
+  color: white;
+  padding: 14px 28px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.subscribe-button:hover {
+  background: linear-gradient(135deg, #388e3c, #2e7d32);
+  transform: scale(1.05);
+}
+
+.test-response {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: #777;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

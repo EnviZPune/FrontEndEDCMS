@@ -1,0 +1,185 @@
+.users-page-container {
+  padding: var(--space-10) var(--space-8);
+  max-width: 1200px;
+  margin: auto;
+  text-align: center;
+  background-color: var(--bg-subtle);
+  color: var(--neutral-800);
+  font-family: var(--font-sans);
+}
+
+.users-page-container h2 {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-8);
+  color: var(--neutral-900);
+}
+
+.user-search-input {
+  width: 100%;
+  max-width: 500px;
+  padding: var(--space-3) var(--space-4);
+  margin: var(--space-6) auto;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
+  transition: border-color var(--duration-200), box-shadow var(--duration-200);
+  box-shadow: var(--shadow-sm);
+}
+
+.user-search-input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 8px var(--primary-100);
+}
+
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+}
+
+.user-card {
+  background-color: var(--neutral-0);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  text-align: center;
+  cursor: pointer;
+  transition: box-shadow var(--duration-300) var(--ease-in-out), transform var(--duration-200) var(--ease-in-out);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-5px);
+}
+
+.user-card-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-4);
+  border: 3px solid var(--primary-500);
+  box-shadow: var(--shadow-sm);
+}
+
+.user-card-info h4 {
+  margin: var(--space-2) 0 var(--space-1);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--neutral-900);
+}
+
+.user-card-info p {
+  font-size: var(--text-sm);
+  color: var(--neutral-600);
+  margin: var(--space-px) 0;
+}
+
+.user-card-info .user-role {
+  font-weight: var(--font-weight-medium);
+  color: var(--accent-600);
+  margin-top: var(--space-2);
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-6);
+  margin-top: var(--space-10);
+}
+
+.pagination-controls button {
+  padding: var(--space-2) var(--space-5);
+  font-size: var(--text-base);
+  background-color: var(--primary-500);
+  color: var(--neutral-0);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--duration-200) var(--ease-in-out);
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: var(--primary-600);
+}
+
+.pagination-controls span {
+  font-size: var(--text-base);
+  color: var(--neutral-700);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  .users-page-container {
+    background-color: var(--neutral-950);
+    color: var(--neutral-100);
+  }
+
+  .users-page-container h2 {
+    color: var(--neutral-50);
+  }
+
+  .user-search-input {
+    border-color: var(--neutral-700);
+    background: var(--neutral-800);
+    color: var(--neutral-100);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .user-search-input:focus {
+    border-color: var(--primary-400);
+    box-shadow: 0 0 8px var(--primary-900);
+  }
+
+  .user-card {
+    background-color: var(--neutral-900);
+    box-shadow: var(--shadow-2xl);
+  }
+
+  .user-card:hover {
+    box-shadow: var(--shadow-3xl);
+  }
+
+  .user-card-img {
+    border: 3px solid var(--primary-400);
+  }
+
+  .user-card-info h4 {
+    color: var(--neutral-50);
+  }
+
+  .user-card-info p {
+    color: var(--neutral-400);
+  }
+
+  .user-card-info .user-role {
+    color: var(--accent-400);
+  }
+
+  .pagination-controls button {
+    background-color: var(--primary-600);
+    color: var(--neutral-0);
+  }
+
+  .pagination-controls button:hover:not(:disabled) {
+    background-color: var(--primary-700);
+  }
+
+  .pagination-controls span {
+    color: var(--neutral-400);
+  }
+}

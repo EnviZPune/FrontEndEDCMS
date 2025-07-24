@@ -1,0 +1,348 @@
+/* Modern Photo Panel Design */
+.photo-panel {
+  background: linear-gradient(135deg, var(--surface-base) 0%, rgba(255, 255, 255, 0.8) 100%);
+  backdrop-filter: blur(10px);
+  padding: 32px;
+  border-radius: 16px;
+  max-width: 800px;
+  margin: 0 auto 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.photo-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-500), var(--primary-600), var(--primary-500));
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.photo-panel h3 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--neutral-800);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.photo-panel h3::before {
+  content: "📸";
+  font-size: 1.5rem;
+}
+
+.photo-panel-grid {
+  display: grid;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .photo-panel-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.photo-input-group {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  animation: slideInUp 0.6s ease-out;
+}
+
+.photo-input-group:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.photo-input-group label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--neutral-700);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.photo-preview-container {
+  background: linear-gradient(135deg, var(--neutral-50) 0%, rgba(248, 250, 252, 0.8) 100%);
+  border: 2px dashed var(--neutral-300);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.photo-preview-container:hover {
+  border-color: var(--primary-400);
+  background: linear-gradient(135deg, var(--primary-50) 0%, rgba(248, 250, 252, 0.9) 100%);
+}
+
+.photo-preview {
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.photo-preview:hover {
+  transform: scale(1.02);
+}
+
+.photo-placeholder {
+  color: var(--neutral-500);
+  font-size: 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.photo-placeholder::before {
+  content: "🖼️";
+  font-size: 2rem;
+  opacity: 0.6;
+}
+
+.photo-upload-button {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+  color: var(--neutral-0);
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.photo-upload-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+}
+
+.photo-upload-button:active {
+  transform: translateY(0);
+}
+
+.photo-upload-button input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.save-button {
+  display: block;
+  margin: 2rem auto 0;
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+  color: var(--neutral-0);
+  border: none;
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  min-width: 160px;
+}
+
+.save-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.save-button:hover::before {
+  left: 100%;
+}
+
+.save-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+}
+
+.save-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  background: var(--neutral-400);
+}
+
+/* Loading state */
+.photo-panel .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--neutral-200);
+  border-top: 4px solid var(--primary-500);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .photo-panel {
+    padding: 24px;
+    margin: 0 16px 24px;
+  }
+
+  .photo-panel h3 {
+    font-size: 1.5rem;
+  }
+
+  .photo-panel-grid {
+    gap: 1.5rem;
+  }
+
+  .photo-input-group {
+    padding: 20px;
+  }
+
+  .photo-preview-container {
+    min-height: 160px;
+  }
+
+  .save-button {
+    padding: 14px 28px;
+    font-size: 1rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .photo-panel {
+    background: linear-gradient(135deg, var(--surface-base) 0%, rgba(30, 41, 59, 0.8) 100%);
+    color: var(--neutral-100);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .photo-panel h3 {
+    color: var(--neutral-100);
+  }
+
+  .photo-input-group {
+    background: rgba(30, 41, 59, 0.5);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .photo-input-group label {
+    color: var(--neutral-200);
+  }
+
+  .photo-preview-container {
+    background: linear-gradient(135deg, var(--neutral-800) 0%, rgba(30, 41, 59, 0.8) 100%);
+    border-color: var(--neutral-700);
+  }
+
+  .photo-preview-container:hover {
+    border-color: var(--primary-400);
+    background: linear-gradient(135deg, var(--primary-900) 0%, rgba(30, 41, 59, 0.9) 100%);
+  }
+
+  .photo-placeholder {
+    color: var(--neutral-400);
+  }
+
+  .photo-upload-button {
+    background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+  }
+
+  .photo-upload-button:hover {
+    background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%);
+  }
+
+  .save-button {
+    background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+  }
+
+  .save-button:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%);
+  }
+}

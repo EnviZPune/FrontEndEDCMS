@@ -1,0 +1,93 @@
+/* PendingChangesPanel.css */
+
+.pending-changes-panel {
+  background: var(--surface-base);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.pending-changes-panel h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--neutral-800);
+}
+
+.pending-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pending-item {
+  background: var(--neutral-50);
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pending-item-header {
+  background: var(--neutral-100);
+  padding: 0.75rem;
+  font-weight: 600;
+}
+
+.pending-item-meta {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--neutral-600);
+}
+
+.change-details-container {
+  padding: 0.75rem;
+}
+
+.pending-item-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+}
+
+.pending-item-actions button {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  color: #1a1919;
+  cursor: pointer;
+}
+
+.approve-btn {
+  background: var(--primary-500);
+}
+
+.reject-btn {
+  background: var(--error-500);
+}
+
+@media (prefers-color-scheme: dark) {
+  .pending-changes-panel {
+    background: var(--surface-base);
+    color: var(--neutral-100);
+  }
+  .pending-changes-panel h3 {
+    color: var(--neutral-100);
+  }
+  .pending-item {
+    background: var(--neutral-800);
+  }
+  .pending-item-header {
+    background: var(--neutral-700);
+    color: var(--neutral-100);
+  }
+  .pending-item-meta {
+    color: var(--neutral-300);
+  }
+  .approve-btn {
+    background: var(--primary-600);
+  }
+  .reject-btn {
+    background: var(--error-600);
+  }
+}

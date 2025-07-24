@@ -1,0 +1,121 @@
+/* Variables for easy theming */
+:root {
+  --color-bg: #171718;
+  --color-card: #252527;;
+  --color-primary: #5c6ac4;
+  --color-primary-light: #8c97e8;
+  --color-text: #ffffff;
+  --color-heading: #1f2a63;
+  --color-link: #9ea8e9;
+  --color-link-hover: #5d68be;
+  --radius: 12px;
+  --spacing: 16px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.owner-guide.page-wrapper {
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  margin-top: 50px;
+}
+
+.owner-guide-content {
+  flex: 1;
+  max-width: 800px;
+  margin: calc(2 * var(--spacing)) auto;
+  padding: var(--spacing);
+}
+
+.owner-guide-content h1 {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: calc(1.5 * var(--spacing));
+  text-align: center;
+  position: relative;
+}
+.owner-guide-content h1::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: var(--color-primary);
+  margin: var(--spacing) auto 0;
+  border-radius: 2px;
+}
+
+.owner-guide-content section {
+  background: var(--color-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--spacing);
+  margin-bottom: calc(2 * var(--spacing));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.owner-guide-content section:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.owner-guide-content h2 {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing);
+}
+
+.owner-guide-content p {
+  color: var(--color-text);
+  line-height: 1.6;
+  margin-bottom: var(--spacing);
+}
+
+.owner-guide-content ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.owner-guide-content ul li {
+  position: relative;
+  padding-left: calc(2 * var(--spacing));
+  margin-bottom: var(--spacing);
+  color: var(--color-text);
+}
+
+.owner-guide-content ul li::before {
+  content: '✔';
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  color: var(--color-primary);
+}
+
+.owner-guide-content a {
+  color: var(--color-link);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.owner-guide-content a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .owner-guide-content {
+    margin: var(--spacing);
+    padding: var(--spacing);
+  }
+
+  .owner-guide-content h1 {
+    font-size: 2rem;
+  }
+
+  .owner-guide-content h2 {
+    font-size: 1.3rem;
+  }
+}
