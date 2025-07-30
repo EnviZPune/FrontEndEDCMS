@@ -69,21 +69,21 @@ export default function PendingChangesPanel({ business }) {
 
   if (loading) {
     return (
-      <div className="panel pending-changes-panel">
+      <div className="pending-changes-panel">
         <p>Loading pending changes…</p>
       </div>
     )
   }
   if (error) {
     return (
-      <div className="panel pending-changes-panel">
+      <div className="pending-changes-panel">
         <p>Error loading changes.</p>
       </div>
     )
   }
   if (pendingChanges.length === 0) {
     return (
-      <div className="panel pending-changes-panel">
+      <div className="pending-changes-panel">
         <h3>Pending Changes</h3>
         <p>No pending changes.</p>
       </div>
@@ -138,7 +138,7 @@ export default function PendingChangesPanel({ business }) {
   }
 
   return (
-    <div className="panel pending-changes-panel">
+    <div className="pending-changes-panel">
       <h3>Pending Changes</h3>
       <ul className="pending-list">
         {pendingChanges.map(change => {

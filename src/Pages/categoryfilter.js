@@ -1,11 +1,10 @@
-// src/pages/CategoryFilter.js
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useSearchParams }      from 'react-router-dom';
 import Navbar                         from '../Components/Navbar';
 import Footer                         from '../Components/Footer';
 import Search                         from '../Components/SearchBar.js';
 import Pagination                     from '../Components/Pagination.tsx';
-import '../Styling/shoplist.css';
+import '../Styling/categoryfilter.css'
 
 export default function CategoryFilter() {
   const [searchParams] = useSearchParams();
@@ -21,7 +20,6 @@ export default function CategoryFilter() {
   const cardsToShow = 5;
   const carouselRef = useRef(null);
 
-  // fetch on category change
   useEffect(() => {
     let canceled = false;
     (async () => {
@@ -68,6 +66,7 @@ export default function CategoryFilter() {
     carouselRef.current?.scrollTo({ left: 0, behavior: 'auto' });
   };
 
+
   return (
     <>
       <Navbar />
@@ -86,6 +85,9 @@ export default function CategoryFilter() {
           <h2>Filtered Shops</h2>
         </div>
         {error && <p className="error-text">Error: {error}</p>}
+        {!loading && !error && shops.length === 0 && (
+          <p className="no-shops-text">No Shops Yet In this Category</p>
+        )}
 
         <div className="browse-shops-wrapper">
           <div className="browse-carousel" ref={carouselRef}>

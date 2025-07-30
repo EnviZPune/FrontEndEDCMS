@@ -108,14 +108,14 @@ export default function EmployeePanel({ business }) {
 
   if (loading) {
     return (
-      <div className="panel employee-panel">
+      <div className="employee-panel">
         <p>Loading employees…</p>
       </div>
     )
   }
 
   return (
-    <div className="panel employee-panel">
+    <div className="employee-panel">
       <h3>Employee Management</h3>
 
       <div className="employee-management-container">

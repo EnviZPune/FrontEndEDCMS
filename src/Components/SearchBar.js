@@ -169,7 +169,7 @@ const SearchBar = () => {
     return text.split(re).map((part, i) =>
       part.toLowerCase() === searchQuery.toLowerCase()
         ? <span key={i} className="highlight">{part}</span>
-        : part
+        : <span className="highlight-part">{part}</span>
     );
   };
 
@@ -206,7 +206,7 @@ const SearchBar = () => {
           value={searchQuery}
           onChange={onChange}
         />
-        <FaSearch className="search-icon" />
+        <FaSearch className="search-icon" fill="#6b7280"/>
         {searchQuery && (
           <button className="clear-button" onClick={clearSearch}>✕</button>
         )}

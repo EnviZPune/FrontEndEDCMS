@@ -20,7 +20,7 @@ export default function BusinessInfoPanel({ business }) {
   const [detail, setDetail]           = useState(null)
   const [form, setForm]               = useState({
     name: '', description: '', nipt: '',
-    address: '', location: '',
+    businessEmail: '', location: '',
     openingHours: '', businessPhoneNumber: ''
   })
   const [coordinates, setCoordinates] = useState(null)
@@ -65,7 +65,7 @@ export default function BusinessInfoPanel({ business }) {
           name:                data.name || '',
           description:         data.description || '',
           nipt:                data.nipt || '',
-          address:             data.address || '',
+          businessEmail:       data.businessEmail || '',
           openingHours:        data.openingHours || '',
           businessPhoneNumber: data.businessPhoneNumber || ''
         }))
@@ -77,10 +77,8 @@ export default function BusinessInfoPanel({ business }) {
       .finally(() => !cancelled && setLoading(false))
 
     return () => { cancelled = true }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [business?.businessId])
 
-  // 2) Initialize the map once (after details load)
   useEffect(() => {
     if (loading || !detail) return
     if (!mapContainerRef.current || leafletMapRef.current) return
@@ -181,11 +179,11 @@ export default function BusinessInfoPanel({ business }) {
     }
   }, [coordinates, detail, form, put])
 
-  if (loading) return <div className="panel business-info-panel"><p>Loading…</p></div>
-  if (!detail)  return <div className="panel business-info-panel"><p>Error loading info.</p></div>
+  if (loading) return <div className="business-info-panel"><p>Loading…</p></div>
+  if (!detail)  return <div className="business-info-panel"><p>Error loading info.</p></div>
 
   return (
-    <div className="panel business-info-panel">
+    <div className="business-info-panel">
       <h3>Edit Business Info</h3>
 
       <label><b>Business Name</b></label>
@@ -208,11 +206,11 @@ export default function BusinessInfoPanel({ business }) {
         onChange={e => setForm(f => ({ ...f, nipt: e.target.value }))}
       />
 
-      <label><b>Address</b></label>
+      <label><b>Business Email</b></label>
       <input
-        type="text"
-        value={form.address}
-        onChange={e => setForm(f => ({ ...f, address: e.target.value }))}
+        type="email"
+        value={form.businessEmail}
+        onChange={e => setForm(f => ({ ...f, businessEmail: e.target.value }))}
       />
 
       <label><b>Location</b></label>

@@ -1,4 +1,3 @@
-// src/Components/Navbar.js
 import React, { useState, useEffect, useRef } from "react"
 import {jwtDecode} from "jwt-decode"
 import { FaUser, FaCaretDown } from "react-icons/fa"
@@ -121,7 +120,6 @@ const Navbar = () => {
     }
 
     if (timeoutMs <= 0) {
-      // already expired
       handleLogout()
     } else {
       const timerId = setTimeout(() => {

@@ -210,7 +210,7 @@ export default function CategoryPanel({ business }) {
   )
 
   return (
-    <div className="panel category-panel">
+    <div className="category-panel">
       <h3>Category Managment Panel</h3>
 
       <label className="toggle-premade">

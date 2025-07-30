@@ -9,6 +9,7 @@ const API_BASE = "http://77.242.26.150:8000"
 
 const getToken = () => {
   const raw = localStorage.getItem("token")
+  
   if (!raw) return null
   try {
     const parsed = JSON.parse(raw)
@@ -229,58 +230,64 @@ function ShopsPanel({ businesses }) {
 
             return (
               <Link
-                key={shop.businessId}
-                to={`/shop/${shop.slug || shop.businessId}`}
-                className="shop-card enhanced"
-                onMouseEnter={() => setHoveredShop(shop.businessId)}
-                onMouseLeave={() => setHoveredShop(null)}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="shop-card-background"></div>
-                <div className="shop-card-content">
-                  <div className="shop-logo-section">
-                    <div className="logo-container">
-                      <img
-                        src={shop.profilePictureUrl || "/default-shop-logo.png"}
-                        alt={`${shop.name} logo`}
-                        className="shop-card-logo"
-                      />
-                      <div className="logo-overlay"></div>
-                    </div>
-                    <div className={`shop-status-badge ${isOpen ? "open" : "closed"}`}>
-                      <div className={`status-dot ${isOpen ? "open" : "closed"}`}></div>
-                      <span>{isOpen ? "Open" : "Closed"}</span>
-                    </div>
+              key={shop.slug}
+              to={`/shop/${shop.slug}`}
+              className="shop-card enhanced"
+              onMouseEnter={() => setHoveredShop(shop.slug)}
+              onMouseLeave={() => setHoveredShop(null)}
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <div className="shop-card-background" />
+              <div className="shop-card-content">
+                {/* Show the name up top */}
+                <div className="shop-name-section">
+                  <h4 className="shop-card-name">
+                    {shop.name ?? shop.slug}
+                  </h4>
+                </div>
+
+                {/* Logo + status */}
+                <div className="shop-logo-section">
+                  <div className="logo-container">
+                    <img
+                      src={shop.profilePictureUrl || "/default-shop-logo.png"}
+                      alt={`${shop.name || shop.slug} logo`}
+                      className="shop-card-logo"
+                    />
+                    <div className="logo-overlay" />
                   </div>
-
-                  <div className="shop-info-section">
-                    <h4 className="shop-card-name">{shop.name}</h4>
-
-                    <div className="shop-details-enhanced">
-                      {shop.address && (
-                        <div className="shop-detail-item">
-                          <span className="detail-icon">📍</span>
-                          <p className="detail-text">{shop.address}</p>
-                        </div>
-                      )}
-
-                      {shop.businessPhoneNumber && (
-                        <div className="shop-detail-item">
-                          <span className="detail-icon">📞</span>
-                          <p className="detail-text">{shop.businessPhoneNumber}</p>
-                        </div>
-                      )}
-
-                      {shop.openingHours && (
-                        <div className="shop-detail-item">
-                          <span className="detail-icon">🕒</span>
-                          <p className="detail-text">{shop.openingHours}</p>
-                        </div>
-                      )}
-                    </div>
+                  <div className={`shop-status-badge ${isOpen ? "open" : "closed"}`}>
+                    <div className={`status-dot ${isOpen ? "open" : "closed"}`}/>
+                    <span>{isOpen ? "Open" : "Closed"}</span>
                   </div>
                 </div>
-              </Link>
+
+                {/* Details */}
+                <div className="shop-info-section">
+                  <div className="shop-details-enhanced">
+                    <div className="shop-detail-item">
+                      <span className="detail-icon">🏷️</span>
+                      <p className="detail-text">{shop.name ?? shop.slug}</p>
+                    </div>
+
+                    {shop.businessPhoneNumber && (
+                      <div className="shop-detail-item">
+                        <span className="detail-icon">📞</span>
+                        <p className="detail-text">{shop.businessPhoneNumber}</p>
+                      </div>
+                    )}
+
+                    {shop.openingHours && (
+                      <div className="shop-detail-item">
+                        <span className="detail-icon">🕒</span>
+                        <p className="detail-text">{shop.openingHours}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Link>
+
             )
           })}
         </div>
@@ -295,7 +302,7 @@ function ShopsPanel({ businesses }) {
           <p className="empty-state-text">
             Start your entrepreneurial journey by creating your first shop and showcase your products to the world!
           </p>
-          <Link to="/create-business" className="btn-primary enhanced">
+          <Link to="/become-owner" className="btn-primary enhanced">
             <span className="btn-icon">✨</span>
             <span className="btn-text">Create Your First Shop</span>
             <div className="btn-shimmer"></div>

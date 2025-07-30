@@ -140,6 +140,18 @@
   animation: profile-rotate 20s linear infinite;
 }
 
+.profile-page-container .shop-name-section {
+  margin-top: auto;
+}
+.profile-page-container .shop-card-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  text-align: center;
+}
+
+
 .profile-page-container .online-indicator {
   position: absolute;
   bottom: 10px;
@@ -177,7 +189,7 @@
 }
 
 .profile-page-container .profile-hero-name {
-  font-size: 3rem;
+  font-size: 1.9rem;
   font-weight: 800;
   color: white;
   margin-bottom: 1rem;
@@ -212,15 +224,15 @@
 }
 
 .profile-page-container .badge.verified {
-  background: rgba(16, 185, 129, 0.2);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(9, 223, 37, 0.582);
+  color: #07ff30;
+  border: 1px solid rgba(3, 250, 65, 0.801);
 }
 
 .profile-page-container .badge.member {
-  background: rgba(245, 158, 11, 0.2);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: rgba(245, 159, 11, 0.555);
+  color: #ffa200;
+  border: 1px solid rgba(247, 83, 19, 0.904);
 }
 
 .profile-page-container .profile-hero-actions {
@@ -598,7 +610,9 @@
   background: rgba(16, 185, 129, 0.1);
   color: #10b981;
   border: 1px solid rgba(16, 185, 129, 0.2);
+  margin-left: 13px;
 }
+
 
 .profile-page-container .shop-status-badge.closed {
   background: rgba(239, 68, 68, 0.1);
@@ -625,7 +639,7 @@
   margin-top: auto;
 }
 
-.profile-page-container .shop-card-name {
+.profile-page-container {
   font-size: 1.25rem;
   font-weight: 700;
   color: #1f2937;

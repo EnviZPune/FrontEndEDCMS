@@ -167,11 +167,8 @@ const ProductDetailsPage = () => {
             <p><strong>Quantity:</strong> {product.quantity}</p>
             <p><strong>Material:</strong> {product.material}</p>
             <p><strong>Colors:</strong> {product.colors}</p>
-            <p><strong>Sizes:</strong> {
-              typeof product.sizes === 'number'
-                ? ['XS','S','M','L','XL','XXL'][product.sizes]
-                : product.sizes
-            }</p>
+            <p><strong>Size:</strong> {product.sizes}</p>
+
             <button
               className="rezerve-button"
               onClick={handleReserve}

@@ -36,7 +36,7 @@ export default function DeleteBusinessPanel({ business }) {
   }
 
   return (
-    <div className="panel delete-business-panel">
+    <div className="delete-business-panel">
       <h3>Delete Business</h3>
       <p className="warning-text">
         <strong>Warning:</strong> Deleting a business is permanent and cannot be undone.

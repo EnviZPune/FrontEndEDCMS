@@ -1,52 +1,84 @@
-/* Modern Photo Panel Design */
+/* ----------------------------------------
+   PREMIUM PHOTO PANEL - MAGICAL DESIGN SYSTEM
+---------------------------------------- */
+
+/* Main Panel Container with Floating Effect */
 .photo-panel {
-  background: linear-gradient(135deg, var(--surface-base) 0%, rgba(255, 255, 255, 0.8) 100%);
-  backdrop-filter: blur(10px);
-  padding: 32px;
-  border-radius: 16px;
-  max-width: 800px;
-  margin: 0 auto 32px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, var(--surface-base) 0%, var(--surface-glass) 100%);
+  backdrop-filter: blur(20px);
+  padding: var(--space-10);
+  border-radius: var(--radius-4xl);
+  max-width: 900px;
+  margin: 0 auto var(--space-10);
+  box-shadow: var(--shadow-3xl), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 60px rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   position: relative;
   overflow: hidden;
-  animation: fadeInUp 0.6s ease-out;
+  animation: floatIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  transform-style: preserve-3d;
 }
 
+/* Magical Rainbow Border Animation */
 .photo-panel::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary-500), var(--primary-600), var(--primary-500));
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-500) 0%,
+    var(--secondary-500) 16.66%,
+    var(--success-500) 33.33%,
+    var(--warning-500) 50%,
+    var(--error-500) 66.66%,
+    var(--primary-600) 83.33%,
+    var(--primary-500) 100%
+  );
+  background-size: 300% 100%;
+  animation: rainbowShimmer 4s ease-in-out infinite;
+  border-radius: var(--radius-4xl) var(--radius-4xl) 0 0;
 }
 
+/* Floating Background Elements */
+.photo-panel::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+  animation: floatingBg 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Premium Header with 3D Effect */
 .photo-panel h3 {
   text-align: center;
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: var(--neutral-800);
+  font-family: var(--font-serif);
+  font-size: var(--text-4xl);
+  font-weight: 800;
+  margin-bottom: var(--space-10);
+  color: var(--neutral-900);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: var(--space-4);
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: perspective(1000px) rotateX(5deg);
 }
 
-.photo-panel h3::before {
-  content: "📸";
-  font-size: 1.5rem;
-}
-
+/* Enhanced Grid Layout */
 .photo-panel-grid {
   display: grid;
-  gap: 2rem;
-  margin-bottom: 2rem;
+  gap: var(--space-10);
+  margin-bottom: var(--space-10);
 }
 
 @media (min-width: 768px) {
@@ -55,103 +87,182 @@
   }
 }
 
+/* Premium Input Groups with Glass Effect */
 .photo-input-group {
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(8px);
-  border-radius: 12px;
-  padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
-  animation: slideInUp 0.6s ease-out;
-}
-
-.photo-input-group:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.photo-input-group label {
-  display: block;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--neutral-700);
-  margin-bottom: 16px;
-  text-align: center;
-}
-
-.photo-preview-container {
-  background: linear-gradient(135deg, var(--neutral-50) 0%, rgba(248, 250, 252, 0.8) 100%);
-  border: 2px dashed var(--neutral-300);
-  border-radius: 12px;
-  padding: 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-3xl);
+  padding: var(--space-8);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all var(--duration-500) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: slideInUp var(--duration-500) var(--ease-out);
   position: relative;
-  min-height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
   overflow: hidden;
 }
 
-.photo-preview-container:hover {
-  border-color: var(--primary-400);
-  background: linear-gradient(135deg, var(--primary-50) 0%, rgba(248, 250, 252, 0.9) 100%);
+.photo-input-group::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left var(--duration-700) var(--ease-out);
 }
 
+.photo-input-group:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-2xl), inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 40px rgba(59, 130, 246, 0.2);
+}
+
+.photo-input-group:hover::before {
+  left: 100%;
+}
+
+/* Enhanced Labels with Icons */
+.photo-input-group label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--neutral-800);
+  margin-bottom: var(--space-6);
+  text-align: center;
+  position: relative;
+}
+
+.photo-input-group:nth-child(1) label::before {
+  content: "🏪";
+  font-size: var(--text-lg);
+}
+
+.photo-input-group:nth-child(2) label::before {
+  content: "🎨";
+  font-size: var(--text-lg);
+}
+
+/* Premium Preview Container */
+.photo-preview-container {
+  background: linear-gradient(135deg, var(--neutral-25) 0%, rgba(248, 250, 252, 0.9) 100%);
+  border: 3px dashed var(--neutral-300);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  position: relative;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-500) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.photo-preview-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(59, 130, 246, 0.1) 50%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--duration-500) var(--ease-out);
+}
+
+.photo-preview-container:hover {
+  border-color: var(--primary-500);
+  background: linear-gradient(135deg, var(--primary-50) 0%, rgba(59, 130, 246, 0.1) 100%);
+  transform: scale(1.02);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05), 0 0 30px rgba(59, 130, 246, 0.3);
+}
+
+.photo-preview-container:hover::before {
+  opacity: 1;
+  animation: shimmerSweep 1.5s ease-out;
+}
+
+/* Enhanced Photo Preview */
 .photo-preview {
   max-width: 100%;
-  max-height: 180px;
+  max-height: 200px;
   object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--duration-500) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: brightness(1) contrast(1.05) saturate(1.1);
 }
 
 .photo-preview:hover {
-  transform: scale(1.02);
+  transform: scale(1.05) rotate(1deg);
+  box-shadow: var(--shadow-2xl);
+  filter: brightness(1.1) contrast(1.1) saturate(1.2);
 }
 
+/* Enhanced Placeholder */
 .photo-placeholder {
   color: var(--neutral-500);
-  font-size: 1rem;
+  font-size: var(--text-lg);
+  font-weight: 600;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-4);
+  animation: breathe 3s ease-in-out infinite;
 }
 
 .photo-placeholder::before {
   content: "🖼️";
-  font-size: 2rem;
-  opacity: 0.6;
+  font-size: 4rem;
+  opacity: 0.7;
+  animation: float 4s ease-in-out infinite;
 }
 
+/* Premium Upload Button */
 .photo-upload-button {
   position: absolute;
-  bottom: 12px;
-  right: 12px;
-  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+  bottom: var(--space-4);
+  right: var(--space-4);
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 50%, var(--primary-700) 100%);
   color: var(--neutral-0);
-  padding: 8px 16px;
+  padding: var(--space-3) var(--space-5);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-xl);
   cursor: pointer;
   overflow: hidden;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  transition: all var(--duration-300) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.photo-upload-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left var(--duration-500) var(--ease-out);
 }
 
 .photo-upload-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: var(--shadow-2xl), inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 0 20px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 50%, var(--primary-800) 100%);
+}
+
+.photo-upload-button:hover::before {
+  left: 100%;
 }
 
 .photo-upload-button:active {
-  transform: translateY(0);
+  transform: translateY(-1px) scale(1.02);
 }
 
 .photo-upload-button input {
@@ -164,22 +275,26 @@
   cursor: pointer;
 }
 
+/* Premium Save Button */
 .save-button {
   display: block;
-  margin: 2rem auto 0;
-  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+  margin: var(--space-10) auto 0;
+  background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 50%, var(--success-700) 100%);
   color: var(--neutral-0);
   border: none;
-  padding: 16px 32px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 12px;
+  padding: var(--space-5) var(--space-10);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  border-radius: var(--radius-2xl);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all var(--duration-300) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: var(--shadow-2xl), inset 0 2px 0 rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
-  min-width: 160px;
+  min-width: 200px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: var(--font-sans);
 }
 
 .save-button::before {
@@ -189,8 +304,17 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left var(--duration-700) var(--ease-out);
+}
+
+.save-button::after {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--text-lg);
+  transition: all var(--duration-300) var(--ease-out);
 }
 
 .save-button:hover::before {
@@ -198,13 +322,17 @@
 }
 
 .save-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
-  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: var(--shadow-3xl), inset 0 2px 0 rgba(255, 255, 255, 0.3), 0 0 40px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, var(--success-600) 0%, var(--success-700) 50%, var(--success-800) 100%);
+}
+
+.save-button:hover::after {
+  transform: translateY(-50%) scale(1.2) rotate(10deg);
 }
 
 .save-button:active:not(:disabled) {
-  transform: translateY(0);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .save-button:disabled {
@@ -212,77 +340,185 @@
   cursor: not-allowed;
   transform: none;
   background: var(--neutral-400);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Loading state */
+/* Premium Loading Spinner */
 .photo-panel .loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid var(--neutral-200);
-  border-top: 4px solid var(--primary-500);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+  width: 60px;
+  height: 60px;
+  border: 6px solid var(--neutral-200);
+  border-top: 6px solid var(--primary-500);
+  border-right: 6px solid var(--secondary-500);
+  border-radius: var(--radius-full);
+  animation: premiumSpin 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
   margin: 0 auto;
+  box-shadow: var(--shadow-lg);
 }
 
-/* Animations */
-@keyframes fadeInUp {
-  from {
+/* Premium Animations */
+@keyframes floatIn {
+  0% {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(60px) scale(0.9);
   }
-  to {
+  100% {
     opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes rainbowShimmer {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes floatingBg {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+  33% {
+    transform: rotate(120deg) scale(1.1);
+  }
+  66% {
+    transform: rotate(240deg) scale(0.9);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2) rotate(180deg);
   }
 }
 
 @keyframes slideInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(40px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes shimmer {
+@keyframes shimmerSweep {
   0% {
-    background-position: -200% 0;
+    transform: translateX(-100%) skewX(-15deg);
   }
   100% {
-    background-position: 200% 0;
+    transform: translateX(200%) skewX(-15deg);
   }
 }
 
-@keyframes spin {
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes premiumSpin {
   0% {
-    transform: rotate(0deg);
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
   }
   100% {
-    transform: rotate(360deg);
+    transform: rotate(360deg) scale(1);
   }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .photo-panel {
-    padding: 24px;
-    margin: 0 16px 24px;
+    padding: var(--space-8);
+    margin: 0 var(--space-4) var(--space-8);
+    border-radius: var(--radius-3xl);
   }
 
   .photo-panel h3 {
-    font-size: 1.5rem;
+    font-size: var(--text-3xl);
+    margin-bottom: var(--space-8);
   }
 
   .photo-panel-grid {
-    gap: 1.5rem;
+    gap: var(--space-8);
   }
 
   .photo-input-group {
-    padding: 20px;
+    padding: var(--space-6);
+  }
+
+  .photo-preview-container {
+    min-height: 200px;
+  }
+
+  .save-button {
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--text-lg);
+    min-width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .photo-panel {
+    padding: var(--space-6);
+    margin: 0 var(--space-2) var(--space-6);
+  }
+
+  .photo-panel h3 {
+    font-size: var(--text-2xl);
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .photo-input-group {
+    padding: var(--space-4);
   }
 
   .photo-preview-container {
@@ -290,26 +526,30 @@
   }
 
   .save-button {
-    padding: 14px 28px;
-    font-size: 1rem;
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--text-base);
+    min-width: 160px;
   }
 }
 
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   .photo-panel {
-    background: linear-gradient(135deg, var(--surface-base) 0%, rgba(30, 41, 59, 0.8) 100%);
+    background: linear-gradient(135deg, var(--neutral-900) 0%, rgba(15, 23, 42, 0.95) 100%);
     color: var(--neutral-100);
     border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-3xl), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 60px rgba(59, 130, 246, 0.1);
   }
 
   .photo-panel h3 {
     color: var(--neutral-100);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 
   .photo-input-group {
-    background: rgba(30, 41, 59, 0.5);
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.8) 100%);
     border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   .photo-input-group label {
@@ -317,13 +557,13 @@
   }
 
   .photo-preview-container {
-    background: linear-gradient(135deg, var(--neutral-800) 0%, rgba(30, 41, 59, 0.8) 100%);
-    border-color: var(--neutral-700);
+    background: linear-gradient(135deg, var(--neutral-800) 0%, rgba(30, 41, 59, 0.9) 100%);
+    border-color: var(--neutral-600);
   }
 
   .photo-preview-container:hover {
     border-color: var(--primary-400);
-    background: linear-gradient(135deg, var(--primary-900) 0%, rgba(30, 41, 59, 0.9) 100%);
+    background: linear-gradient(135deg, var(--primary-900) 0%, rgba(30, 41, 59, 0.95) 100%);
   }
 
   .photo-placeholder {
@@ -331,18 +571,72 @@
   }
 
   .photo-upload-button {
-    background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+    background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 50%, var(--primary-800) 100%);
   }
 
   .photo-upload-button:hover {
-    background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%);
+    background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 50%, var(--primary-900) 100%);
   }
 
   .save-button {
-    background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+    background: linear-gradient(135deg, var(--success-600) 0%, var(--success-700) 50%, var(--success-800) 100%);
   }
 
   .save-button:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%);
+    background: linear-gradient(135deg, var(--success-700) 0%, var(--success-800) 50%, var(--success-900) 100%);
+  }
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .photo-panel {
+    border-width: 2px;
+    border-color: var(--neutral-600);
+  }
+
+  .photo-input-group {
+    border-width: 2px;
+    border-color: var(--neutral-500);
+  }
+
+  .photo-preview-container {
+    border-width: 3px;
+    border-color: var(--neutral-600);
+  }
+}
+
+/* Focus Visible for Keyboard Navigation */
+.photo-upload-button:focus-visible,
+.save-button:focus-visible {
+  outline: 3px solid var(--primary-500);
+  outline-offset: 3px;
+}
+
+/* Print Styles */
+@media print {
+  .photo-panel {
+    box-shadow: none;
+    border: 2px solid var(--neutral-300);
+    background: white;
+  }
+
+  .photo-upload-button,
+  .save-button {
+    display: none;
+  }
+
+  .photo-panel::before,
+  .photo-panel::after {
+    display: none;
   }
 }

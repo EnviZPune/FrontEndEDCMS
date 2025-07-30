@@ -31,13 +31,14 @@
 /* Login Page Styles */
 .login-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #5f0de4 30%, #764ba2 80%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem 1rem;
   position: relative;
   font-family: var(--font-sans);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .login-page::before {
@@ -186,6 +187,7 @@
   color: var(--text-primary);
   transition: all 0.2s ease-in-out;
   font-family: var(--font-sans);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .form-input:focus {
@@ -361,11 +363,6 @@
   color: var(--text-muted);
   position: relative;
   z-index: 1;
-}
-
-/* Google Login */
-.google-login-container {
-  width: 100%;
 }
 
 /* Login Footer */

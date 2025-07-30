@@ -78,7 +78,7 @@ function LoginComponent() {
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <label htmlFor="username" className="form-label">
-              Username or Email
+              Firstname and Lastname
             </label>
             <input
               id="username"

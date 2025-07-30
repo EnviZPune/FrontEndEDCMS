@@ -42,7 +42,7 @@ export default function MyShopsPanel({ businesses = [] }) {
   const handleNext = () => setPage(p => Math.min(p + 1, totalPages))
 
   return (
-    <div className="panel my-shops-panel">
+    <div className="my-shops-panel">
       <h3>My Shops</h3>
 
       <div className="shop-grid">

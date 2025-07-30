@@ -6,7 +6,7 @@ import Footer from '../Components/Footer';
 import '../Styling/userspage.css';
 
 const API_BASE = 'http://77.242.26.150:8000';
-const ITEMS_PER_PAGE = 15;
+const ITEMS_PER_PAGE = 6;
 const SEARCH_DEBOUNCE_MS = 300;
 
 const UsersPage = () => {

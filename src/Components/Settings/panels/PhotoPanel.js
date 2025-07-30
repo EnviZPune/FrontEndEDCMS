@@ -112,7 +112,7 @@ export default function PhotoPanel({ business }) {
 
   // 6) Render form
   return (
-    <div className="panel photo-panel">
+    <div className="photo-panel">
       <h3>Edit Profile & Cover Photos</h3>
       <div className="photo-panel-grid">
         <div className="photo-input-group">
@@ -125,7 +125,7 @@ export default function PhotoPanel({ business }) {
             )}
             <button className="photo-upload-button" disabled={saving}>
               <input type="file" accept="image/*" onChange={(e) => handleUpload(e, setProfileUrl)} />
-              Choose…
+              +
             </button>
           </div>
         </div>
@@ -140,8 +140,7 @@ export default function PhotoPanel({ business }) {
             )}
             <button className="photo-upload-button" disabled={saving}>
               <input type="file" accept="image/*" onChange={(e) => handleUpload(e, setCoverUrl)} />
-              Choose…
-            </button>
+              +            </button>
           </div>
         </div>
       </div>

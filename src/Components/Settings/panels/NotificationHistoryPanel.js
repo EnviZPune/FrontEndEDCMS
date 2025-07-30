@@ -50,7 +50,7 @@ export default function NotificationHistoryPanel({ business }) {
 
   if (loading) {
     return (
-      <div className="panel notification-history-panel">
+      <div className="notification-history-panel">
         <p>Loading notifications…</p>
       </div>
     )
@@ -58,7 +58,7 @@ export default function NotificationHistoryPanel({ business }) {
 
   if (error) {
     return (
-      <div className="panel notification-history-panel">
+      <div className="notification-history-panel">
         <p>Error loading notifications.</p>
       </div>
     )
@@ -70,7 +70,7 @@ export default function NotificationHistoryPanel({ business }) {
   const paginatedHistory = history.slice(startIdx, startIdx + pageSize)
 
   return (
-    <div className="panel notification-history-panel">
+    <div className="notification-history-panel">
       <h3>Notification History</h3>
 
       {totalCount === 0 ? (

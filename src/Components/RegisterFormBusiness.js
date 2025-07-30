@@ -35,7 +35,7 @@ export default function RegisterFormBusiness() {
   const [business, setBusiness] = useState({
     name: "",
     description: "",
-    address: "",
+    businessEmail: "",
     location: "",
     businessPhoneNumber: "",
     nipt: "",
@@ -55,30 +55,47 @@ export default function RegisterFormBusiness() {
   const [validationErrors, setValidationErrors] = useState({})
   const [showSuggestions, setShowSuggestions] = useState(false)
 
-  // Refs for the map + marker
   const mapRef = useRef(null)
   const markerRef = useRef(null)
   const containerRef = useRef(null)
   const locationInputRef = useRef(null)
 
-  // Calculate form progress
+  // calculate progress
   useEffect(() => {
-    const fields = Object.values(business).filter((val) => val.trim() !== "")
-    const images = [profileUrl, coverUrl].filter((url) => url !== "")
-    const location = coords ? 1 : 0
-    const total = Object.keys(business).length + 2 + 1 // business fields + 2 images + location
-    const completed = fields.length + images.length + location
+    const fields = ["name","description","businessPhoneNumber","nipt","openingHours"]
+      .map(k => business[k].trim() !== "")
+      .filter(Boolean).length
+    const images = [profileUrl, coverUrl].filter((u) => u).length
+    const locationDone = coords ? 1 : 0
+    const total = 5 + 2 + 1
+    const completed = fields + images + locationDone
     setFormProgress((completed / total) * 100)
   }, [business, profileUrl, coverUrl, coords])
 
-  // 1) Validate payment token
+  // fetch current user's email
+  useEffect(() => {
+    fetch(`${API_BASE}/User/me`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load user info")
+        return res.json()
+      })
+      .then((user) => {
+        setBusiness((b) => ({ ...b, businessEmail: user.email }))
+      })
+      .catch(() => {
+        console.warn("Could not fetch user email")
+      })
+  }, [])
+
+  // validate payment token
   useEffect(() => {
     if (!paymentToken) {
       setError("Missing access token")
       setTokenChecked(true)
       return
     }
-
     fetch(`${API_BASE}/payment/validate-token?token=${paymentToken}`)
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((d) => setTokenValid(d.valid))
@@ -86,120 +103,98 @@ export default function RegisterFormBusiness() {
       .finally(() => setTokenChecked(true))
   }, [paymentToken])
 
-  // 2) Initialize Leaflet map once form is rendered (after token check & valid)
+  // init map
   useEffect(() => {
-    if (!tokenChecked || !tokenValid) return
-    if (!containerRef.current) return
-
-    // Tear down any existing map
+    if (!tokenChecked || !tokenValid || !containerRef.current) return
     if (mapRef.current) {
       mapRef.current.remove()
-      mapRef.current = null
       markerRef.current?.remove()
-      markerRef.current = null
     }
-
     const map = L.map(containerRef.current, {
-      center: [41.3275, 19.8187], // Tirana, Albania
+      center: [41.3275, 19.8187],
       zoom: 10,
-      zoomControl: false, // We'll add custom controls
+      zoomControl: false,
       layers: [
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: "&copy; OpenStreetMap contributors",
         }),
       ],
     })
-
-    // Click on map to place pin
     map.on("click", (e) => {
       const { lat, lng } = e.latlng
       setCoords([lat, lng])
-      setBusiness((b) => ({ ...b, location: `${lat.toFixed(6)},${lng.toFixed(6)}` }))
+      setBusiness((b) => ({
+        ...b,
+        location: `${lat.toFixed(6)},${lng.toFixed(6)}`,
+      }))
       setSuggestions([])
       setShowSuggestions(false)
       setValidationErrors((prev) => ({ ...prev, location: null }))
-
-      // Reverse geocoding to get address
       reverseGeocode(lat, lng)
     })
-
     map.whenReady(() => map.invalidateSize())
     mapRef.current = map
-
-    return () => {
-      map.remove()
-      mapRef.current = null
-    }
+    return () => map.remove()
   }, [tokenChecked, tokenValid])
 
-  // 3) Whenever coords change, move or add a draggable marker
+  // marker on coords change
   useEffect(() => {
     const map = mapRef.current
     if (!map) return
-
-    // Remove existing
-    if (markerRef.current) {
-      markerRef.current.remove()
-      markerRef.current = null
-    }
-
+    markerRef.current?.remove()
     if (!coords) return
-
     const m = L.marker(coords, { draggable: true }).addTo(map)
     m.on("dragend", (e) => {
       const { lat, lng } = e.target.getLatLng()
       setCoords([lat, lng])
-      setBusiness((b) => ({ ...b, location: `${lat.toFixed(6)},${lng.toFixed(6)}` }))
+      setBusiness((b) => ({
+        ...b,
+        location: `${lat.toFixed(6)},${lng.toFixed(6)}`,
+      }))
       reverseGeocode(lat, lng)
     })
-
     markerRef.current = m
-    // Re-center on pin
     map.setView(coords, 13)
   }, [coords])
 
-  // Reverse geocoding function
   const reverseGeocode = async (lat, lng) => {
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`
       )
       const data = await res.json()
       if (data.display_name) {
         setBusiness((b) => ({ ...b, location: data.display_name }))
       }
-    } catch (error) {
-      console.error("Reverse geocoding failed:", error)
+    } catch (e) {
+      console.error("Reverse geocoding failed:", e)
     }
   }
 
-  // 4) Enhanced autocomplete
+  // autocomplete
   const handleLocationChange = useCallback(async (e) => {
     const q = e.target.value
     setBusiness((b) => ({ ...b, location: q }))
     setCoords(null)
     setValidationErrors((prev) => ({ ...prev, location: null }))
-
     if (q.length < 3) {
       setSuggestions([])
       setShowSuggestions(false)
       return
     }
-
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&limit=8&q=${encodeURIComponent(q)}&addressdetails=1&extratags=1`,
+        `https://nominatim.openstreetmap.org/search?format=json&limit=8&q=${encodeURIComponent(
+          q
+        )}&addressdetails=1&extratags=1`
       )
       const data = await res.json()
-
-      // Enhanced suggestions with better formatting
-      const enhancedSuggestions = data.map((item) => ({
+      const enhanced = data.map((item) => ({
         ...item,
         main: item.name || item.display_name.split(",")[0],
         sub: item.display_name.split(",").slice(1).join(",").trim(),
       }))
-
-      setSuggestions(enhancedSuggestions)
+      setSuggestions(enhanced)
       setShowSuggestions(true)
     } catch {
       setSuggestions([])
@@ -209,7 +204,7 @@ export default function RegisterFormBusiness() {
 
   const selectSuggestion = (s) => {
     setBusiness((b) => ({ ...b, location: s.display_name }))
-    setCoords([Number.parseFloat(s.lat), Number.parseFloat(s.lon)])
+    setCoords([+s.lat, +s.lon])
     setSuggestions([])
     setShowSuggestions(false)
     setValidationErrors((prev) => ({ ...prev, location: null }))
@@ -225,32 +220,16 @@ export default function RegisterFormBusiness() {
     locationInputRef.current?.focus()
   }
 
-  // Map control functions
-  const zoomIn = () => {
-    if (mapRef.current) {
-      mapRef.current.zoomIn()
-    }
-  }
+  const zoomIn = () => mapRef.current?.zoomIn()
+  const zoomOut = () => mapRef.current?.zoomOut()
+  const centerMap = () => coords && mapRef.current?.setView(coords, 15)
 
-  const zoomOut = () => {
-    if (mapRef.current) {
-      mapRef.current.zoomOut()
-    }
-  }
-
-  const centerMap = () => {
-    if (mapRef.current && coords) {
-      mapRef.current.setView(coords, 15)
-    }
-  }
-
-  // 5) Image uploads
+  // image uploads
   const uploadImageToGCS = async (file) => {
     const ts = Date.now()
     const name = `${ts}-${file.name}`
     const url = `${GCS_BUCKET}/${name}`
     const txt = `${url}.txt`
-
     try {
       let r = await fetch(url, {
         method: "PUT",
@@ -258,14 +237,12 @@ export default function RegisterFormBusiness() {
         body: file,
       })
       if (!r.ok) throw new Error("Upload failed")
-
       r = await fetch(txt, {
         method: "PUT",
         headers: { "Content-Type": "text/plain" },
         body: url,
       })
       if (!r.ok) throw new Error("TXT write failed")
-
       return url
     } catch (err) {
       console.error(err)
@@ -273,126 +250,118 @@ export default function RegisterFormBusiness() {
     }
   }
 
-  const handleFile = (e, setter, fieldName) => {
+  const handleFile = (e, setter, field) => {
     const file = e.target.files?.[0]
     if (!file) return
-
     setLoading(true)
-    setValidationErrors((prev) => ({ ...prev, [fieldName]: null }))
-
+    setValidationErrors((prev) => ({ ...prev, [field]: null }))
     uploadImageToGCS(file)
       .then((url) => {
-        if (url) {
-          setter(url)
-        } else {
+        if (url) setter(url)
+        else {
           setError("Image upload failed")
-          setValidationErrors((prev) => ({ ...prev, [fieldName]: "Upload failed" }))
+          setValidationErrors((prev) => ({ ...prev, [field]: "Upload failed" }))
         }
       })
       .finally(() => setLoading(false))
   }
 
-  const removeImage = (setter, fieldName) => {
+  const removeImage = (setter, field) => {
     setter("")
-    setValidationErrors((prev) => ({ ...prev, [fieldName]: null }))
+    setValidationErrors((prev) => ({ ...prev, [field]: null }))
   }
 
-  // Form validation
+  // form validation
   const validateForm = () => {
     const errors = {}
-
     if (!business.name.trim()) errors.name = "Business name is required"
     if (!business.description.trim()) errors.description = "Description is required"
-    if (!business.address.trim()) errors.address = "Address is required"
-    if (!business.businessPhoneNumber.trim()) errors.businessPhoneNumber = "Phone number is required"
+    if (!business.businessPhoneNumber.trim())
+      errors.businessPhoneNumber = "Phone number is required"
     if (!profileUrl) errors.profilePicture = "Profile photo is required"
+    if (!business.businessEmail.trim()) errors.businessEmail = "Business email is required"
     if (!coverUrl) errors.coverPicture = "Cover photo is required"
     if (!coords) errors.location = "Please select a location"
-
     setValidationErrors(errors)
-    return Object.keys(errors).length === 0
+    return !Object.keys(errors).length
   }
 
-  // Handle input changes
   const handleInputChange = (field, value) => {
     setBusiness((b) => ({ ...b, [field]: value }))
     setValidationErrors((prev) => ({ ...prev, [field]: null }))
   }
 
-  // Close suggestions when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (locationInputRef.current && !locationInputRef.current.contains(event.target)) {
+    const onClickOutside = (e) => {
+      if (
+        locationInputRef.current &&
+        !locationInputRef.current.contains(e.target)
+      ) {
         setShowSuggestions(false)
       }
     }
-
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
+    document.addEventListener("mousedown", onClickOutside)
+    return () => document.removeEventListener("mousedown", onClickOutside)
   }, [])
 
-  // 6) Submit form
+  // submit
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError(null)
     setSuccess(null)
-
     if (!validateForm()) {
       setError("Please fill in all required fields")
       return
     }
 
     setLoading(true)
-
     try {
       const payload = {
-        ...business,
+        // send the raw name—backend will auto-generate slug
+        name: business.name.trim(),
+        description: business.description,
+        businessEmail: business.businessEmail,
+        businessPhoneNumber: business.businessPhoneNumber,
+        nipt: business.nipt,
+        openingHours: business.openingHours,
         profilePictureUrl: profileUrl,
         coverPictureUrl: coverUrl,
         location: `${coords[0]},${coords[1]}`,
-        name: business.name
-          .toLowerCase()
-          .trim()
-          .replace(/\s+/g, "-")
-          .replace(/[^a-z0-9-]/g, ""),
       }
 
-      const res = await fetch(`${API_BASE}/Business?token=${encodeURIComponent(paymentToken)}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify(payload),
-      })
-
+      const res = await fetch(
+        `${API_BASE}/Business?token=${encodeURIComponent(paymentToken)}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      )
       if (!res.ok) {
         const msg = await res.text()
         throw new Error(msg || "Registration failed")
       }
-
       const result = await res.json()
       setSuccess("Business registered successfully!")
-
-      // Reset form
-      setBusiness({
+      // reset
+      setBusiness((b) => ({
+        ...b,
         name: "",
         description: "",
-        address: "",
         location: "",
         businessPhoneNumber: "",
         nipt: "",
         openingHours: "",
-      })
+      }))
       setProfileUrl("")
       setCoverUrl("")
       setCoords(null)
       setSuggestions([])
       setShowSuggestions(false)
       setValidationErrors({})
-
       setTimeout(() => navigate(`/shop/${result.slug}`), 1500)
     } catch (err) {
       setError(err.message)
@@ -401,7 +370,6 @@ export default function RegisterFormBusiness() {
     }
   }
 
-  // Early returns
   if (!tokenChecked) {
     return (
       <div>
@@ -415,7 +383,6 @@ export default function RegisterFormBusiness() {
       </div>
     )
   }
-
   if (!tokenValid) {
     return (
       <div>
@@ -423,7 +390,9 @@ export default function RegisterFormBusiness() {
         <div className="register-business-form-container">
           <div className="form-header">
             <h2>Access Denied</h2>
-            <p className="error-message">⚠️ {error || "Invalid or expired access token"}</p>
+            <p className="error-message">
+              ⚠️ {error || "Invalid or expired access token"}
+            </p>
           </div>
         </div>
       </div>
@@ -439,12 +408,18 @@ export default function RegisterFormBusiness() {
           <p>Create your business profile and start reaching customers today</p>
         </div>
 
-        {/* Progress Bar */}
         <div className="form-progress">
-          <div className="form-progress-bar" style={{ width: `${formProgress}%` }}></div>
+          <div
+            className="form-progress-bar"
+            style={{ width: `${formProgress}%` }}
+          />
         </div>
 
-        <form className="register-business-form" onSubmit={handleSubmit}>
+        <form
+          className="register-business-form"
+          onSubmit={handleSubmit}
+          noValidate
+        >
           {/* Business Name */}
           <div className={`form-group ${validationErrors.name ? "error" : ""}`}>
             <label htmlFor="name">Business Name *</label>
@@ -453,56 +428,80 @@ export default function RegisterFormBusiness() {
               name="name"
               type="text"
               placeholder="Enter your business name"
-              required
               value={business.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
+              required
             />
-            {validationErrors.name && <div className="error-message">⚠️ {validationErrors.name}</div>}
+            {validationErrors.name && (
+              <div className="error-message">
+                ⚠️ {validationErrors.name}
+              </div>
+            )}
           </div>
 
           {/* Description */}
-          <div className={`form-group ${validationErrors.description ? "error" : ""}`}>
+          <div
+            className={`form-group ${
+              validationErrors.description ? "error" : ""
+            }`}
+          >
             <label htmlFor="description">Description *</label>
             <textarea
               id="description"
               name="description"
               placeholder="Describe your business and services"
-              required
               value={business.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("description", e.target.value)
+              }
+              required
             />
-            {validationErrors.description && <div className="error-message">⚠️ {validationErrors.description}</div>}
+            {validationErrors.description && (
+              <div className="error-message">
+                ⚠️ {validationErrors.description}
+              </div>
+            )}
           </div>
 
-          {/* Address */}
-          <div className={`form-group ${validationErrors.address ? "error" : ""}`}>
-            <label htmlFor="address">Address *</label>
-            <input
-              id="address"
-              name="address"
-              type="text"
-              placeholder="Enter your business address"
-              required
-              value={business.address}
-              onChange={(e) => handleInputChange("address", e.target.value)}
-            />
-            {validationErrors.address && <div className="error-message">⚠️ {validationErrors.address}</div>}
-          </div>
+         {/* Business Email (editable string) */}
+            <div className={`form-group ${validationErrors.businessEmail ? "error" : ""}`}>
+              <label htmlFor="businessEmail">Business Email *</label>
+              <input
+                id="businessEmail"
+                name="businessEmail"
+                type="text"
+                placeholder="Enter your business email"
+              value={business.businessEmail}
+                onChange={e => handleInputChange("businessEmail", e.target.value)}
+                required
+              />
+              {validationErrors.businessEmail && (
+                <div className="error-message">⚠️ {validationErrors.businessEmail}</div>
+              )}
+            </div>
 
           {/* Phone Number */}
-          <div className={`form-group ${validationErrors.businessPhoneNumber ? "error" : ""}`}>
+          <div
+            className={`form-group ${
+              validationErrors.businessPhoneNumber ? "error" : ""
+            }`}
+          >
             <label htmlFor="phone">Phone Number *</label>
             <input
               id="phone"
               name="businessPhoneNumber"
               type="tel"
               placeholder="Enter your business phone number"
-              required
               value={business.businessPhoneNumber}
-              onChange={(e) => handleInputChange("businessPhoneNumber", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("businessPhoneNumber", e.target.value)
+              }
+              required
             />
             {validationErrors.businessPhoneNumber && (
-              <div className="error-message">⚠️ {validationErrors.businessPhoneNumber}</div>
+              <div className="error-message">
+                ⚠️ {validationErrors.businessPhoneNumber}
+              </div>
             )}
           </div>
 
@@ -528,12 +527,18 @@ export default function RegisterFormBusiness() {
               type="text"
               placeholder="e.g., Mon-Fri: 9:00-18:00, Sat: 9:00-14:00"
               value={business.openingHours}
-              onChange={(e) => handleInputChange("openingHours", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("openingHours", e.target.value)
+              }
             />
           </div>
 
-          {/* Enhanced Location Input */}
-          <div className={`form-group ${validationErrors.location ? "error" : ""}`}>
+          {/* Location Input & Map */}
+          <div
+            className={`form-group ${
+              validationErrors.location ? "error" : ""
+            }`}
+          >
             <label htmlFor="location">Location *</label>
             <div className="location-input-container" ref={locationInputRef}>
               <div className="location-input-wrapper">
@@ -545,10 +550,18 @@ export default function RegisterFormBusiness() {
                   placeholder="Start typing to search for location..."
                   value={business.location}
                   onChange={handleLocationChange}
-                  onFocus={() => setShowSuggestions(suggestions.length > 0)}
+                  onFocus={() =>
+                    setShowSuggestions(suggestions.length > 0)
+                  }
+                  required
                 />
                 {business.location && (
-                  <button type="button" className="location-clear-btn" onClick={clearLocation} title="Clear location">
+                  <button
+                    type="button"
+                    className="location-clear-btn"
+                    onClick={clearLocation}
+                    title="Clear location"
+                  >
                     ✕
                   </button>
                 )}
@@ -556,40 +569,72 @@ export default function RegisterFormBusiness() {
               {showSuggestions && suggestions.length > 0 && (
                 <ul className="location-suggestions">
                   {suggestions.map((s) => (
-                    <li key={s.place_id} onClick={() => selectSuggestion(s)}>
+                    <li
+                      key={s.place_id}
+                      onClick={() => selectSuggestion(s)}
+                    >
                       <div className="location-suggestion-text">
-                        <div className="location-suggestion-main">{s.main}</div>
-                        <div className="location-suggestion-sub">{s.sub}</div>
+                        <div className="location-suggestion-main">
+                          {s.main}
+                        </div>
+                        <div className="location-suggestion-sub">
+                          {s.sub}
+                        </div>
                       </div>
                     </li>
                   ))}
                 </ul>
               )}
             </div>
-            {validationErrors.location && <div className="error-message">⚠️ {validationErrors.location}</div>}
+            {validationErrors.location && (
+              <div className="error-message">
+                ⚠️ {validationErrors.location}
+              </div>
+            )}
           </div>
 
-          {/* Enhanced Map */}
+          {/* Map */}
           <div className="form-group">
             <label>Select Location on Map</label>
             <div className="map-container">
               <div className="map-overlay">
                 <div className="map-overlay-content">
                   <div className="map-overlay-icon">🗺️</div>
-                  <div className="map-overlay-text">Click on the map to place a marker at your business location</div>
+                  <div className="map-overlay-text">
+                    Click on the map to place a marker at your business
+                    location
+                  </div>
                 </div>
               </div>
               <div className="map-wrapper">
-                <div ref={containerRef} style={{ height: "100%", width: "100%" }} />
+                <div
+                  ref={containerRef}
+                  style={{ height: "100%", width: "100%" }}
+                />
                 <div className="map-controls">
-                  <button type="button" className="map-control-btn" onClick={zoomIn} title="Zoom In">
+                  <button
+                    type="button"
+                    className="map-control-btn"
+                    onClick={zoomIn}
+                    title="Zoom In"
+                  >
                     +
                   </button>
-                  <button type="button" className="map-control-btn" onClick={zoomOut} title="Zoom Out">
+                  <button
+                    type="button"
+                    className="map-control-btn"
+                    onClick={zoomOut}
+                    title="Zoom Out"
+                  >
                     −
                   </button>
                   {coords && (
-                    <button type="button" className="map-control-btn" onClick={centerMap} title="Center on Marker">
+                    <button
+                      type="button"
+                      className="map-control-btn"
+                      onClick={centerMap}
+                      title="Center on Marker"
+                    >
                       🎯
                     </button>
                   )}
@@ -598,8 +643,12 @@ export default function RegisterFormBusiness() {
             </div>
           </div>
 
-          {/* Enhanced Profile Photo */}
-          <div className={`form-group ${validationErrors.profilePicture ? "error" : ""}`}>
+          {/* Profile Photo */}
+          <div
+            className={`form-group ${
+              validationErrors.profilePicture ? "error" : ""
+            }`}
+          >
             <label htmlFor="profile">Profile Photo *</label>
             <div className="file-input-wrapper">
               <input
@@ -614,11 +663,13 @@ export default function RegisterFormBusiness() {
               </div>
             </div>
             {validationErrors.profilePicture && (
-              <div className="error-message">⚠️ {validationErrors.profilePicture}</div>
+              <div className="error-message">
+                ⚠️ {validationErrors.profilePicture}
+              </div>
             )}
             {profileUrl && (
               <div className="image-preview profile-preview">
-                <img src={profileUrl || "/placeholder.svg"} alt="Profile preview" />
+                <img src={profileUrl} alt="Profile preview" />
                 <div
                   className="image-preview-overlay"
                   onClick={() => removeImage(setProfileUrl, "profilePicture")}
@@ -630,8 +681,12 @@ export default function RegisterFormBusiness() {
             )}
           </div>
 
-          {/* Enhanced Cover Photo */}
-          <div className={`form-group ${validationErrors.coverPicture ? "error" : ""}`}>
+          {/* Cover Photo */}
+          <div
+            className={`form-group ${
+              validationErrors.coverPicture ? "error" : ""
+            }`}
+          >
             <label htmlFor="cover">Cover Photo *</label>
             <div className="file-input-wrapper">
               <input
@@ -645,10 +700,14 @@ export default function RegisterFormBusiness() {
                 <span>Choose Cover Photo</span>
               </div>
             </div>
-            {validationErrors.coverPicture && <div className="error-message">⚠️ {validationErrors.coverPicture}</div>}
+            {validationErrors.coverPicture && (
+              <div className="error-message">
+                ⚠️ {validationErrors.coverPicture}
+              </div>
+            )}
             {coverUrl && (
               <div className="image-preview cover-preview">
-                <img src={coverUrl || "/placeholder.svg"} alt="Cover preview" />
+                <img src={coverUrl} alt="Cover preview" />
                 <div
                   className="image-preview-overlay"
                   onClick={() => removeImage(setCoverUrl, "coverPicture")}
@@ -660,8 +719,12 @@ export default function RegisterFormBusiness() {
             )}
           </div>
 
-          {/* Submit Button */}
-          <button type="submit" className={`submit-button ${loading ? "loading" : ""}`} disabled={loading}>
+          {/* Submit */}
+          <button
+            type="submit"
+            className={`submit-button ${loading ? "loading" : ""}`}
+            disabled={loading}
+          >
             {loading ? (
               <>
                 <div className="loading-spinner"></div>
@@ -675,14 +738,13 @@ export default function RegisterFormBusiness() {
             )}
           </button>
 
-          {/* Messages */}
           {error && (
-            <div className="error-message" style={{ marginTop: "var(--space-4)", textAlign: "center" }}>
+            <div className="error-message" style={{ textAlign: "center" }}>
               ⚠️ {error}
             </div>
           )}
           {success && (
-            <div className="success-message" style={{ marginTop: "var(--space-4)", textAlign: "center" }}>
+            <div className="success-message" style={{ textAlign: "center" }}>
               ✅ {success}
             </div>
           )}

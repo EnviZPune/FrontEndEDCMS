@@ -84,7 +84,7 @@ export default function ReservationsPanel({ business }) {
   const pending   = reservations.filter(r => r.status === 'Pending')
 
   return (
-    <div className="panel reservations-panel">
+    <div className="reservations-panel">
       <h3>Product Reservations</h3>
 
       <section>

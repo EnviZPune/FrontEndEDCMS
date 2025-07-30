@@ -232,7 +232,7 @@ export default function ShopDetailsPage() {
               <div className="sd-shop-info-section">
                 <h4><FaPhoneAlt /> Contact</h4>
                 <p><strong>Phone:</strong> {shop.businessPhoneNumber}</p>
-                <p><strong>Address:</strong> {shop.address}</p>
+                <p><strong>Business Email:</strong> {shop.businessEmailAddress}</p>
               </div>
               <div className="sd-shop-info-section">
                 <h4><FaClock /> Hours</h4>

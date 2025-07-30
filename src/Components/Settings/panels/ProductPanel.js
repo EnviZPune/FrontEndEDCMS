@@ -1,381 +1,687 @@
-// src/Components/Settings/panels/ProductPanel.js
-import React, { useState, useEffect } from 'react'
-import { useApiClient } from '../hooks/useApiClient'
-import { useAuth } from '../hooks/useAuth'
-import Pagination from '../../Pagination.tsx'
-import '../../../Styling/Settings/productpanel.css'
+"use client"
 
-const SIZE_MAP = { XS: 0, S: 1, M: 2, L: 3, XL: 4, XXL: 5 }
-const REV_SIZE_MAP = { 0: 'XS', 1: 'S', 2: 'M', 3: 'L', 4: 'XL', 5: 'XXL' }
+import { useState, useEffect, useCallback, useRef, useMemo } from "react"
+import { useApiClient } from "../hooks/useApiClient"
+import { useAuth } from "../hooks/useAuth"
+import Pagination from "../../Pagination.tsx"
+import "../../../Styling/Settings/productpanel.css"
 
 export default function ProductPanel({ business }) {
   const { get, post, put, del } = useApiClient()
-  const { role }                = useAuth()
+  const { role } = useAuth()
+  const fileInputRef = useRef(null)
 
-  // ─── State ────────────────────────────────────────────────────────────────
-  const [products, setProducts]       = useState([])
-  const [categories, setCategories]   = useState([])
-  const [editingId, setEditingId]     = useState(null)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [page, setPage]               = useState(1)
-  const pageSize                      = 10
+  // ─── State Management ────────────────────────────────────────────────────
+  const [products, setProducts] = useState([])
+  const [categories, setCategories] = useState([])
+  const [editingId, setEditingId] = useState(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [page, setPage] = useState(1)
+  const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [error, setError] = useState(null)
+  const pageSize = 10
 
   const [form, setForm] = useState({
-    name: '', description: '', price: '', quantity: '',
-    categoryId: '', brand: '', model: '',
-    photos: [], colors: '', size: 'XS', material: '',
+    name: "",
+    description: "",
+    price: "",
+    quantity: "",
+    categoryId: "",
+    brand: "",
+    model: "",
+    photos: [],
+    colors: "",
+    size: "",
+    material: "",
   })
-  const [mainPhotoIndex, setMainPhotoIndex] = useState(0)
-  // ────────────────────────────────────────────────────────────────────────────
 
-  // ─── Load products & categories when businessId changes ────────────────────
+  const [mainPhotoIndex, setMainPhotoIndex] = useState(0)
+  const [dragOver, setDragOver] = useState(false)
+
+  // ─── Memoized Values ─────────────────────────────────────────────────────
+  const businessId = business?.businessId
+
+  // ─── Form Validation (Fixed dependency) ──────────────────────────────────
+  const validateForm = useCallback(() => {
+    const errors = []
+    if (!form.name.trim()) errors.push("Product name is required")
+    if (!form.price || Number.parseFloat(form.price) <= 0) errors.push("Valid price is required")
+    if (!form.quantity || Number.parseInt(form.quantity) < 0) errors.push("Valid quantity is required")
+    return errors
+  }, [form.name, form.price, form.quantity]) // Only depend on specific form fields
+
+  // ─── Load Data (Fixed dependencies) ──────────────────────────────────────
   useEffect(() => {
-    const id = business?.businessId
-    if (!id) return
+    if (!businessId) return
 
     let cancelled = false
-    ;(async () => {
+
+    const loadData = async () => {
+      setLoading(true)
+      setError(null)
+
       try {
         const [prods, cats] = await Promise.all([
-          get(`/api/ClothingItem/business/${id}`),
-          get(`/api/ClothingCategory/business/${id}`),
+          get(`/api/ClothingItem/business/${businessId}`),
+          get(`/api/ClothingCategory/business/${businessId}`),
         ])
+
         if (!cancelled) {
-          setProducts(prods)
-          setCategories(cats)
+          setProducts(prods || [])
+          setCategories(cats || [])
         }
       } catch (err) {
-        console.error('Load error:', err)
+        console.error("Load error:", err)
         if (!cancelled) {
+          setError("Failed to load data. Please try again.")
           setProducts([])
           setCategories([])
         }
+      } finally {
+        if (!cancelled) {
+          setLoading(false)
+        }
       }
-    })()
-    return () => { cancelled = true }
-  }, [business?.businessId])  // ← fixed: removed `get` from deps to avoid loop
+    }
 
-  // reset page whenever search or products list changes
-  useEffect(() => { setPage(1) }, [searchQuery, products])
+    loadData()
 
-  // ─── Helper: Upload image + .txt URL file ──────────────────────────────────
-  const uploadImageToGCS = async (file) => {
+    return () => {
+      cancelled = true
+    }
+  }, [businessId]) // Remove get from dependencies to prevent infinite loop
+
+  // Reset page when search or products change (Fixed dependencies)
+  useEffect(() => {
+    setPage(1)
+  }, [searchQuery, products.length]) // Use products.length instead of products array
+
+  // ─── Image Upload Helpers ────────────────────────────────────────────────
+  const uploadImageToGCS = useCallback(async (file) => {
     if (!file) return null
-    const ts   = Date.now()
-    const name = `${ts}-${file.name}`
+
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    if (file.size > maxSize) {
+      throw new Error("File size must be less than 5MB")
+    }
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"]
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error("Only JPEG, PNG, WebP, and GIF images are allowed")
+    }
+
+    const ts = Date.now()
+    const name = `${ts}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`
     const imgUrl = `https://storage.googleapis.com/edcms_bucket/${name}`
     const txtUrl = `${imgUrl}.txt`
 
-    await fetch(imgUrl, {
-      method: 'PUT',
-      headers: { 'Content-Type': file.type },
-      body: file,
-    })
-    await fetch(txtUrl, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'text/plain' },
-      body: imgUrl,
-    })
-    return imgUrl
-  }
-  // ────────────────────────────────────────────────────────────────────────────
-
-  // ─── Save (create or update) a product ────────────────────────────────────
-  const saveProduct = async () => {
-    if (!business) return
-
-    // ensure the selected “main” photo is first
-    const orderedPhotos = form.photos.length
-      ? [
-          form.photos[mainPhotoIndex],
-          ...form.photos.filter((_, idx) => idx !== mainPhotoIndex)
-        ]
-      : []
-
-    const dto = {
-      name: form.name,
-      businessIds: [business.businessId],
-      description: form.description,
-      price: parseFloat(form.price) || 0,
-      quantity: parseInt(form.quantity, 10) || 0,
-      clothingCategoryId: form.categoryId ? +form.categoryId : null,
-      brand: form.brand,
-      model: form.model,
-      pictureUrls: orderedPhotos,
-      colors: form.colors.split(',').map(s => s.trim()),
-      sizes: SIZE_MAP[form.size] ?? 0,
-      material: form.material,
-    }
-
     try {
-      if (role === 'employee') {
-        await post('/api/ProposedChanges/submit', {
-          businessId: business.businessId,
-          type: editingId ? 'Update' : 'Create',
-          itemDto: { ...dto, clothingItemId: editingId || 0 }
-        })
-        alert('Your change has been proposed.')
-      } else {
-        if (editingId) await put(`/api/ClothingItem/${editingId}`, dto)
-        else await post('/api/ClothingItem', dto)
-        alert('Product saved!')
-        const updated = await get(`/api/ClothingItem/business/${business.businessId}`)
-        setProducts(updated)
-      }
-    } catch (err) {
-      console.error('Save error:', err)
-      alert('Failed to save product.')
-    }
+      await fetch(imgUrl, {
+        method: "PUT",
+        headers: { "Content-Type": file.type },
+        body: file,
+      })
 
-    // reset form & main-photo
+      await fetch(txtUrl, {
+        method: "PUT",
+        headers: { "Content-Type": "text/plain" },
+        body: imgUrl,
+      })
+
+      return imgUrl
+    } catch (error) {
+      console.error("Upload error:", error)
+      throw new Error("Failed to upload image")
+    }
+  }, [])
+
+  const handleFileUpload = useCallback(
+    async (files) => {
+      if (!files || files.length === 0) return
+
+      setUploading(true)
+      setError(null)
+
+      try {
+        const uploadPromises = []
+        const filesToUpload = Array.from(files).slice(0, 10 - form.photos.length)
+
+        for (const file of filesToUpload) {
+          uploadPromises.push(uploadImageToGCS(file))
+        }
+
+        const uploadedUrls = await Promise.all(uploadPromises)
+        const validUrls = uploadedUrls.filter((url) => url !== null)
+
+        if (validUrls.length > 0) {
+          setForm((prevForm) => ({
+            ...prevForm,
+            photos: [...prevForm.photos, ...validUrls],
+          }))
+
+          // Set main photo index if this is the first photo
+          setMainPhotoIndex((prevIndex) => {
+            return form.photos.length === 0 ? 0 : prevIndex
+          })
+        }
+      } catch (err) {
+        console.error("Upload error:", err)
+        setError(err.message || "Failed to upload images")
+      } finally {
+        setUploading(false)
+        if (fileInputRef.current) {
+          fileInputRef.current.value = ""
+        }
+      }
+    },
+    [form.photos.length, uploadImageToGCS],
+  )
+
+  // ─── Drag and Drop Handlers (Fixed dependencies) ─────────────────────────
+  const handleDragOver = useCallback((e) => {
+    e.preventDefault()
+    setDragOver(true)
+  }, [])
+
+  const handleDragLeave = useCallback((e) => {
+    e.preventDefault()
+    setDragOver(false)
+  }, [])
+
+  const handleDrop = useCallback(
+    (e) => {
+      e.preventDefault()
+      setDragOver(false)
+
+      const files = Array.from(e.dataTransfer.files).filter((file) => file.type.startsWith("image/"))
+
+      if (files.length > 0) {
+        handleFileUpload(files)
+      }
+    },
+    [handleFileUpload],
+  )
+
+  // ─── CRUD Operations ─────────────────────────────────────────────────────
+  const resetForm = useCallback(() => {
     setEditingId(null)
     setForm({
-      name: '', description: '', price: '', quantity: '',
-      categoryId: '', brand: '', model: '',
-      photos: [], colors: '', size: 'XS', material: '',
+      name: "",
+      description: "",
+      price: "",
+      quantity: "",
+      categoryId: "",
+      brand: "",
+      model: "",
+      photos: [],
+      colors: "",
+      size: "",
+      material: "",
     })
     setMainPhotoIndex(0)
-  }
-  // ────────────────────────────────────────────────────────────────────────────
+    setError(null)
+  }, [])
 
-  // ─── Delete or propose delete ──────────────────────────────────────────────
-  const handleDelete = async (id) => {
-    if (!business) return
+  const saveProduct = useCallback(async () => {
+    if (!businessId) return
 
-    if (role === 'employee') {
-      if (!window.confirm('Submit delete request?')) return
-      await post('/api/ProposedChanges/submit', {
-        businessId: business.businessId,
-        type: 'Delete',
-        itemDto: { clothingItemId: id, businessIds: [business.businessId] }
-      })
-      alert('Delete request submitted.')
-    } else {
-      if (!window.confirm('Permanently delete this product?')) return
-      try {
-        await del(`/api/ClothingItem/${id}`)
-        alert('Product deleted.')
-        const updated = await get(`/api/ClothingItem/business/${business.businessId}`)
-        setProducts(updated)
-      } catch (err) {
-        console.error('Delete error:', err)
-        alert('Failed to delete product.')
-      }
+    const validationErrors = validateForm()
+    if (validationErrors.length > 0) {
+      setError(validationErrors.join(", "))
+      return
     }
-  }
-  // ────────────────────────────────────────────────────────────────────────────
 
-  // ─── Populate form for edit ─────────────────────────────────────────────────
-  const startEdit = (p) => {
-    setEditingId(p.clothingItemId)
+    setLoading(true)
+    setError(null)
+
+    try {
+      // Ensure main photo is first
+      const orderedPhotos =
+        form.photos.length > 0
+          ? [form.photos[mainPhotoIndex], ...form.photos.filter((_, idx) => idx !== mainPhotoIndex)]
+          : []
+
+      const dto = {
+        name: form.name.trim(),
+        businessIds: [businessId],
+        description: form.description.trim(),
+        price: Number.parseFloat(form.price) || 0,
+        quantity: Number.parseInt(form.quantity, 10) || 0,
+        clothingCategoryId: form.categoryId ? +form.categoryId : null,
+        brand: form.brand.trim(),
+        model: form.model.trim(),
+        pictureUrls: orderedPhotos,
+        colors: form.colors
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s),
+        sizes: form.size.trim(),
+        material: form.material.trim(),
+      }
+
+      if (role === "employee") {
+        await post("/api/ProposedChanges/submit", {
+          businessId: businessId,
+          type: editingId ? "Update" : "Create",
+          itemDto: { ...dto, clothingItemId: editingId || 0 },
+        })
+        alert("Your change has been proposed and is pending approval.")
+      } else {
+        if (editingId) {
+          await put(`/api/ClothingItem/${editingId}`, dto)
+        } else {
+          await post("/api/ClothingItem", dto)
+        }
+
+        // Refresh products list
+        const updated = await get(`/api/ClothingItem/business/${businessId}`)
+        setProducts(updated || [])
+        alert("Product saved successfully!")
+      }
+
+      // Reset form
+      resetForm()
+    } catch (err) {
+      console.error("Save error:", err)
+      setError("Failed to save product. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }, [businessId, validateForm, form, mainPhotoIndex, editingId, role, post, put, get, resetForm])
+
+  const handleDelete = useCallback(
+    async (id) => {
+      if (!businessId) return
+
+      const confirmMessage =
+        role === "employee" ? "Submit delete request for approval?" : "Permanently delete this product?"
+
+      if (!window.confirm(confirmMessage)) return
+
+      setLoading(true)
+      setError(null)
+
+      try {
+        if (role === "employee") {
+          await post("/api/ProposedChanges/submit", {
+            businessId: businessId,
+            type: "Delete",
+            itemDto: { clothingItemId: id, businessIds: [businessId] },
+          })
+          alert("Delete request submitted for approval.")
+        } else {
+          await del(`/api/ClothingItem/${id}`)
+          const updated = await get(`/api/ClothingItem/business/${businessId}`)
+          setProducts(updated || [])
+          alert("Product deleted successfully.")
+        }
+      } catch (err) {
+        console.error("Delete error:", err)
+        setError("Failed to delete product. Please try again.")
+      } finally {
+        setLoading(false)
+      }
+    },
+    [businessId, role, post, del, get],
+  )
+
+  const startEdit = useCallback((product) => {
+    setEditingId(product.clothingItemId)
     setForm({
-      name: p.name,
-      description: p.description,
-      price: p.price.toString(),
-      quantity: p.quantity.toString(),
-      categoryId: p.clothingCategoryId || '',
-      brand: p.brand,
-      model: p.model,
-      photos: p.pictureUrls || [],
-      colors: Array.isArray(p.colors) ? p.colors.join(', ') : p.colors || '',
-      size: REV_SIZE_MAP[p.sizes] || 'XS',
-      material: p.material,
+      name: product.name || "",
+      description: product.description || "",
+      price: product.price?.toString() || "",
+      quantity: product.quantity?.toString() || "",
+      categoryId: product.clothingCategoryId?.toString() || "",
+      brand: product.brand || "",
+      model: product.model || "",
+      photos: product.pictureUrls || [],
+      colors: Array.isArray(product.colors) ? product.colors.join(", ") : product.colors || "",
+      size: product.sizes || "",
+      material: product.material || "",
     })
     setMainPhotoIndex(0)
-  }
-  // ────────────────────────────────────────────────────────────────────────────
+    setError(null)
+  }, [])
 
-  // ─── Filter + paginate ─────────────────────────────────────────────────────
-  const filtered = products.filter(p =>
-    [p.name, p.brand, p.model, p.description]
-      .join(' ')
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
-  )
-  const totalCount = filtered.length
-  const paginated  = filtered.slice((page - 1) * pageSize, page * pageSize)
-  // ────────────────────────────────────────────────────────────────────────────
+  const removePhoto = useCallback((indexToRemove) => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      photos: prevForm.photos.filter((_, idx) => idx !== indexToRemove),
+    }))
+
+    // Adjust main photo index
+    setMainPhotoIndex((prevIndex) => {
+      if (indexToRemove === prevIndex) {
+        return 0
+      } else if (indexToRemove < prevIndex) {
+        return prevIndex - 1
+      }
+      return prevIndex
+    })
+  }, [])
+
+  // ─── Filter and Pagination (Memoized to prevent recalculation) ───────────
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) =>
+      [product.name, product.brand, product.model, product.description]
+        .join(" ")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()),
+    )
+  }, [products, searchQuery])
+
+  const totalCount = filteredProducts.length
+  const paginatedProducts = useMemo(() => {
+    return filteredProducts.slice((page - 1) * pageSize, page * pageSize)
+  }, [filteredProducts, page, pageSize])
+
+  // ─── Render ──────────────────────────────────────────────────────────────
+  if (!business) {
+    return (
+      <div className="panel">
+        <div className="no-business-selected">
+          <h3>No Business Selected</h3>
+          <p>Please select a business to manage products.</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <>
-      <div className="panel product-form">
-        <h3>{editingId ? 'Edit Product' : 'Add New Product'}</h3>
-
-        <div className="grid two-cols">
-          <input
-            placeholder="Name"
-            value={form.name}
-            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-          />
-          <input
-            placeholder="Brand"
-            value={form.brand}
-            onChange={e => setForm(f => ({ ...f, brand: e.target.value }))}
-          />
-        </div>
-
-        <div className="grid two-cols">
-          <input
-            placeholder="Model"
-            value={form.model}
-            onChange={e => setForm(f => ({ ...f, model: e.target.value }))}
-          />
-          <input
-            type="number"
-            placeholder="Price"
-            value={form.price}
-            onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
-          />
-        </div>
-
-        <textarea
-          placeholder="Description"
-          value={form.description}
-          onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-        />
-
-        <div className="grid three-cols">
-          <input
-            type="number"
-            placeholder="Quantity"
-            value={form.quantity}
-            onChange={e => setForm(f => ({ ...f, quantity: e.target.value }))}
-          />
-          <select
-            value={form.categoryId}
-            onChange={e => setForm(f => ({ ...f, categoryId: e.target.value }))}
-          >
-            <option value="">Category…</option>
-            {categories.map(c => (
-              <option key={c.clothingCategoryId} value={c.clothingCategoryId}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-          <select
-            value={form.size}
-            onChange={e => setForm(f => ({ ...f, size: e.target.value }))}
-          >
-            {Object.keys(SIZE_MAP).map(sz => (
-              <option key={sz} value={sz}>{sz}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="grid two-cols">
-          <input
-            placeholder="Colors (comma separated)"
-            value={form.colors}
-            onChange={e => setForm(f => ({ ...f, colors: e.target.value }))}
-          />
-          <input
-            placeholder="Material"
-            value={form.material}
-            onChange={e => setForm(f => ({ ...f, material: e.target.value }))}
-          />
-        </div>
-
-        <label className="file-btn">
-          Upload Some Pictures
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={async e => {
-              let curr = [...form.photos]
-              for (let file of Array.from(e.target.files)) {
-                if (curr.length >= 10) break
-                const url = await uploadImageToGCS(file)
-                if (url) curr.push(url)
-              }
-              setForm(f => ({ ...f, photos: curr }))
-              setMainPhotoIndex(0)
-            }}
-          />
-        </label>
-
-        <div className="photo-row">
-          {form.photos.map((url, i) => (
-            <div
-              key={i}
-              className={`thumb ${i === mainPhotoIndex ? 'selected' : ''}`}
-              onClick={() => setMainPhotoIndex(i)}
-            >
-              <img src={url} alt={`photo-${i}`} />
-              <button
-                onClick={e => {
-                  e.stopPropagation()
-                  setForm(f => ({
-                    ...f,
-                    photos: f.photos.filter((_, idx) => idx !== i)
-                  }))
-                  setMainPhotoIndex(prev => {
-                    if (i === prev) return 0
-                    if (i < prev)   return prev - 1
-                    return prev
-                  })
-                }}
-              >×</button>
+      {/* Error Display */}
+      {error && (
+        <div className="panel error">
+          <div className="error-message">
+            <span className="error-icon">⚠️</span>
+            <div>
+              <h4>Error</h4>
+              <p>{error}</p>
             </div>
-          ))}
+            <button onClick={() => setError(null)} className="error-close">
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Product Form */}
+      <div className="panel product-form">
+        <h3>
+          <span className="panel-icon">📦</span>
+          {editingId ? "Edit Product" : "Add New Product"}
+        </h3>
+
+        <div className="form-group">
+          <div className="grid two-cols">
+            <div className="form-group">
+              <label htmlFor="product-name">Product Name *</label>
+              <input
+                id="product-name"
+                placeholder="Enter product name"
+                value={form.name}
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                disabled={loading}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="product-brand">Brand</label>
+              <input
+                id="product-brand"
+                placeholder="Enter brand name"
+                value={form.brand}
+                onChange={(e) => setForm((f) => ({ ...f, brand: e.target.value }))}
+                disabled={loading}
+              />
+            </div>
+          </div>
         </div>
 
+        <div className="form-group">
+          <div className="grid two-cols">
+            <div className="form-group">
+              <label htmlFor="product-model">Model</label>
+              <input
+                id="product-model"
+                placeholder="Enter model"
+                value={form.model}
+                onChange={(e) => setForm((f) => ({ ...f, model: e.target.value }))}
+                disabled={loading}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="product-price">Price *</label>
+              <input
+                id="product-price"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="0.00"
+                value={form.price}
+                onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+                disabled={loading}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="product-description">Description</label>
+          <textarea
+            id="product-description"
+            placeholder="Enter product description"
+            value={form.description}
+            onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+            disabled={loading}
+          />
+        </div>
+
+        <div className="form-group">
+          <div className="grid three-cols">
+            <div className="form-group">
+              <label htmlFor="product-quantity">Quantity *</label>
+              <input
+                id="product-quantity"
+                type="number"
+                min="0"
+                placeholder="0"
+                value={form.quantity}
+                onChange={(e) => setForm((f) => ({ ...f, quantity: e.target.value }))}
+                disabled={loading}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="product-category">Category</label>
+              <select
+                id="product-category"
+                value={form.categoryId}
+                onChange={(e) => setForm((f) => ({ ...f, categoryId: e.target.value }))}
+                disabled={loading}
+              >
+                <option value="">Select category...</option>
+                {categories.map((category) => (
+                  <option key={category.clothingCategoryId} value={category.clothingCategoryId}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="product-size">Size</label>
+              <input
+                id="product-size"
+                placeholder="e.g. M, 32W, One-Size"
+                value={form.size}
+                onChange={(e) => setForm((f) => ({ ...f, size: e.target.value }))}
+                disabled={loading}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <div className="grid two-cols">
+            <div className="form-group">
+              <label htmlFor="product-colors">Colors</label>
+              <input
+                id="product-colors"
+                placeholder="Red, Blue, Green (comma separated)"
+                value={form.colors}
+                onChange={(e) => setForm((f) => ({ ...f, colors: e.target.value }))}
+                disabled={loading}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="product-material">Material</label>
+              <input
+                id="product-material"
+                placeholder="Cotton, Polyester, etc."
+                value={form.material}
+                onChange={(e) => setForm((f) => ({ ...f, material: e.target.value }))}
+                disabled={loading}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Photo Upload */}
+        <div className="form-group">
+          <label>Product Photos</label>
+          <label className="file-btn" disabled={uploading || loading}>
+            {uploading ? "⏳ Uploading..." : "📁 Upload Photos"}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => handleFileUpload(e.target.files)}
+              disabled={uploading || loading}
+            />
+          </label>
+
+          <div
+            className={`photo-row ${dragOver ? "drag-over" : ""}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            {form.photos.length === 0 && !uploading && (
+              <div className="empty-photos">📸 Drop photos here or click upload button</div>
+            )}
+
+            {form.photos.map((url, index) => (
+              <div
+                key={`${url}-${index}`}
+                className={`thumb ${index === mainPhotoIndex ? "selected" : ""}`}
+                onClick={() => setMainPhotoIndex(index)}
+                title={index === mainPhotoIndex ? "Main photo" : "Click to set as main photo"}
+              >
+                <img src={url || "/placeholder.svg"} alt={`Product photo ${index + 1}`} />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    removePhoto(index)
+                  }}
+                  disabled={loading}
+                  title="Remove photo"
+                >
+                  ×
+                </button>
+                {index === mainPhotoIndex && <div className="main-photo-badge">Main</div>}
+              </div>
+            ))}
+
+            {uploading && (
+              <div className="upload-progress">
+                <div className="loading-spinner"></div>
+              </div>
+            )}
+          </div>
+
+          {form.photos.length > 0 && (
+            <p className="photo-help">Click on a photo to set it as the main image. Maximum 10 photos allowed.</p>
+          )}
+        </div>
+
+        {/* Action Buttons */}
         <div className="actions">
-          <button onClick={saveProduct}>{editingId ? 'Save' : 'Add'}</button>
+          <button onClick={saveProduct} disabled={loading || uploading} className="primary">
+            {loading ? "⏳ Saving..." : editingId ? "Update Product" : "Add Product"}
+          </button>
+
           {editingId && (
-            <button
-              onClick={() => {
-                setEditingId(null)
-                setForm({
-                  name: '', description: '', price: '', quantity: '',
-                  categoryId: '', brand: '', model: '',
-                  photos: [], colors: '', size: 'XS', material: '',
-                })
-                setMainPhotoIndex(0)
-              }}
-              className="cancel"
-            >
+            <button onClick={resetForm} disabled={loading} className="secondary">
               Cancel
             </button>
           )}
         </div>
       </div>
 
+      {/* Products List */}
       <div className="panel product-list">
-        <h3>Products</h3>
-        <input
-          className="search"
-          type="text"
-          placeholder="Search…"
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-        />
+        <h3>
+          <span className="panel-icon">📋</span>
+          Products ({totalCount})
+        </h3>
 
-        <ul>
-          {paginated.length > 0 ? (
-            paginated.map(p => ([
-              <li key={p.clothingItemId}>
-                <span>{p.name} – {p.model} (${p.price})</span>
-                <div className="btns">
-                  <button onClick={() => startEdit(p)}>Edit</button>
-                  <button onClick={() => handleDelete(p.clothingItemId)}>
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ]))
+        <div className="product-list-content">
+          <div className="form-group">
+            <input
+              className="search"
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              disabled={loading}
+            />
+          </div>
+
+          {loading && products.length === 0 ? (
+            <div className="loading-state">
+              <div className="loading-spinner"></div>
+              <p>Loading products...</p>
+            </div>
           ) : (
-            <li className="no-results">No products match.</li>
+            <ul>
+              {paginatedProducts.length > 0 ? (
+                paginatedProducts.map((p) => (
+                  <li key={p.clothingItemId}>
+                    <div className="product-card-icon">📦</div>
+                    <div className="product-info">
+                      <div className="product-name">
+                        {p.name}
+                        {p.brand && <span className="product-brand"> - {p.brand}</span>}
+                      </div>
+                      <div className="product-details">
+                        {p.model && <span>Model: {p.model}</span>}
+                        <span className="price">Price: ${p.price}</span>
+                        {p.sizes && <span>Size: {p.sizes}</span>}
+                        <span className="quantity">Qty: {p.quantity}</span>
+                      </div>
+                    </div>
+                    <div className="btns">
+                      <button onClick={() => startEdit(p)} disabled={loading} className="edit">
+                        ✏️ Edit
+                      </button>
+                      <button onClick={() => handleDelete(p.clothingItemId)} disabled={loading} className="delete">
+                        🗑️ Delete
+                      </button>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <li className="no-results">{searchQuery ? "No products match your search." : "No products found."}</li>
+              )}
+            </ul>
           )}
-        </ul>
 
-        <Pagination
-          page={page}
-          pageSize={pageSize}
-          totalCount={totalCount}
-          onPageChange={setPage}
-          maxButtons={5}
-        />
+          {totalCount > pageSize && (
+            <Pagination page={page} pageSize={pageSize} totalCount={totalCount} onPageChange={setPage} maxButtons={5} />
+          )}
+        </div>
       </div>
     </>
   )
