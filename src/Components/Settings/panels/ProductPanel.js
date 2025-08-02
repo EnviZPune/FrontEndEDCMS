@@ -11,6 +11,12 @@ export default function ProductPanel({ business }) {
   const { role } = useAuth()
   const fileInputRef = useRef(null)
 
+  // keep a stable reference to get to avoid effect loops
+  const getRef = useRef(get)
+  useEffect(() => {
+    getRef.current = get
+  }, [get])
+
   // ─── State Management ────────────────────────────────────────────────────
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
@@ -39,19 +45,18 @@ export default function ProductPanel({ business }) {
   const [mainPhotoIndex, setMainPhotoIndex] = useState(0)
   const [dragOver, setDragOver] = useState(false)
 
-  // ─── Memoized Values ─────────────────────────────────────────────────────
   const businessId = business?.businessId
 
-  // ─── Form Validation (Fixed dependency) ──────────────────────────────────
+  // ─── Form Validation ─────────────────────────────────────────────────────
   const validateForm = useCallback(() => {
     const errors = []
     if (!form.name.trim()) errors.push("Product name is required")
     if (!form.price || Number.parseFloat(form.price) <= 0) errors.push("Valid price is required")
     if (!form.quantity || Number.parseInt(form.quantity) < 0) errors.push("Valid quantity is required")
     return errors
-  }, [form.name, form.price, form.quantity]) // Only depend on specific form fields
+  }, [form.name, form.price, form.quantity])
 
-  // ─── Load Data (Fixed dependencies) ──────────────────────────────────────
+  // ─── Load Data ───────────────────────────────────────────────────────────
   useEffect(() => {
     if (!businessId) return
 
@@ -63,8 +68,8 @@ export default function ProductPanel({ business }) {
 
       try {
         const [prods, cats] = await Promise.all([
-          get(`/api/ClothingItem/business/${businessId}`),
-          get(`/api/ClothingCategory/business/${businessId}`),
+          getRef.current(`/api/ClothingItem/business/${businessId}`),
+          getRef.current(`/api/ClothingCategory/business/${businessId}`),
         ])
 
         if (!cancelled) {
@@ -79,23 +84,20 @@ export default function ProductPanel({ business }) {
           setCategories([])
         }
       } finally {
-        if (!cancelled) {
-          setLoading(false)
-        }
+        if (!cancelled) setLoading(false)
       }
     }
 
     loadData()
-
     return () => {
       cancelled = true
     }
-  }, [businessId]) // Remove get from dependencies to prevent infinite loop
+  }, [businessId])
 
-  // Reset page when search or products change (Fixed dependencies)
+  // Reset page when search or products change
   useEffect(() => {
     setPage(1)
-  }, [searchQuery, products.length]) // Use products.length instead of products array
+  }, [searchQuery, products.length])
 
   // ─── Image Upload Helpers ────────────────────────────────────────────────
   const uploadImageToGCS = useCallback(async (file) => {
@@ -130,8 +132,8 @@ export default function ProductPanel({ business }) {
       })
 
       return imgUrl
-    } catch (error) {
-      console.error("Upload error:", error)
+    } catch (uploadErr) {
+      console.error("Upload error:", uploadErr)
       throw new Error("Failed to upload image")
     }
   }, [])
@@ -160,14 +162,13 @@ export default function ProductPanel({ business }) {
             photos: [...prevForm.photos, ...validUrls],
           }))
 
-          // Set main photo index if this is the first photo
           setMainPhotoIndex((prevIndex) => {
             return form.photos.length === 0 ? 0 : prevIndex
           })
         }
       } catch (err) {
         console.error("Upload error:", err)
-        setError(err.message || "Failed to upload images")
+        setError(err?.message || "Failed to upload images")
       } finally {
         setUploading(false)
         if (fileInputRef.current) {
@@ -178,7 +179,7 @@ export default function ProductPanel({ business }) {
     [form.photos.length, uploadImageToGCS],
   )
 
-  // ─── Drag and Drop Handlers (Fixed dependencies) ─────────────────────────
+  // ─── Drag and Drop Handlers ─────────────────────────────────────────────
   const handleDragOver = useCallback((e) => {
     e.preventDefault()
     setDragOver(true)
@@ -194,7 +195,9 @@ export default function ProductPanel({ business }) {
       e.preventDefault()
       setDragOver(false)
 
-      const files = Array.from(e.dataTransfer.files).filter((file) => file.type.startsWith("image/"))
+      const files = Array.from(e.dataTransfer.files).filter((file) =>
+        file.type.startsWith("image/"),
+      )
 
       if (files.length > 0) {
         handleFileUpload(files)
@@ -236,7 +239,6 @@ export default function ProductPanel({ business }) {
     setError(null)
 
     try {
-      // Ensure main photo is first
       const orderedPhotos =
         form.photos.length > 0
           ? [form.photos[mainPhotoIndex], ...form.photos.filter((_, idx) => idx !== mainPhotoIndex)]
@@ -256,7 +258,7 @@ export default function ProductPanel({ business }) {
           .split(",")
           .map((s) => s.trim())
           .filter((s) => s),
-        sizes: form.size.trim(),
+        sizes: (form.size || "").trim(),
         material: form.material.trim(),
       }
 
@@ -274,21 +276,24 @@ export default function ProductPanel({ business }) {
           await post("/api/ClothingItem", dto)
         }
 
-        // Refresh products list
-        const updated = await get(`/api/ClothingItem/business/${businessId}`)
+        // Refresh list
+        const updated = await getRef.current(`/api/ClothingItem/business/${businessId}`)
         setProducts(updated || [])
         alert("Product saved successfully!")
       }
 
-      // Reset form
       resetForm()
     } catch (err) {
-      console.error("Save error:", err)
-      setError("Failed to save product. Please try again.")
+      console.error("Save error detail:", err)
+      if (err?.message) {
+        setError(`Failed to save product: ${err.message}`)
+      } else {
+        setError("Failed to save product. Please check console/network for details.")
+      }
     } finally {
       setLoading(false)
     }
-  }, [businessId, validateForm, form, mainPhotoIndex, editingId, role, post, put, get, resetForm])
+  }, [businessId, validateForm, form, mainPhotoIndex, editingId, role, post, put, resetForm])
 
   const handleDelete = useCallback(
     async (id) => {
@@ -312,18 +317,22 @@ export default function ProductPanel({ business }) {
           alert("Delete request submitted for approval.")
         } else {
           await del(`/api/ClothingItem/${id}`)
-          const updated = await get(`/api/ClothingItem/business/${businessId}`)
+          const updated = await getRef.current(`/api/ClothingItem/business/${businessId}`)
           setProducts(updated || [])
           alert("Product deleted successfully.")
         }
       } catch (err) {
-        console.error("Delete error:", err)
-        setError("Failed to delete product. Please try again.")
+        console.error("Delete error detail:", err)
+        if (err?.message) {
+          setError(`Failed to delete product: ${err.message}`)
+        } else {
+          setError("Failed to delete product. Please check console/network for details.")
+        }
       } finally {
         setLoading(false)
       }
     },
-    [businessId, role, post, del, get],
+    [businessId, role, post, del],
   )
 
   const startEdit = useCallback((product) => {
@@ -338,7 +347,9 @@ export default function ProductPanel({ business }) {
       model: product.model || "",
       photos: product.pictureUrls || [],
       colors: Array.isArray(product.colors) ? product.colors.join(", ") : product.colors || "",
-      size: product.sizes || "",
+      size: Array.isArray(product.sizes)
+        ? product.sizes.join(", ")
+        : product.sizes?.toString() || "",
       material: product.material || "",
     })
     setMainPhotoIndex(0)
@@ -351,7 +362,6 @@ export default function ProductPanel({ business }) {
       photos: prevForm.photos.filter((_, idx) => idx !== indexToRemove),
     }))
 
-    // Adjust main photo index
     setMainPhotoIndex((prevIndex) => {
       if (indexToRemove === prevIndex) {
         return 0
@@ -362,7 +372,7 @@ export default function ProductPanel({ business }) {
     })
   }, [])
 
-  // ─── Filter and Pagination (Memoized to prevent recalculation) ───────────
+  // ─── Filter and Pagination ───────────────────────────────────────────────
   const filteredProducts = useMemo(() => {
     return products.filter((product) =>
       [product.name, product.brand, product.model, product.description]
@@ -602,7 +612,9 @@ export default function ProductPanel({ business }) {
           </div>
 
           {form.photos.length > 0 && (
-            <p className="photo-help">Click on a photo to set it as the main image. Maximum 10 photos allowed.</p>
+            <p className="photo-help">
+              Click on a photo to set it as the main image. Maximum 10 photos allowed.
+            </p>
           )}
         </div>
 
@@ -649,8 +661,6 @@ export default function ProductPanel({ business }) {
               {paginatedProducts.length > 0 ? (
                 paginatedProducts.map((p) => (
                   <li key={p.clothingItemId}>
-                    <div className="product-card-icon">📦</div>
-                    <div className="product-info">
                       <div className="product-name">
                         {p.name}
                         {p.brand && <span className="product-brand"> - {p.brand}</span>}
@@ -661,7 +671,6 @@ export default function ProductPanel({ business }) {
                         {p.sizes && <span>Size: {p.sizes}</span>}
                         <span className="quantity">Qty: {p.quantity}</span>
                       </div>
-                    </div>
                     <div className="btns">
                       <button onClick={() => startEdit(p)} disabled={loading} className="edit">
                         ✏️ Edit
@@ -673,7 +682,9 @@ export default function ProductPanel({ business }) {
                   </li>
                 ))
               ) : (
-                <li className="no-results">{searchQuery ? "No products match your search." : "No products found."}</li>
+                <li className="no-results">
+                  {searchQuery ? "No products match your search." : "No products found."}
+                </li>
               )}
             </ul>
           )}

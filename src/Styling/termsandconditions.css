@@ -93,7 +93,6 @@
 
 @media (max-width: 600px) {
   .policy-container {
-    margin: var(--spacing);
     padding: var(--spacing);
   }
   .policy-container h1 {

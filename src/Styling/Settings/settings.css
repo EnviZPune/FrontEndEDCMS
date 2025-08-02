@@ -586,6 +586,14 @@
   }
 }
 
+.welcome-message {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+
 /* Focus States */
 .settings-component .settings-sidebar li:focus-visible,
 .settings-component .panel button:focus-visible,

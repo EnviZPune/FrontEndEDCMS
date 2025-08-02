@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
@@ -15,10 +15,16 @@ const getToken = () => {
   }
 };
 
-const getHeaders = () => ({
-  'Content-Type': 'application/json',
-  Authorization: `Bearer ${getToken()}`,
-});
+const getHeaders = () => {
+  const token = getToken();
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return headers;
+};
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
@@ -27,6 +33,7 @@ const ProductDetailsPage = () => {
   const [mainImage, setMainImage] = useState(null);
   const [shopSlug, setShopSlug] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [booking, setBooking] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -34,14 +41,14 @@ const ProductDetailsPage = () => {
         const res = await fetch(`http://77.242.26.150:8000/api/ClothingItem/${id}`, {
           headers: getHeaders(),
         });
-    
+
         if (!res.ok) {
           throw new Error(`Product fetch failed with status ${res.status}`);
         }
-    
+
         const data = await res.json();
         setProduct(data);
-    
+
         let parsedImages = [];
         if (Array.isArray(data.pictureUrls)) {
           parsedImages = data.pictureUrls;
@@ -52,20 +59,19 @@ const ProductDetailsPage = () => {
             parsedImages = [];
           }
         }
-    
+
         if (parsedImages.length > 0) setMainImage(parsedImages[0]);
-    
+
         if (data.businessId) {
           const shopRes = await fetch(`http://77.242.26.150:8000/api/Business/${data.businessId}`, {
             headers: getHeaders(),
           });
-    
+
           if (shopRes.ok) {
             const shopData = await shopRes.json();
             setShopSlug(shopData.slug);
           }
         }
-    
       } catch (error) {
         console.error('Failed to load product:', error);
         setProduct(null);
@@ -86,6 +92,8 @@ const ProductDetailsPage = () => {
       alert('Please log in to make a reservation.');
       return;
     }
+
+    setBooking(true);
     try {
       const res = await fetch('http://77.242.26.150:8000/api/Reservation', {
         method: 'POST',
@@ -101,32 +109,24 @@ const ProductDetailsPage = () => {
     } catch (e) {
       console.error('Reservation error:', e);
       alert('An error occurred while booking.');
+    } finally {
+      setBooking(false);
     }
   };
 
+  const parsedImages = useMemo(() => {
+    if (!product) return [];
+    try {
+      return Array.isArray(product.pictureUrls)
+        ? product.pictureUrls
+        : JSON.parse(product.pictureUrls || '[]');
+    } catch {
+      return [];
+    }
+  }, [product]);
+
   if (loading) return <div>Loading...</div>;
   if (!product) return <div>Product not found.</div>;
-
-  let parsedImages = [];
-  try {
-    parsedImages = Array.isArray(product.pictureUrls)
-      ? product.pictureUrls
-      : JSON.parse(product.pictureUrls || '[]');
-  } catch {
-    parsedImages = [];
-  }
-
-  // Debug: log JWT claims to console
-  (async () => {
-    const token = getToken();
-    if (!token) return;
-    const res = await fetch('http://77.242.26.150:8000/api/Reservation/claims', {
-      headers: getHeaders(),
-    });
-    if (res.ok) {
-      console.log('Claims:', await res.json());
-    }
-  })();
 
   return (
     <>
@@ -135,7 +135,13 @@ const ProductDetailsPage = () => {
         <div className="top-back-button-wrapper">
           <button
             className="back-to-shop-button"
-            onClick={() => navigate(shopSlug ? `/shop/${shopSlug}` : '/')}
+            onClick={() => {
+              if (shopSlug) {
+                navigate(`/shop/${shopSlug}`);
+              } else {
+                navigate(-1);
+              }
+            }}
           >
             ← Back to Shop
           </button>
@@ -160,20 +166,37 @@ const ProductDetailsPage = () => {
           </div>
 
           <div className="product-info">
-            <h1>{product.name} – {product.brand}</h1>
-            <p><strong>Model:</strong> {product.model}</p>
-            <p><strong>Description:</strong> {product.description}</p>
-            <p><strong>Price:</strong> ${product.price}</p>
-            <p><strong>Quantity:</strong> {product.quantity}</p>
-            <p><strong>Material:</strong> {product.material}</p>
-            <p><strong>Colors:</strong> {product.colors}</p>
-            <p><strong>Size:</strong> {product.sizes}</p>
+            <h1>
+              {product.name} – {product.brand}
+            </h1>
+            <p>
+              <strong>Model:</strong> {product.model}
+            </p>
+            <p>
+              <strong>Description:</strong> {product.description}
+            </p>
+            <p>
+              <strong>Price:</strong> ${product.price}
+            </p>
+            <p>
+              <strong>Quantity:</strong> {product.quantity}
+            </p>
+            <p>
+              <strong>Material:</strong> {product.material}
+            </p>
+            <p>
+              <strong>Colors:</strong> {product.colors}
+            </p>
+            <p>
+              <strong>Size:</strong> {product.sizes}
+            </p>
 
             <button
               className="rezerve-button"
               onClick={handleReserve}
+              disabled={booking}
             >
-              Book Product
+              {booking ? 'Booking this product...' : 'Book Product'}
             </button>
           </div>
         </div>

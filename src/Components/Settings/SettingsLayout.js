@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import { Navigate } from "react-router-dom"
 import Navbar from "../Navbar"
 import "../../Styling/Settings/settings.css"
 
@@ -15,8 +16,8 @@ const PANEL_DEFS = [
   { key: "DeleteBusiness", label: "Delete Business", icon: "🗑️" },
 ]
 
-// panels employees are allowed to see
 const EMPLOYEE_ALLOWED = new Set(["Products", "Categories", "MyShops", "Reservations"])
+const ALLOWED_ROLES = new Set(["owner", "employee"])
 
 export default function SettingsLayout({
   businesses,
@@ -25,19 +26,23 @@ export default function SettingsLayout({
   selectedPanel,
   onSelectPanel,
   userRole,
+  ownerName,
   children,
 }) {
   const isOwner = userRole === "owner"
 
-  // Filter which panels to show in the sidebar
+  const unauthorized = userRole != null && !ALLOWED_ROLES.has(userRole)
   const visiblePanels = PANEL_DEFS.filter((p) => isOwner || EMPLOYEE_ALLOWED.has(p.key))
 
-  // If the currently selected panel is not allowed, reset to first
   useEffect(() => {
     if (!visiblePanels.some((p) => p.key === selectedPanel)) {
       onSelectPanel(visiblePanels[0]?.key)
     }
   }, [visiblePanels, selectedPanel, onSelectPanel])
+
+  if (unauthorized) {
+    return <Navigate to="/unauthorized" replace />
+  }
 
   const handleBusinessChange = (e) => {
     const id = Number.parseInt(e.target.value, 10)
@@ -78,7 +83,22 @@ export default function SettingsLayout({
           </aside>
           <section className="settings-content">
             {selectedBusiness ? (
-              <div className="NO-USE!">{children}</div>
+              <div className="panel">
+                {isOwner && (selectedBusiness?.ownerName || ownerName) && (
+                  <div
+                    className="welcome-message"
+                    style={{
+                      fontSize: "1.5rem",
+                      fontWeight: "600",
+                      marginBottom: "1rem",
+                      color: "#333",
+                    }}
+                  >
+                    Welcome, {selectedBusiness?.ownerName || ownerName}!
+                  </div>
+                )}
+                {children}
+              </div>
             ) : (
               <div className="panel">
                 <div className="no-business-selected">

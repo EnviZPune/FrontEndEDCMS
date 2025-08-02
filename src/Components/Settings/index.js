@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
+import { useNavigate } from "react-router-dom"
 import SettingsLayout from "./SettingsLayout"
 import BusinessInfoPanel from "./panels/BusinessInfoPanel"
 import ProductPanel from "./panels/ProductPanel"
@@ -13,13 +14,21 @@ import DeleteBusinessPanel from "./panels/DeleteBusinessPanel"
 import { useBusinesses } from "./hooks/useBusinesses"
 import { useAuth } from "./hooks/useAuth"
 
+const ALLOWED_ROLES = new Set(["owner", "employee"])
+
 export default function Settings() {
+  const navigate = useNavigate()
   const { businesses, loading, error } = useBusinesses()
-  const { role } = useAuth() // ← get role from JWT
+  const { role, userInfo } = useAuth()
   const [selectedBusiness, setSelectedBusiness] = useState(null)
   const [selectedPanel, setSelectedPanel] = useState("BusinessInfo")
 
-  // initialize selectedBusiness once
+  useEffect(() => {
+    if (role != null && !ALLOWED_ROLES.has(role)) {
+      navigate("/unauthorized", { replace: true })
+    }
+  }, [role, navigate])
+
   useEffect(() => {
     if (!loading && businesses.length > 0 && !selectedBusiness) {
       setSelectedBusiness(businesses[0])
@@ -67,7 +76,6 @@ export default function Settings() {
     )
   }
 
-  // all panels
   const panels = {
     BusinessInfo: <BusinessInfoPanel business={selectedBusiness} />,
     Products: <ProductPanel business={selectedBusiness} />,
@@ -88,7 +96,8 @@ export default function Settings() {
       onSelectBusiness={handleSelectBusiness}
       selectedPanel={selectedPanel}
       onSelectPanel={handleSelectPanel}
-      userRole={role} // ← pass role down
+      userRole={role}
+      ownerName={userInfo?.firstName}
     >
       {panels[selectedPanel]}
     </SettingsLayout>

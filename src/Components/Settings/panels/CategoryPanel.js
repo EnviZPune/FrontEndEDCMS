@@ -1,167 +1,289 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
+import { FaSearch } from 'react-icons/fa'
 import { useApiClient } from '../hooks/useApiClient'
 import '../../../Styling/Settings/categorypanel.css'
 
 const PREMADE_CATEGORIES = [
+  'Ankle Boots',
+  'Athletic Shoes',
+  'Ballet Flats',
+  'Belt',
   'Bandana',
-  'Baletkë',
-  'Belkë',
-  'Bluzë',
-  'Bluzë me mëngë të gjata',
-  'Bluzë me mëngë të shkurtra',
-  'Boxera',
-  'Breteshe',
+  'Beanie',
+  'Bikini',
+  'Blazer',
+  'Blouse',
+  'Bodycon Dress',
+  'Bodysuit',
+  'Bomb­er Jacket',
+  'Boots',
+  'Boyfriend Jeans',
   'Bra',
-  'Çanta dore',
-  'Çanta shpine',
-  'Çizme',
-  'Çizme Chelsea',
-  'Çizme deri në gju',
-  'Çizme shpute',
-  'Çorape',
-  'Çorape leshi',
-  'Çorape pambuku',
-  'Çorape sportive',
-  'Doreza',
-  'Fanellë futbolli',
-  'Fustan',
-  'Fustan ballo',
-  'Fustan dasmë',
-  'Fustan folklorik',
-  'Fustan maxi',
-  'Fustan sundrese',
-  'Fustan veror',
-  'Jeans/Xhinse',
-  'Jeans të ngushta',
-  'Jeans të shkurtra',
-  'Jelekë',
-  'Jelekë izoluese',
-  'Kaftan',
-  'Kapelë bejsbolli',
-  'Kapelë Fedora',
-  'Kapelë kovë',
-  'Kapelë Panama',
-  'Kapuçë',
-  'Kardigan',
-  'Këmishë',
-  'Këmishë elegante',
-  'Këmishë nate',
-  'Këmishë të brendshme',
-  'Këpucë',
-  'Këpucë atletike (Atlete)',
-  'Këpucë Chelsea',
-  'Këpucë me merkuriale',
-  'Këpucë pa taka (Flats)',
-  'Këpucë sportive',
-  'Leggingje',
-  'Lingjeri',
+  'Bucket Hat',
+  'Caftan',
+  'Cardigan',
+  'Chelsea Boots',
+  'Chinos',
+  'Cleats',
+  'Cotton Socks',
+  'Crop Top',
+  'Denim Jacket',
+  'Denim Shorts',
+  'Dress',
+  'Down Jacket',
+  'Evening Gown',
+  'Flats',
+  'Flip Flops',
+  'Gloves',
+  'Handbag',
+  'Hood',
+  'Hoodie/Sweatshirt',
+  'Jeans',
+  'Jumpsuit',
+  'Knee-High Boots',
+  'Kimono',
+  'Leggings',
   'Loafers',
-  'Maikë (Tank-top)',
-  'Mokasina',
-  'Opinga',
-  'Pantallona',
-  'Pantallona Chino',
-  'Pantallona yoga',
+  'Long Sleeve Blouse',
+  'Maternity Dress',
+  'Mesh Top',
+  'Mini Skirt',
+  'Moccasins',
+  'Mules',
+  'Nightshirt',
   'Parka',
-  'Pantofole',
-  'Pizhama',
-  'Ponço',
-  'Pumpa të larta (Taka)',
-  'Pullover',
-  'Polo-këmishë',
-  'Qeleshë',
-  'Qeleshe leshi',
-  'Rrip',
-  'Rroba banje',
-  'Rompër',
-  'Salopetë (Jumpsuit)',
-  'Sandale',
-  'Scarfs/Shall',
-  'Shall',
-  'Skirtë',
-  'Skirtë midi',
+  'Peacoat',
+  'Pencil Skirt',
+  'Polo Shirt',
+  'Poncho',
+  'Pajamas',
+  'Raincoat',
+  'Romper',
+  'Sandals',
+  'Scarf/Shawl',
+  'Shawl',
+  'Short Shorts',
+  'Short Sleeve Blouse',
   'Shorts',
-  'Shorts të shkurtra',
-  'Strump/Çorape të holla',
-  'Sweatpants/Pantallona triko',
-  'Sweatshirts/Hoodies',
-  'Tangë',
-  'T-Shirt',
-  'Trening',
-  'Tuta sportive',
-  'Uniforma',
-  'Veste',
-  'Xhaketë bomber',
-  'Xhaketë denim',
-  'Xhaketë kundër erës',
-  'Xhaketë lëkure',
-  'Xhaketë me pendë (Down jacket)',
-  'Xhaketë puffer'
-].sort((a, b) => a.localeCompare(b, 'sq'))
+  'Skinny Jeans',
+  'Skirt',
+  'Slippers',
+  'Soccer Jersey',
+  'Sports Socks',
+  'Sportswear',
+  'Stockings',
+  'Suspenders',
+  'Swimwear',
+  'Tank Top',
+  'Thongs',
+  'Tracksuit',
+  'Trench Coat',
+  'Trousers',
+  'T-shirt',
+  'Uniform',
+  'Anorak',
+  'Blouson Jacket',
+  'Cape',
+  'Coveralls',
+  'Duffle Coat',
+  'Flight Jacket',
+  'Motorcycle Jacket',
+  'Overcoat',
+  'Slicker',
+  // Bottoms
+  'Cargo Pants',
+  'Culottes',
+  'Dungarees/Overalls',
+  'Palazzo Pants',
+  'Pea Coat',
+  'Tuxedo Pants',  
+  // Formal & Tailored
+  'Dinner Jacket',
+  'Suit',
+  'Tailcoat',
+  'Tuxedo',
+  // Knitwear
+  'Fisherman Sweater',
+  'Turtleneck',
+  // Active & Loungewear
+  'Bike Shorts',
+  'Board Shorts',
+  'Compression Tights',
+  'Lounge Set',
+  'Rash Guard',
+  'Sweatpants',
+  // Undergarments
+  'Boxer Briefs',
+  'Briefs',
+  'Corset',
+  'Long Johns',
+  'Nursing Bra',
+  'Sports Bra',
+  // Accessories
+  'Backpack',
+  'Bow Tie',
+  'Clutch',
+  'Cufflinks',
+  'Earrings',
+  'Fanny Pack',
+  'Messenger Bag',
+  'Necklace',
+  'Pocket Square',
+  'Ring',
+  'Satchel',
+  'Sunglasses',
+  'Tie',
+  'Tie Clip',
+  'Umbrella',
+  'Watch',
+  'Undershirt',
+  'Vest',
+  'Wide Leg Jeans',
+  'Wool Qeleshe (Traditional Hat)',
+  'Wool Socks',
+    'Anorak',
+  'Blouson Jacket',
+  'Cape',
+  'Culottes',
+  'Harem Pants',
+  'Utility Vest',
+  'Windbreaker',
+  'Fleece Jacket',
+  'Leather Pants',
+  'Pleated Skirt',
+  'A-Line Skirt',
+  'Wrap Dress',
+  'Sheath Dress',
+  'Fishnet Tights',
+  'Leg Warmers',
+  'Thermal Underwear',
+  'Swim Trunks',
+  'Base Layer',
+  'Babydoll Dress',
+  'Boiler Suit',
+  'Capri Pants',
+  'Cargo Shorts',
+  'Chore Jacket',
+  'Cigarette Pants',
+  'Duster Coat',
+  'Halter Top',
+  'Off-the-Shoulder Top',
+  'One-Shoulder Top',
+  'Peplum Top',
+  'Pullover',
+  'Shacket',
+  'Shirt Dress',
+  'Skort',
+  'Tunic',
+  'Tunic Dress',
+  'Bandeau Top',
+  'Bolero',
+  'Crewneck Sweater',
+  'Cropped Jeans',
+  'Cropped Pants',
+  'Flare Jeans',
+  'Bootcut Jeans',
+  'Mom Jeans',
+  'Sweater Dress',
+  'T-Shirt Dress',
+  'Swing Dress',
+  'Maxi Dress',
+  'Pinafore Dress',
+  'Paperbag Waist Pants',
+  'High-Waisted Pants',
+  'Joggers',
+  'Utility Jumpsuit',
+  'Hoodie',
+  'Socks',
+  'Underwear',
+  'Panties',
+  'Coat',
+  'Jacket',
+  'Sweater',
+  'Formal Dresses',
+  'Normal Bra',
+  'Robes',
+  'Swim Suit',
+  'Heels',
+  'Hats',
+  'Caps',
+  'Bracelet',
+  'Gold',
+  'Silver',
+  'Button Up Shirts'
+]
+  .filter((v, i, a) => a.indexOf(v) === i) // dedupe
+  .sort((a, b) => a.localeCompare(b, 'en'))
 
 export default function CategoryPanel({ business }) {
   const { get, post, put, del } = useApiClient()
 
-  const [categories, setCategories]         = useState([])
-  const [premadeOptions, setPremadeOptions] = useState([])
-  const [showPremade, setShowPremade]       = useState(false)
-  const [premadePage, setPremadePage]       = useState(1)
-
-  const [newCategory, setNewCategory]       = useState({ name: '' })
+  const [categories, setCategories]           = useState([])
+  const [premadeOptions, setPremadeOptions]   = useState(PREMADE_CATEGORIES)
+  const [showPremade, setShowPremade]         = useState(false)
+  const [premadePage, setPremadePage]         = useState(1)
+  const [newCategory, setNewCategory]         = useState({ name: '' })
   const [editingCategory, setEditingCategory] = useState(null)
+  const [searchTerm, setSearchTerm]           = useState('')
 
   const ITEMS_PER_PAGE = 10
 
   useEffect(() => {
-    setPremadeOptions([...PREMADE_CATEGORIES].sort((a, b) =>
-      a.localeCompare(b, 'sq')
-    ))
-  }, [])
-
-  useEffect(() => {
-    if (!business?.businessId) return
     fetchCategories()
   }, [business?.businessId])
 
   async function fetchCategories() {
+    if (!business?.businessId) return
+
     try {
       const data = await get(`/api/ClothingCategory/business/${business.businessId}`)
       setCategories(data)
 
       const existing = new Set(data.map(c => c.name))
       setPremadeOptions(
-        PREMADE_CATEGORIES
-          .filter(name => !existing.has(name))
-          .sort((a, b) => a.localeCompare(b, 'sq'))
+        PREMADE_CATEGORIES.filter(name => !existing.has(name))
       )
       setPremadePage(1)
-    } catch (err) {
-      console.error('Failed to load categories:', err)
+    } catch {
+      console.error('Failed to load categories')
       setCategories([])
-      setPremadeOptions([...PREMADE_CATEGORIES].sort((a, b) =>
-        a.localeCompare(b, 'sq')
-      ))
+      setPremadeOptions(PREMADE_CATEGORIES)
       setPremadePage(1)
     }
   }
 
+  const filteredCategories = useMemo(
+    () => categories.filter(c =>
+      c.name.toLowerCase().includes(searchTerm.toLowerCase().trim())
+    ),
+    [categories, searchTerm]
+  )
+  const filteredPremades = useMemo(
+    () => premadeOptions.filter(name =>
+      name.toLowerCase().includes(searchTerm.toLowerCase().trim())
+    ),
+    [premadeOptions, searchTerm]
+  )
+
+  const totalPremadePages = Math.ceil(filteredPremades.length / ITEMS_PER_PAGE)
+  const currentPremades = filteredPremades.slice(
+    (premadePage - 1) * ITEMS_PER_PAGE,
+    premadePage * ITEMS_PER_PAGE
+  )
+
   const handleSave = async () => {
-    const body = { businessId: business.businessId, name: newCategory.name.trim() }
+    const payload = { businessId: business.businessId, name: newCategory.name.trim() }
     try {
       if (editingCategory) {
-        await put(
-          `/api/ClothingCategory/${editingCategory.clothingCategoryId}`,
-          body
-        )
+        await put(`/api/ClothingCategory/${editingCategory.clothingCategoryId}`, payload)
         alert('Category updated!')
       } else {
-        await post('/api/ClothingCategory', body)
+        await post('/api/ClothingCategory', payload)
         alert('Category added!')
       }
       resetForm()
       fetchCategories()
-    } catch (err) {
-      console.error('Failed to save category:', err)
+    } catch {
       alert('Failed to save category.')
     }
   }
@@ -172,8 +294,7 @@ export default function CategoryPanel({ business }) {
       await del(`/api/ClothingCategory/${id}`)
       alert('Category deleted!')
       fetchCategories()
-    } catch (err) {
-      console.error('Failed to delete category:', err)
+    } catch {
       alert('Failed to delete category.')
     }
   }
@@ -189,10 +310,9 @@ export default function CategoryPanel({ business }) {
         businessId: business.businessId,
         name
       })
-      alert(`’${name}’ added!`)
+      alert(`'${name}' added!`)
       fetchCategories()
-    } catch (err) {
-      console.error('Failed to add premade:', err)
+    } catch {
       alert('Failed to add premade category.')
     }
   }
@@ -202,16 +322,9 @@ export default function CategoryPanel({ business }) {
     setNewCategory({ name: '' })
   }
 
-  const totalPremadePages = Math.ceil(premadeOptions.length / ITEMS_PER_PAGE)
-  const startIdx = (premadePage - 1) * ITEMS_PER_PAGE
-  const currentPremades = premadeOptions.slice(
-    startIdx,
-    startIdx + ITEMS_PER_PAGE
-  )
-
   return (
     <div className="category-panel">
-      <h3>Category Managment Panel</h3>
+      <h3>Category Management Panel</h3>
 
       <label className="toggle-premade">
         <input
@@ -219,11 +332,23 @@ export default function CategoryPanel({ business }) {
           checked={showPremade}
           onChange={e => {
             setShowPremade(e.target.checked)
+            setSearchTerm('')
             setPremadePage(1)
           }}
         />
         Use Premade Categories
       </label>
+
+      <div className="search-box">
+        <FaSearch className="search-icon" />
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search categories…"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+        />
+      </div>
 
       {showPremade ? (
         <>
@@ -236,10 +361,9 @@ export default function CategoryPanel({ business }) {
                 </li>
               ))
             ) : (
-              <li className="no-results">There are no categories to add</li>
+              <li className="no-results">No premade categories found.</li>
             )}
           </ul>
-
           {totalPremadePages > 1 && (
             <div className="premade-pagination">
               <button
@@ -263,29 +387,29 @@ export default function CategoryPanel({ business }) {
       ) : (
         <>
           <ul className="category-list">
-            {categories.map(cat => (
-              <li key={cat.clothingCategoryId}>
-                <span className="category-name">{cat.name}</span>
-                <button onClick={() => handleEdit(cat)}>Ndrysho</button>
-                <button onClick={() => handleDelete(cat.clothingCategoryId)}>
-                  Delete
-                </button>
-              </li>
-            ))}
+            {filteredCategories.length > 0 ? (
+              filteredCategories.map(cat => (
+                <li key={cat.clothingCategoryId}>
+                  <span className="category-name">{cat.name}</span>
+                  <button onClick={() => handleEdit(cat)}>Edit</button>
+                  <button onClick={() => handleDelete(cat.clothingCategoryId)}>
+                    Delete
+                  </button>
+                </li>
+              ))
+            ) : (
+              <li className="no-results">No categories match your search.</li>
+            )}
           </ul>
 
           <div className="category-form">
-            <h4>{editingCategory ? 'Update' : 'Create'} Category</h4>
-
+            <h4>{editingCategory ? 'Update' : 'Create'} Your Own Category</h4>
             <input
               type="text"
               value={newCategory.name}
-              onChange={e =>
-                setNewCategory(nc => ({ ...nc, name: e.target.value }))
-              }
-              placeholder="Category Nane"
+              onChange={e => setNewCategory({ name: e.target.value })}
+              placeholder="Category Name"
             />
-
             <div className="form-actions">
               <button onClick={handleSave}>
                 {editingCategory ? 'Update' : 'Create'}
