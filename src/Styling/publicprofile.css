@@ -4,7 +4,7 @@
   --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
   --accent-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-bg: rgba(255, 255, 255, 0.568);
   --glass-border: rgba(255, 255, 255, 0.2);
   --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.1);
   --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
@@ -14,7 +14,6 @@
   --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
   min-height: 130vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   position: relative;
   overflow-x: hidden;
   padding-top: 80px;
@@ -37,33 +36,6 @@
   filter: blur(40px);
   opacity: 0.6;
   animation: float 6s ease-in-out infinite;
-}
-
-.orb-1 {
-  width: 300px;
-  height: 300px;
-  background: var(--primary-gradient);
-  top: 10%;
-  left: 10%;
-  animation-delay: 0s;
-}
-
-.orb-2 {
-  width: 200px;
-  height: 200px;
-  background: var(--secondary-gradient);
-  top: 60%;
-  right: 10%;
-  animation-delay: 2s;
-}
-
-.orb-3 {
-  width: 250px;
-  height: 250px;
-  background: var(--accent-gradient);
-  bottom: 20%;
-  left: 50%;
-  animation-delay: 4s;
 }
 
 .floating-particles {
@@ -154,7 +126,6 @@
   height: calc(100% + 30px);
   border: 3px solid transparent;
   border-radius: 50%;
-  background: var(--primary-gradient);
   background-clip: padding-box;
   animation: rotate 20s linear infinite;
 }

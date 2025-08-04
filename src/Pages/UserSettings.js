@@ -40,7 +40,7 @@ const getPasswordRequirements = (password) => [
 const uploadImageToGCS = async (file) => {
   if (!file) return null
   const timestamp = Date.now()
-  const fileName = `${timestamp}-${file.name}`
+  const fileName = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_")}`
   const uploadUrl = `https://storage.googleapis.com/edcms_bucket/${fileName}`
   const txtUrl = `${uploadUrl}.txt`
 
@@ -64,6 +64,17 @@ const uploadImageToGCS = async (file) => {
   }
 }
 
+const getToken = () => {
+  const raw = localStorage.getItem("token")
+  if (!raw) return null
+  try {
+    const parsed = JSON.parse(raw)
+    return parsed.token || parsed
+  } catch {
+    return raw
+  }
+}
+
 export default function UserSettings() {
   const navigate = useNavigate()
   const [profile, setProfile] = useState({
@@ -72,6 +83,7 @@ export default function UserSettings() {
     email: "",
     telephoneNumber: "",
     profilePictureUrl: "",
+    dateOfBirth: "",
   })
 
   const [newPassword, setNewPassword] = useState("")
@@ -82,10 +94,10 @@ export default function UserSettings() {
   const [success, setSuccess] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const token = localStorage.getItem("token")
+  const token = getToken()
   const headers = {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
+    ...(token && { Authorization: `Bearer ${token}` }),
   }
 
   // Calculate password strength
@@ -102,12 +114,22 @@ export default function UserSettings() {
         return res.json()
       })
       .then((dto) => {
+        let dob = ""
+        if (dto.dateOfBirth) {
+          try {
+            const d = new Date(dto.dateOfBirth)
+            if (!isNaN(d)) {
+              dob = d.toISOString().slice(0, 10)
+            }
+          } catch {}
+        }
         setProfile({
           userId: dto.userId,
           name: dto.name,
           email: dto.email,
           telephoneNumber: dto.telephoneNumber || "",
           profilePictureUrl: dto.profilePictureUrl || "",
+          dateOfBirth: dob,
         })
       })
       .catch((err) => {
@@ -150,6 +172,7 @@ export default function UserSettings() {
       email: profile.email,
       telephoneNumber: profile.telephoneNumber,
       profilePictureUrl: profile.profilePictureUrl,
+      dateOfBirth: profile.dateOfBirth || null,
       ...(newPassword ? { password: newPassword } : {}),
     }
 
@@ -161,6 +184,18 @@ export default function UserSettings() {
       })
 
       if (!res.ok) throw new Error("Update failed")
+
+      // Cache latest profile picture so profile page reflects immediately
+      if (profile.profilePictureUrl) {
+        localStorage.setItem("latestProfilePicture", profile.profilePictureUrl)
+        window.dispatchEvent(
+          new StorageEvent("storage", {
+            key: "latestProfilePicture",
+            newValue: profile.profilePictureUrl,
+            storageArea: localStorage,
+          })
+        )
+      }
 
       setSuccess("Profile updated successfully!")
       setNewPassword("")
@@ -280,15 +315,27 @@ export default function UserSettings() {
                 </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label">Phone Number</label>
-                <input
-                  type="tel"
-                  className="form-input"
-                  value={profile.telephoneNumber}
-                  onChange={(e) => setProfile({ ...profile, telephoneNumber: e.target.value })}
-                  placeholder="Enter your phone number"
-                />
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Phone Number</label>
+                  <input
+                    type="tel"
+                    className="form-input"
+                    value={profile.telephoneNumber}
+                    onChange={(e) => setProfile({ ...profile, telephoneNumber: e.target.value })}
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Date of Birth</label>
+                  <input
+                    type="date"
+                    className="form-input"
+                    value={profile.dateOfBirth}
+                    onChange={(e) => setProfile({ ...profile, dateOfBirth: e.target.value })}
+                    placeholder="YYYY-MM-DD"
+                  />
+                </div>
               </div>
             </div>
 
@@ -347,7 +394,9 @@ export default function UserSettings() {
                 <div className="password-input-container">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
-                    className={`form-input ${passwordsDontMatch ? "error" : ""} ${passwordsMatch ? "success" : ""}`}
+                    className={`form-input ${passwordsDontMatch ? "error" : ""} ${
+                      passwordsMatch ? "success" : ""
+                    }`}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm new password"

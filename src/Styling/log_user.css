@@ -31,14 +31,13 @@
 /* Login Page Styles */
 .login-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #5f0de4 30%, #764ba2 80%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem 1rem;
   position: relative;
   font-family: var(--font-sans);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 9px 12px rgba(0, 0, 0, 0.1);
 }
 
 .login-page::before {
@@ -426,6 +425,12 @@
   .divider-text {
     background: var(--background-primary);
   }
+
+  .status-message.error {
+  background-color: var(--error-light);
+  color: var(--error-color);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
 }
 
 /* Responsive Design */

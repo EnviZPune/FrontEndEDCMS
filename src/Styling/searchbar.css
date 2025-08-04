@@ -100,10 +100,6 @@
   transform: translateY(0);
 }
 
-span:last-child{
-  color: black;
-}
-
 /* Custom scrollbar for dropdown */
 .search-dropdown::-webkit-scrollbar,
 .search-dropdown-active::-webkit-scrollbar {
@@ -367,9 +363,6 @@ span:last-child{
     box-shadow: 0 4px 12px rgba(78, 205, 196, 0.2);
   }
 
-  span:last-child{
-    color: white;
-  }
 
   .highlight-part{
     color: white;
