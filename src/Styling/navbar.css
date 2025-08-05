@@ -221,9 +221,9 @@
 }
 
 .nav-links a:hover {
-  color: white;
+  color: black;
   transform: translateY(-1px);
-  background-color: var(--neutral-600);
+  background-color: var(--neutral-200);
 }
 
 .nav-links a::after {

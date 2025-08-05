@@ -252,7 +252,7 @@ export default function ShopDetailsPage() {
                 <small>{routeName}</small>
                 <div className="sd-location-map">
                   <Map
-                    height={260}
+                    height={300}
                     defaultCenter={coords}
                     defaultZoom={13}
                     metaWheel
