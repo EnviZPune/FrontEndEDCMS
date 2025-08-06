@@ -29,12 +29,12 @@ export default function SearchResultsPage() {
   const params = new URLSearchParams(search);
   const query = params.get("query")?.trim().toLowerCase() || "";
 
-  const [loading, setLoading]         = useState(true);
-  const [error, setError]             = useState(null);
-  const [shops, setShops]             = useState([]);
-  const [categories, setCategories]   = useState([]);
-  const [users, setUsers]             = useState([]);
-  const [groups, setGroups]           = useState([]);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState(null);
+  const [shops, setShops]           = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [users, setUsers]           = useState([]);
+  const [groups, setGroups]         = useState([]);
 
   // Fetch all data once
   useEffect(() => {
@@ -63,6 +63,7 @@ export default function SearchResultsPage() {
         const catData  = await catRes.json();
         const userData = await userRes.json();
 
+        // enrich shops with logoUrl and items with imageUrl
         const withItems = await Promise.all(
           bizData.map(async (b) => {
             const itRes = await fetch(
@@ -74,6 +75,7 @@ export default function SearchResultsPage() {
               id:            b.businessId,
               slug:          b.slug || slugify(b.name),
               name:          b.name,
+              logoUrl:       b.profilePictureUrl || "/Assets/default-shop.png",
               description:   b.description,
               address:       b.address,
               NIPT:          b.nipt,
@@ -86,15 +88,23 @@ export default function SearchResultsPage() {
                 price:       i.price,
                 category:    i.category,
                 description: i.description,
-                imageUrl:    i.pictureUrls?.[0] || "",
+                imageUrl:    i.pictureUrls?.[0] || "/Assets/default-product.jpg",
               })),
             };
           })
         );
 
+        // enrich users with imageUrl
+        const enrichedUsers = userData.map((u) => ({
+          userId:   u.userId,
+          name:     u.name,
+          email:    u.email,
+          imageUrl: u.profilePictureUrl || u.profileImage || "/Assets/default-avatar.jpg",
+        }));
+
         setShops(withItems);
         setCategories(catData);
-        setUsers(userData);
+        setUsers(enrichedUsers);
       } catch (e) {
         console.error(e);
         setError(e.message);
@@ -114,18 +124,21 @@ export default function SearchResultsPage() {
       return;
     }
 
+    // Shops
     const shopMatches = shops
       .filter((s) =>
         [s.name, s.description, s.address, s.NIPT, s.phoneNumber]
           .some((f) => f?.toLowerCase().includes(query))
       )
       .map((s) => ({
-        type: "shop",
-        id:   s.id,
-        slug: s.slug,
-        name: s.name,
+        type:     "shop",
+        id:       s.id,
+        slug:     s.slug,
+        name:     s.name,
+        imageUrl: s.logoUrl,
       }));
 
+    // Clothing Items
     const itemMatches = shops.flatMap((shop) =>
       shop.clothingItems
         .filter((it) =>
@@ -142,24 +155,32 @@ export default function SearchResultsPage() {
           type:     "item",
           id:       it.id,
           name:     it.name,
+          brand:     it.brand,
           shopSlug: shop.slug,
           imageUrl: it.imageUrl,
         }))
     );
 
+    // Categories
     const categoryMatches = categories
       .filter((c) => c.name?.toLowerCase().includes(query))
-      .map((c) => ({ type: "category", name: c.name }));
+      .map((c) => ({
+        type:     "category",
+        name:     c.name,
+        imageUrl: "/Assets/default-category.png",
+      }));
 
+    // Users
     const userMatches = users
       .filter((u) =>
         [u.name, u.email].some((f) => f?.toLowerCase().includes(query))
       )
       .map((u) => ({
-        type:  "user",
-        id:    u.userId,
-        name:  u.name,
-        email: u.email,
+        type:     "user",
+        id:       u.userId,
+        name:     u.name,
+        email:    u.email,
+        imageUrl: u.imageUrl,
       }));
 
     const g = [];
@@ -210,26 +231,30 @@ export default function SearchResultsPage() {
                             to={`/shop/${item.slug}`}
                             className="search-results__link"
                           >
+                            <img
+                              src={item.imageUrl}
+                              alt={item.name}
+                              className="search-results__image"
+                            />
                             <span className="search-results__item-name">
                               {item.name}
                             </span>
                           </Link>
                         )}
+
                         {item.type === "item" && (
                           <Link
                             to={`/product/${item.id}`}
                             className="search-results__link search-results__item-with-image"
                           >
-                            {item.imageUrl && (
-                              <img
-                                src={item.imageUrl}
-                                alt={item.name}
-                                className="search-results__image"
-                              />
-                            )}
+                            <img
+                              src={item.imageUrl}
+                              alt={item.name}
+                              className="search-results__image"
+                            />
                             <div className="search-results__item-info">
                               <span className="search-results__item-name">
-                                {item.name}
+                                {`${item.name} - ${item.brand}`}
                               </span>
                               <span className="search-results__item-meta">
                                 {item.shopSlug}
@@ -237,21 +262,33 @@ export default function SearchResultsPage() {
                             </div>
                           </Link>
                         )}
+
                         {item.type === "category" && (
                           <Link
                             to={`/category-filter?category=${encodeURIComponent(item.name)}`}
                             className="search-results__link"
                           >
+                            <img
+                              src={item.imageUrl}
+                              alt={item.name}
+                              className="search-results__image"
+                            />
                             <span className="search-results__item-name">
                               {item.name}
                             </span>
                           </Link>
                         )}
+
                         {item.type === "user" && (
                           <Link
                             to={`/profile/${item.id}`}
                             className="search-results__link search-results__item-user"
                           >
+                            <img
+                              src={item.imageUrl}
+                              alt={item.name}
+                              className="search-results__image"
+                            />
                             <div className="search-results__item-info">
                               <span className="search-results__item-name">
                                 {item.name}
