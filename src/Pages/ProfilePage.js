@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useNavigate, useParams, Link } from "react-router-dom"
 import {jwtDecode} from "jwt-decode"
 import Footer from "../Components/Footer"
@@ -30,14 +30,12 @@ function parseAndCheckOpen(openingHours) {
   const now = new Date()
   const [sh, sm] = start.split(":").map(Number)
   const [eh, em] = end.split(":").map(Number)
-  const s = new Date(now)
-  s.setHours(sh, sm, 0, 0)
-  const e = new Date(now)
-  e.setHours(eh, em, 0, 0)
+  const s = new Date(now); s.setHours(sh, sm, 0, 0)
+  const e = new Date(now); e.setHours(eh, em, 0, 0)
   return now >= s && now <= e
 }
 
-// Enhanced Activity Panel Component with guidance to reach 100%
+// Enhanced Activity Panel
 function ActivityStatsCard({ profile, token }) {
   const navigate = useNavigate()
   const [hoursSpent, setHoursSpent] = useState(0)
@@ -78,7 +76,9 @@ function ActivityStatsCard({ profile, token }) {
   const targetStats = {
     shops: profile?.businesses?.length || 0,
     hours: hoursSpent,
-    days: joinedDate ? Math.floor((Date.now() - joinedDate.getTime()) / (1000 * 60 * 60 * 24)) : 0,
+    days: joinedDate
+      ? Math.floor((Date.now() - joinedDate.getTime()) / (1000 * 60 * 60 * 24))
+      : 0,
     age: age || 0,
   }
 
@@ -97,9 +97,13 @@ function ActivityStatsCard({ profile, token }) {
       }, 30)
       return () => clearInterval(timer)
     })
-  }, [targetStats.shops, targetStats.hours, targetStats.days, targetStats.age])
+  }, [
+    targetStats.shops,
+    targetStats.hours,
+    targetStats.days,
+    targetStats.age,
+  ])
 
-  // Completion logic
   const profileTasks = [
     {
       key: "profilePictureUrl",
@@ -122,10 +126,15 @@ function ActivityStatsCard({ profile, token }) {
   ]
 
   const completedProfileCount = profileTasks.filter((t) => t.done).length
-  const profileCompletion = Math.round((completedProfileCount / profileTasks.length) * 100)
-  const hasShop = Array.isArray(profile?.businesses) && profile.businesses.length > 0
+  const profileCompletion = Math.round(
+    (completedProfileCount / profileTasks.length) * 100
+  )
+  const hasShop =
+    Array.isArray(profile?.businesses) && profile.businesses.length > 0
   const shopCompletion = hasShop ? 100 : 0
-  const overallCompletion = Math.round((profileCompletion + shopCompletion) / 2)
+  const overallCompletion = Math.round(
+    (profileCompletion + shopCompletion) / 2
+  )
   const missingProfileTasks = profileTasks.filter((t) => !t.done)
 
   return (
@@ -135,88 +144,55 @@ function ActivityStatsCard({ profile, token }) {
         <div>
           <h3 className="card-title">Activity Overview</h3>
           <p className="card-subtitle">
-            Your current engagement score. Complete the suggested tasks below to reach 100% and increase visibility.
+            Your current engagement score. Complete the suggested tasks below
+            to reach 100% and increase visibility.
           </p>
         </div>
       </div>
       <div className="card-content">
         <div className="stats-grid">
-          <div className="stat-item">
-            <div className="stat-circle">
-              <div className="stat-value">{animatedStats.shops}</div>
-              <svg viewBox="0 0 36 36" className="circular-chart">
-                <path
-                  className="circle-bg"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <path
-                  className="circle shops"
-                  strokeDasharray={`${Math.min(animatedStats.shops * 25, 100)}, 100`}
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-              </svg>
-            </div>
-            <div className="stat-label">Shops</div>
-          </div>
-
-          <div className="stat-item">
-            <div className="stat-circle">
-              <div className="stat-value">{animatedStats.hours}</div>
-              <svg viewBox="0 0 36 36" className="circular-chart">
-                <path
-                  className="circle-bg"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <path
-                  className="circle hours"
-                  strokeDasharray={`${Math.min(animatedStats.hours / 2, 100)}, 100`}
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-              </svg>
-            </div>
-            <div className="stat-label">Hours</div>
-          </div>
-
-          <div className="stat-item">
-            <div className="stat-circle">
-              <div className="stat-value">{animatedStats.days}</div>
-              <svg viewBox="0 0 36 36" className="circular-chart">
-                <path
-                  className="circle-bg"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <path
-                  className="circle days"
-                  strokeDasharray={`${Math.min(animatedStats.days / 5, 100)}, 100`}
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-              </svg>
-            </div>
-            <div className="stat-label">Days</div>
-          </div>
-
-          {age !== null && (
-            <div className="stat-item">
-              <div className="stat-circle">
-                <div className="stat-value">{animatedStats.age}</div>
-                <svg viewBox="0 0 36 36" className="circular-chart">
-                  <path
-                    className="circle-bg"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <path
-                    className="circle age"
-                    strokeDasharray={`${Math.min(animatedStats.age, 100)}, 100`}
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                </svg>
+          {["shops", "hours", "days", "age"]
+            .filter((key) => key !== "age" || age !== null)
+            .map((key) => (
+              <div key={key} className="stat-item">
+                <div className="stat-circle">
+                  <div className="stat-value">{animatedStats[key]}</div>
+                  <svg viewBox="0 0 36 36" className="circular-chart">
+                    <path
+                      className="circle-bg"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <path
+                      className={`circle ${key}`}
+                      strokeDasharray={`${
+                        Math.min(
+                          key === "shops"
+                            ? animatedStats.shops * 25
+                            : key === "hours"
+                            ? animatedStats.hours / 2
+                            : key === "days"
+                            ? animatedStats.days / 5
+                            : animatedStats.age,
+                          100
+                        )
+                      }, 100`}
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                  </svg>
+                </div>
+                <div className="stat-label">
+                  {key === "shops"
+                    ? "Shops"
+                    : key === "hours"
+                    ? "Hours"
+                    : key === "days"
+                    ? "Days"
+                    : "Years Old"}
+                </div>
               </div>
-              <div className="stat-label">Years Old</div>
-            </div>
-          )}
+            ))}
         </div>
 
-        {/* Completion / Guidance Section */}
         <div className="completion-guidance">
           <div className="completion-summary">
             <div className="completion-bar-wrapper">
@@ -291,14 +267,15 @@ function ActivityStatsCard({ profile, token }) {
                 )}
               </ul>
               <p className="guidance-text">
-                Completing these tasks increases your activity score and unlocks more visibility
-                and credibility on the platform.
+                Completing these tasks increases your activity score and
+                unlocks more visibility and credibility on the platform.
               </p>
             </div>
           )}
           {overallCompletion === 100 && (
             <div className="congrats">
-              🎉 You've reached 100% activity! Keep engaging to maintain momentum.
+              🎉 You've reached 100% activity! Keep engaging to maintain
+              momentum.
             </div>
           )}
         </div>
@@ -307,10 +284,9 @@ function ActivityStatsCard({ profile, token }) {
   )
 }
 
-// Enhanced Shops Panel Component
+// Enhanced Shops Panel
 function ShopsCard({ businesses = [] }) {
   const navigate = useNavigate()
-
   return (
     <div className="enhanced-card shops-card">
       <div className="card-header">
@@ -328,7 +304,9 @@ function ShopsCard({ businesses = [] }) {
                 typeof shop.isManuallyOpen === "boolean"
                   ? shop.isManuallyOpen
                   : parseAndCheckOpen(shop.openingHours)
-              const slugPath = shop.slug ? `/shop/${encodeURIComponent(shop.slug)}` : "/"
+              const slugPath = shop.slug
+                ? `/shop/${encodeURIComponent(shop.slug)}`
+                : "/"
 
               return (
                 <Link
@@ -336,9 +314,6 @@ function ShopsCard({ businesses = [] }) {
                   to={slugPath}
                   className="shop-item"
                   style={{ animationDelay: `${index * 0.1}s` }}
-                  onClick={() => {
-                    console.log("Navigating to shop:", slugPath)
-                  }}
                 >
                   <div className="shop-avatar">
                     <img
@@ -346,16 +321,26 @@ function ShopsCard({ businesses = [] }) {
                       alt={`${shop.name || shop.slug} logo`}
                       className="shop-logo"
                     />
-                    <div className={`status-indicator ${isOpen ? "online" : "offline"}`}></div>
+                    <div
+                      className={`status-indicator ${
+                        isOpen ? "online" : "offline"
+                      }`}
+                    ></div>
                   </div>
 
                   <div className="shop-info">
                     <h4 className="shop-name">{shop.name || shop.slug}</h4>
                     <div className="shop-meta">
-                      <span className={`status-badge ${isOpen ? "open" : "closed"}`}>
+                      <span
+                        className={`status-badge ${
+                          isOpen ? "open" : "closed"
+                        }`}
+                      >
                         {isOpen ? "🟢 Open" : "🔴 Closed"}
                       </span>
-                      {shop.openingHours && <span className="hours">🕒 {shop.openingHours}</span>}
+                      {shop.openingHours && (
+                        <span className="hours">🕒 {shop.openingHours}</span>
+                      )}
                     </div>
                   </div>
 
@@ -391,45 +376,41 @@ function ShopsCard({ businesses = [] }) {
   )
 }
 
-// Enhanced Bookings Panel Component
-function BookingsCard({ bookings, loading, error }) {
+// Enhanced Bookings Panel with Pagination
+function BookingsCard({ bookings = [], loading, error }) {
   const navigate = useNavigate()
 
-  const getStatusIcon = (status) => {
-    if (!status || typeof status !== "string") return "📦"
+  const activeBookings = bookings.filter((b) =>
+    ["confirmed", "pending"].includes(String(b.status || "").toLowerCase())
+  )
 
-    switch (status.toLowerCase()) {
-      case "confirmed":
-        return "✅"
-      case "pending":
-        return "⏳"
-      case "cancelled":
-        return "❌"
-      default:
-        return "📦"
-    }
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 6
+  const totalPages = Math.max(1, Math.ceil(activeBookings.length / itemsPerPage))
+  const paginated = activeBookings.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
+  const getStatusIcon = (status) => {
+    const s = String(status || "").toLowerCase()
+    if (s === "confirmed") return "✅"
+    if (s === "pending") return "⏳"
+    return "📦"
   }
 
   const getStatusClass = (status) => {
-    if (!status || typeof status !== "string") return "default"
-
-    switch (status.toLowerCase()) {
-      case "confirmed":
-        return "confirmed"
-      case "pending":
-        return "pending"
-      case "cancelled":
-        return "cancelled"
-      default:
-        return "default"
-    }
+    const s = String(status || "").toLowerCase()
+    if (s === "confirmed") return "confirmed"
+    if (s === "pending") return "pending"
+    return "default"
   }
 
   return (
     <div className="enhanced-card bookings-card">
       <div className="card-header">
         <div className="card-icon">🛍️</div>
-        <h3 className="card-title">My Bookings ({bookings?.length || 0})</h3>
+        <h3 className="card-title">My Bookings ({activeBookings.length})</h3>
       </div>
       <div className="card-content">
         {loading && (
@@ -445,7 +426,7 @@ function BookingsCard({ bookings, loading, error }) {
           </div>
         )}
 
-        {!loading && !error && bookings && bookings.length === 0 && (
+        {!loading && paginated.length === 0 && (
           <div className="empty-state">
             <div className="empty-icon">🛍️</div>
             <h4>No bookings yet</h4>
@@ -453,53 +434,70 @@ function BookingsCard({ bookings, loading, error }) {
           </div>
         )}
 
-        {!loading && bookings && bookings.length > 0 && (
-          <div className="bookings-list">
-            {bookings.map((booking) => (
-              <div key={booking.reservationId} className="booking-item">
-                <div className="booking-image">
-                  {booking.clothingItem?.pictureUrls?.[0] ? (
-                    <img
-                      src={booking.clothingItem.pictureUrls[0] || "/placeholder.svg"}
-                      alt={booking.clothingItem.name}
-                      className="product-image"
-                    />
-                  ) : (
-                    <div className="placeholder-image">📦</div>
-                  )}
-                </div>
-
-                <div className="booking-details">
-                  <h4 className="product-name">{booking.clothingItem?.name}</h4>
-                  {booking.clothingItem?.brand && <p className="product-brand">{booking.clothingItem.brand}</p>}
-                  <div className="booking-meta">
-                    <span className={`status-badge ${getStatusClass(booking.status)}`}>
-                      {getStatusIcon(booking.status)} {booking.status || "Unknown"}
-                    </span>
-                    <span className="booking-date">{new Date(booking.createdAt).toLocaleDateString()}</span>
+        {!loading && paginated.length > 0 && (
+          <>
+            <div className="bookings-list">
+              {paginated.map((booking) => (
+                <div key={booking.reservationId} className="booking-item">
+                  <div className="booking-image">
+                    {booking.clothingItem?.pictureUrls?.[0] ? (
+                      <img
+                        src={booking.clothingItem.pictureUrls[0]}
+                        alt={booking.clothingItem.name}
+                        className="product-image"
+                      />
+                    ) : (
+                      <div className="placeholder-image">📦</div>
+                    )}
                   </div>
+                  <div className="booking-details">
+                    <h4 className="product-name">{booking.clothingItem?.name}</h4>
+                    <div className="booking-meta">
+                      <span className={`status-badge ${getStatusClass(booking.status)}`}>
+                        {getStatusIcon(booking.status)} {booking.status}
+                      </span>
+                      <span className="booking-date">
+                        {new Date(booking.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    className="view-details-btn"
+                    onClick={() => {
+                      const id = booking.clothingItem?.clothingItemId
+                      if (id) navigate(`/product/${id}`)
+                    }}
+                  >
+                    View
+                  </button>
                 </div>
+              ))}
+            </div>
 
-                <button
-                  className="view-details-btn"
-                  onClick={() => {
-                    if (booking.clothingItem?.clothingItemId) {
-                      navigate(`/product/${booking.clothingItem.clothingItemId}`)
-                    }
-                  }}
-                >
-                  View
-                </button>
-              </div>
-            ))}
-          </div>
+            <div className="pagination-controls">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          </>
         )}
       </div>
     </div>
   )
 }
 
-// Main Enhanced Profile Page Component
 export default function EnhancedProfilePage() {
   const { userId: paramId } = useParams()
   const navigate = useNavigate()
@@ -519,10 +517,33 @@ export default function EnhancedProfilePage() {
       tokenId = d.UserId || d.sub || d.id
     } catch {}
   }
-
   const userId = paramId || tokenId
 
-  // Online/offline detection
+  const fetchBookings = useCallback(async () => {
+    if (!token) {
+      setBookingsError("Not authenticated.")
+      setLoadingBookings(false)
+      return
+    }
+    setLoadingBookings(true)
+    setBookingsError("")
+    try {
+      const res = await fetch(`${API_BASE}/api/Reservation/my-bookings`, {
+        headers: getAuthHeaders(token),
+      })
+      if (!res.ok) {
+        if (res.status === 401) throw new Error("Unauthorized; please log in again.")
+        throw new Error(`Error fetching bookings: ${res.status}`)
+      }
+      const data = await res.json()
+      setBookings(data)
+    } catch (e) {
+      setBookingsError(e.message)
+    } finally {
+      setLoadingBookings(false)
+    }
+  }, [token])
+
   useEffect(() => {
     const handleOnline = () => setIsOnline(true)
     const handleOffline = () => setIsOnline(false)
@@ -534,18 +555,18 @@ export default function EnhancedProfilePage() {
     }
   }, [])
 
-  // sync profile picture if updated elsewhere
   useEffect(() => {
     const onStorage = (e) => {
-      if (e.key === "latestProfilePicture" && profile) {
-        setProfile((p) => ({ ...p, profilePictureUrl: e.newValue || p.profilePictureUrl }))
-      }
+      if (e.key === "reservationUpdated") fetchBookings()
     }
     window.addEventListener("storage", onStorage)
     return () => window.removeEventListener("storage", onStorage)
-  }, [profile])
+  }, [fetchBookings])
 
-  // Load profile
+  useEffect(() => {
+    fetchBookings()
+  }, [fetchBookings])
+
   useEffect(() => {
     if (!userId) {
       setError("Invalid user ID.")
@@ -561,15 +582,10 @@ export default function EnhancedProfilePage() {
           navigate("/login")
           return
         }
-        if (res.status === 404) throw new Error("User not found.")
         if (!res.ok) throw new Error(`Error ${res.status}`)
         const data = await res.json()
-
-        const cachedPic = localStorage.getItem("latestProfilePicture")
-        if (cachedPic) {
-          data.profilePictureUrl = cachedPic
-        }
-
+        const pic = localStorage.getItem("latestProfilePicture")
+        if (pic) data.profilePictureUrl = pic
         setProfile(data)
       } catch (e) {
         setError(e.message)
@@ -578,43 +594,6 @@ export default function EnhancedProfilePage() {
       }
     })()
   }, [userId, navigate, token])
-
-  // Load bookings
-  useEffect(() => {
-    if (!token) {
-      setBookingsError("Not authenticated.")
-      setLoadingBookings(false)
-      return
-    }
-
-    let cancelled = false
-    const loadBookings = async () => {
-      setLoadingBookings(true)
-      setBookingsError("")
-      try {
-        const res = await fetch(`${API_BASE}/api/Reservation/my-bookings`, {
-          headers: getAuthHeaders(token),
-        })
-        if (!res.ok) {
-          if (res.status === 401) throw new Error("Unauthorized; please log in again.")
-          const text = await res.text()
-          throw new Error(text || `Error fetching bookings: ${res.status}`)
-        }
-        const data = await res.json()
-        if (!cancelled) setBookings(data)
-      } catch (e) {
-        console.error("Bookings load error:", e)
-        if (!cancelled) setBookingsError(e.message)
-      } finally {
-        if (!cancelled) setLoadingBookings(false)
-      }
-    }
-
-    loadBookings()
-    return () => {
-      cancelled = true
-    }
-  }, [token])
 
   if (loading) {
     return (
@@ -687,7 +666,10 @@ export default function EnhancedProfilePage() {
             </div>
 
             <div className="profile-actions">
-              <button className="btn-primary" onClick={() => navigate("/settings/profile")}>
+              <button
+                className="btn-primary"
+                onClick={() => navigate("/settings/profile")}
+              >
                 ✏️ Edit Profile
               </button>
             </div>
@@ -703,10 +685,15 @@ export default function EnhancedProfilePage() {
               <ShopsCard businesses={profile?.businesses || []} />
             </div>
             <div className="grid-item bookings">
-              <BookingsCard bookings={bookings} loading={loadingBookings} error={bookingsError} />
+              <BookingsCard
+                bookings={bookings}
+                loading={loadingBookings}
+                error={bookingsError}
+              />
             </div>
           </div>
         </div>
+
         <Footer />
       </div>
     </>
