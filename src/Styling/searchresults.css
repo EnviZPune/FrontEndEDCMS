@@ -1,0 +1,157 @@
+/* src/Styling/searchresults.css */
+
+/* Define CSS variables for colors (Light mode by default) */
+:root {
+  --color-background: #f7fafc;
+  --color-text-primary: #2d3748;
+  --color-text-secondary: #718096;
+  --color-text-tertiary: #4a5568;
+  --color-border: #cbd5e0;
+  --color-card-background: #ffffff;
+  --color-shadow-light: rgba(0, 0, 0, 0.05);
+  --color-shadow-hover: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode colors using media query */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #1a202c; /* Dark background */
+    --color-text-primary: #e2e8f0; /* Light text for titles */
+    --color-text-secondary: #a0aec0; /* Slightly darker light gray for messages */
+    --color-text-tertiary: #cbd5e0; /* Medium light gray for group titles and emails */
+    --color-border: #4a5568; /* Darker border */
+    --color-card-background: #2d3748; /* Darker background for cards */
+    --color-shadow-light: rgba(0, 0, 0, 0.2); /* More subtle dark shadow */
+    --color-shadow-hover: rgba(0, 0, 0, 0.4); /* Darker hover shadow */
+  }
+}
+
+/* If you still want to allow manual override with a class (e.g., from next-themes) */
+/* This block will override the media query if the 'dark' class is present */
+.dark {
+  --color-background: #1a202c;
+  --color-text-primary: #e2e8f0;
+  --color-text-secondary: #a0aec0;
+  --color-text-tertiary: #cbd5e0;
+  --color-border: #4a5568;
+  --color-card-background: #2d3748;
+  --color-shadow-light: rgba(0, 0, 0, 0.2);
+  --color-shadow-hover: rgba(0, 0, 0, 0.4);
+}
+
+
+.search-results-page {
+  background-color: var(--color-background);
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-results__header {
+  width: 100%;
+  max-width: 1024px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.search-results__title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.search-results__empty,
+.search-results__loading,
+.search-results__error {
+  font-size: 1.25rem;
+  color: var(--color-text-secondary);
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.search-results__group {
+  width: 100%;
+  max-width: 1024px;
+  margin-bottom: 2rem;
+}
+
+.search-results__group-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--color-text-tertiary);
+  border-bottom: 3px solid var(--color-border);
+  padding-bottom: 0.25rem;
+}
+
+.search-results__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.search-results__item {
+  background: var(--color-card-background);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 8px var(--color-shadow-light);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-results__item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px var(--color-shadow-hover);
+}
+
+.search-results__link {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.search-results__item-with-image {
+  flex-direction: column;
+  text-align: center;
+}
+
+.search-results__image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.search-results__item-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+}
+
+.search-results__item-with-image .search-results__item-info {
+  margin-left: 0;
+  margin-top: 1rem;
+}
+
+.search-results__item-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.search-results__item-meta {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.search-results__item-user .search-results__item-info {
+  flex-direction: column;
+}
+
+.search-results__item-email {
+  font-size: 0.875rem;
+  color: var(--color-text-tertiary);
+  margin-top: 0.25rem;
+}

@@ -658,7 +658,7 @@ export default function EnhancedProfilePage() {
             <div className="avatar-section">
               <div className="avatar-container">
                 <img
-                  src={profile?.profilePictureUrl || "/default-avatar.png"}
+                  src={profile?.profilePictureUrl || "/Assets/default-avatar.jpg"}
                   alt={profile?.name}
                   className="profile-avatar"
                 />

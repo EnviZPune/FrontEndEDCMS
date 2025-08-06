@@ -28,6 +28,7 @@ import PaymentCancel       from './Pages/PaymentCancel'
 import OwnerForm           from './Pages/OwnerForm'
 import CategoryFilter from './Pages/categoryfilter';
 import AllCategories from './Pages/AllCategories';
+import SearchResultsPage from './Pages/searchresultspage';
 
 export default function App() {
   return (
@@ -61,6 +62,7 @@ export default function App() {
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-cancel" element={<PaymentCancel />} />
           <Route path="/owner-form" element={<OwnerForm />} />
+          <Route path="/search" element={<SearchResultsPage />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>

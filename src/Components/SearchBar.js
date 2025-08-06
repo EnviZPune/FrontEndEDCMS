@@ -1,5 +1,6 @@
 // src/components/SearchBar.jsx
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import "../Styling/searchbar.css";
 
@@ -22,7 +23,8 @@ const slugify = (str) =>
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
 
-const SearchBar = () => {
+export default function SearchBar() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery]     = useState("");
   const [groups, setGroups]               = useState([]);
   const [shops, setShops]                 = useState([]);
@@ -51,16 +53,16 @@ const SearchBar = () => {
 
       try {
         const [bizRes, catRes, userRes] = await Promise.all([
-          fetch(`${API_BASE}/Business`,            { headers }),
-          fetch(`${API_BASE}/ClothingCategory/all`,{ headers }),
-          fetch(`${API_BASE}/User/all`,            { headers }),
+          fetch(`${API_BASE}/Business`,             { headers }),
+          fetch(`${API_BASE}/ClothingCategory/all`, { headers }),
+          fetch(`${API_BASE}/User/all`,             { headers }),
         ]);
 
         const bizData  = await bizRes.json();
         const catData  = await catRes.json();
         const userData = await userRes.json();
 
-        // Include slug in each shop
+        // include logoUrl on shops
         const withItems = await Promise.all(
           bizData.map(async (b) => {
             const itemsRes = await fetch(
@@ -69,19 +71,23 @@ const SearchBar = () => {
             );
             const itemsData = await itemsRes.json();
             return {
-              id:             b.businessId,
-              slug:           b.slug || slugify(b.name),
-              name:           b.name,
-              address:        b.address,
-              phoneNumber:    b.businessPhoneNumber,
-              NIPT:           b.nipt,
-              description:    b.description,
-              clothingItems:  itemsData.map((i) => ({
+              id:            b.businessId,
+              slug:          b.slug || slugify(b.name),
+              name:          b.name,
+              logoUrl:       b.profilePictureUrl || "/default-shop.png",
+              address:       b.address,
+              phoneNumber:   b.businessPhoneNumber,
+              NIPT:          b.nipt,
+              description:   b.description,
+              clothingItems: itemsData.map((i) => ({
                 id:          i.clothingItemId,
                 name:        i.name,
+                brand:       i.brand,
+                model:       i.model,
+                price:       i.price,
                 category:    i.category,
                 description: i.description,
-                imageUrl:    i.pictureUrls?.[0] || "",
+                imageUrl:    i.pictureUrls?.[0] || "/default-product.jpg",
               })),
             };
           })
@@ -89,7 +95,15 @@ const SearchBar = () => {
 
         setShops(withItems);
         setCategories(catData);
-        setUsers(userData);
+
+        // include imageUrl on users
+        const enrichedUsers = userData.map((u) => ({
+          userId:   u.userId,
+          name:     u.name,
+          email:    u.email,
+          imageUrl: u.profilePictureUrl || u.profileImage || "/Assets/default-avatar.jpg",
+        }));
+        setUsers(enrichedUsers);
       } catch (err) {
         console.error("SearchBar fetch error:", err);
       }
@@ -98,7 +112,7 @@ const SearchBar = () => {
     fetchAll();
   }, []);
 
-  // Debounced search
+  // Debounced search grouping
   useEffect(() => {
     if (!searchQuery.trim()) {
       setGroups([]);
@@ -106,21 +120,31 @@ const SearchBar = () => {
     }
     const q = searchQuery.trim().toLowerCase();
     const timer = setTimeout(() => {
-      // Shop matches now include slug
+      // shops include imageUrl
       const shopMatches = shops
         .filter((s) =>
-          [s.name, s.description, s.address, s.NIPT, s.phoneNumber].some((f) =>
-            f?.toLowerCase().includes(q)
-          )
+          [s.name, s.description, s.address, s.NIPT, s.phoneNumber]
+            .some((f) => f?.toLowerCase().includes(q))
         )
-        .map((s) => ({ type: "shop", id: s.id, slug: s.slug, name: s.name }));
+        .map((s) => ({
+          type:     "shop",
+          id:       s.id,
+          slug:     s.slug,
+          name:     s.name,
+          imageUrl: s.logoUrl,
+        }));
 
       const itemMatches = shops.flatMap((shop) =>
         shop.clothingItems
           .filter((it) =>
-            [it.name, it.category, it.description].some((f) =>
-              f?.toLowerCase().includes(q)
-            )
+            [
+              it.name,
+              it.brand,
+              it.model,
+              it.category,
+              it.description,
+              it.price?.toString(),
+            ].some((f) => f?.toLowerCase().includes(q))
           )
           .map((it) => ({
             type:     "item",
@@ -135,24 +159,24 @@ const SearchBar = () => {
         .filter((c) => c.name?.toLowerCase().includes(q))
         .map((c) => ({ type: "category", name: c.name }));
 
+      // users include imageUrl
       const userMatches = users
         .filter((u) =>
-          [u.name, u.email].some((f) =>
-            f?.toLowerCase().includes(q)
-          )
+          [u.name, u.email].some((f) => f?.toLowerCase().includes(q))
         )
         .map((u) => ({
-          type:  "user",
-          id:    u.userId,
-          name:  u.name,
-          email: u.email,
+          type:     "user",
+          id:       u.userId,
+          name:     u.name,
+          email:    u.email,
+          imageUrl: u.imageUrl,
         }));
 
       const newGroups = [];
-      if (shopMatches.length)     newGroups.push({ category: "Shops",         results: shopMatches });
+      if (shopMatches.length)     newGroups.push({ category: "Shops",          results: shopMatches });
       if (itemMatches.length)     newGroups.push({ category: "Clothing Items", results: itemMatches });
-      if (categoryMatches.length) newGroups.push({ category: "Categories",    results: categoryMatches });
-      if (userMatches.length)     newGroups.push({ category: "Users",         results: userMatches });
+      if (categoryMatches.length) newGroups.push({ category: "Categories",     results: categoryMatches });
+      if (userMatches.length)     newGroups.push({ category: "Users",          results: userMatches });
 
       setGroups(newGroups);
     }, 300);
@@ -160,8 +184,19 @@ const SearchBar = () => {
     return () => clearTimeout(timer);
   }, [searchQuery, shops, categories, users]);
 
-  const onChange     = (e) => setSearchQuery(e.target.value);
-  const clearSearch = () => { setSearchQuery(""); setGroups([]); };
+  // Redirect on Enter
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) {
+      navigate(`/search?query=${encodeURIComponent(q)}`);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setGroups([]);
+  };
 
   const highlight = (text) => {
     if (!searchQuery) return text;
@@ -169,7 +204,7 @@ const SearchBar = () => {
     return text.split(re).map((part, i) =>
       part.toLowerCase() === searchQuery.toLowerCase()
         ? <span key={i} className="highlight">{part}</span>
-        : <span className="highlight-part">{part}</span>
+        : <span key={i} className="highlight-part">{part}</span>
     );
   };
 
@@ -197,18 +232,25 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="search-bar-container">
+    <form className="search-bar-container" onSubmit={handleSubmit}>
       <div className="search-input-container">
         <input
           type="text"
           placeholder="Search shops, items, categories, or users..."
           className="search-input"
           value={searchQuery}
-          onChange={onChange}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <FaSearch className="search-icon" fill="#6b7280"/>
+        <FaSearch className="search-icon" />
+        <button type="submit" className="search-icon-button"></button>
         {searchQuery && (
-          <button className="clear-button" onClick={clearSearch}>✕</button>
+          <button
+            type="button"
+            className="clear-button"
+            onClick={clearSearch}
+          >
+            ✕
+          </button>
         )}
       </div>
 
@@ -237,7 +279,7 @@ const SearchBar = () => {
                       className="search-result-item"
                       onClick={(e) => handleClick(item, e)}
                     >
-                      {item.type === "item" && item.imageUrl && (
+                      {item.imageUrl && (
                         <img
                           src={item.imageUrl}
                           alt={item.name}
@@ -246,7 +288,7 @@ const SearchBar = () => {
                       )}
                       <span>
                         {highlight(item.name)}
-                        {item.type === "item" && ` — ${ (item.shopName)}`}
+                        {item.type === "item" && ` — ${item.shopName}`}
                         {item.type === "user" && ` — ${item.email}`}
                       </span>
                     </li>
@@ -257,8 +299,6 @@ const SearchBar = () => {
           )}
         </div>
       )}
-    </div>
+    </form>
   );
-};
-
-export default SearchBar;
+}

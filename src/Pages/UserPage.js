@@ -149,7 +149,7 @@ const UsersPage = () => {
                   }
                 >
                   <img
-                    src={user.profilePictureUrl || '/default-avatar.png'}
+                    src={user.profilePictureUrl || '/Assets/default-avatar.jpg'}
                     alt={`${user.name}'s avatar`}
                     className="user-avatar"
                   />

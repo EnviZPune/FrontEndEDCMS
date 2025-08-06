@@ -120,7 +120,7 @@ const PublicProfilePage = () => {
             <div className="avatar-section-public">
               <div className="avatar-container-public">
                 <img
-                  src={profile.profilePictureUrl || "/default-avatar.png"}
+                  src={profile.profilePictureUrl || "/Assets/default-avatar.jpg"}
                   alt={profile.name}
                   className="profile-picture-public"
                 />

@@ -46,6 +46,10 @@
   pointer-events: none;
 }
 
+.search-icon-button{
+  display: none;
+}
+
 /* clear (×) button on the right inside the input */
 .clear-button {
   position: absolute;
@@ -333,7 +337,7 @@
   }
 
   .search-icon {
-    color: var(--text-light, #e0e0e0);
+    color: white;
   }
 
   .clear-button {
