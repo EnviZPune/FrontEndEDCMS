@@ -7,6 +7,7 @@ import "../Styling/map.css"
 
 const API_BASE = "http://77.242.26.150:8000/api"
 const PAGE_SIZE = 100
+const IP_GEO_API = "https://ipapi.co/json/"
 
 // —— copy auth helpers from ProductDetailsPage —— //
 const getToken = () => {
@@ -35,17 +36,31 @@ const toSlug = (str) =>
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "")
 
-// —— reverse-geocode a lat/lng into a display name —— //
-async function reverseGeocode(lat, lng) {
-  try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
-    )
-    if (!res.ok) throw new Error("Geocode error")
-    const data = await res.json()
-    return data.display_name || ""
-  } catch {
-    return ""
+// —— unified location fetcher —— //
+async function fetchBestLocation() {
+  const canGeo =
+    "geolocation" in navigator &&
+    (window.isSecureContext || window.location.hostname === "localhost")
+
+  if (canGeo) {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 60000,
+      })
+    })
+  }
+
+  // fallback to IP-based lookup
+  const res = await fetch(IP_GEO_API)
+  if (!res.ok) throw new Error("IP lookup failed")
+  const data = await res.json()
+  return {
+    coords: {
+      latitude: data.latitude,
+      longitude: data.longitude,
+    },
   }
 }
 
@@ -64,37 +79,26 @@ export default function MyMap() {
   const [defaultAddress, setDefaultAddress] = useState("")
   const [selectedAddress, setSelectedAddress] = useState("")
 
-  // Geolocation logic
+  // —— get current location (GPS on HTTPS/localhost, IP fallback otherwise) —— //
   useEffect(() => {
-    if (!navigator.geolocation) {
-      setLocationError("Geolocation is not supported by this browser")
-      setLocationStatus("unsupported")
-      return
-    }
-
     setLocationStatus("requesting")
-    navigator.geolocation.getCurrentPosition(
-      ({ coords: { latitude, longitude } }) => {
+    fetchBestLocation()
+      .then(({ coords: { latitude, longitude } }) => {
         setCurrentLocation({ lat: latitude, lng: longitude })
         setCenter([latitude, longitude])
         setZoom(15)
         setHasLocation(true)
         setLocationStatus("found")
         setLocationError(null)
-      },
-      (err) => {
-        let msg = "An unknown error occurred"
-        if (err.code === err.PERMISSION_DENIED) msg = "Location access denied"
-        else if (err.code === err.POSITION_UNAVAILABLE) msg = "Location unavailable"
-        else if (err.code === err.TIMEOUT) msg = "Location request timed out"
-        setLocationError(msg)
-        setLocationStatus(err.code === err.TIMEOUT ? "timeout" : "error")
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
-    )
+      })
+      .catch((err) => {
+        console.error("Location error:", err)
+        setLocationError(err.message)
+        setLocationStatus("error")
+      })
   }, [])
 
-  // Fetch detailed shop data (so we can reverse-geocode if needed)
+  // —— Fetch detailed shop data —— //
   useEffect(() => {
     const loadShops = async () => {
       setLoading(true)
@@ -108,10 +112,9 @@ export default function MyMap() {
 
         const detailed = await Promise.all(
           items.map(async (b) => {
-            const res = await fetch(
-              `${API_BASE}/Business/${b.businessId}`,
-              { headers: getHeaders() }
-            )
+            const res = await fetch(`${API_BASE}/Business/${b.businessId}`, {
+              headers: getHeaders(),
+            })
             if (!res.ok) throw new Error(`Shop ${b.businessId} failed`)
             const shop = await res.json()
             const [latS = "", lngS = ""] = (shop.location || "").split(",")
@@ -138,7 +141,7 @@ export default function MyMap() {
     loadShops()
   }, [])
 
-  // Once we have shops, reverse-geocode the first one if it lacks an address
+  // —— Reverse-geocode first shop for default address —— //
   useEffect(() => {
     if (!loading && shops.length > 0) {
       const first = shops[0]
@@ -150,7 +153,7 @@ export default function MyMap() {
     }
   }, [loading, shops])
 
-  // When user selects a marker, reverse-geocode if needed
+  // —— Reverse-geocode selected marker —— //
   useEffect(() => {
     if (selected) {
       if (selected.address) {
@@ -161,7 +164,7 @@ export default function MyMap() {
     }
   }, [selected])
 
-  // Fallback center if user denies location
+  // —— Fallback center if user denies location —— //
   useEffect(() => {
     if (!hasLocation && shops.length > 0 && locationStatus !== "requesting") {
       const { lat, lng } = shops[0]
@@ -181,23 +184,19 @@ export default function MyMap() {
   const requestLocationAgain = () => {
     setLocationStatus("requesting")
     setLocationError(null)
-    navigator.geolocation.getCurrentPosition(
-      ({ coords: { latitude, longitude } }) => {
+    fetchBestLocation()
+      .then(({ coords: { latitude, longitude } }) => {
         setCurrentLocation({ lat: latitude, lng: longitude })
         setCenter([latitude, longitude])
         setZoom(15)
         setHasLocation(true)
         setLocationStatus("found")
-      },
-      (err) => {
-        let msg = "Unable to get your location"
-        if (err.code === err.PERMISSION_DENIED) msg = "Location access denied"
-        else if (err.code === err.TIMEOUT) msg = "Location request timed out"
-        setLocationError(msg)
+      })
+      .catch((err) => {
+        console.error("Location retry error:", err)
+        setLocationError(err.message)
         setLocationStatus("error")
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-    )
+      })
   }
 
   if (loading) {
@@ -233,7 +232,7 @@ export default function MyMap() {
 
       <Map
         center={center}
-        defaultZoom={zoom}
+        zoom={zoom}
         onBoundsChanged={({ center, zoom }) => {
           setCenter(center)
           setZoom(zoom)
@@ -344,4 +343,18 @@ export default function MyMap() {
       </div>
     </div>
   )
+}
+
+// —— helper to reverse-geocode lat/lng into a display name —— //
+async function reverseGeocode(lat, lng) {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+    )
+    if (!res.ok) throw new Error("Geocode error")
+    const data = await res.json()
+    return data.display_name || ""
+  } catch {
+    return ""
+  }
 }

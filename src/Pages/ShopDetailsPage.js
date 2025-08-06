@@ -194,7 +194,7 @@ export default function ShopDetailsPage() {
                           />
                           <div className="sd-product-inline">
                             <span className="product-name">
-                              {p.brand ? `${p.brand} ${p.model}` : p.model}
+                              {p.brand ? `${p.name} - ${p.brand}` : p.model}
                             </span>
                             <span className="product-price"> {p.price.toFixed(2)} LEK</span>
                             <span className="product-desc">{p.description}</span>
