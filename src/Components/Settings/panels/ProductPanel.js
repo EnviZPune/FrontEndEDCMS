@@ -462,7 +462,7 @@ export default function ProductPanel({ business }) {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="product-price">Price *</label>
+              <label htmlFor="product-price">Price in LEK *</label>
               <input
                 id="product-price"
                 type="number"
@@ -667,7 +667,7 @@ export default function ProductPanel({ business }) {
                       </div>
                       <div className="product-details">
                         {p.model && <span>Model: {p.model}</span>}
-                        <span className="price">Price: ${p.price}</span>
+                        <span className="price">Price: LEK {p.price}</span>
                         {p.sizes && <span>Size: {p.sizes}</span>}
                         <span className="quantity">Qty: {p.quantity}</span>
                       </div>

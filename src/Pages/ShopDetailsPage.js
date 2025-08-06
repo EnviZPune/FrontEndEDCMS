@@ -196,7 +196,7 @@ export default function ShopDetailsPage() {
                             <span className="product-name">
                               {p.brand ? `${p.brand} ${p.model}` : p.model}
                             </span>
-                            <span className="product-price">${p.price.toFixed(2)}</span>
+                            <span className="product-price"> {p.price.toFixed(2)} LEK</span>
                             <span className="product-desc">{p.description}</span>
                           </div>
                         </Link>

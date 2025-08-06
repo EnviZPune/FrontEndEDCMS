@@ -257,7 +257,6 @@
 .settings-component .panel select {
   width: 100%;
   padding: var(--space-4);
-  margin-bottom: var(--space-5);
   border: 1px solid var(--settings-input-border);
   border-radius: var(--radius-lg);
   background: var(--settings-input-bg);

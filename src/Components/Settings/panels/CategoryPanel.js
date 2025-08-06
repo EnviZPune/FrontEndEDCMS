@@ -339,11 +339,11 @@ export default function CategoryPanel({ business }) {
         Use Premade Categories
       </label>
 
-      <div className="search-box">
-        <FaSearch className="search-icon" />
+      <div className="search-box-category">
+        <FaSearch className="search-icon-category" />
         <input
           type="text"
-          className="search-input"
+          className="search-input-category"
           placeholder="Search categories…"
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}

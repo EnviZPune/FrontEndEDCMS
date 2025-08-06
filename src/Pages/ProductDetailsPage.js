@@ -176,7 +176,7 @@ const ProductDetailsPage = () => {
               <strong>Description:</strong> {product.description}
             </p>
             <p>
-              <strong>Price:</strong> ${product.price}
+              <strong>Price:</strong> {product.price} LEK
             </p>
             <p>
               <strong>Quantity:</strong> {product.quantity}
