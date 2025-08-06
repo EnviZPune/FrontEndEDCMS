@@ -155,3 +155,69 @@
   color: var(--color-text-tertiary);
   margin-top: 0.25rem;
 }
+
+/* ----------------------------------------
+   EXTRA SMALL PHONES (<480px)
+   ---------------------------------------- */
+@media (max-width: 479px) {
+  .search-results-page {
+    /* pushed down a bit more under mobile header */
+    padding-top: 5rem;
+  }
+  .search-results__list {
+    gap: 1.5rem;
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ----------------------------------------
+   PHONES & SMALL TABLETS (480–767px)
+   ---------------------------------------- */
+@media (min-width: 480px) and (max-width: 767px) {
+  .search-results-page {
+    padding-top: 5.5rem;
+  }
+  .search-results__list {
+    gap: 1.75rem;
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ----------------------------------------
+   TABLETS & SMALL DESKTOPS (768–1023px)
+   ---------------------------------------- */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .search-results-page {
+    padding-top: 6rem;
+  }
+  .search-results__list {
+    gap: 2rem;
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* ----------------------------------------
+   DESKTOPS & LARGE SCREENS (1024–1439px)
+   ---------------------------------------- */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .search-results-page {
+    padding-top: 6.5rem;
+  }
+  .search-results__list {
+    gap: 2.25rem;
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+/* ----------------------------------------
+   EXTRA LARGE SCREENS & TVs (1440px+)
+   ---------------------------------------- */
+@media (min-width: 1440px) {
+  .search-results-page {
+    padding-top: 7rem;
+  }
+  .search-results__list {
+    gap: 2.5rem;
+    grid-template-columns: repeat(5, 1fr) !important;
+  }
+}
