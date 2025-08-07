@@ -47,14 +47,12 @@
   }
 }
 
-/* ===== BASE STYLES ===== */
 * {
   box-sizing: border-box;
 }
 
 .search-results-page {
   min-height: 100vh;
-  background-color: var(--bg-primary);
   color: var(--text-primary);
   margin-top: 86px;
   padding: 2rem 1rem;

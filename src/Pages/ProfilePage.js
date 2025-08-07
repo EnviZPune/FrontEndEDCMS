@@ -54,7 +54,7 @@ function ActivityStatsCard({ profile, token }) {
       first = Date.now().toString()
       localStorage.setItem(key, first)
     }
-    const hours = (Date.now() - Number.parseInt(first, 10)) / (1000 * 60 * 60)
+    const hours = (Date.now() - parseInt(first, 10)) / (1000 * 60 * 60)
     setHoursSpent(Math.floor(hours))
   }, [profile?.userId])
 
@@ -97,12 +97,7 @@ function ActivityStatsCard({ profile, token }) {
       }, 30)
       return () => clearInterval(timer)
     })
-  }, [
-    targetStats.shops,
-    targetStats.hours,
-    targetStats.days,
-    targetStats.age,
-  ])
+  }, [targetStats.shops, targetStats.hours, targetStats.days, targetStats.age])
 
   const profileTasks = [
     {
@@ -125,9 +120,9 @@ function ActivityStatsCard({ profile, token }) {
     },
   ]
 
-  const completedProfileCount = profileTasks.filter((t) => t.done).length
+  const completedCount = profileTasks.filter((t) => t.done).length
   const profileCompletion = Math.round(
-    (completedProfileCount / profileTasks.length) * 100
+    (completedCount / profileTasks.length) * 100
   )
   const hasShop =
     Array.isArray(profile?.businesses) && profile.businesses.length > 0
@@ -135,7 +130,7 @@ function ActivityStatsCard({ profile, token }) {
   const overallCompletion = Math.round(
     (profileCompletion + shopCompletion) / 2
   )
-  const missingProfileTasks = profileTasks.filter((t) => !t.done)
+  const missingTasks = profileTasks.filter((t) => !t.done)
 
   return (
     <div className="enhanced-card activity-card">
@@ -144,8 +139,8 @@ function ActivityStatsCard({ profile, token }) {
         <div>
           <h3 className="card-title">Activity Overview</h3>
           <p className="card-subtitle">
-            Your current engagement score. Complete the suggested tasks below
-            to reach 100% and increase visibility.
+            Your current engagement score. Complete the suggested tasks below to
+            reach 100% and increase visibility.
           </p>
         </div>
       </div>
@@ -192,7 +187,6 @@ function ActivityStatsCard({ profile, token }) {
               </div>
             ))}
         </div>
-
         <div className="completion-guidance">
           <div className="completion-summary">
             <div className="completion-bar-wrapper">
@@ -207,7 +201,6 @@ function ActivityStatsCard({ profile, token }) {
                 />
               </div>
             </div>
-
             <div className="completion-bar-wrapper">
               <div className="completion-label">
                 <strong>Shop Setup:</strong> {hasShop ? "Done" : "Incomplete"}
@@ -220,7 +213,6 @@ function ActivityStatsCard({ profile, token }) {
                 />
               </div>
             </div>
-
             <div className="completion-bar-wrapper overall">
               <div className="completion-label">
                 <strong>Overall Activity Score:</strong> {overallCompletion}%
@@ -234,12 +226,11 @@ function ActivityStatsCard({ profile, token }) {
               </div>
             </div>
           </div>
-
           {overallCompletion < 100 && (
             <div className="next-steps">
               <h4>How to reach 100%</h4>
               <ul>
-                {missingProfileTasks.map((t) => (
+                {missingTasks.map((t) => (
                   <li key={t.key}>
                     <button
                       className="inline-action"
@@ -267,8 +258,8 @@ function ActivityStatsCard({ profile, token }) {
                 )}
               </ul>
               <p className="guidance-text">
-                Completing these tasks increases your activity score and
-                unlocks more visibility and credibility on the platform.
+                Completing these tasks increases your activity score and unlocks
+                more visibility and credibility on the platform.
               </p>
             </div>
           )}
@@ -284,7 +275,6 @@ function ActivityStatsCard({ profile, token }) {
   )
 }
 
-// Enhanced Shops Panel
 function ShopsCard({ businesses = [] }) {
   const navigate = useNavigate()
   return (
@@ -307,7 +297,6 @@ function ShopsCard({ businesses = [] }) {
               const slugPath = shop.slug
                 ? `/shop/${encodeURIComponent(shop.slug)}`
                 : "/"
-
               return (
                 <Link
                   key={shop.slug || index}
@@ -327,7 +316,6 @@ function ShopsCard({ businesses = [] }) {
                       }`}
                     ></div>
                   </div>
-
                   <div className="shop-info">
                     <h4 className="shop-name">{shop.name || shop.slug}</h4>
                     <div className="shop-meta">
@@ -343,7 +331,6 @@ function ShopsCard({ businesses = [] }) {
                       )}
                     </div>
                   </div>
-
                   <div className="shop-actions">
                     <button
                       className="action-btn edit-btn"
@@ -376,14 +363,11 @@ function ShopsCard({ businesses = [] }) {
   )
 }
 
-// Enhanced Bookings Panel with Pagination
 function BookingsCard({ bookings = [], loading, error }) {
   const navigate = useNavigate()
-
   const activeBookings = bookings.filter((b) =>
     ["confirmed", "pending"].includes(String(b.status || "").toLowerCase())
   )
-
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
   const totalPages = Math.max(1, Math.ceil(activeBookings.length / itemsPerPage))
@@ -410,7 +394,9 @@ function BookingsCard({ bookings = [], loading, error }) {
     <div className="enhanced-card bookings-card">
       <div className="card-header">
         <div className="card-icon">🛍️</div>
-        <h3 className="card-title">My Bookings ({activeBookings.length})</h3>
+        <h3 className="card-title">
+          My Bookings ({activeBookings.length})
+        </h3>
       </div>
       <div className="card-content">
         {loading && (
@@ -419,13 +405,11 @@ function BookingsCard({ bookings = [], loading, error }) {
             <p>Loading your bookings...</p>
           </div>
         )}
-
         {error && (
           <div className="error-state">
             <span>⚠️ {error}</span>
           </div>
         )}
-
         {!loading && paginated.length === 0 && (
           <div className="empty-state">
             <div className="empty-icon">🛍️</div>
@@ -433,7 +417,6 @@ function BookingsCard({ bookings = [], loading, error }) {
             <p>Your booked products will appear here</p>
           </div>
         )}
-
         {!loading && paginated.length > 0 && (
           <>
             <div className="bookings-list">
@@ -451,21 +434,30 @@ function BookingsCard({ bookings = [], loading, error }) {
                     )}
                   </div>
                   <div className="booking-details">
-                    <h4 className="product-name">{booking.clothingItem?.name}</h4>
+                    <h4 className="product-name">
+                      {booking.clothingItem?.name} – {booking.shopName}
+                    </h4>
                     <div className="booking-meta">
-                      <span className={`status-badge ${getStatusClass(booking.status)}`}>
+                      <span
+                        className={`status-badge ${getStatusClass(
+                          booking.status
+                        )}`}
+                      >
                         {getStatusIcon(booking.status)} {booking.status}
                       </span>
                       <span className="booking-date">
-                        {new Date(booking.createdAt).toLocaleDateString()}
+                        {new Date(
+                          booking.createdAt
+                        ).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
                   <button
                     className="view-details-btn"
                     onClick={() => {
-                      const id = booking.clothingItem?.clothingItemId
-                      if (id) navigate(`/product/${id}`)
+                      if (booking.clothingItemId) {
+                        navigate(`/product/${booking.clothingItemId}`)
+                      }
                     }}
                   >
                     View
@@ -473,10 +465,11 @@ function BookingsCard({ bookings = [], loading, error }) {
                 </div>
               ))}
             </div>
-
             <div className="pagination-controls">
               <button
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                onClick={() =>
+                  setCurrentPage((p) => Math.max(1, p - 1))
+                }
                 disabled={currentPage === 1}
               >
                 Previous
@@ -485,7 +478,9 @@ function BookingsCard({ bookings = [], loading, error }) {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
                 disabled={currentPage === totalPages}
               >
                 Next
@@ -498,7 +493,7 @@ function BookingsCard({ bookings = [], loading, error }) {
   )
 }
 
-export default function EnhancedProfilePage() {
+export default function ProfilePage() {
   const { userId: paramId } = useParams()
   const navigate = useNavigate()
   const token = getToken()
@@ -527,16 +522,39 @@ export default function EnhancedProfilePage() {
     }
     setLoadingBookings(true)
     setBookingsError("")
+
     try {
-      const res = await fetch(`${API_BASE}/api/Reservation/my-bookings`, {
-        headers: getAuthHeaders(token),
-      })
-      if (!res.ok) {
-        if (res.status === 401) throw new Error("Unauthorized; please log in again.")
-        throw new Error(`Error fetching bookings: ${res.status}`)
-      }
-      const data = await res.json()
-      setBookings(data)
+      const res = await fetch(
+        `${API_BASE}/api/Reservation/my-bookings`,
+        { headers: getAuthHeaders(token) }
+      )
+      if (!res.ok) throw new Error(`Error ${res.status}`)
+      const raw = await res.json()
+
+      const enriched = await Promise.all(
+        raw.map(async (booking) => {
+          try {
+            const itemRes = await fetch(
+              `${API_BASE}/api/ClothingItem/${booking.clothingItemId}`,
+              { headers: getAuthHeaders(token) }
+            )
+            if (itemRes.ok) {
+              const itemData = await itemRes.json()
+              booking.shopName =
+                itemData.shop?.name ||
+                itemData.business?.name ||
+                "Unknown Shop"
+            } else {
+              booking.shopName = "Unknown Shop"
+            }
+          } catch {
+            booking.shopName = "Unknown Shop"
+          }
+          return booking
+        })
+      )
+
+      setBookings(enriched)
     } catch (e) {
       setBookingsError(e.message)
     } finally {
@@ -545,13 +563,13 @@ export default function EnhancedProfilePage() {
   }, [token])
 
   useEffect(() => {
-    const handleOnline = () => setIsOnline(true)
-    const handleOffline = () => setIsOnline(false)
-    window.addEventListener("online", handleOnline)
-    window.addEventListener("offline", handleOffline)
+    const goOnline = () => setIsOnline(true)
+    const goOffline = () => setIsOnline(false)
+    window.addEventListener("online", goOnline)
+    window.addEventListener("offline", goOffline)
     return () => {
-      window.removeEventListener("online", handleOnline)
-      window.removeEventListener("offline", handleOffline)
+      window.removeEventListener("online", goOnline)
+      window.removeEventListener("offline", goOffline)
     }
   }, [])
 
@@ -612,7 +630,10 @@ export default function EnhancedProfilePage() {
         <div className="error-container">
           <div className="error-icon">😔</div>
           <p className="error-text">{error}</p>
-          <button className="btn-secondary" onClick={() => navigate("/")}>
+          <button
+            className="btn-secondary"
+            onClick={() => navigate("/")}
+          >
             🏠 Go Home
           </button>
         </div>
@@ -626,8 +647,8 @@ export default function EnhancedProfilePage() {
       <div className="enhanced-profile-container">
         {!isOnline && (
           <div className="offline-banner">
-            <span>📡</span>
-            You're currently offline. Some features may be limited.
+            <span>📡</span> You're currently offline. Some features may be
+            limited.
           </div>
         )}
 
@@ -637,7 +658,10 @@ export default function EnhancedProfilePage() {
             <div className="avatar-section">
               <div className="avatar-container">
                 <img
-                  src={profile?.profilePictureUrl || "/Assets/default-avatar.jpg"}
+                  src={
+                    profile?.profilePictureUrl ||
+                    "/Assets/default-avatar.jpg"
+                  }
                   alt={profile?.name}
                   className="profile-avatar"
                 />

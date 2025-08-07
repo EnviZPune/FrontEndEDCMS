@@ -133,7 +133,7 @@
 
 .form-group label::after {
   content: "";
-  position: absolute;
+  /* position: absolute; */
   bottom: -4px;
   left: 0;
   width: 0;
@@ -434,7 +434,6 @@
 
 /* Enhanced Location Suggestions */
 .location-suggestions {
-  position: absolute;
   top: calc(100% + 4px);
   left: 0;
   right: 0;
@@ -446,9 +445,8 @@
   list-style: none;
   max-height: 280px;
   overflow-y: auto;
-  z-index: 2000; /* Increase z-index to appear above map */
+  z-index: 12000; /* Increase z-index to appear above map */
   box-shadow: var(--shadow-2xl);
-  backdrop-filter: blur(10px);
   animation: slideDown 0.3s ease-out;
 }
 
