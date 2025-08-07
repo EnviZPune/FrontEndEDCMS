@@ -1,7 +1,8 @@
 // src/components/SearchBar.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
+import Fuse from "fuse.js";
 import "../Styling/searchbar.css";
 
 const API_BASE = "http://77.242.26.150:8000/api";
@@ -26,10 +27,10 @@ const slugify = (str) =>
 export default function SearchBar() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery]     = useState("");
-  const [groups, setGroups]               = useState([]);
   const [shops, setShops]                 = useState([]);
   const [categories, setCategories]       = useState([]);
   const [users, setUsers]                 = useState([]);
+  const [groups, setGroups]               = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
 
   const recognitionRef = useRef(null);
@@ -62,7 +63,7 @@ export default function SearchBar() {
         const catData  = await catRes.json();
         const userData = await userRes.json();
 
-        // include logoUrl on shops
+        // include logoUrl on shops and fetch items
         const withItems = await Promise.all(
           bizData.map(async (b) => {
             const itemsRes = await fetch(
@@ -112,77 +113,112 @@ export default function SearchBar() {
     fetchAll();
   }, []);
 
-  // Debounced search grouping
+  // Flattened items list for Fuse
+  const flatItems = useMemo(
+    () =>
+      shops.flatMap((shop) =>
+        shop.clothingItems.map((it) => ({
+          ...it,
+          shopSlug: shop.slug,
+        }))
+      ),
+    [shops]
+  );
+
+  // Create Fuse instances
+  const fuseShops = useMemo(
+    () =>
+      new Fuse(shops, {
+        keys: ["name", "description", "address", "NIPT", "phoneNumber"],
+        threshold: 0.35,
+      }),
+    [shops]
+  );
+
+  const fuseItems = useMemo(
+    () =>
+      new Fuse(flatItems, {
+        keys: ["name", "brand", "model", "category", "description", "price"],
+        threshold: 0.35,
+      }),
+    [flatItems]
+  );
+
+  const fuseCategories = useMemo(
+    () =>
+      new Fuse(categories, {
+        keys: ["name"],
+        threshold: 0.3,
+      }),
+    [categories]
+  );
+
+  const fuseUsers = useMemo(
+    () =>
+      new Fuse(users, {
+        keys: ["name", "email"],
+        threshold: 0.3,
+      }),
+    [users]
+  );
+
+  // Debounced fuzzy search grouping
   useEffect(() => {
-    if (!searchQuery.trim()) {
+    const q = searchQuery.trim();
+    if (!q) {
       setGroups([]);
       return;
     }
-    const q = searchQuery.trim().toLowerCase();
+
     const timer = setTimeout(() => {
-      // shops include imageUrl
-      const shopMatches = shops
-        .filter((s) =>
-          [s.name, s.description, s.address, s.NIPT, s.phoneNumber]
-            .some((f) => f?.toLowerCase().includes(q))
-        )
-        .map((s) => ({
-          type:     "shop",
-          id:       s.id,
-          slug:     s.slug,
-          name:     s.name,
-          imageUrl: s.logoUrl,
-        }));
+      // Fuzzy search each group
+      const shopMatches = fuseShops.search(q).map((r) => r.item);
+      const itemMatches = fuseItems.search(q).map((r) => r.item);
+      const categoryMatches = fuseCategories.search(q).map((r) => r.item);
+      const userMatches = fuseUsers.search(q).map((r) => r.item);
 
-      const itemMatches = shops.flatMap((shop) =>
-        shop.clothingItems
-          .filter((it) =>
-            [
-              it.name,
-              it.brand,
-              it.model,
-              it.category,
-              it.description,
-              it.price?.toString(),
-            ].some((f) => f?.toLowerCase().includes(q))
-          )
-          .map((it) => ({
-            type:     "item",
-            id:       it.id,
-            name:     it.name,
-            shopName: shop.slug,
-            imageUrl: it.imageUrl,
-          }))
-      );
+      // Map to unified result objects
+      const shopsGroup = shopMatches.map((s) => ({
+        type:     "shop",
+        id:       s.id,
+        slug:     s.slug,
+        name:     s.name,
+        imageUrl: s.logoUrl,
+      }));
 
-      const categoryMatches = categories
-        .filter((c) => c.name?.toLowerCase().includes(q))
-        .map((c) => ({ type: "category", name: c.name }));
+      const itemsGroup = itemMatches.map((it) => ({
+        type:     "item",
+        id:       it.id,
+        name:     it.name,
+        shopName: it.shopSlug,
+        imageUrl: it.imageUrl,
+      }));
 
-      // users include imageUrl
-      const userMatches = users
-        .filter((u) =>
-          [u.name, u.email].some((f) => f?.toLowerCase().includes(q))
-        )
-        .map((u) => ({
-          type:     "user",
-          id:       u.userId,
-          name:     u.name,
-          email:    u.email,
-          imageUrl: u.imageUrl,
-        }));
+      const categoriesGroup = categoryMatches.map((c) => ({
+        type: "category",
+        name: c.name,
+      }));
 
+      const usersGroup = userMatches.map((u) => ({
+        type:     "user",
+        id:       u.userId,
+        name:     u.name,
+        email:    u.email,
+        imageUrl: u.imageUrl,
+      }));
+
+      // Assemble groups in display order
       const newGroups = [];
-      if (shopMatches.length)     newGroups.push({ category: "Shops",          results: shopMatches });
-      if (itemMatches.length)     newGroups.push({ category: "Clothing Items", results: itemMatches });
-      if (categoryMatches.length) newGroups.push({ category: "Categories",     results: categoryMatches });
-      if (userMatches.length)     newGroups.push({ category: "Users",          results: userMatches });
+      if (shopsGroup.length)      newGroups.push({ category: "Shops",          results: shopsGroup });
+      if (itemsGroup.length)      newGroups.push({ category: "Clothing Items", results: itemsGroup });
+      if (categoriesGroup.length) newGroups.push({ category: "Categories",     results: categoriesGroup });
+      if (usersGroup.length)      newGroups.push({ category: "Users",          results: usersGroup });
 
       setGroups(newGroups);
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery, shops, categories, users]);
+  }, [searchQuery, fuseShops, fuseItems, fuseCategories, fuseUsers]);
 
   // Redirect on Enter
   const handleSubmit = (e) => {
@@ -198,16 +234,18 @@ export default function SearchBar() {
     setGroups([]);
   };
 
+  // Highlight matches
   const highlight = (text) => {
     if (!searchQuery) return text;
     const re = new RegExp(`(${searchQuery})`, "gi");
     return text.split(re).map((part, i) =>
-      part.toLowerCase() === searchQuery.toLowerCase()
+      re.test(part)
         ? <span key={i} className="highlight">{part}</span>
         : <span key={i} className="highlight-part">{part}</span>
     );
   };
 
+  // Click handler
   const handleClick = (item, e) => {
     e.preventDefault();
     if (!currentUserId) return;
@@ -242,7 +280,7 @@ export default function SearchBar() {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <FaSearch className="search-icon" />
-        <button type="submit" className="search-icon-button"></button>
+        <button type="submit" className="search-icon-button" />
         {searchQuery && (
           <button
             type="button"

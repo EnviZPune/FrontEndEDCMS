@@ -1,6 +1,7 @@
 // src/Pages/SearchResultsPage.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, Link } from "react-router-dom";
+import Fuse from "fuse.js";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import "../Styling/searchresults.css";
@@ -27,7 +28,7 @@ const slugify = (str) =>
 export default function SearchResultsPage() {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
-  const query = params.get("query")?.trim().toLowerCase() || "";
+  const query = params.get("query")?.trim() || "";
 
   const [loading, setLoading]       = useState(true);
   const [error, setError]           = useState(null);
@@ -35,6 +36,7 @@ export default function SearchResultsPage() {
   const [categories, setCategories] = useState([]);
   const [users, setUsers]           = useState([]);
   const [groups, setGroups]         = useState([]);
+  const [suggestion, setSuggestion] = useState("");
 
   // Fetch all data once
   useEffect(() => {
@@ -63,7 +65,7 @@ export default function SearchResultsPage() {
         const catData  = await catRes.json();
         const userData = await userRes.json();
 
-        // enrich shops with logoUrl and items with imageUrl
+        // enrich shops with logoUrl & items
         const withItems = await Promise.all(
           bizData.map(async (b) => {
             const itRes = await fetch(
@@ -116,81 +118,139 @@ export default function SearchResultsPage() {
     fetchAll();
   }, []);
 
-  // Filter whenever data or query changes
+  // Flatten items for Fuse
+  const flatItems = useMemo(
+    () =>
+      shops.flatMap((shop) =>
+        shop.clothingItems.map((it) => ({
+          ...it,
+          shopSlug: shop.slug,
+        }))
+      ),
+    [shops]
+  );
+
+  // Fuse instances for each type
+  const fuseShops = useMemo(
+    () =>
+      new Fuse(shops, {
+        keys: ["name", "description", "address", "NIPT", "phoneNumber"],
+        threshold: 0.35,
+      }),
+    [shops]
+  );
+
+  const fuseItems = useMemo(
+    () =>
+      new Fuse(flatItems, {
+        keys: ["name", "brand", "model", "category", "description", "price"],
+        threshold: 0.35,
+      }),
+    [flatItems]
+  );
+
+  const fuseCategories = useMemo(
+    () =>
+      new Fuse(categories, {
+        keys: ["name"],
+        threshold: 0.3,
+      }),
+    [categories]
+  );
+
+  const fuseUsers = useMemo(
+    () =>
+      new Fuse(users, {
+        keys: ["name", "email"],
+        threshold: 0.3,
+      }),
+    [users]
+  );
+
+  // Combined suggestion list for "Did you mean"
+  const fuseSuggestions = useMemo(() => {
+    const suggestions = [
+      ...shops.map((s) => s.name),
+      ...flatItems.map((i) => i.name),
+      ...categories.map((c) => c.name),
+      ...users.map((u) => u.name),
+    ];
+    return new Fuse(suggestions, {
+      includeScore: true,
+      threshold: 0.6,
+    });
+  }, [shops, flatItems, categories, users]);
+
+  // Run fuzzy filter and suggestion whenever data or query changes
   useEffect(() => {
     if (loading || error) return;
     if (!query) {
       setGroups([]);
+      setSuggestion("");
       return;
     }
 
-    // Shops
-    const shopMatches = shops
-      .filter((s) =>
-        [s.name, s.description, s.address, s.NIPT, s.phoneNumber]
-          .some((f) => f?.toLowerCase().includes(query))
-      )
-      .map((s) => ({
-        type:     "shop",
-        id:       s.id,
-        slug:     s.slug,
-        name:     s.name,
-        imageUrl: s.logoUrl,
-      }));
+    const shopMatches     = fuseShops.search(query).map(r => r.item);
+    const itemMatches     = fuseItems.search(query).map(r => r.item);
+    const categoryMatches = fuseCategories.search(query).map(r => r.item);
+    const userMatches     = fuseUsers.search(query).map(r => r.item);
 
-    // Clothing Items
-    const itemMatches = shops.flatMap((shop) =>
-      shop.clothingItems
-        .filter((it) =>
-          [
-            it.name,
-            it.brand,
-            it.model,
-            it.category,
-            it.description,
-            it.price?.toString(),
-          ].some((f) => f?.toLowerCase().includes(query))
-        )
-        .map((it) => ({
-          type:     "item",
-          id:       it.id,
-          name:     it.name,
-          brand:     it.brand,
-          shopSlug: shop.slug,
-          imageUrl: it.imageUrl,
-        }))
-    );
+    const shopsGroup = shopMatches.map((s) => ({
+      type:     "shop",
+      id:       s.id,
+      slug:     s.slug,
+      name:     s.name,
+      imageUrl: s.logoUrl,
+    }));
 
-    // Categories
-    const categoryMatches = categories
-      .filter((c) => c.name?.toLowerCase().includes(query))
-      .map((c) => ({
-        type:     "category",
-        name:     c.name,
-        imageUrl: "/Assets/default-category.png",
-      }));
+    const itemsGroup = itemMatches.map((it) => ({
+      type:     "item",
+      id:       it.id,
+      name:     it.name,
+      brand:    it.brand,
+      shopSlug: it.shopSlug,
+      imageUrl: it.imageUrl,
+    }));
 
-    // Users
-    const userMatches = users
-      .filter((u) =>
-        [u.name, u.email].some((f) => f?.toLowerCase().includes(query))
-      )
-      .map((u) => ({
-        type:     "user",
-        id:       u.userId,
-        name:     u.name,
-        email:    u.email,
-        imageUrl: u.imageUrl,
-      }));
+    const categoriesGroup = categoryMatches.map((c) => ({
+      type:     "category",
+      name:     c.name,
+      imageUrl: "/Assets/default-category.png",
+    }));
 
-    const g = [];
-    if (shopMatches.length)     g.push({ title: "Shops",          items: shopMatches });
-    if (itemMatches.length)     g.push({ title: "Clothing Items", items: itemMatches });
-    if (categoryMatches.length) g.push({ title: "Categories",     items: categoryMatches });
-    if (userMatches.length)     g.push({ title: "Users",          items: userMatches });
+    const usersGroup = userMatches.map((u) => ({
+      type:     "user",
+      id:       u.userId,
+      name:     u.name,
+      email:    u.email,
+      imageUrl: u.imageUrl,
+    }));
 
-    setGroups(g);
-  }, [loading, error, shops, categories, users, query]);
+    const newGroups = [];
+    if (shopsGroup.length)      newGroups.push({ title: "Shops",          items: shopsGroup });
+    if (itemsGroup.length)      newGroups.push({ title: "Clothing Items", items: itemsGroup });
+    if (categoriesGroup.length) newGroups.push({ title: "Categories",     items: categoriesGroup });
+    if (usersGroup.length)      newGroups.push({ title: "Users",          items: usersGroup });
+
+    setGroups(newGroups);
+
+    // If no results, compute suggestion
+    if (newGroups.length === 0) {
+      const [best] = fuseSuggestions.search(query);
+      setSuggestion(best ? best.item : "");
+    } else {
+      setSuggestion("");
+    }
+  }, [
+    loading,
+    error,
+    query,
+    fuseShops,
+    fuseItems,
+    fuseCategories,
+    fuseUsers,
+    fuseSuggestions,
+  ]);
 
   return (
     <>
@@ -210,7 +270,18 @@ export default function SearchResultsPage() {
             </header>
 
             {groups.length === 0 ? (
-              <p className="search-results__empty">No results found.</p>
+              <>
+                <p className="search-results__empty">No results found.</p>
+                {suggestion && (
+                  <p className="search-results__suggestion">
+                    Did you mean{" "}
+                    <Link to={`/search?query=${encodeURIComponent(suggestion)}`}>
+                      <strong>{suggestion}</strong>
+                    </Link>
+                    ?
+                  </p>
+                )}
+              </>
             ) : (
               groups.map((group) => (
                 <section
@@ -254,7 +325,7 @@ export default function SearchResultsPage() {
                             />
                             <div className="search-results__item-info">
                               <span className="search-results__item-name">
-                                {`${item.name} - ${item.brand}`}
+                                {`${item.name} — ${item.brand}`}
                               </span>
                               <span className="search-results__item-meta">
                                 {item.shopSlug}
