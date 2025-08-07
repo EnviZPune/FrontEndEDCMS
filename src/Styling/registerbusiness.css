@@ -735,6 +735,7 @@
   transform: scale(1.1);
 }
 
+
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   .register-business-form-container {
