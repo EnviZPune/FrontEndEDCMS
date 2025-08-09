@@ -1,4 +1,3 @@
-// src/Components/Settings/panels/BusinessInfoPanel.js
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -6,7 +5,6 @@ import { useApiClient } from '../../../Components/Settings/hooks/useApiClient';
 import '../../../Styling/Settings/settings.css';
 import '../../../Styling/Settings/businessinfopanel.css';
 
-// Fix Leaflet’s default icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),

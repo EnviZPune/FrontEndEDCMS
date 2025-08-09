@@ -1,8 +1,7 @@
-"use client"
 
 import { useState, useEffect, useCallback } from "react"
 import { useApiClient } from "../hooks/useApiClient"
-import Cropper from "react-easy-crop"
+// import Cropper from "react-easy-crop"
 import "../../../Styling/Settings/settings.css"
 import "../../../Styling/Settings/photopanel.css"
 
@@ -231,7 +230,7 @@ export default function PhotoPanel({ business }) {
       {cropModalOpen && (
         <div className="crop-modal-overlay">
           <div className="crop-modal">
-            <Cropper
+            {/* <Cropper
               image={rawImage}
               crop={crop}
               zoom={zoom}
@@ -239,7 +238,7 @@ export default function PhotoPanel({ business }) {
               onCropChange={setCrop}
               onZoomChange={setZoom}
               onCropComplete={onCropComplete}
-            />
+            /> */}
             <div className="crop-controls">
               <label>
                 Zoom
