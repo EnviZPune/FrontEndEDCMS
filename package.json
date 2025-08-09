@@ -21,7 +21,6 @@
     "cropperjs": "^2.0.1",
     "crypto": "^1.0.1",
     "crypto-browserify": "^3.12.1",
-    "fuse.js": "^7.1.0",
     "jose": "^4.15.9",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^4.0.0",
