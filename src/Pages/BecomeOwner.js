@@ -1,6 +1,5 @@
-"use client"
-
 import { useState, useMemo, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { loadStripe } from "@stripe/stripe-js"
 import "../Styling/BecomeOwner.css"
 import Navbar from "../Components/Navbar"
@@ -16,7 +15,34 @@ function getToken() {
   }
 }
 
+function decodeJwt(token) {
+  try {
+    const payload = token.split(".")[1]
+    const json = atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
+    return JSON.parse(decodeURIComponent(escape(json)))
+  } catch {
+    return null
+  }
+}
+
+function extractRoles(claims) {
+  if (!claims) return []
+  // Common role claim shapes
+  const candidates = [
+    claims.roles,
+    claims.role,
+    claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
+    claims["roles"],
+  ]
+  const found =
+    candidates?.find((v) => v !== undefined) ??
+    []
+  return Array.isArray(found) ? found : [found]
+}
+
 export default function BecomeOwner() {
+  const navigate = useNavigate()
+
   const [loading, setLoading] = useState(false)
   const [testResponse, setResponse] = useState(null)
   const [darkMode, setDarkMode] = useState(() => {
@@ -27,10 +53,27 @@ export default function BecomeOwner() {
   })
 
   const publishableKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY
-  const stripePromise = useMemo(() => (publishableKey ? loadStripe(publishableKey) : null), [publishableKey])
+  const stripePromise = useMemo(
+    () => (publishableKey ? loadStripe(publishableKey) : null),
+    [publishableKey]
+  )
 
   const frontendBase = process.env.REACT_APP_CLIENT_BASE_URL || window.location.origin
   const apiBase = process.env.REACT_APP_API_BASE_URL || "http://77.242.26.150:8000"
+
+  // Redirect Admins away from this page
+  useEffect(() => {
+    const jwt = getToken()
+    if (!jwt) return
+
+    const claims = decodeJwt(jwt)
+    const roles = extractRoles(claims).map(String)
+    const isAdmin = roles.some((r) => r.toLowerCase() === "admin")
+
+    if (isAdmin) {
+      navigate("/unauthorized", { replace: true })
+    }
+  }, [navigate])
 
   useEffect(() => {
     localStorage.setItem("becomeOwnerDarkMode", darkMode)
@@ -43,6 +86,7 @@ export default function BecomeOwner() {
       return
     }
 
+    // If user is Admin, the redirect effect above will run; this fetch is fine for others
     fetch(`${apiBase}/api/business/string`, {
       headers: { Authorization: `Bearer ${jwt}` },
     })
@@ -240,6 +284,11 @@ export default function BecomeOwner() {
               </div>
             </div>
           </div>
+
+          {/* Optional theme toggle control; keep if you have a switch in your design */}
+          <button className="become-owner-theme-toggle" onClick={toggleDarkMode} type="button" aria-label="Toggle theme">
+            Toggle theme
+          </button>
         </div>
       </div>
     </div>

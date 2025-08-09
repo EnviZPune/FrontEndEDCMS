@@ -22,13 +22,18 @@ import UserPage from './Pages/UserPage';
 import AllShops from './Pages/AllShops';
 import ForgotPasswordPage from './Pages/ForgotPasswordPage';
 import ResetPasswordPage from './Pages/ResetPasswordPage';
-import BecomeOwner         from './Pages/BecomeOwner'
-import PaymentSuccess      from './Pages/PaymentSuccess'
-import PaymentCancel       from './Pages/PaymentCancel'
-import OwnerForm           from './Pages/OwnerForm'
+import BecomeOwner         from './Pages/BecomeOwner';
+import PaymentSuccess      from './Pages/PaymentSuccess';
+import PaymentCancel       from './Pages/PaymentCancel';
+import OwnerForm           from './Pages/OwnerForm';
 import CategoryFilter from './Pages/categoryfilter';
 import AllCategories from './Pages/AllCategories';
 import SearchResultsPage from './Pages/searchresultspage';
+
+import ChatWidget from "./Components/Chat/ChatWidget";
+import SupportDashboard from "./Pages/SupportDashboard";
+import Panel from "./Pages/Panel";
+import ProtectedRoute from "./Components/ProtectedRoute";
 
 export default function App() {
   return (
@@ -63,7 +68,27 @@ export default function App() {
           <Route path="/payment-cancel" element={<PaymentCancel />} />
           <Route path="/owner-form" element={<OwnerForm />} />
           <Route path="/search" element={<SearchResultsPage />} />
+
+          <Route
+            path="/support-dashboard"
+            element={
+              <ProtectedRoute>
+                <SupportDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/panel"
+            element={
+              <ProtectedRoute>
+                <Panel />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
+
+        {/* Chat widget must be OUTSIDE <Routes> */}
+        <ChatWidget />
       </Router>
     </GoogleOAuthProvider>
   );
