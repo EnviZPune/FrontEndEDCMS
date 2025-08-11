@@ -1,9 +1,8 @@
 // src/Pages/Panel.js
 import React, { useState } from "react";
 import SupportDashboard from "../Pages/SupportDashboard"
-import "../Styling/panel.css";
 
-const tabs = [{ key: "support", label: "Support" }];
+const tabs = [{ key: "support", label: "Support Dashboard" }];
 
 export default function Panel() {
   const [active, setActive] = useState("support");
