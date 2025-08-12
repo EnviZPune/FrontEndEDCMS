@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import SupportDashboard from "../Pages/SupportDashboard"
 
-const tabs = [{ key: "support", label: "Support Dashboard" }];
+const tabs = [{ key: "support", label: "Home" }];
 
 export default function Panel() {
   const [active, setActive] = useState("support");
@@ -12,13 +12,13 @@ export default function Panel() {
         <h1>Control Panel</h1>
         <div className="panel-tabs">
           {tabs.map((t) => (
-            <button
+            <a href="/"><button
               key={t.key}
               className={`panel-tab ${active === t.key ? "active" : ""}`}
               onClick={() => setActive(t.key)}
             >
               {t.label}
-            </button>
+            </button></a>
           ))}
         </div>
       </div>

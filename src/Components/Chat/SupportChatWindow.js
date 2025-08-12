@@ -10,13 +10,17 @@ import {
   Image as ImageIcon,
   Send,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  Pencil,
+  Check,
+  X,
+  Trash2
 } from "lucide-react"
 import "../../Styling/chat.css"
 
 const DEFAULT_AVATAR = "Assets/default-avatar.jpg"
 
-// Safely pick a user's photo url from typical fields
+// Pick a user photo URL from common fields
 const pickAvatarUrl = (u) =>
   u?.profileImage ||
   u?.profilePictureUrl ||
@@ -24,13 +28,27 @@ const pickAvatarUrl = (u) =>
   u?.photoUrl ||
   ""
 
-// Try to read userId from the JWT for fallback when /User/me is not available
-function resolveUserIdFromToken() {
+// Pick a display name from common fields
+const pickDisplayName = (u) => {
+  const joined = [u?.firstName, u?.lastName].filter(Boolean).join(" ").trim()
+  return (
+    u?.displayName ||
+    u?.fullName ||
+    (joined || null) ||
+    u?.name ||
+    u?.username ||
+    u?.email ||
+    ""
+  )
+}
+
+// Try to read fields from the JWT for fallback when /User/me isn’t available
+function resolveFromToken() {
   try {
     const token = getToken()
-    if (!token) return null
-    const decoded = jwtDecode(token)
-    const candidates = [
+    if (!token) return { id: null, name: null }
+    const d = jwtDecode(token)
+    const idCandidates = [
       "nameid",
       "sub",
       "uid",
@@ -39,22 +57,59 @@ function resolveUserIdFromToken() {
       "user_id",
       "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
     ]
-    for (const k of candidates) {
-      const v = decoded?.[k]
-      if (v != null && `${v}`.trim() !== "") return `${v}`.trim()
+    const nameCandidates = [
+      "name",
+      "given_name",
+      "family_name",
+      "unique_name",
+      "preferred_username",
+      "email"
+    ]
+    let id = null
+    for (const k of idCandidates) {
+      const v = d?.[k]
+      if (v != null && `${v}`.trim() !== "") { id = `${v}`.trim(); break }
     }
-  } catch {}
-  return null
+    // Build a friendly name if possible
+    let name =
+      (d?.given_name && d?.family_name
+        ? `${d.given_name} ${d.family_name}`.trim()
+        : null) || null
+    if (!name) {
+      for (const k of nameCandidates) {
+        const v = d?.[k]
+        if (v != null && `${v}`.trim() !== "") { name = `${v}`.trim(); break }
+      }
+    }
+    return { id, name }
+  } catch {
+    return { id: null, name: null }
+  }
 }
 
-export default function SupportChatWindow({ threadId }) {
+// Make a relative "/uploads/..." into "http://77.242.26.150:8000/uploads/..."
+const apiOrigin = API_BASE.replace(/\/api\/?$/, "") // strips trailing /api
+const fileUrl = (u) => {
+  if (!u) return ""
+  if (/^https?:\/\//i.test(u)) return u // already absolute
+  return `${apiOrigin}${u.startsWith("/") ? u : `/${u}`}`
+}
+
+export default function SupportChatWindow({ threadId, onDeleted }) {
   const [topic, setTopic] = useState("")
+  const [editingTopic, setEditingTopic] = useState(false)
+  const [topicDraft, setTopicDraft] = useState("")
+
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState("")
   const [sending, setSending] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [connected, setConnected] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+
+  // Current (end) user identity for avatar + name on their messages
   const [meAvatar, setMeAvatar] = useState(DEFAULT_AVATAR)
+  const [meName, setMeName] = useState("You")
 
   const [isDragging, setIsDragging] = useState(false)
 
@@ -65,31 +120,38 @@ export default function SupportChatWindow({ threadId }) {
   const scrollToBottom = () => endRef.current?.scrollIntoView({ behavior: "smooth" })
   useEffect(() => { scrollToBottom() }, [messages])
 
-  // Load current user's avatar once
+  // Load current user's avatar & name once
   useEffect(() => {
     let alive = true
     ;(async () => {
       try {
-        // Prefer /User/me if your API supports it
-        let res = await fetch(`${API_BASE}/User/me`, { headers: authHeaders() })
+        let res = await fetch(`${API_BASE}/User/me`, { headers: authHeaders({ json: false }) })
         if (!res.ok) {
-          // Fallback: decode token and call /User/{id}
-          const uid = resolveUserIdFromToken()
-          if (uid) {
-            res = await fetch(`${API_BASE}/User/${uid}`, { headers: authHeaders() })
-          }
+          const { id, name } = resolveFromToken()
+          if (id) res = await fetch(`${API_BASE}/User/${id}`, { headers: authHeaders({ json: false }) })
+          if (alive && name) setMeName(name) // fallback name while we try /User/{id}
         }
         if (!alive) return
-        if (!res?.ok) { setMeAvatar(DEFAULT_AVATAR); return }
+        if (!res?.ok) {
+          const { name } = resolveFromToken()
+          setMeAvatar(DEFAULT_AVATAR)
+          if (name) setMeName(name)
+          return
+        }
         const u = await res.json()
         const url = pickAvatarUrl(u)
+        const display = pickDisplayName(u)
         setMeAvatar(url && typeof url === "string" ? url : DEFAULT_AVATAR)
+        setMeName(display?.trim() ? display.trim() : (resolveFromToken().name || "You"))
       } catch {
-        if (alive) setMeAvatar(DEFAULT_AVATAR)
+        if (alive) {
+          const { name } = resolveFromToken()
+          setMeAvatar(DEFAULT_AVATAR)
+          if (name) setMeName(name)
+        }
       }
     })()
     return () => { alive = false }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Load thread + connect hub on mount / thread change
@@ -98,14 +160,14 @@ export default function SupportChatWindow({ threadId }) {
 
     const load = async () => {
       if (!threadId) return
-      const res = await fetch(`${API_BASE}/Support/threads/${threadId}`, {
-        headers: authHeaders()
-      })
+      const res = await fetch(`${API_BASE}/Support/threads/${threadId}`, { headers: authHeaders({ json: false }) })
       if (!res.ok) return
       const dto = await res.json()
       if (cancelled) return
 
-      setTopic(dto.topic || dto.title || `Thread #${threadId}`)
+      const t = dto.topic || dto.title || `Thread #${threadId}`
+      setTopic(t)
+      setTopicDraft(t)
       setMessages(Array.isArray(dto.messages) ? dto.messages : [])
 
       await connectToHub(threadId)
@@ -120,7 +182,6 @@ export default function SupportChatWindow({ threadId }) {
         connRef.current = null
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [threadId])
 
   const connectToHub = async (tid) => {
@@ -195,10 +256,10 @@ export default function SupportChatWindow({ threadId }) {
       form.append("file", file)
       if (input.trim()) form.append("caption", input.trim())
 
-      // IMPORTANT: matches your controller route: POST /api/Support/threads/{threadId}/photos
+      // matches controller route: POST /api/Support/threads/{threadId}/photos
       const res = await fetch(`${API_BASE}/Support/threads/${threadId}/photos`, {
         method: "POST",
-        headers: authHeaders(), // don't set content-type manually
+        headers: authHeaders({ json: false }), // IMPORTANT: no Content-Type with FormData
         body: form
       })
       if (!res.ok) {
@@ -232,11 +293,124 @@ export default function SupportChatWindow({ threadId }) {
     if (file) onPickImage(file)
   }
 
+  // ---------- Topic rename ----------
+  const saveTopic = async () => {
+    const newTopic = topicDraft.trim()
+    if (!newTopic || newTopic === topic) { setEditingTopic(false); return }
+    try {
+      const res = await fetch(`${API_BASE}/Support/threads/${threadId}/topic`, {
+        method: "PUT",
+        headers: { ...authHeaders(), "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: newTopic })
+      })
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "")
+        throw new Error(txt || `Failed (${res.status})`)
+      }
+      const dto = await res.json()
+      setTopic(dto.topic || newTopic)
+      setEditingTopic(false)
+    } catch (e) {
+      console.error(e)
+      alert("Couldn't update the subject.")
+    }
+  }
+
+  // ---------- Delete chat (thread) ----------
+  const deleteThread = async () => {
+    if (!threadId || deleting) return
+    const ok = window.confirm("Delete this conversation permanently? This cannot be undone.")
+    if (!ok) return
+    setDeleting(true)
+    try {
+      // Expected backend: DELETE /api/Support/threads/{threadId} -> 204/200
+      const res = await fetch(`${API_BASE}/Support/threads/${threadId}`, {
+        method: "DELETE",
+        headers: authHeaders({ json: false })
+      })
+      if (!(res.ok || res.status === 204)) {
+        const body = await res.text().catch(() => "")
+        throw new Error(body || `Delete failed (${res.status})`)
+      }
+
+      // Stop receiving new messages
+      if (connRef.current) {
+        try { await connRef.current.stop() } catch {}
+        connRef.current = null
+      }
+      setConnected(false)
+
+      // Clear UI & notify parent if provided
+      setMessages([])
+      setTopic("(deleted)")
+      setTopicDraft("(deleted)")
+
+      if (typeof onDeleted === "function") {
+        onDeleted(threadId)
+      }
+    } catch (e) {
+      console.error(e)
+      alert("Couldn't delete this conversation.")
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  // Resolve author label for a message
+  const authorNameFor = (m) => {
+    if (m.isSystem) return "System"
+    if (m.senderIsAdmin) return (m.senderName && m.senderName.trim()) || "Support"
+    // end user
+    return (m.senderName && m.senderName.trim()) || (meName?.trim() || "You")
+  }
+
   return (
     <div className="chat-window" onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}>
       <div className="chat-window-header">
         <div className="chat-window-title">
-          <strong>{topic || `Thread #${threadId}`}</strong>
+          {editingTopic ? (
+            <div className="topic-edit">
+              <input
+                className="topic-input"
+                value={topicDraft}
+                onChange={(e) => setTopicDraft(e.target.value)}
+                maxLength={300}
+                autoFocus
+                disabled={deleting}
+              />
+              <button className="topic-commit" onClick={saveTopic} title="Save" disabled={deleting}>
+                <Check className="w-4 h-4" />
+              </button>
+              <button
+                className="topic-cancel"
+                onClick={() => { setTopicDraft(topic); setEditingTopic(false) }}
+                title="Cancel"
+                disabled={deleting}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <>
+              <strong>{topic || `Thread #${threadId}`}</strong>
+              <button
+                className="topic-edit-btn"
+                onClick={() => setEditingTopic(true)}
+                title="Rename subject"
+                disabled={deleting}
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
+              <button
+                className="chat-delete-btn"
+                onClick={deleteThread}
+                title="Delete chat"
+                disabled={deleting}
+              >
+                {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+              </button>
+            </>
+          )}
         </div>
         <div className="chat-conn">
           <div className={`conn-dot ${connected ? "online" : "offline"}`} />
@@ -244,6 +418,7 @@ export default function SupportChatWindow({ threadId }) {
         </div>
       </div>
 
+      {/* Drop overlay */}
       {isDragging && (
         <div className="chat-drop-overlay">
           <ImageIcon className="w-8 h-8" />
@@ -251,6 +426,7 @@ export default function SupportChatWindow({ threadId }) {
         </div>
       )}
 
+      {/* Messages */}
       <div className="chat-messages">
         {messages.length === 0 ? (
           <div className="chat-messages-empty">
@@ -269,7 +445,7 @@ export default function SupportChatWindow({ threadId }) {
                 ) : m.senderIsAdmin ? (
                   <div className="sd-avatar agent">A</div>
                 ) : (
-                  // === USER AVATAR (real photo with dashboard styles) ===
+                  // USER AVATAR (real photo with dashboard styles)
                   <div className="sd-avatar user">
                     <img
                       className="sd-avatar-img"
@@ -284,21 +460,26 @@ export default function SupportChatWindow({ threadId }) {
               </div>
 
               <div className="chat-bubble">
+                {/* Author name line */}
+                <div className="chat-author">{authorNameFor(m)}</div>
+
+                {/* Text */}
                 {m.body && <div className="chat-text">{m.body}</div>}
 
+                {/* Attachments (images) */}
                 {Array.isArray(m.attachments) && m.attachments.length > 0 && (
                   <div className="chat-attachments-grid">
                     {m.attachments.map((a) =>
                       a.kind === "image" ? (
                         <a
                           key={a.attachmentId || a.url}
-                          href={a.url}
+                          href={fileUrl(a.url)}
                           target="_blank"
                           rel="noreferrer"
                           className="chat-attachment"
                           title={a.fileName || "image"}
                         >
-                          <img src={a.url} alt={a.fileName || "attachment"} />
+                          <img src={fileUrl(a.url)} alt={a.fileName || "attachment"} />
                         </a>
                       ) : null
                     )}
@@ -313,6 +494,7 @@ export default function SupportChatWindow({ threadId }) {
         <div ref={endRef} />
       </div>
 
+      {/* Input + actions */}
       <div className="chat-input-row">
         <input
           type="file"
@@ -328,7 +510,7 @@ export default function SupportChatWindow({ threadId }) {
         <button
           className="chat-img-btn"
           onClick={() => fileInputRef.current?.click()}
-          disabled={uploading}
+          disabled={uploading || deleting}
           title="Send a photo"
         >
           {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
@@ -345,13 +527,19 @@ export default function SupportChatWindow({ threadId }) {
           }}
           className="chat-input"
           rows={1}
-          placeholder={uploading ? "Uploading…" : "Type a message… (Enter to send)"}
-          disabled={uploading || sending}
+          placeholder={
+            deleting
+              ? "Deleting…"
+              : uploading
+              ? "Uploading…"
+              : "Type a message… (Enter to send)"
+          }
+          disabled={uploading || sending || deleting}
         />
         <button
           className="chat-send-btn"
           onClick={sendText}
-          disabled={!input.trim() || sending || uploading}
+          disabled={!input.trim() || sending || uploading || deleting}
           title="Send"
         >
           {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}

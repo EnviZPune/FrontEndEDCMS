@@ -285,6 +285,121 @@
   color: #92400e;
 }
 
+/* Author name above message bubbles */
+.chat-author {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: var(--sd-text-muted, #6b7280);
+}
+
+.chat-msg.user .chat-author {
+  text-align: right;
+  color: rgba(255,255,255,0.9); /* reads well on your blue bubble */
+}
+
+.chat-msg.agent .chat-author {
+  color: var(--sd-text-secondary, #374151);
+}
+
+.chat-msg.system .chat-author {
+  display: none; /* system messages already styled distinctly */
+}
+
+/* ——— Tiny icon buttons for Edit & Delete ——— */
+.topic-edit-btn,
+.chat-delete-btn {
+  appearance: none;
+  position: relative;
+  left: 20px;
+  top: 5px;
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  color: inherit;              /* use surrounding text color */
+  cursor: pointer;
+  transition: background .15s ease, opacity .15s ease, transform .05s ease;
+  padding: 0;
+}
+
+.topic-edit-btn:hover,
+.chat-delete-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.topic-edit-btn:active,
+.chat-delete-btn:active {
+  transform: translateY(1px);
+}
+
+.topic-edit-btn:focus-visible,
+.chat-delete-btn:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.5); /* simple focus ring */
+  outline-offset: 2px;
+}
+
+.topic-edit-btn:disabled,
+.chat-delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* make delete look a bit “danger” without being loud */
+.chat-delete-btn {
+  color: #ef4444;
+}
+.chat-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+/* dark mode hover background */
+@media (prefers-color-scheme: dark) {
+  .topic-edit-btn:hover,
+  .chat-delete-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+
+/* Placement in your header/title area */
+.chat-window-title .icon-btn { margin-left: 8px; }
+
+/* Topic edit row */
+.topic-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.topic-input {
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--chat-border);
+  background: var(--chat-bg);
+  color: var(--chat-text);
+  font-size: 14px;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.topic-input:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--chat-primary) 60%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--chat-primary) 18%, transparent);
+}
+
+/* Optional: tuck delete button to the far right of the header */
+.chat-window-header .chat-actions {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+
 .chat-new-btn-support{
   position: relative;
   margin-bottom: 12px;

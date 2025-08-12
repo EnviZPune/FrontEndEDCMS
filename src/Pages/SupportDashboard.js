@@ -1,7 +1,5 @@
-"use client"
-
 import { useEffect, useMemo, useRef, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
 import * as signalR from "@microsoft/signalr"
 import { API_BASE, HUB_URL } from "../config"
@@ -17,11 +15,38 @@ import {
   Bot,
   Loader2,
   ShieldCheck,
-  XCircle
+  XCircle,
+  Pencil,
+  Check,
+  X
 } from "lucide-react"
 import "../Styling/support-dashboard.css"
 
-const DEFAULT_AVATAR_PATH = "Assets/default-avatar.jpg"
+ const USER_PROFILE_BASE = "/profile";
+ const profilePath = (id) => `${USER_PROFILE_BASE}/${id}`;
+ const DEFAULT_AVATAR_PATH = "Assets/default-avatar.jpg"
+
+// Safely pick common avatar fields
+const pickAvatarUrl = (u) =>
+  u?.profileImage ||
+  u?.profilePictureUrl ||
+  u?.avatarUrl ||
+  u?.photoUrl ||
+  ""
+
+// Safely pick a display name
+const pickDisplayName = (u) => {
+  const joined = [u?.firstName, u?.lastName].filter(Boolean).join(" ").trim()
+  return (
+    u?.displayName ||
+    u?.fullName ||
+    (joined || null) ||
+    u?.name ||
+    u?.username ||
+    u?.email ||
+    ""
+  )
+}
 
 export default function SupportDashboard() {
   const navigate = useNavigate()
@@ -38,6 +63,8 @@ export default function SupportDashboard() {
   const [activeStatus, setActiveStatus] = useState(null) // "Open" | "Pending" | "Closed"
   const [messages, setMessages] = useState([])
   const [topic, setTopic] = useState("")
+  const [editingTopic, setEditingTopic] = useState(false)
+  const [topicDraft, setTopicDraft] = useState("")
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const [denied, setDenied] = useState(false)
@@ -47,9 +74,9 @@ export default function SupportDashboard() {
   // Connection state
   const [connected, setConnected] = useState(false)
 
-  // Avatars cache: { [userId: string]: string }
-  const [avatars, setAvatars] = useState({})
-  const pendingAvatarIdsRef = useRef(new Set())
+  // Profiles cache: { [userId: string]: { avatar: string, name: string } }
+  const [profiles, setProfiles] = useState({})
+  const pendingProfileIdsRef = useRef(new Set())
 
   // Track message IDs we've already rendered (prevents duplicate renders/remounts)
   const seenMessageIdsRef = useRef(new Set())
@@ -132,38 +159,40 @@ export default function SupportDashboard() {
     if (data) setMyThreads(Array.isArray(data) ? data : [])
   }
 
-  // ----- Avatars -----
-  const pickAvatarUrl = (u) =>
-    u?.profileImage ||
-    u?.profilePictureUrl ||
-    u?.avatarUrl ||
-    u?.photoUrl ||
-    ""
-
-  const fetchMissingAvatars = async (userIds /* array<string> */) => {
+  // ----- Profiles (avatar + name) fetcher for end-users in the thread -----
+  const fetchMissingProfiles = async (userIds /* array<string> */) => {
     if (!userIds.length) return
     try {
       const results = await Promise.all(
         userIds.map(async (uid) => {
           try {
             const res = await fetch(`${API_BASE}/User/${uid}`, { headers: authHeaders() })
-            if (!res.ok) return [uid, DEFAULT_AVATAR_PATH]
+            if (!res.ok) {
+              return [uid, { avatar: DEFAULT_AVATAR_PATH, name: `User #${uid}` }]
+            }
             const u = await res.json()
             const url = pickAvatarUrl(u)
-            return [uid, url && typeof url === "string" ? url : DEFAULT_AVATAR_PATH]
+            const name = pickDisplayName(u)
+            return [
+              uid,
+              {
+                avatar: url && typeof url === "string" ? url : DEFAULT_AVATAR_PATH,
+                name: name?.trim() ? name.trim() : `User #${uid}`
+              }
+            ]
           } catch {
-            return [uid, DEFAULT_AVATAR_PATH]
+            return [uid, { avatar: DEFAULT_AVATAR_PATH, name: `User #${uid}` }]
           }
         })
       )
-      // Update only if changed
-      setAvatars((prev) => {
+      setProfiles((prev) => {
         let changed = false
         const next = { ...prev }
-        for (const [uid, url] of results) {
+        for (const [uid, data] of results) {
           const key = String(uid)
-          const val = url || DEFAULT_AVATAR_PATH
-          if (next[key] !== val) {
+          const val = data || { avatar: DEFAULT_AVATAR_PATH, name: `User #${uid}` }
+          const prevVal = next[key]
+          if (!prevVal || prevVal.avatar !== val.avatar || prevVal.name !== val.name) {
             next[key] = val
             changed = true
           }
@@ -171,12 +200,12 @@ export default function SupportDashboard() {
         return changed ? next : prev
       })
     } finally {
-      userIds.forEach((id) => pendingAvatarIdsRef.current.delete(String(id)))
+      userIds.forEach((id) => pendingProfileIdsRef.current.delete(String(id)))
     }
   }
 
-  // Compute exactly which user IDs are missing an avatar (memoized)
-  const missingAvatarIds = useMemo(() => {
+  // Determine which user IDs we still need profiles for (only end-users)
+  const missingProfileIds = useMemo(() => {
     if (!messages?.length) return []
     const ids = new Set()
     for (const m of messages) {
@@ -185,34 +214,33 @@ export default function SupportDashboard() {
       const strId = String(raw ?? "")
       if (!strId) continue
       if (!Number.isFinite(Number(strId))) continue
-      if (!avatars[strId] && !pendingAvatarIdsRef.current.has(strId)) {
+      if (!profiles[strId] && !pendingProfileIdsRef.current.has(strId)) {
         ids.add(strId)
       }
     }
     return Array.from(ids)
-  }, [messages, avatars])
+  }, [messages, profiles])
 
-  // Prefetch missing avatars whenever the set of missing IDs changes
+  // Fetch missing profiles as they appear
   useEffect(() => {
-    if (!missingAvatarIds.length) return
-    missingAvatarIds.forEach((id) => pendingAvatarIdsRef.current.add(String(id)))
-    fetchMissingAvatars(missingAvatarIds)
+    if (!missingProfileIds.length) return
+    missingProfileIds.forEach((id) => pendingProfileIdsRef.current.add(String(id)))
+    fetchMissingProfiles(missingProfileIds)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [missingAvatarIds])
+  }, [missingProfileIds])
 
   // ----- Thread open + hub connection -----
   const openThread = async (id) => {
     setActiveThreadId(id)
-
-    // Reset seen ids for this thread to avoid cross-thread carryover
     seenMessageIdsRef.current = new Set()
 
     const dto = await fetchJson(`${API_BASE}/Support/threads/${id}`)
     if (!dto) return
 
-    setTopic(dto.topic || dto.title || `Thread #${id}`)
+    const t = dto.topic || dto.title || `Thread #${id}`
+    setTopic(t)
+    setTopicDraft(t)
 
-    // Seed messages and the seen ids set
     const initialMessages = Array.isArray(dto.messages) ? dto.messages : []
     setMessages(initialMessages)
     for (const m of initialMessages) {
@@ -240,16 +268,13 @@ export default function SupportDashboard() {
     connRef.current = connection
 
     connection.on("message", (msg) => {
-      // —— DEDUPE: ignore if we've already seen this messageId ——
+      // Dedupe
       const id = msg?.messageId
       if (id != null) {
         const key = String(id)
-        if (seenMessageIdsRef.current.has(key)) {
-          return
-        }
+        if (seenMessageIdsRef.current.has(key)) return
         seenMessageIdsRef.current.add(key)
       } else {
-        // If the server doesn't send IDs (unlikely), fall back to a weak hash
         const fallbackKey = `${msg?.createdAt || ""}|${msg?.senderUserId || ""}|${msg?.body || ""}`
         if (seenMessageIdsRef.current.has(fallbackKey)) return
         seenMessageIdsRef.current.add(fallbackKey)
@@ -264,7 +289,6 @@ export default function SupportDashboard() {
       setMessages((prev) => [...prev, normalized])
     })
 
-    // Optional: server can broadcast ThreadClosed
     connection.on("ThreadClosed", (dto) => {
       if (dto?.threadId === threadId) {
         setActiveStatus("Closed")
@@ -369,6 +393,35 @@ export default function SupportDashboard() {
     }
   }
 
+  // Rename topic (admin)
+  const saveTopic = async () => {
+    if (!activeThreadId) return
+    const newTopic = topicDraft.trim()
+    if (!newTopic || newTopic === topic) { setEditingTopic(false); return }
+    try {
+      const res = await fetch(`${API_BASE}/Support/threads/${activeThreadId}/topic`, {
+        method: "PUT",
+        headers: { ...authHeaders(), "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: newTopic })
+      })
+      if (!res.ok) {
+        const txt = await res.text().catch(()=> "")
+        throw new Error(txt || `Failed (${res.status})`)
+      }
+      const dto = await res.json()
+      const t = dto.topic || newTopic
+      setTopic(t)
+      setEditingTopic(false)
+
+      // Update lists
+      setThreads((prev) => prev.map(x => x.threadId === activeThreadId ? { ...x, topic: t, title: t } : x))
+      setMyThreads((prev) => prev.map(x => x.threadId === activeThreadId ? { ...x, topic: t, title: t } : x))
+    } catch (e) {
+      console.error(e)
+      alert("Couldn't update the subject.")
+    }
+  }
+
   // ----- UI helpers -----
   const getStatusIcon = (status) => {
     switch ((status || "").toLowerCase()) {
@@ -407,6 +460,15 @@ export default function SupportDashboard() {
     return date.toLocaleDateString()
   }
 
+  // Resolve author label for a message (admin’s view)
+  const authorNameFor = (m) => {
+    if (m.isSystem) return "System"
+    if (m.senderIsAdmin) return (m.senderName && m.senderName.trim()) || "Support"
+    const key = String(m?.senderUserId ?? "")
+    const profile = key ? profiles[key] : null
+    return (m.senderName && m.senderName.trim()) || profile?.name || (key ? `User #${key}` : "User")
+  }
+
   // ----- Initial loads (after auth) -----
   useEffect(() => {
     if (!authChecked || !authorized) return
@@ -424,9 +486,7 @@ export default function SupportDashboard() {
     )
   }
 
-  if (!authorized) {
-    return null // redirect already triggered
-  }
+  if (!authorized) return null
 
   if (denied) {
     return (
@@ -483,7 +543,7 @@ export default function SupportDashboard() {
                       onClick={() => openThread(t.threadId)}
                     >
                       <div className="sd-thread-header">
-                        <h3 className="sd-thread-title">{t.title || t.topic || `Thread #${t.threadId}`}</h3>
+                        <h3 className="sd-thread-title">{t.topic || t.title || `Thread #${t.threadId}`}</h3>
                         <span className="sd-thread-time">{formatTime(last)}</span>
                       </div>
                       <div className="sd-thread-meta">
@@ -534,7 +594,7 @@ export default function SupportDashboard() {
                     onClick={() => openThread(t.threadId)}
                   >
                     <div className="sd-thread-header">
-                      <h4 className="sd-thread-title">{t.title || t.topic || `Thread #${t.threadId}`}</h4>
+                      <h4 className="sd-thread-title">{t.topic || t.title || `Thread #${t.threadId}`}</h4>
                       <span className="sd-thread-time">{formatTime(last)}</span>
                     </div>
                     <span className={`sd-status ${getStatusColor(t.status)}`}>
@@ -556,7 +616,30 @@ export default function SupportDashboard() {
             {/* Chat Header */}
             <div className="sd-chat-header">
               <div className="sd-chat-info">
-                <h1 className="sd-chat-title">{topic}</h1>
+                {!editingTopic ? (
+                  <div className="sd-chat-title-row">
+                    <h1 className="sd-chat-title">{topic}</h1>
+                    <button className="topic-edit-btn" onClick={() => setEditingTopic(true)} title="Rename subject">
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="topic-edit">
+                    <input
+                      className="topic-input"
+                      value={topicDraft}
+                      onChange={(e) => setTopicDraft(e.target.value)}
+                      maxLength={300}
+                      autoFocus
+                    />
+                    <button className="topic-commit" onClick={saveTopic} title="Save">
+                      <Check className="w-4 h-4" />
+                    </button>
+                    <button className="topic-cancel" onClick={() => { setTopicDraft(topic); setEditingTopic(false) }} title="Cancel">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
                 <span className="sd-chat-id">Thread #{activeThreadId}</span>
                 <span className={`sd-status ml-2 ${getStatusColor(activeStatus)}`}>
                   {getStatusIcon(activeStatus)}
@@ -595,70 +678,84 @@ export default function SupportDashboard() {
                   <p>This thread is ready for your first message.</p>
                 </div>
               ) : (
-                messages.map((m) => (
-                  <div
-                    key={m.messageId ?? `${m.createdAt}-${m.senderUserId ?? m.senderIsAdmin ?? "sys"}`}
-                    className={`sd-message ${m.isSystem ? "system" : m.senderIsAdmin ? "agent" : "user"}`}
-                  >
-                    <div className="sd-message-avatar">
-                      {m.isSystem ? (
-                        <div className="sd-avatar system">
-                          <AlertCircle className="w-4 h-4" />
-                        </div>
-                      ) : m.senderIsAdmin ? (
-                        <div className="sd-avatar agent">
-                          <Bot className="w-4 h-4" />
-                        </div>
-                      ) : (
-                        <div className="sd-avatar user">
-                          <img
-                            // swap DEFAULT_AVATAR_PATH for DEFAULT_AVATAR_DATA_URI if desired
-                            src={
-                              avatars?.[String(m.senderUserId)]?.trim()
-                                ? avatars[String(m.senderUserId)]
-                                : DEFAULT_AVATAR_PATH
-                                // : DEFAULT_AVATAR_DATA_URI
-                            }
-                            alt="User avatar"
-                            className="sd-avatar-img"
-                            loading="lazy"
-                            draggable={false}
-                            onError={(e) => {
-                              e.currentTarget.onerror = null
-                              e.currentTarget.src = DEFAULT_AVATAR_PATH
-                              // e.currentTarget.src = DEFAULT_AVATAR_DATA_URI
-                            }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                    <div className="sd-message-content">
-                      {m.body && <div className="sd-message-body">{m.body}</div>}
+                messages.map((m) => {
+                  const key = String(m?.senderUserId ?? "")
+                  const avatar = m.isSystem
+                    ? null
+                    : m.senderIsAdmin
+                    ? null
+                    : profiles[key]?.avatar || DEFAULT_AVATAR_PATH
 
-                      {/* Render image attachments */}
-                      {Array.isArray(m.attachments) && m.attachments.length > 0 && (
-                        <div className="sd-attachments-grid">
-                          {m.attachments.map((a) =>
-                            a.kind === "image" ? (
-                              <a
-                                key={a.attachmentId || a.url}
-                                href={a.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="sd-attachment"
-                                title={a.fileName || "image"}
-                              >
-                                <img src={a.url} alt={a.fileName || "attachment"} loading="lazy" draggable={false} />
-                              </a>
-                            ) : null
-                          )}
-                        </div>
-                      )}
+                  return (
+                    <div
+                      key={m.messageId ?? `${m.createdAt}-${m.senderUserId ?? m.senderIsAdmin ?? "sys"}`}
+                      className={`sd-message ${m.isSystem ? "system" : m.senderIsAdmin ? "agent" : "user"}`}
+                    >
+                      <div className="sd-message-avatar">
+                        {m.isSystem ? (
+                          <div className="sd-avatar system">
+                            <AlertCircle className="w-4 h-4" />
+                          </div>
+                        ) : m.senderIsAdmin ? (
+                          <div className="sd-avatar agent">
+                            <Bot className="w-4 h-4" />
+                          </div>
+                        ) : (
+                     <div className="sd-avatar user">
+                            <Link
+                              to={profilePath(m.senderUserId)}
+                              className="sd-avatar-link"
+                              title={`Open ${authorNameFor(m)}'s profile`}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <img
+                                src={avatar}
+                                alt={`${authorNameFor(m)} avatar`}
+                                className="sd-avatar-img"
+                                loading="lazy"
+                                draggable={false}
+                                onError={(e) => {
+                                  e.currentTarget.onerror = null
+                                  e.currentTarget.src = DEFAULT_AVATAR_PATH
+                                }}
+                              />
+                            </Link>
+                          </div>
+                        )}
+                      </div>
 
-                      <div className="sd-message-time">{formatTime(m.createdAt)}</div>
+                      <div className="sd-message-content">
+                        {/* Author name line */}
+                        <div className="sd-author">{authorNameFor(m)}</div>
+
+                        {/* Body */}
+                        {m.body && <div className="sd-message-body">{m.body}</div>}
+
+                        {/* Attachments */}
+                        {Array.isArray(m.attachments) && m.attachments.length > 0 && (
+                          <div className="sd-attachments-grid">
+                            {m.attachments.map((a) =>
+                              a.kind === "image" ? (
+                                <a
+                                  key={a.attachmentId || a.url}
+                                  href={a.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="sd-attachment"
+                                  title={a.fileName || "image"}
+                                >
+                                  <img src={a.url} alt={a.fileName || "attachment"} loading="lazy" draggable={false} />
+                                </a>
+                              ) : null
+                            )}
+                          </div>
+                        )}
+
+                        <div className="sd-message-time">{formatTime(m.createdAt)}</div>
+                      </div>
                     </div>
-                  </div>
-                ))
+                  )
+                })
               )}
               <div ref={messagesEndRef} />
             </div>

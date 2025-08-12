@@ -648,6 +648,24 @@
   text-align: right;
 }
 
+/* Author name (admin sees end-user names) */
+.sd-author {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  color: var(--sd-text-muted, #6b7280);
+}
+.sd-message.user .sd-author {
+  color: var(--sd-text-secondary, #374151);
+}
+.sd-message.agent .sd-author {
+  color: var(--sd-text-secondary, #374151);
+}
+.sd-message.system .sd-author {
+  display: none;
+}
+
+
 /* Input area */
 .sd-input-area {
   padding: 20px;
