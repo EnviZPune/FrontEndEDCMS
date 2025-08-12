@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { jwtDecode } from "jwt-decode" // if on v3 of jwt-decode, use: import jwtDecode from "jwt-decode"
+import { jwtDecode } from "jwt-decode"
 import * as signalR from "@microsoft/signalr"
 import { API_BASE, HUB_URL } from "../config"
 import { authHeaders, getToken } from "../utils/auth"
@@ -21,7 +21,7 @@ import {
 } from "lucide-react"
 import "../Styling/support-dashboard.css"
 
-const DEFAULT_AVATAR_PATH = "/default-avatar.png" // update if your asset lives elsewhere
+const DEFAULT_AVATAR_PATH = "Assets/default-avatar.jpg"
 
 export default function SupportDashboard() {
   const navigate = useNavigate()
@@ -50,6 +50,9 @@ export default function SupportDashboard() {
   // Avatars cache: { [userId: string]: string }
   const [avatars, setAvatars] = useState({})
   const pendingAvatarIdsRef = useRef(new Set())
+
+  // Track message IDs we've already rendered (prevents duplicate renders/remounts)
+  const seenMessageIdsRef = useRef(new Set())
 
   // Refs
   const connRef = useRef(null)
@@ -137,7 +140,7 @@ export default function SupportDashboard() {
     u?.photoUrl ||
     ""
 
-  const fetchMissingAvatars = async (userIds /* array of string ids */) => {
+  const fetchMissingAvatars = async (userIds /* array<string> */) => {
     if (!userIds.length) return
     try {
       const results = await Promise.all(
@@ -153,7 +156,7 @@ export default function SupportDashboard() {
           }
         })
       )
-      // Only update the keys that changed to reduce re-renders
+      // Update only if changed
       setAvatars((prev) => {
         let changed = false
         const next = { ...prev }
@@ -168,7 +171,6 @@ export default function SupportDashboard() {
         return changed ? next : prev
       })
     } finally {
-      // clear pending flags
       userIds.forEach((id) => pendingAvatarIdsRef.current.delete(String(id)))
     }
   }
@@ -193,7 +195,6 @@ export default function SupportDashboard() {
   // Prefetch missing avatars whenever the set of missing IDs changes
   useEffect(() => {
     if (!missingAvatarIds.length) return
-    // mark as pending to prevent re-entry
     missingAvatarIds.forEach((id) => pendingAvatarIdsRef.current.add(String(id)))
     fetchMissingAvatars(missingAvatarIds)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -202,10 +203,24 @@ export default function SupportDashboard() {
   // ----- Thread open + hub connection -----
   const openThread = async (id) => {
     setActiveThreadId(id)
+
+    // Reset seen ids for this thread to avoid cross-thread carryover
+    seenMessageIdsRef.current = new Set()
+
     const dto = await fetchJson(`${API_BASE}/Support/threads/${id}`)
     if (!dto) return
+
     setTopic(dto.topic || dto.title || `Thread #${id}`)
-    setMessages(Array.isArray(dto.messages) ? dto.messages : [])
+
+    // Seed messages and the seen ids set
+    const initialMessages = Array.isArray(dto.messages) ? dto.messages : []
+    setMessages(initialMessages)
+    for (const m of initialMessages) {
+      if (m?.messageId != null) {
+        seenMessageIdsRef.current.add(String(m.messageId))
+      }
+    }
+
     setActiveStatus(dto.status || "Open")
     await connectToHub(id)
   }
@@ -225,6 +240,21 @@ export default function SupportDashboard() {
     connRef.current = connection
 
     connection.on("message", (msg) => {
+      // —— DEDUPE: ignore if we've already seen this messageId ——
+      const id = msg?.messageId
+      if (id != null) {
+        const key = String(id)
+        if (seenMessageIdsRef.current.has(key)) {
+          return
+        }
+        seenMessageIdsRef.current.add(key)
+      } else {
+        // If the server doesn't send IDs (unlikely), fall back to a weak hash
+        const fallbackKey = `${msg?.createdAt || ""}|${msg?.senderUserId || ""}|${msg?.body || ""}`
+        if (seenMessageIdsRef.current.has(fallbackKey)) return
+        seenMessageIdsRef.current.add(fallbackKey)
+      }
+
       const normalized = {
         ...msg,
         senderIsAdmin: !!msg.senderIsAdmin,
@@ -567,7 +597,7 @@ export default function SupportDashboard() {
               ) : (
                 messages.map((m) => (
                   <div
-                    key={m.messageId || `${m.createdAt}-${m.senderUserId || m.senderIsAdmin || "sys"}`}
+                    key={m.messageId ?? `${m.createdAt}-${m.senderUserId ?? m.senderIsAdmin ?? "sys"}`}
                     className={`sd-message ${m.isSystem ? "system" : m.senderIsAdmin ? "agent" : "user"}`}
                   >
                     <div className="sd-message-avatar">
@@ -582,16 +612,21 @@ export default function SupportDashboard() {
                       ) : (
                         <div className="sd-avatar user">
                           <img
+                            // swap DEFAULT_AVATAR_PATH for DEFAULT_AVATAR_DATA_URI if desired
                             src={
                               avatars?.[String(m.senderUserId)]?.trim()
                                 ? avatars[String(m.senderUserId)]
                                 : DEFAULT_AVATAR_PATH
+                                // : DEFAULT_AVATAR_DATA_URI
                             }
                             alt="User avatar"
                             className="sd-avatar-img"
+                            loading="lazy"
+                            draggable={false}
                             onError={(e) => {
                               e.currentTarget.onerror = null
                               e.currentTarget.src = DEFAULT_AVATAR_PATH
+                              // e.currentTarget.src = DEFAULT_AVATAR_DATA_URI
                             }}
                           />
                         </div>
@@ -613,7 +648,7 @@ export default function SupportDashboard() {
                                 className="sd-attachment"
                                 title={a.fileName || "image"}
                               >
-                                <img src={a.url} alt={a.fileName || "attachment"} />
+                                <img src={a.url} alt={a.fileName || "attachment"} loading="lazy" draggable={false} />
                               </a>
                             ) : null
                           )}

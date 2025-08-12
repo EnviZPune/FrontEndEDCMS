@@ -1,5 +1,8 @@
+"use client"
+
 import { useEffect, useRef, useState } from "react"
 import * as signalR from "@microsoft/signalr"
+import { jwtDecode } from "jwt-decode"
 import { API_BASE, HUB_URL } from "../../config"
 import { authHeaders, getToken } from "../../utils/auth"
 import {
@@ -7,10 +10,42 @@ import {
   Image as ImageIcon,
   Send,
   Loader2,
-  AlertCircle,
-  User as UserIcon
+  AlertCircle
 } from "lucide-react"
 import "../../Styling/chat.css"
+
+const DEFAULT_AVATAR = "Assets/default-avatar.jpg"
+
+// Safely pick a user's photo url from typical fields
+const pickAvatarUrl = (u) =>
+  u?.profileImage ||
+  u?.profilePictureUrl ||
+  u?.avatarUrl ||
+  u?.photoUrl ||
+  ""
+
+// Try to read userId from the JWT for fallback when /User/me is not available
+function resolveUserIdFromToken() {
+  try {
+    const token = getToken()
+    if (!token) return null
+    const decoded = jwtDecode(token)
+    const candidates = [
+      "nameid",
+      "sub",
+      "uid",
+      "userId",
+      "UserId",
+      "user_id",
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+    ]
+    for (const k of candidates) {
+      const v = decoded?.[k]
+      if (v != null && `${v}`.trim() !== "") return `${v}`.trim()
+    }
+  } catch {}
+  return null
+}
 
 export default function SupportChatWindow({ threadId }) {
   const [topic, setTopic] = useState("")
@@ -19,18 +54,43 @@ export default function SupportChatWindow({ threadId }) {
   const [sending, setSending] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [connected, setConnected] = useState(false)
+  const [meAvatar, setMeAvatar] = useState(DEFAULT_AVATAR)
 
-  // drag / drop state
   const [isDragging, setIsDragging] = useState(false)
 
   const connRef = useRef(null)
   const endRef = useRef(null)
+  const fileInputRef = useRef(null)
 
   const scrollToBottom = () => endRef.current?.scrollIntoView({ behavior: "smooth" })
+  useEffect(() => { scrollToBottom() }, [messages])
 
+  // Load current user's avatar once
   useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+    let alive = true
+    ;(async () => {
+      try {
+        // Prefer /User/me if your API supports it
+        let res = await fetch(`${API_BASE}/User/me`, { headers: authHeaders() })
+        if (!res.ok) {
+          // Fallback: decode token and call /User/{id}
+          const uid = resolveUserIdFromToken()
+          if (uid) {
+            res = await fetch(`${API_BASE}/User/${uid}`, { headers: authHeaders() })
+          }
+        }
+        if (!alive) return
+        if (!res?.ok) { setMeAvatar(DEFAULT_AVATAR); return }
+        const u = await res.json()
+        const url = pickAvatarUrl(u)
+        setMeAvatar(url && typeof url === "string" ? url : DEFAULT_AVATAR)
+      } catch {
+        if (alive) setMeAvatar(DEFAULT_AVATAR)
+      }
+    })()
+    return () => { alive = false }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Load thread + connect hub on mount / thread change
   useEffect(() => {
@@ -38,7 +98,6 @@ export default function SupportChatWindow({ threadId }) {
 
     const load = async () => {
       if (!threadId) return
-      // Fetch existing thread
       const res = await fetch(`${API_BASE}/Support/threads/${threadId}`, {
         headers: authHeaders()
       })
@@ -49,7 +108,6 @@ export default function SupportChatWindow({ threadId }) {
       setTopic(dto.topic || dto.title || `Thread #${threadId}`)
       setMessages(Array.isArray(dto.messages) ? dto.messages : [])
 
-      // (re)connect to hub
       await connectToHub(threadId)
     }
 
@@ -78,7 +136,6 @@ export default function SupportChatWindow({ threadId }) {
     connRef.current = connection
 
     connection.on("message", (msg) => {
-      // normalize for safety
       const normalized = {
         ...msg,
         createdAt: msg.createdAt || new Date().toISOString(),
@@ -115,7 +172,6 @@ export default function SupportChatWindow({ threadId }) {
   const sendText = async () => {
     const text = input.trim()
     if (!text || !connRef.current || !threadId || sending) return
-
     setSending(true)
     try {
       await connRef.current.invoke("SendMessage", threadId, text)
@@ -130,26 +186,19 @@ export default function SupportChatWindow({ threadId }) {
   // ---------- Image upload ----------
   const onPickImage = async (file) => {
     if (!file || uploading) return
-    // Optional: basic guard
-    if (!file.type.startsWith("image/")) {
-      alert("Please choose an image.")
-      return
-    }
-    if (file.size > 10 * 1024 * 1024) { // 10MB
-      alert("Image is too large (max 10MB).")
-      return
-    }
+    if (!file.type.startsWith("image/")) { alert("Please choose an image."); return }
+    if (file.size > 10 * 1024 * 1024) { alert("Image is too large (max 10MB)."); return }
 
     setUploading(true)
     try {
       const form = new FormData()
       form.append("file", file)
-      // Optional caption: use the current text input if present, then clear it
       if (input.trim()) form.append("caption", input.trim())
 
-      const res = await fetch(`${API_BASE}/Support/threads/${threadId}/messages/photo`, {
+      // IMPORTANT: matches your controller route: POST /api/Support/threads/{threadId}/photos
+      const res = await fetch(`${API_BASE}/Support/threads/${threadId}/photos`, {
         method: "POST",
-        headers: authHeaders(), // do NOT set Content-Type; browser sets multipart boundary
+        headers: authHeaders(), // don't set content-type manually
         body: form
       })
       if (!res.ok) {
@@ -157,7 +206,6 @@ export default function SupportChatWindow({ threadId }) {
         throw new Error(t || `Upload failed (${res.status})`)
       }
 
-      // The API returns a SupportMessageDTO. We can optimistically append it.
       const dto = await res.json()
       const normalized = {
         ...dto,
@@ -165,7 +213,6 @@ export default function SupportChatWindow({ threadId }) {
         attachments: Array.isArray(dto.attachments) ? dto.attachments : []
       }
       setMessages((prev) => [...prev, normalized])
-      // Clear input if we used it as caption
       if (input.trim()) setInput("")
     } catch (e) {
       console.error(e)
@@ -176,10 +223,7 @@ export default function SupportChatWindow({ threadId }) {
   }
 
   // Drag & drop handlers
-  const onDragOver = (e) => {
-    e.preventDefault()
-    setIsDragging(true)
-  }
+  const onDragOver = (e) => { e.preventDefault(); setIsDragging(true) }
   const onDragLeave = () => setIsDragging(false)
   const onDrop = (e) => {
     e.preventDefault()
@@ -187,8 +231,6 @@ export default function SupportChatWindow({ threadId }) {
     const file = e.dataTransfer?.files?.[0]
     if (file) onPickImage(file)
   }
-
-  const fileInputRef = useRef(null)
 
   return (
     <div className="chat-window" onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}>
@@ -202,7 +244,6 @@ export default function SupportChatWindow({ threadId }) {
         </div>
       </div>
 
-      {/* Drop overlay */}
       {isDragging && (
         <div className="chat-drop-overlay">
           <ImageIcon className="w-8 h-8" />
@@ -210,7 +251,6 @@ export default function SupportChatWindow({ threadId }) {
         </div>
       )}
 
-      {/* Messages */}
       <div className="chat-messages">
         {messages.length === 0 ? (
           <div className="chat-messages-empty">
@@ -225,27 +265,39 @@ export default function SupportChatWindow({ threadId }) {
             >
               <div className="chat-avatar">
                 {m.isSystem ? (
-                  <div className="avatar system"><AlertCircle className="w-4 h-4" /></div>
+                  <div className="sd-avatar system"><AlertCircle className="w-4 h-4" /></div>
                 ) : m.senderIsAdmin ? (
-                  <div className="avatar agent">A</div>
+                  <div className="sd-avatar agent">A</div>
                 ) : (
-                  <div className="avatar user"><UserIcon className="w-4 h-4" /></div>
+                  // === USER AVATAR (real photo with dashboard styles) ===
+                  <div className="sd-avatar user">
+                    <img
+                      className="sd-avatar-img"
+                      src={meAvatar || DEFAULT_AVATAR}
+                      alt="Your avatar"
+                      loading="lazy"
+                      draggable={false}
+                      onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = DEFAULT_AVATAR }}
+                    />
+                  </div>
                 )}
               </div>
+
               <div className="chat-bubble">
                 {m.body && <div className="chat-text">{m.body}</div>}
 
-                {/* Attachments (images) */}
                 {Array.isArray(m.attachments) && m.attachments.length > 0 && (
                   <div className="chat-attachments-grid">
                     {m.attachments.map((a) =>
                       a.kind === "image" ? (
-                        <a key={a.attachmentId || a.url}
-                           href={a.url}
-                           target="_blank"
-                           rel="noreferrer"
-                           className="chat-attachment"
-                           title={a.fileName || "image"}>
+                        <a
+                          key={a.attachmentId || a.url}
+                          href={a.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="chat-attachment"
+                          title={a.fileName || "image"}
+                        >
                           <img src={a.url} alt={a.fileName || "attachment"} />
                         </a>
                       ) : null
@@ -261,7 +313,6 @@ export default function SupportChatWindow({ threadId }) {
         <div ref={endRef} />
       </div>
 
-      {/* Input + actions */}
       <div className="chat-input-row">
         <input
           type="file"
