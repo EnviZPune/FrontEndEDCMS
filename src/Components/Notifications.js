@@ -262,10 +262,10 @@ export default function Notifications() {
 
   return (
     <div ref={wrapperRef} className="notification-wrapper">
-      <div className="notification-bell-container">
+      <div className="notification-bell-container" onClick={() => setOpen((o) => !o)}
+>
         <FaBell
           className={`notification-bell ${connectionStatus === "Connected" ? "connected" : ""}`}
-          onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
           aria-controls="notifications-panel"
           title={`${totalCount} notifications`}

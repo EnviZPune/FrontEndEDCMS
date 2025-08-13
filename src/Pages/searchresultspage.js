@@ -25,6 +25,65 @@ const slugify = (str) =>
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
 
+/** Build a readable size label from common shapes on the item */
+function pickSizeLabel(item) {
+  if (!item) return "";
+
+  const single =
+    item.size ||
+    item.Size ||
+    item.sizeLabel ||
+    item.sizeName ||
+    item.dimension ||
+    item.Dimension;
+  if (single && typeof single === "string") return single.trim();
+
+  const arrayish =
+    item.sizes ||
+    item.Sizes ||
+    item.availableSizes ||
+    item.AvailableSizes ||
+    item.sizeOptions ||
+    item.SizeOptions;
+  if (Array.isArray(arrayish)) {
+    const parts = arrayish.map(String).map((s) => s.trim()).filter(Boolean);
+    if (parts.length) return parts.join("/");
+  }
+  if (typeof arrayish === "string") {
+    const parts = arrayish
+      .split(/[,\|/]+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (parts.length) return parts.join("/");
+  }
+
+  const dict =
+    item.sizeMap ||
+    item.availability ||
+    item.Availability ||
+    item.stockBySize ||
+    item.StockBySize;
+  if (dict && typeof dict === "object" && !Array.isArray(dict)) {
+    const keys = Object.keys(dict).map((k) => String(k).trim()).filter(Boolean);
+    if (keys.length) return keys.join("/");
+  }
+
+  const variants = item.variants || item.Variants || item.options || item.Options;
+  if (Array.isArray(variants)) {
+    const parts = Array.from(
+      new Set(
+        variants
+          .map((v) => v?.size || v?.Size || v?.option || v?.Option)
+          .map((s) => (s == null ? "" : String(s).trim()))
+          .filter(Boolean)
+      )
+    );
+    if (parts.length) return parts.join("/");
+  }
+
+  return "";
+}
+
 export default function SearchResultsPage() {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
@@ -65,7 +124,7 @@ export default function SearchResultsPage() {
         const catData  = await catRes.json();
         const userData = await userRes.json();
 
-        // enrich shops with logoUrl & items
+        // enrich shops with logoUrl & items (+ sizeLabel)
         const withItems = await Promise.all(
           bizData.map(async (b) => {
             const itRes = await fetch(
@@ -91,6 +150,7 @@ export default function SearchResultsPage() {
                 category:    i.category,
                 description: i.description,
                 imageUrl:    i.pictureUrls?.[0] || "/Assets/default-product.jpg",
+                sizeLabel:   pickSizeLabel(i),
               })),
             };
           })
@@ -143,7 +203,7 @@ export default function SearchResultsPage() {
   const fuseItems = useMemo(
     () =>
       new Fuse(flatItems, {
-        keys: ["name", "brand", "model", "category", "description", "price"],
+        keys: ["name", "brand", "model", "category", "description", "price", "sizeLabel"],
         threshold: 0.35,
       }),
     [flatItems]
@@ -204,12 +264,13 @@ export default function SearchResultsPage() {
     }));
 
     const itemsGroup = itemMatches.map((it) => ({
-      type:     "item",
-      id:       it.id,
-      name:     it.name,
-      brand:    it.brand,
-      shopSlug: it.shopSlug,
-      imageUrl: it.imageUrl,
+      type:       "item",
+      id:         it.id,
+      name:       it.name,
+      brand:      it.brand,
+      shopSlug:   it.shopSlug,
+      imageUrl:   it.imageUrl,
+      sizeLabel:  it.sizeLabel || "",
     }));
 
     const categoriesGroup = categoryMatches.map((c) => ({
@@ -325,10 +386,11 @@ export default function SearchResultsPage() {
                             />
                             <div className="search-results__item-info">
                               <span className="search-results__item-name">
-                                {`${item.name} — ${item.brand}`}
+                                {item.brand ? `${item.name} — ${item.brand}` : item.name}
                               </span>
                               <span className="search-results__item-meta">
                                 {item.shopSlug}
+                                {item.sizeLabel ? <>{" · "}<b>{item.sizeLabel}</b></> : null}
                               </span>
                             </div>
                           </Link>

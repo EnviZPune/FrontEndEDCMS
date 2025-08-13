@@ -4,6 +4,8 @@ import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
 import '../Styling/productdetails.css';
 
+const API_BASE = 'http://77.242.26.150:8000/api';
+
 const getToken = () => {
   const raw = localStorage.getItem('token') || localStorage.getItem('authToken');
   if (!raw || raw.trim() === '') return null;
@@ -17,38 +19,53 @@ const getToken = () => {
 
 const getHeaders = () => {
   const token = getToken();
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers.Authorization = `Bearer ${token}`;
   return headers;
 };
+
+// Safe slugify fallback if API doesn't return a slug
+const slugify = (str) =>
+  (str || '')
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [product, setProduct] = useState(null);
   const [mainImage, setMainImage] = useState(null);
+
+  // Shop routing info
+  const [shopId, setShopId] = useState(null);
   const [shopSlug, setShopSlug] = useState(null);
+  const [shopName, setShopName] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState(false);
 
+  // Load product + resolve businessId -> slug
   useEffect(() => {
-    const fetchProduct = async () => {
+    let alive = true;
+
+    const fetchProductAndShop = async () => {
+      setLoading(true);
       try {
-        const res = await fetch(`http://77.242.26.150:8000/api/ClothingItem/${id}`, {
-          headers: getHeaders(),
-        });
-
-        if (!res.ok) {
-          throw new Error(`Product fetch failed with status ${res.status}`);
-        }
-
+        // 1) Product
+        const res = await fetch(`${API_BASE}/ClothingItem/${id}`, { headers: getHeaders() });
+        if (!res.ok) throw new Error(`Product fetch failed with status ${res.status}`);
         const data = await res.json();
+        if (!alive) return;
+
         setProduct(data);
 
+        // Images
         let parsedImages = [];
         if (Array.isArray(data.pictureUrls)) {
           parsedImages = data.pictureUrls;
@@ -59,29 +76,51 @@ const ProductDetailsPage = () => {
             parsedImages = [];
           }
         }
-
         if (parsedImages.length > 0) setMainImage(parsedImages[0]);
 
-        if (data.businessId) {
-          const shopRes = await fetch(`http://77.242.26.150:8000/api/Business/${data.businessId}`, {
-            headers: getHeaders(),
-          });
+        // 2) Prefer businessIds[0], fallback to product.businessId if present
+        const primaryBizId =
+          (Array.isArray(data.businessIds) && data.businessIds.length > 0 && data.businessIds[0]) ||
+          data.businessId ||
+          null;
 
-          if (shopRes.ok) {
-            const shopData = await shopRes.json();
-            setShopSlug(shopData.slug);
+        if (primaryBizId) {
+          setShopId(primaryBizId);
+          // Fetch business to get slug & name
+          try {
+            const bizRes = await fetch(`${API_BASE}/Business/${primaryBizId}`, { headers: getHeaders() });
+            if (bizRes.ok) {
+              const biz = await bizRes.json();
+              const resolvedSlug = (biz.slug && biz.slug.trim()) || slugify(biz.name);
+              if (!alive) return;
+              setShopSlug(resolvedSlug || null);
+              setShopName(biz.name || null);
+            }
+          } catch {
+            /* ignore; backToShop will retry if needed */
           }
         }
-      } catch (error) {
-        console.error('Failed to load product:', error);
-        setProduct(null);
+      } catch {
+        if (alive) setProduct(null);
       } finally {
-        setLoading(false);
+        if (alive) setLoading(false);
       }
     };
 
-    fetchProduct();
+    fetchProductAndShop();
+    return () => { alive = false; };
   }, [id]);
+
+  const parsedImages = useMemo(() => {
+    if (!product) return [];
+    try {
+      return Array.isArray(product.pictureUrls)
+        ? product.pictureUrls
+        : JSON.parse(product.pictureUrls || '[]');
+    } catch {
+      return [];
+    }
+  }, [product]);
 
   const handleThumbnailClick = (url) => setMainImage(url);
 
@@ -95,7 +134,7 @@ const ProductDetailsPage = () => {
 
     setBooking(true);
     try {
-      const res = await fetch('http://77.242.26.150:8000/api/Reservation', {
+      const res = await fetch(`${API_BASE}/Reservation`, {
         method: 'POST',
         headers: getHeaders(),
         body: JSON.stringify({ clothingItemId: product.clothingItemId }),
@@ -106,24 +145,50 @@ const ProductDetailsPage = () => {
         const errText = await res.text();
         alert('Booking error: ' + errText);
       }
-    } catch (e) {
-      console.error('Reservation error:', e);
+    } catch {
       alert('An error occurred while booking.');
     } finally {
       setBooking(false);
     }
   };
 
-  const parsedImages = useMemo(() => {
-    if (!product) return [];
-    try {
-      return Array.isArray(product.pictureUrls)
-        ? product.pictureUrls
-        : JSON.parse(product.pictureUrls || '[]');
-    } catch {
-      return [];
+  // Always send user to the product's shop:
+  // 1) use known slug
+  // 2) fallback: derive from known name
+  // 3) fallback: fetch business by shopId now to resolve slug, then navigate
+  // 4) final fallback: home
+  const backToShop = async () => {
+    if (shopSlug && shopSlug.trim()) {
+      navigate(`/shop/${shopSlug.trim()}`);
+      return;
     }
-  }, [product]);
+
+    if (shopName && slugify(shopName)) {
+      navigate(`/shop/${slugify(shopName)}`);
+      return;
+    }
+
+    if (shopId) {
+      try {
+        const shopRes = await fetch(`${API_BASE}/Business/${shopId}`, { headers: getHeaders() });
+        if (shopRes.ok) {
+          const shopData = await shopRes.json();
+          const resolvedSlug =
+            (shopData.slug && shopData.slug.trim()) || slugify(shopData.name);
+          if (resolvedSlug) {
+            setShopSlug(resolvedSlug);
+            setShopName(shopData.name || null);
+            navigate(`/shop/${resolvedSlug}`);
+            return;
+          }
+        }
+      } catch {
+        // ignore and fall through
+      }
+    }
+
+    navigate('/');
+  };
 
   if (loading) return <div>Loading...</div>;
   if (!product) return <div>Product not found.</div>;
@@ -134,14 +199,9 @@ const ProductDetailsPage = () => {
       <div className="product-detail-container">
         <div className="top-back-button-wrapper">
           <button
+            type="button"
             className="back-to-shop-button"
-            onClick={() => {
-              if (shopSlug) {
-                navigate(`/shop/${shopSlug}`);
-              } else {
-                navigate(-1);
-              }
-            }}
+            onClick={backToShop}
           >
             ← Back to Shop
           </button>
@@ -149,9 +209,7 @@ const ProductDetailsPage = () => {
 
         <div className="product-main">
           <div className="product-images">
-            {mainImage && (
-              <img src={mainImage} alt="Main product" className="main-image" />
-            )}
+            {mainImage && <img src={mainImage} alt="Main product" className="main-image" />}
             <div className="thumbnail-list">
               {parsedImages.slice(0, 10).map((url, idx) => (
                 <img
@@ -185,8 +243,7 @@ const ProductDetailsPage = () => {
               <strong>Material:</strong> {product.material}
             </p>
             <p>
-              <strong>Colors:</strong> {product.colors}
-            </p>
+              <strong>Colors:</strong> {Array.isArray(product.colors) ? product.colors.join(', ') : product.colors}</p>
             <p>
               <strong>Size:</strong> {product.sizes}
             </p>

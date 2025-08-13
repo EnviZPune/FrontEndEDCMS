@@ -24,6 +24,75 @@ const slugify = (str) =>
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
 
+/** Try to build a human-readable size label from common structures */
+function pickSizeLabel(item) {
+  if (!item) return "";
+
+  // Direct single value
+  const single =
+    item.size ||
+    item.Size ||
+    item.sizeLabel ||
+    item.sizeName ||
+    item.dimension ||
+    item.Dimension;
+  if (single && typeof single === "string") return single.trim();
+
+  // Arrays (["S","M","L"]) or comma-separated ("S,M,L")
+  const arrayish =
+    item.sizes ||
+    item.Sizes ||
+    item.availableSizes ||
+    item.AvailableSizes ||
+    item.sizeOptions ||
+    item.SizeOptions;
+  if (Array.isArray(arrayish)) {
+    const parts = arrayish
+      .map(String)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (parts.length) return parts.join("/");
+  }
+  if (typeof arrayish === "string") {
+    const parts = arrayish
+      .split(/[,\|/]+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (parts.length) return parts.join("/");
+  }
+
+  // Object map { "S": 3, "M": 5 } -> "S/M"
+  const dict =
+    item.sizeMap ||
+    item.availability ||
+    item.Availability ||
+    item.stockBySize ||
+    item.StockBySize;
+  if (dict && typeof dict === "object" && !Array.isArray(dict)) {
+    const keys = Object.keys(dict)
+      .map((k) => String(k).trim())
+      .filter(Boolean);
+    if (keys.length) return keys.join("/");
+  }
+
+  // Variants array [{ size: "M", ... }, { size: "L", ... }]
+  const variants = item.variants || item.Variants || item.options || item.Options;
+  if (Array.isArray(variants)) {
+    const parts = Array.from(
+      new Set(
+        variants
+          .map((v) => v?.size || v?.Size || v?.option || v?.Option)
+          .map((s) => (s == null ? "" : String(s).trim()))
+          .filter(Boolean)
+      )
+    );
+    if (parts.length) return parts.join("/");
+  }
+
+  // Nothing found
+  return "";
+}
+
 export default function SearchBar() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery]     = useState("");
@@ -89,6 +158,7 @@ export default function SearchBar() {
                 category:    i.category,
                 description: i.description,
                 imageUrl:    i.pictureUrls?.[0] || "/default-product.jpg",
+                sizeLabel:   pickSizeLabel(i),
               })),
             };
           })
@@ -120,6 +190,7 @@ export default function SearchBar() {
         shop.clothingItems.map((it) => ({
           ...it,
           shopSlug: shop.slug,
+          shopName: shop.name,
         }))
       ),
     [shops]
@@ -138,7 +209,7 @@ export default function SearchBar() {
   const fuseItems = useMemo(
     () =>
       new Fuse(flatItems, {
-        keys: ["name", "brand", "model", "category", "description", "price"],
+        keys: ["name", "brand", "model", "category", "description", "price", "sizeLabel"],
         threshold: 0.35,
       }),
     [flatItems]
@@ -172,10 +243,10 @@ export default function SearchBar() {
 
     const timer = setTimeout(() => {
       // Fuzzy search each group
-      const shopMatches = fuseShops.search(q).map((r) => r.item);
-      const itemMatches = fuseItems.search(q).map((r) => r.item);
+      const shopMatches     = fuseShops.search(q).map((r) => r.item);
+      const itemMatches     = fuseItems.search(q).map((r) => r.item);
       const categoryMatches = fuseCategories.search(q).map((r) => r.item);
-      const userMatches = fuseUsers.search(q).map((r) => r.item);
+      const userMatches     = fuseUsers.search(q).map((r) => r.item);
 
       // Map to unified result objects
       const shopsGroup = shopMatches.map((s) => ({
@@ -187,11 +258,12 @@ export default function SearchBar() {
       }));
 
       const itemsGroup = itemMatches.map((it) => ({
-        type:     "item",
-        id:       it.id,
-        name:     it.name,
-        shopName: it.shopSlug,
-        imageUrl: it.imageUrl,
+        type:       "item",
+        id:         it.id,
+        name:       it.name,
+        shopName:   it.shopName || it.shopSlug,
+        imageUrl:   it.imageUrl,
+        sizeLabel:  it.sizeLabel || "",
       }));
 
       const categoriesGroup = categoryMatches.map((c) => ({
@@ -326,7 +398,12 @@ export default function SearchBar() {
                       )}
                       <span>
                         {highlight(item.name)}
-                        {item.type === "item" && ` — ${item.shopName}`}
+                        {item.type === "item" && (
+                          <>
+                            {" — "}{item.shopName}
+                            {item.sizeLabel ? <>{" · "}<b>{item.sizeLabel}</b></> : null}
+                          </>
+                        )}
                         {item.type === "user" && ` — ${item.email}`}
                       </span>
                     </li>

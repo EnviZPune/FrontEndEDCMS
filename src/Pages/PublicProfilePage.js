@@ -1,10 +1,25 @@
 import { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, Link } from "react-router-dom"
 import Navbar from "../Components/Navbar"
 import Footer from "../Components/Footer"
 import "../Styling/publicprofile.css"
 
 const API_BASE = "http://77.242.26.150:8000"
+
+// Slugify helper (fallback only if actual slug is missing)
+const slugify = (str) =>
+  String(str || "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+
+// Build a /shop/:slug URL using the real slug; if absent, use slugified name (still a slug, not an ID)
+const businessUrl = (b) => {
+  const slug = b?.slug && String(b.slug).trim()
+  const finalSlug = slug || slugify(b?.slug)
+  return `/shop/${finalSlug}`
+}
 
 const PublicProfilePage = () => {
   const { userId } = useParams()
@@ -193,6 +208,7 @@ const PublicProfilePage = () => {
               </div>
 
               <div className="businesses-grid-public">
+                {console.log(profile.businesses)}
                 {profile.businesses.map((business, index) => (
                   <div
                     key={business.businessId}
@@ -232,10 +248,13 @@ const PublicProfilePage = () => {
                       </div>
 
                       <div className="business-actions-public">
-                        <button className="btn-view-business-public">
+                        <Link
+                          to={businessUrl(business)}
+                          className="btn-view-business-public"
+                        >
                           <span>👁️</span>
                           View Business
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </div>

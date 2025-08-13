@@ -81,11 +81,6 @@ export default function EmployeePanel({ business }) {
     }
   }
 
-  const handleEditClick = (emp) => {
-    setEditingEmployee(emp)
-    setNewEmployee({ name: emp.name || '', email: emp.email || '' })
-    setFoundUser({ userId: emp.userId, name: emp.name, email: emp.email })
-  }
 
   const handleCancelEdit = () => {
     setEditingEmployee(null)
@@ -166,9 +161,6 @@ export default function EmployeePanel({ business }) {
                 <li key={emp.userId}>
                   <span>{emp.name} ({emp.email})</span>
                   <div className="employee-actions">
-                    <button onClick={() => handleEditClick(emp)}>
-                      Edit
-                    </button>
                     <button onClick={() => handleDeleteEmployee(emp.userId)}>
                       Delete
                     </button>
