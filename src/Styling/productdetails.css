@@ -1,3 +1,4 @@
+/* Replacing entire CSS with comprehensive mobile-responsive design */
 /* ----------------------------------------
    PROFESSIONAL PRODUCT DETAILS COMPONENT
 ---------------------------------------- */
@@ -291,6 +292,68 @@
   font-weight: 500;
 }
 
+
+/* --- Lightbox viewer --- */
+.lightbox-overlay{
+  position: fixed; inset: 0; background: rgba(0,0,0,.85);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+}
+
+.lightbox-inner{
+  position: relative; width: 92vw; height: 92vh;
+}
+
+/* CLOSE BUTTON – must be above everything */
+.lightbox-close{
+  position:absolute; top:12px; right:12px; width:44px; height:44px;
+  border:none; border-radius:9999px; color:#fff; background:rgba(0,0,0,.55);
+  font-size:28px; line-height:1; cursor:pointer;
+  z-index: 4;                    /* <- key */
+}
+
+/* ARROWS – sit above the image/viewport */
+.lightbox-arrow{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:56px; height:56px; border:none; border-radius:9999px;
+  color:#fff; background:rgba(0,0,0,.55); font-size:34px; cursor:pointer;
+  z-index: 3;                    /* <- key */
+}
+.lightbox-arrow.left{ left:10px; }
+.lightbox-arrow.right{ right:10px; }
+
+/* VIEWPORT under controls, ignores clicks except on the image */
+.lightbox-viewport{
+  position: absolute; inset: 0; overflow: hidden;
+  z-index: 1;                    /* <- under arrows/close */
+  pointer-events: none;          /* <- lets clicks hit arrows/close */
+}
+
+/* IMAGE still receives events (zoom/pan) */
+.lightbox-image{
+  position:absolute; top:50%; left:50%;
+  max-width: 90vw; max-height: 90vh;
+  user-select:none; pointer-events:auto;  /* <- important */
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 120ms ease-out;
+  z-index: 1;
+}
+
+/* TOOLBAR above viewport but below arrows/close */
+.lightbox-toolbar{
+  position:absolute; left:50%; bottom:16px; transform:translateX(-50%);
+  display:flex; align-items:center; gap:8px;
+  background: rgba(0,0,0,.45); padding:8px 12px; border-radius:9999px;
+  color:#fff; font-weight:600;
+  z-index: 2;                    /* <- above viewport */
+}
+.lightbox-tool{
+  width:36px; height:36px; border:none; border-radius:8px; cursor:pointer;
+  background: rgba(255,255,255,.1); color:#fff; font-size:16px;
+}
+.lightbox-tool:disabled{ opacity:.5; cursor:not-allowed; }
+.lightbox-zoom-label{ min-width:48px; text-align:center; }
+
 /* ----------------------------------------
    PROFESSIONAL RESERVE BUTTON
 ---------------------------------------- */
@@ -346,6 +409,61 @@
   cursor: not-allowed;
 }
 
+.carousel-arrow {
+  position: relative;
+  transform: translateY(-50%);
+  border: none;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  display: inline-flex; /* force visible */
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  user-select: none;
+}
+
+.carousel-arrow.left {
+  left: 8px;
+}
+.carousel-arrow.right {
+  right: 8px;
+}
+
+.carousel-arrow:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-50%) scale(1.02);
+}
+
+.carousel-arrow:active:not(:disabled) {
+  transform: translateY(-50%) scale(0.98);
+}
+
+.carousel-arrow:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.carousel-arrow[disabled] {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* OPTIONAL: if your thumbnails overlap on very small screens, bump arrows inwards */
+@media (max-width: 480px) {
+  .carousel-arrow.left {
+    left: 4px;
+  }
+  .carousel-arrow.right {
+    right: 4px;
+  }
+}
 
 /* ----------------------------------------
    PROFESSIONAL LOADING STATES

@@ -28,6 +28,17 @@
   transform: scale(1.05);
 }
 
+/* Make seen items visually distinct */
+.notification-item.seen {
+  opacity: 0.65;
+}
+
+/* Make each notification look clickable */
+.notifications-section .notification-item {
+  cursor: pointer;
+}
+
+
 .notification-bell {
   font-size: 1.5rem;
   color: #ff6b6b;
