@@ -1010,6 +1010,7 @@
 
   .nav-links a:hover {
     background: rgba(59, 130, 246, 0.1);
+    color: white;
   }
 
   .dropdown-submenu-content{

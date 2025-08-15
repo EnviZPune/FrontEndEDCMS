@@ -70,6 +70,7 @@ export default function SupportDashboard() {
   const [denied, setDenied] = useState(false)
   const [sending, setSending] = useState(false)
   const [closing, setClosing] = useState(false)
+  const inputRef = useRef(null)
 
   // Connection state
   const [connected, setConnected] = useState(false)
@@ -334,21 +335,24 @@ export default function SupportDashboard() {
     await loadMine()
   }
 
-  const send = async () => {
-    const text = input.trim()
-    if (!text || !connRef.current || !activeThreadId || sending) return
-    if ((activeStatus || "").toLowerCase() === "closed") return
+ const send = async () => {
+  const text = input.trim()
+  if (!text || !connRef.current || !activeThreadId || sending) return
+  if ((activeStatus || "").toLowerCase() === "closed") return
 
-    setSending(true)
-    try {
-      await connRef.current.invoke("SendMessage", activeThreadId, text)
-      setInput("")
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setSending(false)
-    }
+  setSending(true)
+  try {
+    await connRef.current.invoke("SendMessage", activeThreadId, text)
+    setInput("")
+    requestAnimationFrame(() => inputRef.current?.focus()) // ← keep focus after send
+  } catch (e) {
+    console.error(e)
+    requestAnimationFrame(() => inputRef.current?.focus()) // still refocus on error
+  } finally {
+    setSending(false)
   }
+}
+
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -764,6 +768,7 @@ export default function SupportDashboard() {
             <div className="sd-input-area">
               <div className="sd-input-container">
                 <textarea
+                  ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={handleKeyPress}

@@ -21,6 +21,17 @@ const businessUrl = (b) => {
   return `/shop/${finalSlug}`
 }
 
+const isAdminUser = (profile) => {
+  const role = profile?.role ?? profile?.roleName ?? profile?.Role ?? null
+  return (
+    role === "Admin" ||
+    role === "admin" ||
+    role === 1 ||
+    role === "1" ||
+    role === "Administrator"
+  )
+}
+
 const PublicProfilePage = () => {
   const { userId } = useParams()
   const navigate = useNavigate()
@@ -175,93 +186,95 @@ const PublicProfilePage = () => {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="public-profile-content">
-          {/* Stats Section */}
           <div className="stats-section-public">
             <div className="stat-card-public">
               <div className="stat-icon-public">👤</div>
               <div className="stat-info-public">
-                <div className="stat-value-public">Member</div>
+                <div className="stat-value-public">
+               {profile.role === "Admin" ? "Support Agent" : "Member"}
+                      </div>
                 <div className="stat-label-public">Status</div>
               </div>
             </div>
 
-            <div className="stat-card-public">
-              <div className="stat-icon-public">🏪</div>
-              <div className="stat-info-public">
-                <div className="stat-value-public">{profile.businesses ? profile.businesses.length : 0}</div>
-                <div className="stat-label-public">Businesses</div>
+           {!isAdminUser(profile) && (
+              <div className="stat-card-public">
+                <div className="stat-icon-public">🏪</div>
+                <div className="stat-info-public">
+                  <div className="stat-value-public">
+                    {Array.isArray(profile.businesses) ? profile.businesses.length : 0}
+                  </div>
+                  <div className="stat-label-public">Businesses</div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
-          {/* Businesses Section */}
-          {profile.businesses && profile.businesses.length > 0 && (
-            <div className="businesses-section-public">
-              <div className="section-header-public">
-                <h3 className="section-title-public">
-                  <span className="title-icon-public">🏪</span>
-                  Businesses Owned
-                </h3>
-                <div className="section-decoration-public"></div>
-              </div>
+          {/* Businesses Section — hide if Admin */}
+          {!isAdminUser(profile) &&
+            Array.isArray(profile.businesses) &&
+            profile.businesses.length > 0 && (
+              <div className="businesses-section-public">
+                <div className="section-header-public">
+                  <h3 className="section-title-public">
+                    <span className="title-icon-public">🏪</span>
+                    Businesses Owned
+                  </h3>
+                  <div className="section-decoration-public"></div>
+                </div>
 
-              <div className="businesses-grid-public">
-                {console.log(profile.businesses)}
-                {profile.businesses.map((business, index) => (
-                  <div
-                    key={business.businessId}
-                    className="business-card-public"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <div className="business-card-background-public"></div>
-                    <div className="business-card-content-public">
-                      <div className="business-header-public">
-                        <div className="business-logo-public">
-                          <img
-                            src={business.profilePictureUrl || "/default-shop-logo.png"}
-                            alt={`${business.name} logo`}
-                            className="business-logo-img-public"
-                          />
-                        </div>
-                        <div className="business-status-public">
-                          <div className="status-dot-public open"></div>
-                          <span>Active</span>
-                        </div>
-                      </div>
-
-                      <div className="business-info-public">
-                        <h4 className="business-name-public">{business.name || "Business"}</h4>
-                        {business.address && (
-                          <div className="business-detail-public">
-                            <span className="business-detail-icon-public">📍</span>
-                            <span className="business-detail-text-public">{business.address}</span>
+                <div className="businesses-grid-public">
+                  {profile.businesses.map((business, index) => (
+                    <div
+                      key={business.businessId ?? index}
+                      className="business-card-public"
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                      <div className="business-card-background-public"></div>
+                      <div className="business-card-content-public">
+                        <div className="business-header-public">
+                          <div className="business-logo-public">
+                            <img
+                              src={business.profilePictureUrl || "/default-shop-logo.png"}
+                              alt={`${business.name || "Business"} logo`}
+                              className="business-logo-img-public"
+                            />
                           </div>
-                        )}
-                        {business.category && (
-                          <div className="business-detail-public">
-                            <span className="business-detail-icon-public">🏷️</span>
-                            <span className="business-detail-text-public">{business.category}</span>
+                          <div className="business-status-public">
+                            <div className="status-dot-public open"></div>
+                            <span>Active</span>
                           </div>
-                        )}
-                      </div>
+                        </div>
 
-                      <div className="business-actions-public">
-                        <Link
-                          to={businessUrl(business)}
-                          className="btn-view-business-public"
-                        >
-                          <span>👁️</span>
-                          View Business
-                        </Link>
+                        <div className="business-info-public">
+                          <h4 className="business-name-public">{business.name || "Business"}</h4>
+                          {business.address && (
+                            <div className="business-detail-public">
+                              <span className="business-detail-icon-public">📍</span>
+                              <span className="business-detail-text-public">{business.address}</span>
+                            </div>
+                          )}
+                          {business.category && (
+                            <div className="business-detail-public">
+                              <span className="business-detail-icon-public">🏷️</span>
+                              <span className="business-detail-text-public">{business.category}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="business-actions-public">
+                          <Link to={businessUrl(business)} className="btn-view-business-public">
+                            <span>👁️</span>
+                            View Business
+                          </Link>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </div>
       <Footer />

@@ -79,21 +79,6 @@ export default function BecomeOwner() {
     localStorage.setItem("becomeOwnerDarkMode", darkMode)
   }, [darkMode])
 
-  useEffect(() => {
-    const jwt = getToken()
-    if (!jwt) {
-      setResponse("Please log in to continue your journey")
-      return
-    }
-
-    // If user is Admin, the redirect effect above will run; this fetch is fine for others
-    fetch(`${apiBase}/api/business/string`, {
-      headers: { Authorization: `Bearer ${jwt}` },
-    })
-      .then((res) => res.text())
-      .then((txt) => setResponse(txt))
-      .catch((err) => setResponse("Connection status: " + err.message))
-  }, [apiBase])
 
   async function handleSubscribe() {
     const jwt = getToken()

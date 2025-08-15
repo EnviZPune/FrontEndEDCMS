@@ -89,15 +89,15 @@ export default function EmployeePanel({ business }) {
   }
 
   const handleDeleteEmployee = async (userId) => {
-    if (!window.confirm('Remove this employee?')) return
+    if (!window.confirm('Are you sure you want to fire this employee?')) return
     try {
       await del(`/api/Business/${business.businessId}/employees/${userId}`)
-      alert('Employee removed.')
+      alert('Employee Fired.')
       const updated = await get(`/api/Business/${business.businessId}/employees`)
       setEmployees(updated)
     } catch (err) {
-      console.error('Remove failed:', err)
-      alert('Failed to remove employee.')
+      console.error('Fire Process failed:', err)
+      alert('Failed to fire employee.')
     }
   }
 
@@ -162,7 +162,7 @@ export default function EmployeePanel({ business }) {
                   <span>{emp.name} ({emp.email})</span>
                   <div className="employee-actions">
                     <button onClick={() => handleDeleteEmployee(emp.userId)}>
-                      Delete
+                      Fire
                     </button>
                   </div>
                 </li>

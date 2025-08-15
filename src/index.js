@@ -2,13 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { ThemeProvider } from './Components/ThemeContext'; // Adjust the path to where your ThemeContext file is located
+import { ThemeProvider } from './Components/ThemeContext';
+
+// NEW: global interceptor + toasts
+import { installFetchInterceptor } from './lib/installFetchInterceptor';
+import NetworkErrorToasts from "../src/Components/NetworkErrorToasts"
+
+// Install once at startup (safe-guarded inside the installer)
+installFetchInterceptor();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider>
       <App />
+      <NetworkErrorToasts />
     </ThemeProvider>
   </React.StrictMode>
 );

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, forwardRef } from "react"
 import * as signalR from "@microsoft/signalr"
 import { jwtDecode } from "jwt-decode"
 import { API_BASE, HUB_URL } from "../../config"
@@ -95,7 +95,10 @@ const fileUrl = (u) => {
   return `${apiOrigin}${u.startsWith("/") ? u : `/${u}`}`
 }
 
-export default function SupportChatWindow({ threadId, onDeleted }) {
+const SupportChatWindow = forwardRef(function SupportChatWindow(
+  { threadId, onDeleted },
+  ref
+) {
   const [topic, setTopic] = useState("")
   const [editingTopic, setEditingTopic] = useState(false)
   const [topicDraft, setTopicDraft] = useState("")
@@ -116,6 +119,7 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
   const connRef = useRef(null)
   const endRef = useRef(null)
   const fileInputRef = useRef(null)
+  const inputRef = useRef(null) // keep-focus ref (plain JS)
 
   const scrollToBottom = () => endRef.current?.scrollIntoView({ behavior: "smooth" })
   useEffect(() => { scrollToBottom() }, [messages])
@@ -171,6 +175,8 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
       setMessages(Array.isArray(dto.messages) ? dto.messages : [])
 
       await connectToHub(threadId)
+      // Focus input when chat loads
+      requestAnimationFrame(() => inputRef.current?.focus())
     }
 
     load()
@@ -230,6 +236,8 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
     return d.toLocaleDateString()
   }
 
+  const keepFocus = () => requestAnimationFrame(() => inputRef.current?.focus())
+
   const sendText = async () => {
     const text = input.trim()
     if (!text || !connRef.current || !threadId || sending) return
@@ -237,8 +245,10 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
     try {
       await connRef.current.invoke("SendMessage", threadId, text)
       setInput("")
+      keepFocus() // refocus after send
     } catch (e) {
       console.error(e)
+      keepFocus() // even on error, return focus to input
     } finally {
       setSending(false)
     }
@@ -275,9 +285,11 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
       }
       setMessages((prev) => [...prev, normalized])
       if (input.trim()) setInput("")
+      keepFocus() // refocus after successful upload
     } catch (e) {
       console.error(e)
       alert("Failed to upload image.")
+      keepFocus() // and after error
     } finally {
       setUploading(false)
     }
@@ -310,9 +322,11 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
       const dto = await res.json()
       setTopic(dto.topic || newTopic)
       setEditingTopic(false)
+      keepFocus() // keep typing flow smooth after renaming
     } catch (e) {
       console.error(e)
       alert("Couldn't update the subject.")
+      keepFocus()
     }
   }
 
@@ -353,6 +367,7 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
       alert("Couldn't delete this conversation.")
     } finally {
       setDeleting(false)
+      keepFocus()
     }
   }
 
@@ -365,7 +380,13 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
   }
 
   return (
-    <div className="chat-window" onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}>
+    <div
+      className="chat-window"
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+      ref={ref}
+    >
       <div className="chat-window-header">
         <div className="chat-window-title">
           {editingTopic ? (
@@ -378,12 +399,19 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
                 autoFocus
                 disabled={deleting}
               />
-              <button className="topic-commit" onClick={saveTopic} title="Save" disabled={deleting}>
+              <button
+                className="topic-commit"
+                onMouseDown={(e) => e.preventDefault()} // don't steal focus
+                onClick={saveTopic}
+                title="Save"
+                disabled={deleting}
+              >
                 <Check className="w-4 h-4" />
               </button>
               <button
                 className="topic-cancel"
-                onClick={() => { setTopicDraft(topic); setEditingTopic(false) }}
+                onMouseDown={(e) => e.preventDefault()} // don't steal focus
+                onClick={() => { setTopicDraft(topic); setEditingTopic(false); keepFocus() }}
                 title="Cancel"
                 disabled={deleting}
               >
@@ -395,6 +423,7 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
               <strong>{topic || `Thread #${threadId}`}</strong>
               <button
                 className="topic-edit-btn"
+                onMouseDown={(e) => e.preventDefault()} // don't steal focus
                 onClick={() => setEditingTopic(true)}
                 title="Rename subject"
                 disabled={deleting}
@@ -403,6 +432,7 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
               </button>
               <button
                 className="chat-delete-btn"
+                onMouseDown={(e) => e.preventDefault()} // don't steal focus
                 onClick={deleteThread}
                 title="Delete chat"
                 disabled={deleting}
@@ -509,6 +539,7 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
         />
         <button
           className="chat-img-btn"
+          onMouseDown={(e) => e.preventDefault()} // don't blur the textarea
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading || deleting}
           title="Send a photo"
@@ -517,6 +548,7 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
         </button>
 
         <textarea
+          ref={inputRef} // attach ref
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
@@ -532,12 +564,13 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
               ? "Deleting…"
               : uploading
               ? "Uploading…"
-              : "Type a message… (Enter to send)"
+              : "Type a message…"
           }
           disabled={uploading || sending || deleting}
         />
         <button
           className="chat-send-btn"
+          onMouseDown={(e) => e.preventDefault()} // avoid brief blur before click
           onClick={sendText}
           disabled={!input.trim() || sending || uploading || deleting}
           title="Send"
@@ -547,4 +580,6 @@ export default function SupportChatWindow({ threadId, onDeleted }) {
       </div>
     </div>
   )
-}
+})
+
+export default SupportChatWindow
