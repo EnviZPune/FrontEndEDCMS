@@ -29,6 +29,8 @@ import OwnerForm           from './Pages/OwnerForm';
 import CategoryFilter from './Pages/categoryfilter';
 import AllCategories from './Pages/AllCategories';
 import SearchResultsPage from './Pages/searchresultspage';
+import RepayPage from './Pages/RepayPage';
+import RepaySuccess from './Pages/RepaySuccess';
 
 import ChatWidget from "./Components/Chat/ChatWidget";
 import SupportDashboard from "./Pages/SupportDashboard";
@@ -68,6 +70,8 @@ export default function App() {
           <Route path="/payment-cancel" element={<PaymentCancel />} />
           <Route path="/owner-form" element={<OwnerForm />} />
           <Route path="/search" element={<SearchResultsPage />} />
+          <Route path="/billing/repay" element={<RepayPage />} />
+          <Route path="/billing/repay/success" element={<RepaySuccess />} />
 
           <Route
             path="/support-dashboard"

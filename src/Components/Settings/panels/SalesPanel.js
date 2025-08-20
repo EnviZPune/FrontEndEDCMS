@@ -57,7 +57,7 @@ export default function SalesPanel({ business }) {
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState(null)
   const [page, setPage]       = useState(1)
-  const [pageSize]            = useState(50)
+  const [pageSize]            = useState(20)
   const [total, setTotal]     = useState(0)
   const [sales, setSales]     = useState([])
   const [refreshKey, setRefreshKey] = useState(0)
@@ -196,7 +196,7 @@ export default function SalesPanel({ business }) {
                         )}
                       </div>
                       <div className="sales-right">
-                        {totalPrice != null ? `${totalPrice.toFixed(2)} ` : ""}
+                        {totalPrice != null ? `${totalPrice.toFixed(2)} `+ "LEK" : ""}
                       </div>
                     </li>
                   )
