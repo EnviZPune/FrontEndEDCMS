@@ -1,0 +1,276 @@
+/* CategoryFilter.css */
+
+/* ----------------------------
+   Hero Banner
+---------------------------- */
+.hero-banner {
+  position: relative;
+  height: 300px;
+  background: var(--primary-600) center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 100px;
+  padding: var(--space-4);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.6)
+  );
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: var(--neutral-0);
+  padding: var(--space-4);
+}
+
+.hero-content h1 {
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.hero-content p {
+  font-size: var(--text-lg);
+  opacity: 0.85;
+}
+
+/* ----------------------------
+   Container & Header
+---------------------------- */
+.shop-list-container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: var(--space-6) auto;
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 10px 15px rgba(0, 0, 0, 0.1),
+    0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+.shop-list-header h2 {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+  text-align: center;
+}
+
+/* ----------------------------
+   Error & Empty States
+---------------------------- */
+.error-text {
+  color: var(--error-600);
+  text-align: center;
+  margin: var(--space-4) 0;
+}
+
+.no-shops-text {
+  text-align: center;
+  font-size: var(--text-lg);
+  color: var(--neutral-300);
+  margin: var(--space-6) 0;
+}
+
+/* ----------------------------
+   Carousel & Cards
+---------------------------- */
+.browse-shops-wrapper {
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+  width: 100%;
+}
+
+.browse-carousel {
+  display: flex;
+  gap: var(--space-4);
+  padding-bottom: var(--space-4);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel-slide {
+  scroll-snap-align: start;
+  flex: 0 0 calc(100% / 5);
+}
+
+.shop-card {
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 2px 4px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-4);
+  transition:
+    transform var(--duration-150) var(--ease-in-out),
+    box-shadow var(--duration-150) var(--ease-in-out);
+}
+
+.shop-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    /* medium lift on hover */
+    0 4px 6px rgba(0, 0, 0, 0.10),
+    0 8px 12px rgba(0, 0, 0, 0.12);
+}
+
+
+.shop-card-media {
+  width: 100%;
+  padding-top: 60%;
+  position: relative;
+  background: var(--surface-overlay);
+}
+
+.shop-card-media img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+.shop-card-placeholder {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--secondary-500);
+  opacity: 0.3;
+}
+
+.shop-card-title {
+  margin: var(--space-3) 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--foreground);
+  text-transform: capitalize;
+}
+
+/* hide sentinel */
+.carousel-end-sentinel {
+  display: none;
+}
+
+/* loading spinner */
+.loading-spinner.small {
+  margin: 0 auto;
+  width: 32px;
+  height: 32px;
+  border: 4px solid var(--secondary-300);
+  border-top-color: var(--secondary-600);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* ----------------------------
+   Pagination
+---------------------------- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.pagination button {
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface-base);
+  border: 2px solid var(--primary-500);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  color: var(--primary-600);
+  transition:
+    background var(--duration-150) var(--ease-in-out),
+    color var(--duration-150) var(--ease-in-out);
+}
+
+.pagination button:hover:not(:disabled) {
+  background: var(--primary-500);
+  color: var(--neutral-0);
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Base: grid with 5 columns ───────────────────────────── */
+.browse-carousel {
+  display: grid;
+  gap: var(--space-4);
+  grid-auto-rows: auto;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+/* ─── Ultra‑wide (4K+) ────────────────────────────────────── */
+@media (min-width: 1920px) {
+  .browse-carousel {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* ─── Large desktop ───────────────────────────────────────── */
+@media (max-width: 1919px) and (min-width: 1440px) {
+  .browse-carousel {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* ─── Desktop ─────────────────────────────────────────────── */
+@media (max-width: 1439px) and (min-width: 1200px) {
+  .browse-carousel {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* ─── Small desktop / large laptop ────────────────────────── */
+@media (max-width: 1199px) and (min-width: 1024px) {
+  .browse-carousel {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ─── Tablet landscape ─────────────────────────────────────── */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .browse-carousel {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ─── Tablet portrait / phablet ───────────────────────────── */
+@media (max-width: 767px) and (min-width: 600px) {
+  .browse-carousel {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ─── Mobile large ────────────────────────────────────────── */
+@media (max-width: 599px) and (min-width: 480px) {
+  .browse-carousel {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ─── Mobile portrait / small ─────────────────────────────── */
+@media (max-width: 479px) {
+  .browse-carousel {
+    grid-template-columns: 1fr;
+  }
+}
+

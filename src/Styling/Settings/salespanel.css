@@ -1,0 +1,8 @@
+/* src/Styling/Settings/product-panel-sale.css */
+.product-row { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px; background:#fff; margin-bottom:8px; }
+.actions { display:flex; gap:8px; }
+.btn { border:1px solid #e5e7eb; padding:6px 10px; border-radius:8px; background:#f9fafb; cursor:pointer; }
+.btn:hover { background:#f3f4f6; }
+.btn:disabled { opacity:.5; cursor:not-allowed; }
+.btn-sale { font-weight:600; }
+.error { color:#b91c1c; margin-bottom:8px; }

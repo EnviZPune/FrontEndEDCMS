@@ -1,0 +1,153 @@
+:root {
+    --primary-color: #4A90E2;
+    --primary-dark: #357ABD;
+    --background-color: #ffffff;
+    --text-color: #333;
+    --border-color: #ddd;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+    --transition-duration: 0.3s;
+}
+
+/* Container for the entire dashboard */
+.user-dashboard-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 24px;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 16px var(--shadow-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.user-dashboard-container h1 {
+    text-align: center;
+    font-size: 28px;
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+/* Summary section */
+.dashboard-summary {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 40px;
+    gap: 20px;
+}
+
+.summary-item {
+    flex: 1;
+    padding: 20px;
+    background-color: #f9f9fb;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    transition: transform var(--transition-duration) ease;
+}
+
+.summary-item:hover {
+    transform: scale(1.05);
+}
+
+.summary-item h3 {
+    font-size: 18px;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.summary-item p {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+/* Chart section */
+.dashboard-charts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-around;
+    margin-bottom: 40px;
+}
+
+.chart-item {
+    flex: 1;
+    min-width: 400px;
+    padding: 20px;
+    background-color: #f9f9fb;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px var(--shadow-color);
+    text-align: center;
+}
+
+.chart-item h3 {
+    font-size: 18px;
+    color: var(--primary-color);
+    margin-bottom: 16px;
+}
+
+/* Recent updates section */
+.recent-updates {
+    margin-bottom: 40px;
+}
+
+.recent-updates h3 {
+    font-size: 20px;
+    color: var(--primary-color);
+    margin-bottom: 16px;
+}
+
+.recent-updates ul {
+    list-style: none;
+    padding: 0;
+}
+
+.recent-updates li {
+    font-size: 16px;
+    color: var(--text-color);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Quick links section */
+.quick-links h3 {
+    font-size: 20px;
+    color: var(--primary-color);
+    margin-bottom: 16px;
+}
+
+.quick-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.quick-links li {
+    margin-bottom: 10px;
+}
+
+.quick-links a {
+    font-size: 16px;
+    color: var(--primary-dark);
+    text-decoration: none;
+    transition: color var(--transition-duration) ease;
+}
+
+.quick-links a:hover {
+    color: var(--primary-color);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .dashboard-summary,
+    .dashboard-charts {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .chart-item {
+        min-width: auto;
+    }
+}

@@ -1,0 +1,38 @@
+.fav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+.fav-btn:hover { background: #f9fafb; }
+.fav-btn:disabled { opacity: .6; cursor: not-allowed; }
+.fav-btn .fav-icon { width: 18px; height: 18px; }
+.fav-btn.is-fav {
+  color: #e11d48;
+  border-color: #fecdd3;
+  background: #fff1f2;
+}
+/* Minimal text hide on very narrow screens */
+@media (max-width: 480px) {
+  .fav-btn .fav-text { display: none; }
+}
+/* Pill for owner view */
+.fav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #be123c;
+  background: #ffe4e6;
+  border: 1px solid #fecdd3;
+}
+.fav-pill .fav-icon { width: 14px; height: 14px; }

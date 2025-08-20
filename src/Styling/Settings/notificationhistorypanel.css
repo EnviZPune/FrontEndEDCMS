@@ -1,0 +1,388 @@
+/* Modern Notification History Panel Design */
+.notification-history-panel {
+  background: var(--neutral-0);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-8);
+  margin-bottom: var(--space-12);
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid var(--neutral-200);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp var(--duration-500) var(--ease-out);
+}
+
+.notification-history-panel h3 {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  margin-bottom: var(--space-6);
+  color: var(--neutral-900);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 2px solid var(--primary-200);
+  position: relative;
+}
+
+.notification-history-panel h3::before {
+  content: "🔔";
+  font-size: var(--text-xl);
+}
+
+/* Notification List */
+.notification-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Individual Notification Entry */
+.notification-entry {
+  padding: var(--space-5);
+  background: var(--neutral-0);
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-lg);
+  transition: all var(--duration-200) var(--ease-out);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--space-2);
+}
+
+.notification-entry:hover {
+  background: var(--neutral-25);
+  border-color: var(--primary-300);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.notification-entry:last-child {
+  margin-bottom: 0;
+}
+
+/* Notification Content */
+.notification-entry p {
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--text-base);
+  color: var(--neutral-800);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.notification-entry small {
+  color: var(--neutral-600);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.notification-entry small::before {
+  content: "🕒";
+  font-size: var(--text-xs);
+}
+
+/* Empty State */
+.notification-empty {
+  text-align: center;
+  padding: var(--space-16) var(--space-8);
+  color: var(--neutral-500);
+}
+
+.notification-empty::before {
+  content: "📭";
+  display: block;
+  font-size: 4rem;
+  margin-bottom: var(--space-4);
+  opacity: 0.6;
+}
+
+.notification-empty p {
+  font-size: var(--text-lg);
+  margin: 0;
+  font-style: italic;
+}
+
+/* Loading State */
+.notification-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12);
+  gap: var(--space-4);
+}
+
+.notification-loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--neutral-200);
+  border-top-color: var(--primary-500);
+  border-radius: var(--radius-full);
+  animation: spin 1s linear infinite;
+}
+
+.notification-loading-text {
+  color: var(--neutral-600);
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+
+/* Notification Types */
+.notification-entry.notification-info {
+  border-left: 4px solid var(--primary-500);
+}
+
+.notification-entry.notification-success {
+  border-left: 4px solid var(--success-500);
+}
+
+.notification-entry.notification-warning {
+  border-left: 4px solid var(--warning-500);
+}
+
+.notification-entry.notification-error {
+  border-left: 4px solid var(--error-500);
+}
+
+/* Pagination */
+.notification-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-6) 0;
+  margin-top: var(--space-6);
+  border-top: 1px solid var(--neutral-200);
+}
+
+.notification-pagination button {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-lg);
+  background: var(--neutral-0);
+  color: var(--neutral-700);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--duration-200) var(--ease-out);
+}
+
+.notification-pagination button:hover:not(:disabled) {
+  background: var(--primary-50);
+  border-color: var(--primary-300);
+  color: var(--primary-700);
+}
+
+.notification-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.notification-pagination button.active {
+  background: var(--primary-500);
+  border-color: var(--primary-500);
+  color: var(--neutral-0);
+}
+
+.notification-pagination span {
+  color: var(--neutral-600);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .notification-history-panel {
+    padding: var(--space-6);
+    margin-bottom: var(--space-8);
+    border-radius: var(--radius-xl);
+  }
+
+  .notification-history-panel h3 {
+    font-size: var(--text-xl);
+    gap: var(--space-2);
+  }
+
+  .notification-entry {
+    padding: var(--space-4);
+  }
+
+  .notification-entry p {
+    font-size: var(--text-sm);
+  }
+
+  .notification-entry small {
+    font-size: var(--text-xs);
+  }
+
+  .notification-pagination {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+}
+
+@media (max-width: 480px) {
+  .notification-history-panel {
+    padding: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .notification-history-panel h3 {
+    font-size: var(--text-lg);
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-2);
+  }
+
+  .notification-entry {
+    padding: var(--space-3);
+  }
+
+  .notification-empty {
+    padding: var(--space-12) var(--space-4);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .notification-history-panel {
+    background: var(--neutral-900);
+    border-color: var(--neutral-700);
+    color: var(--neutral-100);
+  }
+
+  .notification-history-panel h3 {
+    color: var(--neutral-100);
+    border-bottom-color: var(--primary-700);
+  }
+
+  .notification-entry {
+    background: var(--neutral-800);
+    border-color: var(--neutral-700);
+  }
+
+  .notification-entry:hover {
+    background: var(--neutral-750);
+    border-color: var(--primary-600);
+  }
+
+  .notification-entry p {
+    color: var(--neutral-200);
+  }
+
+  .notification-entry small {
+    color: var(--neutral-400);
+  }
+
+  .notification-empty {
+    color: var(--neutral-400);
+  }
+
+  .notification-loading-text {
+    color: var(--neutral-400);
+  }
+
+  .notification-pagination {
+    border-top-color: var(--neutral-700);
+  }
+
+  .notification-pagination button {
+    background: var(--neutral-800);
+    border-color: var(--neutral-600);
+    color: var(--neutral-300);
+  }
+
+  .notification-pagination button:hover:not(:disabled) {
+    background: var(--primary-900);
+    border-color: var(--primary-600);
+    color: var(--primary-300);
+  }
+
+  .notification-pagination button.active {
+    background: var(--primary-600);
+    border-color: var(--primary-600);
+    color: var(--neutral-0);
+  }
+
+  .notification-pagination span {
+    color: var(--neutral-400);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .notification-history-panel {
+    box-shadow: none;
+    border: 1px solid var(--neutral-400);
+  }
+
+  .notification-pagination {
+    display: none;
+  }
+
+  .notification-entry:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .notification-history-panel,
+  .notification-entry,
+  .notification-pagination button {
+    animation: none;
+    transition: none;
+  }
+
+  .notification-entry:hover {
+    transform: none;
+  }
+}
+
+/* Focus States */
+.notification-entry:focus-within {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+.notification-pagination button:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
