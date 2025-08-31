@@ -1,0 +1,41 @@
+{
+  "loading": "Duke ngarkuar detajet e produktit...",
+  "errors": {
+    "not_found": "Produkti nuk u gjet.",
+    "booking_failed": "Ndodhi një gabim gjatë rezervimit.",
+    "booking_api": "Gabim gjatë rezervimit: {{message}}"
+  },
+  "nav": {
+    "back_to_shop": "← Kthehu te Dyqani"
+  },
+  "carousel": {
+    "prev": "Figura e mëparshme",
+    "next": "Figura tjetër",
+    "main_alt": "Figura kryesore e produktit",
+    "thumb_alt": "Miniaturë {{index}}"
+  },
+  "fields": {
+    "model": "Modeli",
+    "description": "Përshkrimi",
+    "price": "Çmimi",
+    "quantity": "Sasia",
+    "material": "Materiali",
+    "colors": "Ngjyrat",
+    "size": "Masa"
+  },
+  "price_fmt": "{{value}} LEK",
+  "booking": {
+    "reserve": "Rezervo Produktin",
+    "reserve_another": "Rezervo Një Tjetër",
+    "reserving": "Duke rezervuar produktin...",
+    "login_required": "Ju lutemi, identifikohuni për të bërë një rezervim.",
+    "success": "Produkti u rezervua me sukses!",
+    "count_label": "Të rezervuara"
+  },
+  "lightbox": {
+    "close": "Mbyll",
+    "zoom_out": "Zvogëlo",
+    "zoom_in": "Zmadho",
+    "reset": "Rivendos"
+  }
+}

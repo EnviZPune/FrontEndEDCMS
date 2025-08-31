@@ -1,0 +1,47 @@
+{
+  "pending": {
+    "loading": "Po ngarkohen ndryshimet në pritje…",
+    "error": "Gabim gjatë ngarkimit të ndryshimeve.",
+    "title": "Ndryshimet në Pritje",
+    "empty": "Nuk ka ndryshime në pritje.",
+    "invalid_details": "Detaje të pavlefshme",
+    "no_field_changes": "Nuk ka ndryshime në fusha.",
+    "table": {
+      "field": "Fusha",
+      "current": "Aktuale",
+      "requested": "Kërkuar"
+    },
+    "fields": {
+      "name": "Emri",
+      "description": "Përshkrimi",
+      "price": "Çmimi",
+      "quantity": "Sasia",
+      "category": "Kategoria",
+      "brand": "Marka",
+      "model": "Modeli",
+      "material": "Materiali"
+    },
+    "meta": {
+      "employee": "Punonjësi",
+      "requested_at": "Data dhe ora e kërkesës"
+    },
+    "photos": {
+      "profile": "Profili:",
+      "cover": "Kopertina:",
+      "profile_alt": "Parapamje profili",
+      "cover_alt": "Parapamje kopertine"
+    },
+    "actions": {
+      "approve": "Mirato",
+      "reject": "Refuzo",
+      "approving": "Duke miratuar…",
+      "rejecting": "Duke refuzuar…"
+    },
+    "operations": {
+      "Create": "Krijo",
+      "Update": "Përditëso",
+      "Delete": "Fshi",
+      "UpdatePhotos": "Përditëso fotot"
+    }
+  }
+}

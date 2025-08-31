@@ -1,0 +1,41 @@
+{
+  "states": {
+    "loading": "Loading your shops…",
+    "error_title": "Error Loading Businesses",
+    "error_body": "There was an error loading your businesses. Please try refreshing the page.",
+    "no_business_title": "No shops yet",
+    "no_business_body": "You don’t have any shops connected to your account. Create your first shop to start adding products and managing your storefront."
+  },
+  
+  "actions": {
+    "refresh": "Refresh Page",
+    "create_first_shop": "Create Your First Shop",
+    "back_home": "Go Home"
+  },
+
+  "layout": {
+    "sidebar_aria": "Settings navigation",
+    "choose_business_label": "Choose a business",
+    "choose_business": "-- Choose Business --",
+    "panels_list_aria": "Panels",
+    "welcome": "Welcome, {{name}}!",
+    "no_business_selected_title": "No Business Selected",
+    "no_business_selected_body": "Please select a business from the dropdown above to manage its settings."
+  },
+
+  "panels": {
+    "BusinessInfo": "Business Info",
+    "Products": "Add/Edit Products",
+    "Sales": "Sales",
+    "Categories": "Categories",
+    "Photos": "Photos",
+    "Employees": "Employees",
+    "PendingChanges": "Pending Changes",
+    "Reservations": "Reservations",
+    "Notifications": "Notification History",
+    "MyShops": "My Shops",
+    "DeleteBusiness": "Delete Business"
+  }
+}
+
+

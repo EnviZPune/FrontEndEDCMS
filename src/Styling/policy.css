@@ -1,0 +1,43 @@
+.policy-container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #222;
+    line-height: 1.8;
+    background-color: #fff;
+  }
+  
+  .policy-container h1 {
+    font-size: 32px;
+    margin-bottom: 24px;
+    color: #000;
+    text-align: center;
+  }
+  
+  .policy-container h2 {
+    font-size: 22px;
+    margin-top: 30px;
+    margin-bottom: 12px;
+    color: #333;
+  }
+  
+  .policy-container p {
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+  
+  .policy-container ul {
+    padding-left: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .policy-container ul li {
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+  
+  .policy-container strong {
+    color: #000;
+  }
+  

@@ -1,0 +1,182 @@
+/* ===== Opening Hours Container ===== */
+.opening-hours-container {
+  /* Adding !important to all CSS properties to override external styles */
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  margin: 16px 0 !important;
+}
+
+.opening-hours-header h3 {
+  margin: 0 0 16px 0 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #6b7280 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+}
+
+.opening-hours-footer {
+  font-size: 12px !important;
+  color: #6b7280 !important;
+  margin-top: 12px !important;
+}
+
+/* ===== Opening Hours picker ===== */
+.hours-picker {
+  display: grid !important;
+  gap: 12px !important;
+}
+
+/* Updated toolbar buttons to match target design */
+.hours-toolbar {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+.hours-toolbar > button {
+  appearance: none !important;
+  border: 1px solid #d1d5db !important;
+  background: #f9fafb !important;
+  color: #374151 !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  cursor: pointer !important;
+  transition: background .15s ease, border-color .15s ease !important;
+}
+
+.hours-toolbar > button:hover {
+  background: #f3f4f6 !important;
+  border-color: #9ca3af !important;
+}
+
+/* Grid */
+.hours-grid {
+  display: grid !important;
+  gap: 8px !important;
+}
+
+.hours-grid-head,
+.hours-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr auto !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.hours-grid-head {
+  font-weight: 500 !important;
+  color: #374151 !important;
+  font-size: 14px !important;
+}
+
+.hours-day {
+  color: #111827 !important;
+  font-size: 14px !important;
+}
+
+.hours-cell.disabled {
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+}
+
+/* Updated select styling to match target design */
+.time-select {
+  width: 100% !important;
+  height: 36px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  background: #fff !important;
+  padding: 0 8px !important;
+  font-size: 14px !important;
+  color: #111827 !important;
+  outline: none !important;
+  appearance: none !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right 8px center !important;
+  background-repeat: no-repeat !important;
+  background-size: 16px !important;
+  padding-right: 32px !important;
+}
+
+.time-select:focus {
+  border-color: #9ca3af !important;
+  box-shadow: 0 0 0 1px rgba(156, 163, 175, 0.3) !important;
+}
+
+.time-select:disabled {
+  background-color: #f9fafb !important;
+  color: #9ca3af !important;
+}
+
+/* Updated toggle switch to match target design */
+.toggle-switch {
+  width: 44px !important;
+  height: 24px !important;
+  border: none !important;
+  border-radius: 12px !important;
+  background: #d1d5db !important;
+  position: relative !important;
+  cursor: pointer !important;
+  transition: background .2s ease !important;
+  padding: 0 !important;
+  outline: none !important;
+}
+
+.toggle-switch:focus {
+  box-shadow: 0 0 0 2px rgba(156, 163, 175, 0.3) !important;
+}
+
+.toggle-switch.checked {
+  background: #374151 !important;
+}
+
+.toggle-thumb {
+  position: absolute !important;
+  top: 2px !important;
+  left: 2px !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  transition: transform .2s ease !important;
+  display: block !important;
+}
+
+.toggle-switch.checked .toggle-thumb {
+  transform: translateX(20px) !important;
+}
+
+/* Responsive: stack fields on small screens */
+@media (max-width: 640px) {
+  .hours-grid-head,
+  .hours-row {
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-areas:
+      "day closed"
+      "open open"
+      "close close" !important;
+    row-gap: 6px !important;
+  }
+
+  .hours-day {
+    grid-area: day !important;
+  }
+
+  .hours-row .hours-cell:nth-child(2) {
+    grid-area: open !important;
+  }
+
+  .hours-row .hours-cell:nth-child(3) {
+    grid-area: close !important;
+  }
+
+  .hours-row .hours-cell:nth-child(4) {
+    grid-area: closed !important;
+    justify-self: end !important;
+  }
+}

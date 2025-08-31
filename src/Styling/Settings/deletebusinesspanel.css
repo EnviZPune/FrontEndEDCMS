@@ -1,0 +1,265 @@
+/* ----------------------------------------
+   PROFESSIONAL DELETE BUSINESS PANEL
+---------------------------------------- */
+
+.delete-business-panel {
+  background: var(--neutral-0);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-8);
+  max-width: 500px;
+  margin: 0 auto var(--space-6);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp var(--duration-500) var(--ease-out);
+  border: 1px solid var(--neutral-200);
+}
+
+.delete-business-panel h3 {
+  color: var(--error-600);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  margin-bottom: var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  position: relative;
+}
+
+.delete-business-panel h3::before {
+  content: "⚠️";
+  font-size: var(--text-xl);
+}
+
+.delete-business-panel .warning-text {
+  color: var(--neutral-700);
+  margin-bottom: var(--space-8);
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  background: var(--error-50);
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--error-200);
+  position: relative;
+}
+
+.delete-business-panel .warning-text::before {
+  content: "💀";
+  display: block;
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-2);
+}
+
+.delete-button {
+  background: linear-gradient(135deg, var(--error-500) 0%, var(--error-600) 100%);
+  color: var(--neutral-0);
+  border: none;
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all var(--duration-200) var(--ease-out);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+  min-width: 180px;
+}
+
+.delete-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left var(--duration-500) var(--ease-out);
+}
+
+.delete-button:hover::before {
+  left: 100%;
+}
+
+.delete-button:hover {
+  background: linear-gradient(135deg, var(--error-600) 0%, var(--error-700) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.delete-button:active {
+  transform: translateY(0);
+}
+
+.delete-button:focus {
+  outline: 2px solid var(--error-300);
+  outline-offset: 2px;
+}
+
+.delete-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  background: var(--neutral-400);
+}
+
+/* Loading state */
+.delete-business-panel .loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--neutral-200);
+  border-top: 3px solid var(--error-500);
+  border-radius: var(--radius-full);
+  animation: spin 1s linear infinite;
+  margin: 0 auto var(--space-4);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (min-width: 600px) {
+  .delete-business-panel {
+    padding: var(--space-12);
+  }
+
+  .delete-business-panel h3 {
+    font-size: var(--text-3xl);
+  }
+
+  .warning-text {
+    font-size: var(--text-xl);
+  }
+
+  .delete-button {
+    padding: var(--space-5) var(--space-10);
+    font-size: var(--text-xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .delete-business-panel {
+    margin: 0 var(--space-4) var(--space-6);
+    padding: var(--space-6);
+  }
+
+  .delete-business-panel h3 {
+    font-size: var(--text-xl);
+  }
+
+  .warning-text {
+    font-size: var(--text-base);
+    padding: var(--space-3);
+  }
+
+  .delete-button {
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--text-base);
+    min-width: 140px;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .delete-business-panel {
+    background: var(--neutral-900);
+    color: var(--neutral-100);
+    border-color: var(--neutral-700);
+  }
+
+  .delete-business-panel h3 {
+    color: var(--error-400);
+  }
+
+  .delete-business-panel .warning-text {
+    color: var(--neutral-200);
+    background: var(--error-950);
+    border-color: var(--error-800);
+  }
+
+  .delete-button {
+    background: linear-gradient(135deg, var(--error-600) 0%, var(--error-700) 100%);
+  }
+
+  .delete-button:hover {
+    background: linear-gradient(135deg, var(--error-700) 0%, var(--error-800) 100%);
+  }
+
+  .delete-button:focus {
+    outline-color: var(--error-400);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .delete-business-panel,
+  .delete-business-panel::before,
+  .delete-button,
+  .delete-button::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .delete-business-panel {
+    border-width: 2px;
+    border-color: var(--error-600);
+  }
+
+  .warning-text {
+    border-width: 2px;
+  }
+
+  .delete-button {
+    border: 2px solid var(--error-700);
+  }
+}
+
+/* Focus visible for keyboard navigation */
+.delete-button:focus-visible {
+  outline: 3px solid var(--error-300);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .delete-business-panel {
+    box-shadow: none;
+    border: 2px solid var(--neutral-800);
+  }
+
+  .delete-button {
+    background: var(--neutral-800) !important;
+    color: var(--neutral-0) !important;
+  }
+}

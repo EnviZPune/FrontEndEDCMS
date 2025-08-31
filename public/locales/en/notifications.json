@@ -1,0 +1,57 @@
+{
+  "panel": {
+    "title": "Notifications",
+    "clear_all": "Clear All",
+    "clearing": "Clearing..."
+  },
+  "bell": {
+    "title": "{{count}} notifications"
+  },
+  "sections": {
+    "invitations": "Invitations"
+  },
+  "invite": {
+    "from": "Invitation from {{name}}"
+  },
+  "note": {
+    "seen": "Seen",
+    "mark_seen": "Mark as seen"
+  },
+  "empty": {
+    "title": "All caught up!",
+    "message": "No new notifications right now"
+  },
+  "notify_titles": {
+    "new_invite": "New Invitation",
+    "new_notification": "New Notification"
+  },
+  "notify_bodies": {
+    "invite_from": "Invitation from {{name}}"
+  },
+  "toast": {
+    "invite_accepted": "Invitation Accepted",
+    "invite_declined": "Invitation Declined",
+    "invite_accepted_body": "You have accepted the invitation.",
+    "invite_declined_body": "You have declined the invitation."
+  },
+  "errors": {
+    "mark_seen_failed": "Failed to mark notification as seen.",
+    "network_mark_seen": "Network error marking notification as seen.",
+    "invite_respond_failed": "Failed to {{action}} invitation: {{message}}",
+    "invite_respond_network": "Error trying to {{action}} invitation",
+    "clear_failed": "Failed to clear notifications"
+  },
+  "common": {
+    "accept": "Accept",
+    "decline": "Decline"
+  },
+  "unknown_business": "Unknown business",
+  "status": {
+    "connecting": "Connecting",
+    "connected": "Connected",
+    "reconnecting": "Reconnecting",
+    "disconnected": "Disconnected",
+    "failed": "Failed",
+    "no_token": "No Token"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "employees": {
+    "loading": "Loading employees…",
+    "title": "Employee Management",
+    "alerts": {
+      "enter_email": "Please enter an email to search.",
+      "user_found": "User found: {{name}}",
+      "user_not_found": "User not found.",
+      "user_search_error": "Error when searching for user.",
+      "find_user_first": "Find a user by email first.",
+      "invite_sent": "Invitation sent!",
+      "invite_failed": "Failed to invite user.",
+      "fire_confirm": "Are you sure you want to fire this employee?",
+      "fired": "Employee fired.",
+      "fire_failed": "Failed to fire employee."
+    },
+    "form": {
+      "edit_title": "Edit Employee",
+      "add_title": "Add New Employee",
+      "name_label": "Name",
+      "name_placeholder": "Name",
+      "email_label": "Email",
+      "email_placeholder": "Email",
+      "find_user": "Find User",
+      "submit_update": "Update",
+      "submit_add": "Add"
+    },
+    "list": {
+      "title": "Existing Employees",
+      "none": "No employees found."
+    },
+    "actions": {
+      "fire": "Fire"
+    }
+  },
+  "common": {
+    "cancel": "Cancel"
+  }
+}

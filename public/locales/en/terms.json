@@ -1,0 +1,73 @@
+{
+  "title": "Terms & Conditions",
+  "intro": "Welcome to <strong>E &amp; D</strong> (\"we\", \"us\", \"our\"). By accessing or using our website at <em>edshopping.al</em> and related services, you agree to be bound by these Terms &amp; Conditions.",
+  "acceptance": {
+    "title": "1. Acceptance of Terms",
+    "body": "By registering, browsing, or using our platform, you acknowledge that you have read, understood, and agree to comply with these Terms & Conditions and all applicable laws and regulations."
+  },
+  "service_overview": {
+    "title": "2. Service Overview",
+    "body": "E & D provides a real-time listing and search interface for physical clothing shop inventories. We do not sell or ship products ourselves; instead, we connect customers with verified shop owners via features such as search, maps, and category filters."
+  },
+  "user_accounts": {
+    "title": "3. User Accounts",
+    "items": {
+      "age": "You must be at least 18 years old to register.",
+      "security": "Registration requires a valid email. You are responsible for maintaining the security of your account and password.",
+      "notify": "Notify us immediately of any unauthorized use or security breach."
+    }
+  },
+  "payments": {
+    "title": "4. Subscription & Payments",
+    "body": "Shop owners subscribe via our sandbox payment system at <OwnerLink>Become Owner</OwnerLink> for a recurring fee of $20/month. Payments are handled through Stripe. Subscriptions renew automatically until canceled. You may cancel anytime via the <SettingsLink>Settings</SettingsLink> dashboard under <em>Delete Business</em>. No refunds for partial periods."
+  },
+  "owner_dashboard": {
+    "title": "5. Owner Dashboard",
+    "intro": "Once subscribed, owners access the Settings dashboard to manage:",
+    "items": {
+      "business_info": { "label": "Business Info:", "desc": "Name, description, address, phone, hours." },
+      "products": { "label": "Products:", "desc": "Add/edit/delete items with up to 10 images each." },
+      "sales": { "label" : "Sales", "desc": "See every sale made today"},
+      "categories": { "label": "Categories:", "desc": "Create, assign colors/icons, filter products." },
+      "photos": { "label": "Photos:", "desc": "Upload cover images and logos (via Google Cloud Storage)." },
+      "employees": { "label": "Employees:", "desc": "Promote users to employees who can propose changes." },
+      "pending": { "label": "Pending Changes:", "desc": "Approve or reject employee submissions." },
+      "reservations": { "label": "Reservations:", "desc": "View and manage customer reservation requests." },
+      "notifications": { "label": "Notifications:", "desc": "Review all system notifications and alerts." },
+      "myshops": { "label": "My Shops:", "desc": "Switch between multiple shop profiles." },
+      "delete": { "label": "Delete Business:", "desc": "Permanently remove your shop (irreversible)." }
+    }
+  },
+  "responsibilities": {
+    "title": "6. User Responsibilities",
+    "items": {
+      "lawful": "Use the platform lawfully and respectfully.",
+      "accuracy": "Ensure accuracy of all information you submit.",
+      "impersonation": "Do not impersonate others or misuse any feature."
+    }
+  },
+  "ip": {
+    "title": "7. Intellectual Property",
+    "body": "All content, design, trademarks, and code on E & D are our property. You may not reproduce or use our assets without express written permission."
+  },
+  "disclaimers": {
+    "title": "8. Disclaimers & Limitation of Liability",
+    "body": "We provide the site \"as is\" without warranties, and disclaim all implied warranties. We are not liable for any direct, indirect, or consequential damages arising from your use of the platform, including disputes between customers and shop owners."
+  },
+  "termination": {
+    "title": "9. Termination",
+    "body": "We may suspend or terminate your access to the platform at any time, without notice, for violations of these terms."
+  },
+  "changes": {
+    "title": "10. Changes to Terms",
+    "body": "We reserve the right to modify these Terms & Conditions at any time. Continued use after changes constitutes acceptance of the updated terms."
+  },
+  "law": {
+    "title": "11. Governing Law",
+    "body": "These terms are governed by the laws of Albania. Any dispute will be resolved in the courts of Tirana."
+  },
+  "contact": {
+    "title": "12. Contact Us",
+    "body": "For questions about these terms, please contact us at <strong>{{email}}</strong>."
+  }
+}

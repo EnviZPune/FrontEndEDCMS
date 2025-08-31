@@ -1,0 +1,60 @@
+{
+  "loading": "Duke ngarkuar profilin tuaj të mrekullueshëm...",
+  "offline_banner": "Jeni aktualisht offline. Disa veçori mund të jenë të kufizuara.",
+  "error": {
+    "invalid_user": "ID e përdoruesit nuk është e vlefshme.",
+    "go_home": "Kthehu në Faqen Kryesore"
+  },
+  "badges": {
+    "verified": "I verifikuar",
+    "member": "Anëtar"
+  },
+  "actions": {
+    "edit_profile": "Ndrysho Profilin"
+  },
+  "activity": {
+    "title": "Përmbledhje Aktiviteti",
+    "subtitle": "Rezultati juaj i angazhimit aktual. Plotësoni detyrat e sugjeruara më poshtë për të arritur 100% dhe për të rritur dukshmërinë.",
+    "stats": {
+      "shops": "Dyqane",
+      "hours": "Orë",
+      "days": "Ditë",
+      "years_old": "Vjeç"
+    },
+    "profile_completion": "Përfundimi i Profilit:",
+    "shop_setup": "Konfigurimi i Dyqanit:",
+    "shop_setup_done": "Përfunduar",
+    "shop_setup_incomplete": "E papërfunduar",
+    "overall_score": "Rezultati i Përgjithshëm i Aktivitetit:",
+    "next_steps_title": "Si të arrini 100%",
+    "tasks": {
+      "upload_picture": "Ngarko fotografinë e profilit",
+      "add_dob": "Shto datën e lindjes",
+      "add_phone": "Shto numrin e telefonit",
+      "create_first_shop": "Krijo dyqanin tënd të parë"
+    },
+    "guidance_text": "Përfundimi i këtyre detyrave rrit rezultatin tuaj të aktivitetit dhe zhbllokon më shumë dukshmëri dhe besueshmëri në platformë.",
+    "congrats": "Arritët 100% aktivitet! Vazhdoni të angazhoheni për të ruajtur vrullin."
+  },
+  "shops": {
+    "title": "Dyqanet e Mia",
+    "add_shop": "Shto Dyqan",
+    "edit_shop": "Ndrysho Dyqanin",
+    "badge_open": "Hapur",
+    "badge_closed": "Mbyllur",
+    "empty_title": "Ende nuk ka dyqane",
+    "empty_desc": "Filloni udhëtimin tuaj sipërmarrës duke krijuar dyqanin e parë",
+    "create_first": "Krijo Dyqanin e Parë",
+    "hours_label": "Orari"
+  },
+  "bookings": {
+    "title": "Rezervimet e Mia",
+    "loading": "Duke ngarkuar rezervimet tuaja...",
+    "empty_title": "Ende nuk ka rezervime",
+    "empty_desc": "Produktet e rezervuara do të shfaqen këtu",
+    "view": "Shiko",
+    "prev": "Prapa",
+    "next": "Para",
+    "page_of": "Faqe {{current}} nga {{total}}"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "title": "Krijo Llogarinë Tënde",
+  "subtitle": "Bashkohu me komunitetin tonë dhe fillo udhëtimin tënd",
+
+  "aria": {
+    "go_home": "Shko në faqen kryesore",
+    "logo_alt": "Logo",
+    "show_password": "Shfaq fjalëkalimin",
+    "hide_password": "Fshih fjalëkalimin"
+  },
+
+  "fields": {
+    "first_name": "Emri",
+    "last_name": "Mbiemri",
+    "dob": "Data e lindjes",
+    "username": "Përdoruesi",
+    "phone": "Numri i telefonit",
+    "email": "Adresa e email-it",
+    "create_password": "Krijo fjalëkalimin",
+    "confirm_password": "Konfirmo fjalëkalimin"
+  },
+
+  "placeholders": {
+    "first_name": "Shkruani emrin tuaj",
+    "last_name": "Shkruani mbiemrin tuaj",
+    "username": "Zgjidhni një emer përdoruesi",
+    "phone": "0691234567",
+    "email": "emaili@juaj.com",
+    "create_password": "Krijoni një fjalëkalim të fortë",
+    "confirm_password": "Konfirmoni fjalëkalimin"
+  },
+
+  "requirements": {
+    "at_least": "Të paktën 8 karaktere",
+    "lowercase": "Një shkronjë e vogël",
+    "uppercase": "Një shkronjë e madhe",
+    "number": "Një numër",
+    "special": "Një karakter special"
+  },
+
+  "strength": {
+    "weak": "i dobët",
+    "fair": "mesatar",
+    "good": "i mirë",
+    "strong": "i fortë"
+  },
+
+  "info": {
+    "passwords_match": "Fjalëkalimet përputhen"
+  },
+
+  "errors": {
+    "missing_field": "Ju lutem plotësoni të gjitha fushat. Mungon: {{field}}",
+    "passwords_mismatch": "Fjalëkalimet nuk përputhen.",
+    "password_too_weak": "Fjalëkalimi është shumë i dobët. Zgjidhni një fjalëkalim më të fortë.",
+    "register_failed": "Ndodhi një gabim gjatë regjistrimit."
+  },
+
+  "success": {
+    "registered": "U regjistruat me sukses. Kontrolloni email-in për verifikim!"
+  },
+
+  "cta": {
+    "create_account": "Krijo Llogari",
+    "creating_account": "Duke krijuar llogarinë..."
+  },
+
+  "footer": {
+    "have_account": "Keni tashmë një llogari?",
+    "sign_in_here": "Hyni këtu"
+  }
+}

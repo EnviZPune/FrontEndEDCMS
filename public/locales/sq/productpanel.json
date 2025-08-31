@@ -1,0 +1,97 @@
+{
+  "common": {
+    "error": "Gabim",
+    "close": "Mbyll",
+    "saving": "⏳ Duke ruajtur...",
+    "cancel": "Anulo",
+    "edit": "Ndrysho",
+    "delete": "Fshi"
+  },
+  "products": {
+    "titles": { "add": "Shto produkt të ri", "edit": "Ndrysho produktin" },
+    "fields": {
+      "name_req": "Emri i produktit *",
+      "brand": "Marka",
+      "model": "Modeli",
+      "price_req": "Çmimi në LEK *",
+      "description": "Përshkrimi",
+      "quantity_req": "Sasia *",
+      "category": "Kategoria",
+      "size": "Masa",
+      "colors": "Ngjyrat",
+      "material": "Materiali",
+      "photos": "Fotot e produktit"
+    },
+    "placeholders": {
+      "name": "Shkruani emrin e produktit",
+      "brand": "Shkruani markën",
+      "model": "Shkruani modelin",
+      "description": "Shkruani përshkrimin e produktit",
+      "category": "Zgjidh kategorinë...",
+      "size": "p.sh. M, 32W, One-Size",
+      "colors": "E kuqe, Blu, Jeshile (të ndara me presje)",
+      "material": "Pambuk, Poliester, etj."
+    },
+    "upload": {
+      "button": "📁 Ngarko foto",
+      "uploading": "⏳ Duke ngarkuar...",
+      "drop_hint": "📸 Zvarrit fotot këtu ose kliko butonin e ngarkimit",
+      "photo_alt": "Foto e produktit {{n}}",
+      "remove": "Hiq fotografinë",
+      "main_photo_title": "Foto kryesore",
+      "set_main_title": "Kliko për ta vendosur si kryesore",
+      "main_badge": "Kryesore",
+      "help": "Kliko një foto për ta vendosur kryesore. Maksimumi 10 foto."
+    },
+    "actions": { "add": "Shto produkt", "update": "Përditëso produktin" },
+    "list": {
+      "title_with_count": "Produktet ({{count}})",
+      "loading": "Duke ngarkuar produktet...",
+      "empty": "Nuk u gjetën produkte."
+    },
+    "search": {
+      "placeholder": "Kërko produktet...",
+      "no_match": "Asnjë produkt nuk përputhet me kërkimin."
+    },
+    "badges": {
+      "model": "Modeli",
+      "price": "Çmimi",
+      "size": "Masa",
+      "qty": "Sasia"
+    },
+    "sale": {
+      "button": "Shitje",
+      "selling": "Duke shitur…",
+      "tooltip": "Regjistro një shitje (zvogëlo stokun me 1)"
+    },
+    "empty": {
+      "no_business_title": "Nuk është zgjedhur biznes",
+      "no_business_desc": "Ju lutemi zgjidhni një biznes për të menaxhuar produktet."
+    },
+    "alerts": {
+      "change_proposed": "Ndryshimi juaj u propozua dhe pret miratim.",
+      "saved": "Produkti u ruajt me sukses!",
+      "delete_proposed": "Kërkesa për fshirje u dërgua për miratim.",
+      "deleted": "Produkti u fshi me sukses."
+    },
+    "confirms": {
+      "delete_request": "Dërgo kërkesë për fshirje për miratim?",
+      "delete_permanent": "Të fshihet përgjithmonë ky produkt?"
+    },
+    "errors": {
+      "name_required": "Kërkohet emri i produktit",
+      "price_required": "Kërkohet një çmim i vlefshëm",
+      "quantity_required": "Kërkohet një sasi e vlefshme",
+      "load_failed": "Dështoi ngarkimi i të dhënave. Provo sërish.",
+      "file_too_large": "Madhësia e skedarit duhet të jetë më pak se 5MB",
+      "bad_filetype": "Lejohen vetëm imazhe JPEG, PNG, WebP dhe GIF",
+      "upload_failed": "Dështoi ngarkimi i fotove",
+      "save_failed_with_reason": "Dështoi ruajtja e produktit: {{reason}}",
+      "save_failed": "Dështoi ruajtja e produktit. Kontrolloni konsolën/rrjetin.",
+      "delete_failed_with_reason": "Dështoi fshirja e produktit: {{reason}}",
+      "delete_failed": "Dështoi fshirja e produktit. Kontrolloni konsolën/rrjetin.",
+      "select_business_first": "Së pari zgjidhni një biznes.",
+      "sale_failed": "Dështoi regjistrimi i shitjes."
+    }
+  }
+}

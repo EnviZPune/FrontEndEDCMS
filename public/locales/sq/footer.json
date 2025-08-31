@@ -1,0 +1,23 @@
+{
+  "footer": {
+    "logo_alt": "Logo E & D",
+    "slogan": "E & D — Qendra e parë tregtare online në kohë reale në Shqipëri. Lidh dyqanet reale me njerëz realë.",
+    "company": "Kompania",
+    "explore": "Eksploro",
+    "contact": "Kontakt",
+    "links": {
+      "about": "Rreth Nesh",
+      "terms": "Kushtet & Afatet",
+      "privacy": "Politika e Privatësisë",
+      "find_shops": "Gjej Dyqane",
+      "find_users": "Gjej Përdorues",
+      "map": "Harta"
+    },
+    "contact_labels": {
+      "email": "Email",
+      "phone": "Telefoni",
+      "location": "Vendndodhja"
+    },
+    "copyright": "© {{year}} E & D. Të gjitha të drejtat e rezervuara."
+  }
+}

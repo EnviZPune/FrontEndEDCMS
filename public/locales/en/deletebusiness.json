@@ -1,0 +1,13 @@
+{
+  "delete": {
+    "title": "Delete Business",
+    "no_business": "Please select a business first.",
+    "confirm": "This action cannot be undone. Are you sure you want to delete this business?",
+    "success": "Business deleted successfully.",
+    "error": "Failed to delete business. Please try again.",
+    "warning_label": "Warning:",
+    "warning_body": "Deleting a business is permanent and cannot be undone.",
+    "button": "Delete Business",
+    "button_deleting": "Deleting…"
+  }
+}

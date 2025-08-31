@@ -1,0 +1,41 @@
+{
+  "loading": "Loading product details...",
+  "errors": {
+    "not_found": "Product not found.",
+    "booking_failed": "An error occurred while booking.",
+    "booking_api": "Booking error: {{message}}"
+  },
+  "nav": {
+    "back_to_shop": "← Back to Shop"
+  },
+  "carousel": {
+    "prev": "Previous image",
+    "next": "Next image",
+    "main_alt": "Main product image",
+    "thumb_alt": "Thumbnail {{index}}"
+  },
+  "fields": {
+    "model": "Model",
+    "description": "Description",
+    "price": "Price",
+    "quantity": "Quantity",
+    "material": "Material",
+    "colors": "Colors",
+    "size": "Size"
+  },
+  "price_fmt": "{{value}} LEK",
+  "booking": {
+    "reserve": "Book Product",
+    "reserve_another": "Book Another",
+    "reserving": "Booking this product...",
+    "login_required": "Please log in to make a reservation.",
+    "success": "Product booked successfully!",
+    "count_label": "Booked"
+  },
+  "lightbox": {
+    "close": "Close",
+    "zoom_out": "Zoom out",
+    "zoom_in": "Zoom in",
+    "reset": "Reset"
+  }
+}

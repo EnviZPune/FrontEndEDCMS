@@ -1,0 +1,26 @@
+{
+  "sales": {
+    "title": "Sales",
+    "select_business": "Select a business to view sales.",
+    "business_label": "Business:",
+    "refresh": "Refresh",
+    "refreshing": "Refreshing…",
+    "loading": "Loading sales…",
+    "empty_month": "No sales this month.",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "qty": "Qty",
+    "at_time": "at",
+    "sku": "SKU",
+    "sold_by": "sale made by:",
+    "prev": "Prev",
+    "next": "Next",
+    "page_x": "Page {{page}}",
+    "errors": {
+      "unauthorized": "Unauthorized (401): token/cookie not sent or expired.",
+      "forbidden": "Forbidden (403): your user lacks the required role.",
+      "not_found": "Not Found (404): Check API_BASE or route.",
+      "load_failed": "Failed to load sales."
+    }
+  }
+}

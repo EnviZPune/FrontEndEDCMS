@@ -1,0 +1,326 @@
+/* Unauthorized Page Styling - Mobile-First with Dark/Light Mode */
+
+/* Light Mode (Default) */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --border-color: #e2e8f0;
+  --shadow-light: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --accent-primary: #3b82f6;
+  --accent-primary-hover: #2563eb;
+  --accent-danger: #ef4444;
+  --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-card: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    --border-color: #334155;
+    --shadow-light: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+    --accent-primary: #60a5fa;
+    --accent-primary-hover: #3b82f6;
+    --accent-danger: #f87171;
+    --gradient-bg: linear-gradient(135deg, #4c1d95 0%, #1e1b4b 100%);
+  }
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+
+/* Unauthorized Page Container */
+.unauthorized-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  position: relative;
+}
+
+.unauthorized-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+/* Card Styles */
+.shopcard {
+  background: var(--bg-card);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-large);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.unauthorized-card {
+  max-width: 28rem;
+  width: 100%;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+@media (prefers-color-scheme: dark) {
+  .unauthorized-card {
+    background: rgba(30, 41, 59, 0.95);
+  }
+}
+
+.unauthorized-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-large);
+}
+
+/* Icon Styles */
+.unauthorized-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+  animation: pulse 2s infinite;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Typography */
+.unauthorized-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.025em;
+}
+
+.unauthorized-text {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin: 0 0 2rem 0;
+  line-height: 1.7;
+}
+
+/* Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  min-width: 8rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn-primary {
+  background-color: var(--accent-primary);
+  color: white;
+  box-shadow: var(--shadow-medium);
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-large);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-light);
+}
+
+.unauthorized-btn {
+  font-size: 1.125rem;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  .unauthorized-page {
+    padding: 0.75rem;
+  }
+
+  .unauthorized-card {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+    margin: 0 0.5rem;
+  }
+
+  .unauthorized-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .unauthorized-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .unauthorized-text {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .unauthorized-btn {
+    font-size: 1rem;
+    padding: 0.875rem 1.75rem;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .unauthorized-card {
+    padding: 1.5rem 1rem;
+    border-radius: 0.75rem;
+  }
+
+  .unauthorized-icon {
+    font-size: 2.5rem;
+  }
+
+  .unauthorized-title {
+    font-size: 1.375rem;
+  }
+
+  .unauthorized-text {
+    font-size: 0.9375rem;
+  }
+}
+
+/* Tablet Styles */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .unauthorized-card {
+    max-width: 32rem;
+    padding: 3rem 2.5rem;
+  }
+
+  .unauthorized-icon {
+    font-size: 4.5rem;
+  }
+
+  .unauthorized-title {
+    font-size: 2rem;
+  }
+
+  .unauthorized-text {
+    font-size: 1.25rem;
+  }
+}
+
+/* Desktop Enhancements */
+@media (min-width: 1025px) {
+  .unauthorized-card {
+    max-width: 36rem;
+    padding: 3.5rem 3rem;
+  }
+
+  .unauthorized-icon {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+  }
+
+  .unauthorized-title {
+    font-size: 2.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .unauthorized-text {
+    font-size: 1.375rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .unauthorized-btn {
+    font-size: 1.25rem;
+    padding: 1.125rem 2.25rem;
+  }
+}
+
+/* Focus States for Accessibility */
+.btn:focus {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn:focus {
+    outline-color: var(--accent-primary);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .unauthorized-icon {
+    animation: none;
+  }
+
+  .btn::before {
+    transition: none;
+  }
+
+  * {
+    transition: none !important;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .unauthorized-card {
+    border: 2px solid var(--text-primary);
+  }
+
+  .btn-primary {
+    border: 2px solid var(--accent-primary);
+  }
+}

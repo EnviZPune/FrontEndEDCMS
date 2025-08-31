@@ -1,0 +1,23 @@
+{
+  "titles": { "edit": "Edit Business Info" },
+  "fields": {
+    "name": "Business Name",
+    "description": "Description",
+    "nipt": "NIPT",
+    "email": "Business Email",
+    "location": "Location",
+    "opening_hours": "Opening Hours",
+    "phone": "Business Phone Number"
+  },
+  "opening_preview": "Preview:",
+  "actions": { "save": "Save Changes" },
+  "state": { "loading": "Loading…", "error_loading": "Error loading info." },
+  "placeholders": { "location": "Start typing…" },
+  "alerts": {
+    "pick_location": "Please pick a location (map or suggestion).",
+    "invalid_hours": "Invalid opening hours. Ensure at least one open day and Open < Close.",
+    "updated": "Business info updated!",
+    "save_failed": "Failed to save business info."
+  },
+  "aria": { "map": "Business location map" }
+}

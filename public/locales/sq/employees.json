@@ -1,0 +1,39 @@
+{
+  "employees": {
+    "loading": "Po ngarkohen punonjësit…",
+    "title": "Menaxhimi i Punonjësve",
+    "alerts": {
+      "enter_email": "Ju lutem shkruani një email për kërkim.",
+      "user_found": "Përdoruesi u gjet: {{name}}",
+      "user_not_found": "Përdoruesi nuk u gjet.",
+      "user_search_error": "Gabim gjatë kërkimit të përdoruesit.",
+      "find_user_first": "Gjeni një përdorues me email më parë.",
+      "invite_sent": "Ftesa u dërgua!",
+      "invite_failed": "Dështoi dërgimi i ftesës.",
+      "fire_confirm": "Jeni i sigurt që doni ta largoni këtë punonjës?",
+      "fired": "Punonjësi u largua.",
+      "fire_failed": "Dështoi largimi i punonjësit."
+    },
+    "form": {
+      "edit_title": "Përditëso Punonjësin",
+      "add_title": "Shto Punonjës të Ri",
+      "name_label": "Emri",
+      "name_placeholder": "Emri",
+      "email_label": "Email",
+      "email_placeholder": "Email",
+      "find_user": "Kerko",
+      "submit_update": "Përditëso",
+      "submit_add": "Shto"
+    },
+    "list": {
+      "title": "Punonjësit Ekzistues",
+      "none": "Nuk u gjetën punonjës."
+    },
+    "actions": {
+      "fire": "Largo"
+    }
+  },
+  "common": {
+    "cancel": "Anulo"
+  }
+}

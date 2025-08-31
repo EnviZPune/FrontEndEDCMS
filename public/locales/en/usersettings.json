@@ -1,0 +1,84 @@
+{
+  "title": "Account Settings",
+  "subtitle": "Manage your profile and account preferences",
+
+  "sections": {
+    "profile_info": "Profile Information",
+    "change_password": "Change Password"
+  },
+
+  "fields": {
+    "profile_picture": "Profile Picture",
+    "full_name": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "dob": "Date of Birth",
+    "new_password": "New Password",
+    "confirm_new_password": "Confirm New Password"
+  },
+
+  "placeholders": {
+    "full_name": "Enter your full name",
+    "email": "Enter your email",
+    "phone": "Enter your phone number",
+    "new_password": "Enter new password",
+    "confirm_new_password": "Confirm new password"
+  },
+
+  "requirements": {
+    "at_least": "At least 8 characters",
+    "lowercase": "One lowercase letter",
+    "uppercase": "One uppercase letter",
+    "number": "One number",
+    "special": "One special character"
+  },
+
+  "strength": {
+    "weak": "Weak",
+    "fair": "Fair",
+    "good": "Good",
+    "strong": "Strong"
+  },
+
+  "info": {
+    "passwords_match": "Passwords match"
+  },
+
+  "cta": {
+    "save": "Save Changes",
+    "saving": "Saving Changes..."
+  },
+
+  "danger": {
+    "title": "Danger Zone",
+    "subtitle": "Once you delete your account, all shops that you might have will be deleted as well and there is no going back. Please be certain.",
+    "delete_btn": "Delete My Account",
+    "confirm": "Are you sure you want to delete your account? This action cannot be undone."
+  },
+
+  "footer": {
+    "back_to_profile": "Back to Profile",
+    "need_help": "Need Help?",
+    "privacy": "Privacy Policy"
+  },
+
+  "aria": {
+    "profile_preview": "Profile preview",
+    "no_picture": "No picture",
+    "show_password": "Show password",
+    "hide_password": "Hide password"
+  },
+
+  "errors": {
+    "load_profile": "Could not load profile.",
+    "image_upload": "Image upload failed.",
+    "passwords_mismatch": "Passwords do not match.",
+    "password_too_weak": "Password is too weak. Please choose a stronger password.",
+    "update_failed": "Update failed. Please try again.",
+    "delete_failed": "Delete failed. Please try again."
+  },
+
+  "success": {
+    "updated": "Profile updated successfully!"
+  }
+}

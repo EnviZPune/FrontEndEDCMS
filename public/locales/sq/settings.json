@@ -1,0 +1,39 @@
+{
+  "states": {
+    "loading": "Po ngarkohen dyqanet…",
+    "error_title": "Gabim gjatë ngarkimit të bizneseve",
+    "error_body": "Ndodhi një gabim gjatë ngarkimit të bizneseve tuaja. Ju lutemi rifreskoni faqen.",
+    "no_business_title": "Ende pa dyqane",
+    "no_business_body": "Nuk keni asnjë dyqan të lidhur me llogarinë tuaj. Krijoni dyqanin e parë për të shtuar produkte dhe për të menaxhuar vitrinën tuaj."
+  },
+  "actions": {
+    "refresh": "Rifresko faqen",
+    "create_first_shop": "Krijo dyqanin e parë",
+    "back_home": "Kthehu te faqja kryesore"
+  },
+
+  "layout": {
+    "sidebar_aria": "Navigimi i cilësimeve",
+    "choose_business_label": "Zgjidh një biznes",
+    "choose_business": "-- Zgjidh Biznesin --",
+    "panels_list_aria": "Panelet",
+    "welcome": "Mirë se erdhe, {{name}}!",
+    "no_business_selected_title": "Asnjë biznes i zgjedhur",
+    "no_business_selected_body": "Ju lutemi zgjidhni një biznes nga lista për të menaxhuar cilësimet."
+  },
+  "panels": {
+    "BusinessInfo": "Të dhënat e biznesit",
+    "Products": "Shto/Redakto Produkte",
+    "Sales": "Shitjet",
+    "Categories": "Kategoritë",
+    "Photos": "Fotot",
+    "Employees": "Punonjësit",
+    "PendingChanges": "Ndryshimet në pritje",
+    "Reservations": "Rezervimet",
+    "Notifications": "Historia e njoftimeve",
+    "MyShops": "Dyqanet e mia",
+    "DeleteBusiness": "Fshi Biznesin"
+  }
+}
+
+

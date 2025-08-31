@@ -1,0 +1,29 @@
+{
+  "photos": {
+    "title": "Ndrysho Fotot e Profilit dhe Foton e Kopertines",
+    "profile_label": "Foto e Profilit",
+    "profile_preview_alt": "Parapamje e profilit",
+    "no_profile": "Nuk ka foto profili",
+    "upload_new": "Ngarko foto të re profili",
+    "upload_input_label": "Zgjidh foton e profilit",
+    "cover_label": "Fotoja e Kopertines",
+    "cover_preview_alt": "Parapamje e Foton e Kopertines",
+    "no_cover": "Nuk ka foto kopertine",
+    "upload_new_cover": "Ngarko foto të re kopertine",
+    "upload_input_label_cover": "Zgjidh foton e Foton e Kopertines",
+    "save_button": "Ruaj Fotot",
+    "zoom": "Zmadhim",
+    "crop_upload": "Preje & Ngarko",
+    "loading_business": "Duke ngarkuar të dhënat e biznesit…",
+    "updated": "Fotot u përditësuan me sukses!"
+  },
+  "errors": {
+    "crop_upload_failed": "Dështoi prerja ose ngarkimi i imazhit.",
+    "save_failed": "Ruajtja dështoi: {{message}}",
+    "business_load": "Nuk u arrit të ngarkohej info e biznesit."
+  },
+  "common": {
+    "saving": "Duke ruajtur…",
+    "cancel": "Anulo"
+  }
+}

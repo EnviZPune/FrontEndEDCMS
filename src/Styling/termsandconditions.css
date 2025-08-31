@@ -1,0 +1,104 @@
+:root {
+  --color-bg: #171718;
+  --color-card: #252527;
+  --color-primary: #5c6ac4;
+  --color-primary-light: #8c97e8;
+  --color-text: #ffffff;
+  --color-heading: #1f2a63;
+  --color-link: #9ea8e9;
+  --color-link-hover: #5d68be;
+  --radius: 12px;
+  --spacing: 16px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.policy-container {
+  background: var(--color-card);
+  color: var(--color-text);
+  max-width: 900px;
+  margin: calc(2 * var(--spacing)) auto;
+  padding: var(--spacing);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.7;
+  margin-top: 98px;
+}
+
+.policy-container h1 {
+  font-size: 2.5rem;
+  color: var(--color-heading);
+  text-align: center;
+  margin-bottom: calc(2 * var(--spacing));
+  position: relative;
+}
+
+.policy-container h1::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: var(--color-primary);
+  margin: var(--spacing) auto 0;
+  border-radius: 2px;
+}
+
+.policy-container h2 {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  margin-top: calc(2 * var(--spacing));
+  margin-bottom: var(--spacing);
+}
+
+.policy-container p {
+  margin: var(--spacing) 0;
+  color: var(--color-text);
+}
+
+.policy-container ul {
+  list-style: none;
+  padding-left: 0;
+  margin: var(--spacing) 0;
+}
+
+.policy-container ul li {
+  position: relative;
+  padding-left: calc(2 * var(--spacing));
+  margin-bottom: var(--spacing);
+}
+
+.policy-container ul li::before {
+  content: '✔';
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  color: var(--color-primary);
+}
+
+.policy-container a {
+  color: var(--color-link);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.policy-container a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+.policy-container strong {
+  color: var(--color-text);
+}
+
+@media (max-width: 600px) {
+  .policy-container {
+    padding: var(--spacing);
+  }
+  .policy-container h1 {
+    font-size: 2rem;
+  }
+  .policy-container h2 {
+    font-size: 1.3rem;
+  }
+}

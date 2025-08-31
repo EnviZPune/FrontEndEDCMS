@@ -1,0 +1,37 @@
+{
+  "reservations": {
+    "title": "Product Reservations",
+    "loading": "Loading reservations…",
+    "error": "Error loading reservations.",
+    "sections": {
+      "confirmed": "Confirmed Reservations",
+      "pending": "Pending Reservations"
+    },
+    "empty": {
+      "approved": "No approved reservations.",
+      "pending": "No pending reservations."
+    },
+    "table": {
+      "id": "ID",
+      "product": "Product",
+      "customer": "Customer",
+      "created_at": "Created At",
+      "actions": "Actions"
+    },
+    "actions": {
+      "mark_completed": "Mark Completed",
+      "no_show": "No Show",
+      "approve": "Approve",
+      "reject": "Reject",
+      "no_show_tooltip": "Customer didn’t show; return item to stock (+1)"
+    },
+    "confirm": {
+      "no_show": "Mark as No Show and return 1 item to stock?"
+    },
+    "alerts": {
+      "complete_failed": "Failed to mark reservation completed.",
+      "status_failed": "Failed to update reservation status.",
+      "no_show_failed": "Failed to mark as No Show."
+    }
+  }
+}

@@ -1,0 +1,516 @@
+/* Modern Employee Panel Design */
+.employee-panel {
+  max-width: 900px;
+  margin: 0 auto var(--space-6);
+  padding: var(--space-6);
+  background: var(--surface-base);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  color: var(--neutral-800);
+  min-height: 430px;
+  border: 1px solid var(--neutral-200);
+  transition: all var(--duration-300) var(--ease-out);
+}
+
+.employee-panel:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-2px);
+}
+
+.employee-panel h3 {
+  margin-bottom: var(--space-6);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--neutral-900);
+  text-align: center;
+  position: relative;
+  padding-bottom: var(--space-4);
+}
+
+.employee-panel h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+  border-radius: var(--radius-full);
+}
+
+.employee-management-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+/* ─── Form ───────────────────────────────────────────────────────────── */
+.employee-form {
+  flex: 1 1 300px;
+  background: var(--surface-raised);
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--neutral-200);
+  box-shadow: var(--shadow-md);
+  transition: all var(--duration-300) var(--ease-out);
+}
+
+.employee-form:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+  border-color: var(--primary-200);
+}
+
+.employee-form h4 {
+  margin-top: 0;
+  margin-bottom: var(--space-5);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--neutral-900);
+  text-align: center;
+  padding: var(--space-3);
+  background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--primary-200);
+}
+
+.employee-form label {
+  display: block;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--neutral-700);
+}
+
+.employee-form input {
+  width: 100%;
+  padding: var(--space-4);
+  margin-top: var(--space-1);
+  border: 2px solid var(--neutral-300);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
+  background: var(--neutral-0);
+  color: var(--neutral-800);
+  transition: all var(--duration-200) var(--ease-out);
+  box-sizing: border-box;
+}
+
+.employee-form input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 4px var(--primary-100);
+  transform: translateY(-1px);
+  background: var(--neutral-0);
+}
+
+.employee-form input:hover {
+  border-color: var(--primary-400);
+  background: var(--neutral-0);
+}
+
+.employee-form-buttons {
+  margin-top: var(--space-6);
+  display: flex;
+  gap: var(--space-3);
+}
+
+.employee-form-buttons button {
+  flex: 1;
+  padding: var(--space-4) var(--space-5);
+  border: none;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  font-size: var(--text-base);
+  font-weight: 600;
+  transition: all var(--duration-200) var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+.employee-form-buttons button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left var(--duration-500) var(--ease-out);
+}
+
+.employee-form-buttons button:hover::before {
+  left: 100%;
+}
+
+.employee-form-buttons button:first-child {
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: var(--neutral-0);
+  box-shadow: var(--shadow-md);
+}
+
+.employee-form-buttons button:first-child:hover {
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.employee-form-buttons button[type="button"]:last-child {
+  background: var(--neutral-100);
+  color: var(--neutral-700);
+  border: 2px solid var(--neutral-300);
+  box-shadow: var(--shadow-sm);
+}
+
+.employee-form-buttons button[type="button"]:last-child:hover {
+  background: var(--neutral-200);
+  border-color: var(--neutral-400);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ─── List ───────────────────────────────────────────────────────────── */
+.employee-list {
+  flex: 2 1 450px;
+}
+
+.employee-list h4 {
+  margin-top: 0;
+  margin-bottom: var(--space-5);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--neutral-900);
+  text-align: center;
+  padding: var(--space-3);
+  background: linear-gradient(135deg, var(--success-50), var(--success-100));
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--success-200);
+}
+
+.employee-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: var(--surface-raised);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--neutral-200);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.employee-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--neutral-200);
+  transition: all var(--duration-200) var(--ease-out);
+  position: relative;
+  background: var(--neutral-0);
+}
+
+.employee-list li:hover {
+  background: var(--neutral-50);
+  transform: translateX(4px);
+}
+
+.employee-list li:last-child {
+  border-bottom: none;
+}
+
+.employee-list li::before {
+  content: "👤";
+  margin-right: var(--space-3);
+  font-size: var(--text-lg);
+}
+
+.employee-list span {
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--neutral-800);
+  flex: 1;
+}
+
+.employee-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.employee-actions button {
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-200) var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+.employee-actions button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left var(--duration-500) var(--ease-out);
+}
+
+.employee-actions button:hover::before {
+  left: 100%;
+}
+
+.employee-actions button:first-child {
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: var(--neutral-0);
+  box-shadow: var(--shadow-sm);
+}
+
+.employee-actions button:first-child:hover {
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.employee-actions button:last-child {
+  background: linear-gradient(135deg, var(--error-500), var(--error-600));
+  color: var(--neutral-0);
+  box-shadow: var(--shadow-sm);
+}
+
+.employee-actions button:last-child:hover {
+  background: linear-gradient(135deg, var(--error-600), var(--error-700));
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ─── Loading / Empty states ─────────────────────────────────────────── */
+.employee-panel p {
+  text-align: center;
+  color: var(--neutral-600);
+  font-size: var(--text-base);
+  padding: var(--space-8);
+  background: var(--surface-raised);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--neutral-200);
+  margin: var(--space-4) 0;
+}
+
+.employee-panel p::before {
+  content: "👥";
+  display: block;
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-3);
+}
+
+/* ─── Loading Spinner ─────────────────────────────────────────────────── */
+.employee-panel .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--neutral-200);
+  border-top: 4px solid var(--primary-500);
+  border-radius: var(--radius-full);
+  animation: spin var(--duration-500) linear infinite;
+  margin: var(--space-8) auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .employee-management-container {
+    flex-direction: column;
+  }
+
+  .employee-panel {
+    margin: 0 var(--space-4) var(--space-6);
+    padding: var(--space-4);
+  }
+
+  .employee-form {
+    padding: var(--space-5);
+  }
+
+  .employee-list li {
+    padding: var(--space-4) var(--space-5);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .employee-actions {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .employee-panel h3 {
+    font-size: var(--text-2xl);
+  }
+
+  .employee-form h4,
+  .employee-list h4 {
+    font-size: var(--text-lg);
+  }
+
+  .employee-form-buttons {
+    flex-direction: column;
+  }
+
+  .employee-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* ─── Dark Mode Support ──────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  .employee-panel {
+    background: var(--neutral-900);
+    color: var(--neutral-100);
+    border-color: var(--neutral-700);
+  }
+
+  .employee-panel h3 {
+    color: var(--neutral-100);
+  }
+
+  .employee-form {
+    background: var(--neutral-800);
+    border-color: var(--neutral-700);
+  }
+
+  .employee-form h4 {
+    color: var(--neutral-100);
+    background: linear-gradient(135deg, var(--primary-900), var(--primary-800));
+    border-color: var(--primary-700);
+  }
+
+  .employee-form label {
+    color: var(--neutral-200);
+  }
+
+  .employee-form input {
+    border-color: var(--neutral-600);
+    background: var(--neutral-900);
+    color: var(--neutral-100);
+  }
+
+  .employee-form input:focus {
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 4px var(--primary-900);
+    background: var(--neutral-900);
+  }
+
+  .employee-form input:hover {
+    border-color: var(--primary-500);
+    background: var(--neutral-900);
+  }
+
+  .employee-form-buttons button:first-child {
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+  }
+
+  .employee-form-buttons button:first-child:hover {
+    background: linear-gradient(135deg, var(--primary-700), var(--primary-800));
+  }
+
+  .employee-form-buttons button[type="button"]:last-child {
+    background: var(--neutral-700);
+    color: var(--neutral-100);
+    border-color: var(--neutral-600);
+  }
+
+  .employee-form-buttons button[type="button"]:last-child:hover {
+    background: var(--neutral-600);
+    border-color: var(--neutral-500);
+  }
+
+  .employee-list h4 {
+    color: var(--neutral-100);
+    background: linear-gradient(135deg, var(--success-900), var(--success-800));
+    border-color: var(--success-700);
+  }
+
+  .employee-list ul {
+    background: var(--neutral-800);
+    border-color: var(--neutral-700);
+  }
+
+  .employee-list li {
+    border-bottom-color: var(--neutral-700);
+    background: var(--neutral-800);
+  }
+
+  .employee-list li:hover {
+    background: var(--neutral-700);
+  }
+
+  .employee-list span {
+    color: var(--neutral-200);
+  }
+
+  .employee-actions button:first-child {
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+  }
+
+  .employee-actions button:first-child:hover {
+    background: linear-gradient(135deg, var(--primary-700), var(--primary-800));
+  }
+
+  .employee-actions button:last-child {
+    background: linear-gradient(135deg, var(--error-600), var(--error-700));
+  }
+
+  .employee-actions button:last-child:hover {
+    background: linear-gradient(135deg, var(--error-700), var(--error-800));
+  }
+
+  .employee-panel p {
+    color: var(--neutral-400);
+    background: var(--neutral-800);
+    border-color: var(--neutral-700);
+  }
+}
+
+/* ─── Accessibility ───────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.employee-form input:focus-visible,
+.employee-form-buttons button:focus-visible,
+.employee-actions button:focus-visible {
+  outline: 3px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+/* ─── Print Styles ────────────────────────────────────────────────────── */
+@media print {
+  .employee-form-buttons,
+  .employee-actions {
+    display: none;
+  }
+
+  .employee-panel {
+    box-shadow: none;
+    border: 1px solid var(--neutral-400);
+  }
+}

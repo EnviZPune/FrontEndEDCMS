@@ -1,0 +1,1531 @@
+/* Enhanced Profile Page Styles - Scoped to profile component only */
+.enhanced-profile-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  position: relative;
+  top: 80px;
+}
+
+/* Dark mode for profile container */
+.enhanced-profile-container.dark-mode {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+/* Offline Banner - Profile specific */
+.enhanced-profile-container .offline-banner {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  animation: profile-slideDown 0.5s ease-out;
+}
+
+@keyframes profile-slideDown {
+  from {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Enhanced Hero Section - Profile specific */
+.enhanced-profile-container .enhanced-hero {
+  position: relative;
+  padding: 4rem 2rem;
+  margin-bottom: 3rem;
+  overflow: hidden;
+}
+
+.enhanced-profile-container .hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  z-index: 1;
+}
+
+/* Dark mode hero background */
+.enhanced-profile-container.dark-mode .hero-background {
+  background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
+}
+
+.enhanced-profile-container .hero-background::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><defs><pattern id="hexagons" width="60" height="60" patternUnits="userSpaceOnUse"><polygon points="30,2 52,17 52,43 30,58 8,43 8,17" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23hexagons)"/></svg>');
+  opacity: 0.3;
+}
+
+.enhanced-profile-container .hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.enhanced-profile-container .avatar-section {
+  flex-shrink: 0;
+}
+
+.enhanced-profile-container .avatar-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+}
+
+.enhanced-profile-container .profile-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.enhanced-profile-container .online-indicator {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: 3px solid white;
+  border-radius: 50%;
+  animation: profile-pulse 2s infinite;
+}
+
+@keyframes profile-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.enhanced-profile-container .profile-info {
+  flex: 1;
+  min-width: 300px;
+}
+
+.enhanced-profile-container .profile-name {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  animation: profile-fadeInUp 0.8s ease-out;
+}
+
+.enhanced-profile-container .contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.enhanced-profile-container .contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+}
+
+.enhanced-profile-container .profile-badges {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.enhanced-profile-container .badge {
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.enhanced-profile-container .badge.verified {
+  background: rgba(16, 185, 129, 0.2);
+  color: #05f826;
+  border: 1px solid rgba(18, 223, 63, 0.911);
+}
+
+.enhanced-profile-container .badge.member {
+  background: rgba(245, 159, 11, 0.2);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 159, 11, 0.795);
+}
+
+/* Dark mode badges */
+.enhanced-profile-container.dark-mode .badge.verified {
+  background: rgba(16, 185, 129, 0.3);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.enhanced-profile-container.dark-mode .badge.member {
+  background: rgba(245, 159, 11, 0.3);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 159, 11, 0.4);
+}
+
+.enhanced-profile-container .profile-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.enhanced-profile-container .btn-primary,
+.enhanced-profile-container .btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.enhanced-profile-container .btn-primary {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.enhanced-profile-container .btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.enhanced-profile-container .btn-primary:hover,
+.enhanced-profile-container .btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes profile-fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.completion-guidance {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* space between summary, next-steps, congrats */
+  margin-top: 1rem;
+}
+
+.completion-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* space between each bar wrapper */
+}
+
+.completion-bar-wrapper {
+  flex: 1 1 220px;
+  background: var(--card-bg, #f9f9fc);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  position: relative;
+  min-width: 180px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.completion-bar-wrapper.overall {
+  width: 100%;
+}
+
+.completion-label {
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+}
+
+.progress-bar {
+  background: #e6e8ec;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 8px;
+  margin-top: 4px;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, #6366f1, #a78bfa);
+  height: 100%;
+  transition: width .4s ease;
+  border-radius: 6px 0 0 6px;
+}
+
+.next-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.next-steps h4 {
+  margin: 0 0 .5rem;
+  font-size: 1rem;
+}
+
+.next-steps ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.inline-action {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background .2s ease, border-color .2s ease;
+}
+
+.inline-action:hover {
+  background: #e2e8f0;
+  border-color: #a0aec0;
+}
+
+.guidance-text {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.congrats {
+  background: #ecfdf5;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+
+/* Enhanced Dashboard - Profile specific */
+.enhanced-profile-container .enhanced-dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+
+.enhanced-profile-container .dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Enhanced Cards - Profile specific */
+.enhanced-profile-container .enhanced-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  animation: profile-slideUp 0.6s ease-out;
+}
+
+/* Dark mode cards */
+.enhanced-profile-container.dark-mode .enhanced-card {
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.enhanced-profile-container .enhanced-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.enhanced-profile-container.dark-mode .enhanced-card:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.enhanced-profile-container .card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 1.5rem 0;
+  position: relative;
+}
+
+.enhanced-profile-container .card-icon {
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 12px;
+  color: white;
+}
+
+.enhanced-profile-container .card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  flex: 1;
+}
+
+/* Dark mode card title */
+.enhanced-profile-container.dark-mode .card-title {
+  color: #f1f5f9;
+}
+
+.enhanced-profile-container .add-shop-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.enhanced-profile-container .add-shop-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.enhanced-profile-container .card-content {
+  padding: 1.5rem;
+}
+
+/* ---------- IMPROVED Activity Overview Card ---------- */
+.enhanced-card.activity-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.enhanced-card.activity-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 30px 50px -5px rgba(0, 0, 0, 0.12);
+}
+
+.enhanced-card.activity-card .card-header {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.enhanced-card.activity-card .card-icon {
+  font-size: 1.75rem;
+  background: linear-gradient(135deg, #6f72ce, #9d7eff);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.enhanced-card.activity-card .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1f2937;
+}
+
+/* IMPROVED Stats Grid Layout */
+.enhanced-card.activity-card .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  justify-items: center;
+}
+
+.enhanced-card.activity-card .stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 100px;
+}
+
+/* IMPROVED Circular Charts */
+.enhanced-card.activity-card .stat-circle {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin-bottom: 0.75rem;
+}
+
+.enhanced-card.activity-card .stat-value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #1f2937;
+  z-index: 2;
+}
+
+.enhanced-card.activity-card svg.circular-chart {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.enhanced-card.activity-card .circle-bg {
+  fill: none;
+  stroke: #f0f2f7;
+  stroke-width: 6;
+}
+
+.enhanced-card.activity-card .circle {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.8s ease-in-out;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.enhanced-card.activity-card .circle.shops {
+  stroke: #7c5aff;
+}
+
+.enhanced-card.activity-card .circle.hours {
+  stroke: #00c6ff;
+}
+
+.enhanced-card.activity-card .circle.days {
+  stroke: #ffc107;
+}
+
+.enhanced-card.activity-card .circle.age {
+  stroke: #4caf50;
+}
+
+.enhanced-card.activity-card .stat-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 600;
+  margin-top: 0;
+}
+
+/* IMPROVED Progress Section */
+.enhanced-card.activity-card .progress-section {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.enhanced-card.activity-card .progress-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0;
+}
+
+.enhanced-card.activity-card .progress-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.enhanced-card.activity-card .progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.enhanced-card.activity-card .progress-bar {
+  background: #f0f2f7;
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.enhanced-card.activity-card .progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #6f72ce, #9d7eff);
+  transition: width 1s ease-in-out;
+  position: relative;
+}
+
+.enhanced-card.activity-card .progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Dark Mode for Activity Card */
+.enhanced-profile-container.dark-mode .enhanced-card.activity-card {
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+.enhanced-profile-container.dark-mode .enhanced-card.activity-card .card-title {
+  color: #f1f5f9;
+}
+
+.enhanced-profile-container.dark-mode .enhanced-card.activity-card .stat-value {
+  color: #f1f5f9;
+}
+
+.enhanced-profile-container.dark-mode .enhanced-card.activity-card .stat-label {
+  color: #94a3b8;
+}
+
+.enhanced-profile-container.dark-mode .enhanced-card.activity-card .progress-title {
+  color: #f1f5f9;
+}
+
+.enhanced-profile-container.dark-mode .enhanced-card.activity-card .progress-info {
+  color: #d1d5db;
+}
+
+.enhanced-profile-container.dark-mode .enhanced-card.activity-card .progress-section {
+  border-top: 1px solid #475569;
+}
+
+.enhanced-profile-container.dark-mode .enhanced-card.activity-card .circle-bg {
+  stroke: #475569;
+}
+
+.enhanced-profile-container.dark-mode .enhanced-card.activity-card .progress-bar {
+  background: #475569;
+}
+
+/* Activity Card Styles - Profile specific */
+.enhanced-profile-container .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  justify-items: center;
+}
+
+.enhanced-profile-container .stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 100px;
+}
+
+.enhanced-profile-container .stat-circle {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin-bottom: 0.75rem;
+}
+
+.enhanced-profile-container .stat-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+/* Dark mode stat value */
+.enhanced-profile-container.dark-mode .stat-value {
+  color: #f1f5f9;
+}
+
+.enhanced-profile-container .circular-chart {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.enhanced-profile-container .circle-bg {
+  fill: none;
+  stroke: #e5e7eb;
+  stroke-width: 6;
+}
+
+/* Dark mode circle background */
+.enhanced-profile-container.dark-mode .circle-bg {
+  stroke: #475569;
+}
+
+.enhanced-profile-container .circle {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1s ease-in-out;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.enhanced-profile-container .circle.shops {
+  stroke: #3b82f6;
+}
+
+.enhanced-profile-container .circle.hours {
+  stroke: #10b981;
+}
+
+.enhanced-profile-container .circle.days {
+  stroke: #f59e0b;
+}
+
+.enhanced-profile-container .circle.age {
+  stroke: #ef4444;
+}
+
+.enhanced-profile-container .stat-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+/* Dark mode stat label */
+.enhanced-profile-container.dark-mode .stat-label {
+  color: #94a3b8;
+}
+
+.enhanced-profile-container .progress-section {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+}
+
+/* Dark mode progress section */
+.enhanced-profile-container.dark-mode .progress-section {
+  border-top: 1px solid #475569;
+}
+
+.enhanced-profile-container .progress-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+/* Dark mode progress title */
+.enhanced-profile-container.dark-mode .progress-title {
+  color: #f1f5f9;
+}
+
+.enhanced-profile-container .progress-item {
+  margin-bottom: 1rem;
+}
+
+.enhanced-profile-container .progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+/* Dark mode progress info */
+.enhanced-profile-container.dark-mode .progress-info {
+  color: #d1d5db;
+}
+
+.enhanced-profile-container .progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Dark mode progress bar */
+.enhanced-profile-container.dark-mode .progress-bar {
+  background: #475569;
+}
+
+.enhanced-profile-container .progress-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 4px;
+  transition: width 1s ease-in-out;
+}
+
+/* Shops Card Styles - Profile specific */
+.enhanced-profile-container .shops-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.enhanced-profile-container .shop-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  animation: profile-slideUp 0.6s ease-out;
+}
+
+/* Dark mode shop item */
+.enhanced-profile-container.dark-mode .shop-item {
+  border: 1px solid #475569;
+  color: #f1f5f9;
+}
+
+.enhanced-profile-container .shop-item:hover {
+  border-color: #667eea;
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+  transform: translateY(-2px);
+}
+
+.enhanced-profile-container.dark-mode .shop-item:hover {
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+}
+
+.enhanced-profile-container .shop-avatar {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
+.enhanced-profile-container .shop-logo {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.enhanced-profile-container .status-indicator {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid white;
+  border-radius: 50%;
+}
+
+.enhanced-profile-container .status-indicator.online {
+  background: #10b981;
+}
+
+.enhanced-profile-container .status-indicator.offline {
+  background: #ef4444;
+}
+
+.enhanced-profile-container .shop-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.enhanced-profile-container .shop-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.25rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Dark mode shop name */
+.enhanced-profile-container.dark-mode .shop-name {
+  color: #f1f5f9;
+}
+
+.enhanced-profile-container .shop-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.enhanced-profile-container .status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.enhanced-profile-container .status-badge.open {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.enhanced-profile-container .status-badge.closed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Dark mode status badges */
+.enhanced-profile-container.dark-mode .status-badge.open {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.enhanced-profile-container.dark-mode .status-badge.closed {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.enhanced-profile-container .hours {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* Dark mode hours */
+.enhanced-profile-container.dark-mode .hours {
+  color: #94a3b8;
+}
+
+.enhanced-profile-container .shop-actions {
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.enhanced-profile-container .shop-item:hover .shop-actions {
+  opacity: 1;
+}
+
+.enhanced-profile-container .action-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enhanced-profile-container .view-btn,
+.enhanced-profile-container .edit-btn {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+/* Dark mode action buttons */
+.enhanced-profile-container.dark-mode .view-btn,
+.enhanced-profile-container.dark-mode .edit-btn {
+  background: #475569;
+  color: #d1d5db;
+}
+
+.enhanced-profile-container .action-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Bookings Card Styles - Profile specific */
+.enhanced-profile-container .bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.enhanced-profile-container .booking-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+/* Dark mode booking item */
+.enhanced-profile-container.dark-mode .booking-item {
+  border: 1px solid #475569;
+}
+
+.enhanced-profile-container .booking-item:hover {
+  border-color: #667eea;
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+}
+
+.enhanced-profile-container.dark-mode .booking-item:hover {
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+}
+
+.enhanced-profile-container .booking-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f4f6;
+  flex-shrink: 0;
+}
+
+/* Dark mode booking image */
+.enhanced-profile-container.dark-mode .booking-image {
+  background: #475569;
+}
+
+.enhanced-profile-container .product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.enhanced-profile-container .placeholder-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #9ca3af;
+}
+
+/* Dark mode placeholder image */
+.enhanced-profile-container.dark-mode .placeholder-image {
+  color: #64748b;
+}
+
+.enhanced-profile-container .booking-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.enhanced-profile-container .product-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.25rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Dark mode product name */
+.enhanced-profile-container.dark-mode .product-name {
+  color: #f1f5f9;
+}
+
+.enhanced-profile-container .product-brand {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0 0 0.5rem 0;
+}
+
+/* Dark mode product brand */
+.enhanced-profile-container.dark-mode .product-brand {
+  color: #94a3b8;
+}
+
+.enhanced-profile-container .booking-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.enhanced-profile-container .status-badge.confirmed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.enhanced-profile-container .status-badge.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.enhanced-profile-container .status-badge.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.enhanced-profile-container .status-badge.default {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+/* Dark mode booking status badges */
+.enhanced-profile-container.dark-mode .status-badge.confirmed {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.enhanced-profile-container.dark-mode .status-badge.pending {
+  background: rgba(245, 159, 11, 0.2);
+  color: #fbbf24;
+}
+
+.enhanced-profile-container.dark-mode .status-badge.cancelled {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.enhanced-profile-container.dark-mode .status-badge.default {
+  background: rgba(71, 85, 105, 0.3);
+  color: #94a3b8;
+}
+
+.enhanced-profile-container .booking-date {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+/* Dark mode booking date */
+.enhanced-profile-container.dark-mode .booking-date {
+  color: #64748b;
+}
+
+.enhanced-profile-container .view-details-btn {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.enhanced-profile-container .view-details-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Empty States - Profile specific */
+.enhanced-profile-container .empty-state {
+  text-align: center;
+  padding: 2rem;
+}
+
+.enhanced-profile-container .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.enhanced-profile-container .empty-state h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+/* Dark mode empty state */
+.enhanced-profile-container.dark-mode .empty-state h4 {
+  color: #f1f5f9;
+}
+
+.enhanced-profile-container .empty-state p {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+/* Dark mode empty state text */
+.enhanced-profile-container.dark-mode .empty-state p {
+  color: #94a3b8;
+}
+
+.enhanced-profile-container .create-shop-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.enhanced-profile-container .create-shop-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+/* Loading States - Profile specific */
+.enhanced-profile-container .loading-container,
+.enhanced-profile-container .loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+  color: #374151;
+}
+
+/* Dark mode loading states */
+.enhanced-profile-container.dark-mode .loading-container,
+.enhanced-profile-container.dark-mode .loading-state {
+  color: #d1d5db;
+}
+
+.enhanced-profile-container .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: profile-spin 1s linear infinite;
+}
+
+/* Dark mode loading spinner */
+.enhanced-profile-container.dark-mode .loading-spinner {
+  border: 4px solid #475569;
+  border-top: 4px solid #667eea;
+}
+
+.enhanced-profile-container .loading-spinner.large {
+  width: 60px;
+  height: 60px;
+}
+
+@keyframes profile-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error States - Profile specific */
+.enhanced-profile-container .error-container,
+.enhanced-profile-container .error-state {
+  text-align: center;
+  padding: 2rem;
+  color: #ef4444;
+}
+
+.enhanced-profile-container .error-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.enhanced-profile-container .error-text {
+  font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.pagination-controls button {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-150) var(--ease-in-out),
+    box-shadow var(--duration-150) var(--ease-in-out),
+    transform var(--duration-150) var(--ease-in-out);
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-1px);
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.pagination-controls span {
+  font-size: 0.875rem;
+  color: var(--color-text-2);
+  user-select: none;
+}
+
+/* Responsive: wrap on narrow screens */
+@media (max-width: 400px) {
+  .pagination-controls {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .pagination-controls span {
+    flex-basis: 100%;
+    text-align: center;
+  }
+}
+
+
+@keyframes profile-slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design - Profile specific */
+@media (max-width: 1024px) {
+  .enhanced-profile-container .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .enhanced-profile-container .hero-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .enhanced-profile-container .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .enhanced-card.activity-card .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .enhanced-profile-container .enhanced-hero {
+    padding: 2rem 1rem;
+  }
+
+  .enhanced-profile-container .profile-name {
+    font-size: 2rem;
+  }
+
+  .enhanced-profile-container .avatar-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .enhanced-profile-container .profile-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .enhanced-profile-container .btn-primary,
+  .enhanced-profile-container .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .enhanced-profile-container .enhanced-dashboard {
+    padding: 0 1rem 2rem;
+  }
+
+  .enhanced-profile-container .card-content {
+    padding: 1rem;
+  }
+
+  .enhanced-card.activity-card .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .enhanced-card.activity-card .stat-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .enhanced-card.activity-card .stat-value {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .enhanced-profile-container .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .enhanced-card.activity-card .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .enhanced-card.activity-card .stat-circle {
+    width: 70px;
+    height: 70px;
+  }
+
+  .enhanced-card.activity-card .stat-value {
+    font-size: 1rem;
+  }
+
+  .enhanced-profile-container .shop-item,
+  .enhanced-profile-container .booking-item {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .enhanced-profile-container .shop-actions {
+    opacity: 1;
+    align-self: flex-end;
+  }
+}
+
+/* Dark mode toggle support */
+@media (prefers-color-scheme: dark) {
+  .enhanced-profile-container {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  }
+
+  .enhanced-profile-container .hero-background {
+    background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
+  }
+
+  .enhanced-profile-container .enhanced-card {
+    background: rgba(30, 41, 59, 0.95);
+    border: 1px solid rgba(71, 85, 105, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .enhanced-profile-container .card-title,
+  .enhanced-profile-container .stat-value,
+  .enhanced-profile-container .progress-title,
+  .enhanced-profile-container .shop-name,
+  .enhanced-profile-container .product-name,
+  .enhanced-profile-container .empty-state h4 {
+    color: #f1f5f9;
+  }
+
+  .enhanced-profile-container .stat-label,
+  .enhanced-profile-container .progress-info,
+  .enhanced-profile-container .hours,
+  .enhanced-profile-container .product-brand,
+  .enhanced-profile-container .booking-date,
+  .enhanced-profile-container .empty-state p {
+    color: #94a3b8;
+  }
+
+  .enhanced-profile-container .circle-bg {
+    stroke: #475569;
+  }
+
+  .enhanced-profile-container .progress-section {
+    border-top: 1px solid #475569;
+  }
+
+  .enhanced-profile-container .progress-bar {
+    background: #475569;
+  }
+
+  .enhanced-profile-container .shop-item,
+  .enhanced-profile-container .booking-item {
+    border: 1px solid #475569;
+    color: #f1f5f9;
+  }
+
+  .enhanced-profile-container .booking-image {
+    background: #475569;
+  }
+
+  .enhanced-profile-container .placeholder-image {
+    color: #64748b;
+  }
+
+  .enhanced-profile-container .view-btn,
+  .enhanced-profile-container .edit-btn {
+    background: #475569;
+    color: #d1d5db;
+  }
+
+  .enhanced-profile-container .loading-container,
+  .enhanced-profile-container .loading-state {
+    color: #d1d5db;
+  }
+
+  .enhanced-profile-container .loading-spinner {
+    border: 4px solid #475569;
+    border-top: 4px solid #667eea;
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "title": "Mirë se u kthyet",
+  "subtitle": "Hyni për të parë të gjitha mundësitë tona!",
+
+  "aria": {
+    "go_home": "Shko në faqen kryesore",
+    "logo_alt": "Logo"
+  },
+
+  "fields": {
+    "email_label": "Email",
+    "email_placeholder": "Vendos emrin e perdoruesit ose email-in",
+    "password_label": "Fjalëkalimi",
+    "password_placeholder": "Vendos fjalëkalimin",
+    "show_password": "Shfaq fjalëkalimin",
+    "hide_password": "Fshih fjalëkalimin"
+  },
+
+  "options": {
+    "remember_me": "Më mbaj mend",
+    "forgot_password": "Keni harruar fjalëkalimin?"
+  },
+
+  "cta": {
+    "sign_in": "Hyr",
+    "logging_in": "Duke u futur..."
+  },
+
+  "footer": {
+    "no_account": "Nuk keni llogari?",
+    "sign_up": "Regjistrohu"
+  },
+
+  "errors": {
+    "login_failed": "Dështoi hyrja",
+    "no_token": "Serveri nuk ktheu token.",
+    "unknown": "Diçka shkoi keq."
+  }
+}

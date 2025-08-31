@@ -1,0 +1,13 @@
+{
+  "myshops": {
+    "title": "Dyqanet e Mia",
+    "favorites": "Të preferuarat",
+    "alt_cover": "Kopertina e {{name}}",
+    "placeholder": "Pa imazh",
+    "empty": "Nuk ka dyqane për t'u shfaqur.",
+    "pagination": {
+      "prev": "Prapa",
+      "next": "Para"
+    }
+  }
+}
