@@ -902,6 +902,13 @@
   .auth-buttons button {
     width: 100%; padding: var(--space-4) var(--space-6);
   }
+
+  .lang-toggle-button{
+    position: relative;
+    bottom: 246px;
+    left: 330px;
+  }
+  
   .dropdown-menu {
     position: static; width: 100%; box-shadow: none;
     border-radius: 0; background: var(--neutral-0);
