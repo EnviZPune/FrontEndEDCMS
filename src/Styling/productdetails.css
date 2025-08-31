@@ -719,6 +719,7 @@
   .product-info {
     padding: var(--space-3);
     gap: var(--space-4);
+    margin-top: 25px;
   }
 
   .product-info h1 {
