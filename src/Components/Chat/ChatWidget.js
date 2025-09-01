@@ -11,6 +11,8 @@ export default function ChatWidget() {
   const [threads, setThreads] = useState([])
   const [activeThreadId, setActiveThreadId] = useState(null)
   const [loading, setLoading] = useState(false)
+  // mobile-only drawer state
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
   // Refs to detect outside clicks
   const containerRef = useRef(null)
@@ -51,12 +53,16 @@ export default function ChatWidget() {
       // If click is inside the chat container or the launcher button, ignore
       if (container && container.contains(e.target)) return
       if (launcher && launcher.contains(e.target)) return
-      // Otherwise, close
+      // Otherwise, close whole widget and collapse drawer
       setOpen(false)
+      setMobileNavOpen(false)
     }
 
     const handleKey = (e) => {
-      if (e.key === "Escape") setOpen(false)
+      if (e.key === "Escape") {
+        setOpen(false)
+        setMobileNavOpen(false)
+      }
     }
 
     document.addEventListener("mousedown", handlePointer)
@@ -94,6 +100,8 @@ export default function ChatWidget() {
       ...prev,
     ])
     setActiveThreadId(dto.threadId)
+    // close the mobile drawer after creating a chat
+    setMobileNavOpen(false)
   }
 
   // Helper function to format date properly
@@ -116,6 +124,11 @@ export default function ChatWidget() {
     }
   }
 
+  const handleClose = () => {
+    setOpen(false)
+    setMobileNavOpen(false)
+  }
+
   if (!isAuthed) return null
 
   return (
@@ -127,6 +140,8 @@ export default function ChatWidget() {
           // prevent any parent handlers from seeing this as an "outside" click
           e.stopPropagation()
           setOpen((o) => !o)
+          // always reset drawer when toggling widget
+          setMobileNavOpen(false)
         }}
         aria-label="Open support chat"
       >
@@ -134,33 +149,48 @@ export default function ChatWidget() {
       </button>
 
       {open && (
-        <div ref={containerRef} className="chat-container">
+        <div
+          ref={containerRef}
+          className={`chat-container ${mobileNavOpen ? "drawer-open" : ""}`}
+        >
+          {/* Mobile dim overlay (inside container so outside-click logic doesn't fire) */}
+          <div
+            className="chat-drawer-scrim"
+            onClick={() => setMobileNavOpen(false)}
+            aria-hidden="true"
+          />
+
           <div className="chat-sidebar">
             <div className="chat-sidebar-header">
               <strong>Help & Support</strong>
-              <button className="chat-reload" onClick={loadMyThreads}>
-                {loading ? "…" : "↻"}
-              </button>
+              <div className="chat-actions">
+            <button
+              className="chat-close mobile-only"
+              aria-label="Close support"
+              title="Close"
+              onClick={handleClose}
+            >
+              Exit Support
+            </button>
+              </div>
             </div>
+
             <button
               className="chat-new-btn-support"
-              onClick={() =>
-                startNew(
-                  "General help",
-                  // you can customize this default message if you also collect the user's name
-                  "Hello, I need assistance.",
-                  null
-                )
-              }
+              onClick={() => startNew("General help", "Hello, I need assistance.", null)}
             >
               + New chat
             </button>
+
             <div className="chat-thread-list">
               {threads.map((t) => (
                 <div
                   key={t.threadId}
                   className={`chat-thread-item ${activeThreadId === t.threadId ? "active" : ""}`}
-                  onClick={() => setActiveThreadId(t.threadId)}
+                  onClick={() => {
+                    setActiveThreadId(t.threadId)
+                    setMobileNavOpen(false) // close drawer on select (mobile)
+                  }}
                 >
                   <div className="chat-thread-topic">{t.topic || "Untitled"}</div>
                   <div className="chat-thread-meta">
@@ -169,14 +199,21 @@ export default function ChatWidget() {
                   </div>
                 </div>
               ))}
-              {threads.length === 0 && !loading && <div className="chat-empty">No conversations yet.</div>}
+              {threads.length === 0 && !loading && (
+                <div className="chat-empty">No conversations yet.</div>
+              )}
             </div>
           </div>
 
           {activeThreadId ? (
-            <SupportChatWindow threadId={activeThreadId} />
+            <SupportChatWindow
+              threadId={activeThreadId}
+              onToggleDrawer={() => setMobileNavOpen((v) => !v)}
+            />
           ) : (
-            <div className="chat-window-placeholder">Select a conversation or create a new one.</div>
+            <div className="chat-window-placeholder">
+              Select a conversation or create a new one.
+            </div>
           )}
         </div>
       )}

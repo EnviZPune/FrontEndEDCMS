@@ -22,11 +22,7 @@ const DEFAULT_AVATAR = "Assets/default-avatar.jpg"
 
 // Pick a user photo URL from common fields
 const pickAvatarUrl = (u) =>
-  u?.profileImage ||
-  u?.profilePictureUrl ||
-  u?.avatarUrl ||
-  u?.photoUrl ||
-  ""
+  u?.profileImage || u?.profilePictureUrl || u?.avatarUrl || u?.photoUrl || ""
 
 // Pick a display name from common fields
 const pickDisplayName = (u) => {
@@ -70,7 +66,6 @@ function resolveFromToken() {
       const v = d?.[k]
       if (v != null && `${v}`.trim() !== "") { id = `${v}`.trim(); break }
     }
-    // Build a friendly name if possible
     let name =
       (d?.given_name && d?.family_name
         ? `${d.given_name} ${d.family_name}`.trim()
@@ -87,28 +82,38 @@ function resolveFromToken() {
   }
 }
 
-// Make a relative "/uploads/..." into "http://77.242.26.150:8000/uploads/..."
-const apiOrigin = API_BASE.replace(/\/api\/?$/, "") // strips trailing /api
+// Make a relative "/uploads/..." into absolute
+const apiOrigin = API_BASE.replace(/\/api\/?$/, "")
 const fileUrl = (u) => {
   if (!u) return ""
-  if (/^https?:\/\//i.test(u)) return u // already absolute
+  if (/^https?:\/\//i.test(u)) return u
   return `${apiOrigin}${u.startsWith("/") ? u : `/${u}`}`
 }
 
+// Merge forwarded ref + local ref safely
+function setRefs(node, forwardedRef, localRef) {
+  localRef.current = node
+  if (!forwardedRef) return
+  if (typeof forwardedRef === "function") forwardedRef(node)
+  else forwardedRef.current = node
+}
+
 const SupportChatWindow = forwardRef(function SupportChatWindow(
-  { threadId, onDeleted },
+  { threadId, onDeleted, onToggleDrawer }, // onToggleDrawer is optional
   ref
 ) {
   const [topic, setTopic] = useState("")
   const [editingTopic, setEditingTopic] = useState(false)
   const [topicDraft, setTopicDraft] = useState("")
-
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState("")
   const [sending, setSending] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [connected, setConnected] = useState(false)
   const [deleting, setDeleting] = useState(false)
+
+  // Drawer state (for aria + morphing hamburger)
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   // Current (end) user identity for avatar + name on their messages
   const [meAvatar, setMeAvatar] = useState(DEFAULT_AVATAR)
@@ -119,7 +124,70 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
   const connRef = useRef(null)
   const endRef = useRef(null)
   const fileInputRef = useRef(null)
-  const inputRef = useRef(null) // keep-focus ref (plain JS)
+  const inputRef = useRef(null)
+  const rootRef = useRef(null)
+  const scrimRef = useRef(null)
+
+  // Helpers to get the nearest .chat-container
+  const getContainer = () => rootRef.current?.closest(".chat-container") || null
+  const openDrawer = () => {
+    const c = getContainer()
+    if (!c) return
+    c.classList.add("drawer-open")
+    setDrawerOpen(true)
+  }
+  const closeDrawer = () => {
+    const c = getContainer()
+    if (!c) return
+    c.classList.remove("drawer-open")
+    setDrawerOpen(false)
+  }
+  const toggleDrawer = () => {
+    if (typeof onToggleDrawer === "function") {
+      onToggleDrawer()
+      return
+    }
+    const c = getContainer()
+    if (!c) return
+    const willOpen = !c.classList.contains("drawer-open")
+    c.classList.toggle("drawer-open", willOpen)
+    setDrawerOpen(willOpen)
+  }
+
+  // Create scrim if not present; add Esc close
+  useEffect(() => {
+    const c = getContainer()
+    if (!c) return
+
+    // sync initial state
+    setDrawerOpen(c.classList.contains("drawer-open"))
+
+    let scrim = c.querySelector(".chat-drawer-scrim")
+    let created = false
+    if (!scrim) {
+      scrim = document.createElement("div")
+      scrim.className = "chat-drawer-scrim"
+      c.appendChild(scrim)
+      created = true
+    }
+    scrimRef.current = scrim
+    const onScrimClick = () => closeDrawer()
+    scrim.addEventListener("click", onScrimClick)
+
+    const onKey = (e) => {
+      if (e.key === "Escape") closeDrawer()
+    }
+    window.addEventListener("keydown", onKey)
+
+    // Cleanup
+    return () => {
+      scrim?.removeEventListener("click", onScrimClick)
+      window.removeEventListener("keydown", onKey)
+      // If we created the scrim, remove on unmount
+      if (created && scrim?.parentElement === c) c.removeChild(scrim)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const scrollToBottom = () => endRef.current?.scrollIntoView({ behavior: "smooth" })
   useEffect(() => { scrollToBottom() }, [messages])
@@ -133,7 +201,7 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
         if (!res.ok) {
           const { id, name } = resolveFromToken()
           if (id) res = await fetch(`${API_BASE}/User/${id}`, { headers: authHeaders({ json: false }) })
-          if (alive && name) setMeName(name) // fallback name while we try /User/{id}
+          if (alive && name) setMeName(name)
         }
         if (!alive) return
         if (!res?.ok) {
@@ -175,7 +243,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
       setMessages(Array.isArray(dto.messages) ? dto.messages : [])
 
       await connectToHub(threadId)
-      // Focus input when chat loads
       requestAnimationFrame(() => inputRef.current?.focus())
     }
 
@@ -245,10 +312,10 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
     try {
       await connRef.current.invoke("SendMessage", threadId, text)
       setInput("")
-      keepFocus() // refocus after send
+      keepFocus()
     } catch (e) {
       console.error(e)
-      keepFocus() // even on error, return focus to input
+      keepFocus()
     } finally {
       setSending(false)
     }
@@ -266,10 +333,9 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
       form.append("file", file)
       if (input.trim()) form.append("caption", input.trim())
 
-      // matches controller route: POST /api/Support/threads/{threadId}/photos
       const res = await fetch(`${API_BASE}/Support/threads/${threadId}/photos`, {
         method: "POST",
-        headers: authHeaders({ json: false }), // IMPORTANT: no Content-Type with FormData
+        headers: authHeaders({ json: false }),
         body: form
       })
       if (!res.ok) {
@@ -285,11 +351,11 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
       }
       setMessages((prev) => [...prev, normalized])
       if (input.trim()) setInput("")
-      keepFocus() // refocus after successful upload
+      keepFocus()
     } catch (e) {
       console.error(e)
       alert("Failed to upload image.")
-      keepFocus() // and after error
+      keepFocus()
     } finally {
       setUploading(false)
     }
@@ -322,7 +388,7 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
       const dto = await res.json()
       setTopic(dto.topic || newTopic)
       setEditingTopic(false)
-      keepFocus() // keep typing flow smooth after renaming
+      keepFocus()
     } catch (e) {
       console.error(e)
       alert("Couldn't update the subject.")
@@ -337,7 +403,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
     if (!ok) return
     setDeleting(true)
     try {
-      // Expected backend: DELETE /api/Support/threads/{threadId} -> 204/200
       const res = await fetch(`${API_BASE}/Support/threads/${threadId}`, {
         method: "DELETE",
         headers: authHeaders({ json: false })
@@ -347,21 +412,17 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
         throw new Error(body || `Delete failed (${res.status})`)
       }
 
-      // Stop receiving new messages
       if (connRef.current) {
         try { await connRef.current.stop() } catch {}
         connRef.current = null
       }
       setConnected(false)
 
-      // Clear UI & notify parent if provided
       setMessages([])
       setTopic("(deleted)")
       setTopicDraft("(deleted)")
 
-      if (typeof onDeleted === "function") {
-        onDeleted(threadId)
-      }
+      if (typeof onDeleted === "function") onDeleted(threadId)
     } catch (e) {
       console.error(e)
       alert("Couldn't delete this conversation.")
@@ -375,7 +436,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
   const authorNameFor = (m) => {
     if (m.isSystem) return "System"
     if (m.senderIsAdmin) return (m.senderName && m.senderName.trim()) || "Support"
-    // end user
     return (m.senderName && m.senderName.trim()) || (meName?.trim() || "You")
   }
 
@@ -385,9 +445,20 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
-      ref={ref}
+      ref={(node) => setRefs(node, ref, rootRef)}
     >
       <div className="chat-window-header">
+        <button
+          className="hamburger-btn"
+          aria-label={drawerOpen ? "Close chat list" : "Open chat list"}
+          aria-expanded={drawerOpen}
+          onClick={toggleDrawer}
+        >
+          <span className="hamburger-bar" />
+          <span className="hamburger-bar" />
+          <span className="hamburger-bar" />
+        </button>
+
         <div className="chat-window-title">
           {editingTopic ? (
             <div className="topic-edit">
@@ -401,21 +472,25 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
               />
               <button
                 className="topic-commit"
-                onMouseDown={(e) => e.preventDefault()} // don't steal focus
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={saveTopic}
                 title="Save"
                 disabled={deleting}
               >
-                <Check className="w-4 h-4" />
+                <Check className="w-4 h-4" style={{color: "black"}}/>
               </button>
               <button
                 className="topic-cancel"
-                onMouseDown={(e) => e.preventDefault()} // don't steal focus
-                onClick={() => { setTopicDraft(topic); setEditingTopic(false); keepFocus() }}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  setTopicDraft(topic)
+                  setEditingTopic(false)
+                  keepFocus()
+                }}
                 title="Cancel"
                 disabled={deleting}
               >
-                <X className="w-4 h-4" />
+                <X className="w-4 h-4" style={{color: "black"}}/>
               </button>
             </div>
           ) : (
@@ -423,7 +498,7 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
               <strong>{topic || `Thread #${threadId}`}</strong>
               <button
                 className="topic-edit-btn"
-                onMouseDown={(e) => e.preventDefault()} // don't steal focus
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => setEditingTopic(true)}
                 title="Rename subject"
                 disabled={deleting}
@@ -432,23 +507,27 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
               </button>
               <button
                 className="chat-delete-btn"
-                onMouseDown={(e) => e.preventDefault()} // don't steal focus
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={deleteThread}
                 title="Delete chat"
                 disabled={deleting}
               >
-                {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                {deleting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Trash2 className="w-4 h-4" />
+                )}
               </button>
             </>
           )}
         </div>
+
         <div className="chat-conn">
           <div className={`conn-dot ${connected ? "online" : "offline"}`} />
           <span>{connected ? "Connected" : "Disconnected"}</span>
         </div>
       </div>
 
-      {/* Drop overlay */}
       {isDragging && (
         <div className="chat-drop-overlay">
           <ImageIcon className="w-8 h-8" />
@@ -456,7 +535,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
         </div>
       )}
 
-      {/* Messages */}
       <div className="chat-messages">
         {messages.length === 0 ? (
           <div className="chat-messages-empty">
@@ -466,16 +544,20 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
         ) : (
           messages.map((m) => (
             <div
-              key={m.messageId || `${m.createdAt}-${m.senderUserId || (m.isSystem ? "sys" : "u")}`}
+              key={
+                m.messageId ||
+                `${m.createdAt}-${m.senderUserId || (m.isSystem ? "sys" : "u")}`
+              }
               className={`chat-msg ${m.isSystem ? "system" : m.senderIsAdmin ? "agent" : "user"}`}
             >
               <div className="chat-avatar">
                 {m.isSystem ? (
-                  <div className="sd-avatar system"><AlertCircle className="w-4 h-4" /></div>
+                  <div className="sd-avatar system">
+                    <AlertCircle className="w-4 h-4" />
+                  </div>
                 ) : m.senderIsAdmin ? (
                   <div className="sd-avatar agent">A</div>
                 ) : (
-                  // USER AVATAR (real photo with dashboard styles)
                   <div className="sd-avatar user">
                     <img
                       className="sd-avatar-img"
@@ -483,20 +565,18 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
                       alt="Your avatar"
                       loading="lazy"
                       draggable={false}
-                      onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = DEFAULT_AVATAR }}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null
+                        e.currentTarget.src = DEFAULT_AVATAR
+                      }}
                     />
                   </div>
                 )}
               </div>
 
               <div className="chat-bubble">
-                {/* Author name line */}
                 <div className="chat-author">{authorNameFor(m)}</div>
-
-                {/* Text */}
                 {m.body && <div className="chat-text">{m.body}</div>}
-
-                {/* Attachments (images) */}
                 {Array.isArray(m.attachments) && m.attachments.length > 0 && (
                   <div className="chat-attachments-grid">
                     {m.attachments.map((a) =>
@@ -509,13 +589,15 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
                           className="chat-attachment"
                           title={a.fileName || "image"}
                         >
-                          <img src={fileUrl(a.url)} alt={a.fileName || "attachment"} />
+                          <img
+                            src={fileUrl(a.url)}
+                            alt={a.fileName || "attachment"}
+                          />
                         </a>
                       ) : null
                     )}
                   </div>
                 )}
-
                 <div className="chat-time">{formatTime(m.createdAt)}</div>
               </div>
             </div>
@@ -524,7 +606,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
         <div ref={endRef} />
       </div>
 
-      {/* Input + actions */}
       <div className="chat-input-row">
         <input
           type="file"
@@ -534,12 +615,12 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
           onChange={(e) => {
             const f = e.target.files?.[0]
             if (f) onPickImage(f)
-            e.currentTarget.value = "" // allow re-upload same file
+            e.currentTarget.value = ""
           }}
         />
         <button
           className="chat-img-btn"
-          onMouseDown={(e) => e.preventDefault()} // don't blur the textarea
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading || deleting}
           title="Send a photo"
@@ -548,7 +629,7 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
         </button>
 
         <textarea
-          ref={inputRef} // attach ref
+          ref={inputRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
@@ -559,18 +640,12 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
           }}
           className="chat-input"
           rows={1}
-          placeholder={
-            deleting
-              ? "Deleting…"
-              : uploading
-              ? "Uploading…"
-              : "Type a message…"
-          }
+          placeholder={deleting ? "Deleting…" : uploading ? "Uploading…" : "Type a message…"}
           disabled={uploading || sending || deleting}
         />
         <button
           className="chat-send-btn"
-          onMouseDown={(e) => e.preventDefault()} // avoid brief blur before click
+          onMouseDown={(e) => e.preventDefault()}
           onClick={sendText}
           disabled={!input.trim() || sending || uploading || deleting}
           title="Send"
