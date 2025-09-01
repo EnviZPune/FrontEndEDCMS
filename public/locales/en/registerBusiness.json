@@ -1,0 +1,74 @@
+{
+  "days": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
+  "hours": {
+    "use_monday": "Use Monday for all",
+    "mark_all_closed": "Mark all closed",
+    "day": "Day",
+    "open": "Open",
+    "close": "Close",
+    "closed": "Closed",
+    "open_ph": "Open",
+    "close_ph": "Close",
+    "closed_on": "Closed on {{day}}"
+  },
+  "hero": {
+    "title": "Register Your Business",
+    "subtitle": "Create your business profile and start reaching customers today"
+  },
+  "progress": {
+    "aria": "Form progress"
+  },
+  "fields": {
+    "name": { "label": "Business Name *", "ph": "Enter your business name" },
+    "description": { "label": "Description *", "ph": "Describe your business and services" },
+    "email": { "label": "Business Email *", "ph": "Enter your business email" },
+    "phone": { "label": "Phone Number *", "ph": "Enter your business phone number" },
+    "nipt": { "label": "NIPT (Tax Number)", "ph": "Enter your tax identification number" },
+    "hours": { "label": "Opening Hours" },
+    "location": { "label": "Location *", "ph": "Start typing to search for location...", "clear": "Clear location" },
+    "profile": { "label": "Profile Photo *", "pick": "Choose Profile Photo", "alt": "Profile preview", "remove": "Remove image" },
+    "cover": { "label": "Cover Photo *", "pick": "Choose Cover Photo", "alt": "Cover preview", "remove": "Remove image" }
+  },
+  "map": {
+    "label": "Select Location on Map",
+    "help": "Click on the map to place a marker at your business location",
+    "zoom_in": "Zoom In",
+    "zoom_out": "Zoom Out",
+    "center": "Center on Marker"
+  },
+  "cta": {
+    "register": "Register Business",
+    "registering": "Registering Business..."
+  },
+  "status": {
+    "validating_token": "Validating access token..."
+  },
+  "denied": {
+    "title": "Access Denied"
+  },
+  "errors": {
+    "missing_token": "Missing access token",
+    "invalid_token": "Invalid or expired access token",
+    "image_upload_failed": "Image upload failed",
+    "upload_failed": "Upload failed",
+    "name_required": "Business name is required",
+    "desc_required": "Description is required",
+    "phone_required": "Phone number is required",
+    "email_required": "Business email is required",
+    "hours_invalid": "Please provide valid hours (open < close) and at least one open day",
+    "hours_length": "Opening hours text must be ≤ 1000 characters",
+    "location_required": "Please select a location",
+    "fill_required": "Please fill in all required fields"
+  },
+  "success": {
+    "registered": "Business registered successfully!"
+  }
+}
