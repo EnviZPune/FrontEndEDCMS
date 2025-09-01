@@ -1,99 +1,78 @@
-import { useState, useMemo, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { loadStripe } from "@stripe/stripe-js"
-import "../Styling/BecomeOwner.css"
-import Navbar from "../Components/Navbar"
+// src/Pages/BecomeOwner.jsx
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import Navbar from "../Components/Navbar";
+import "../Styling/BecomeOwner.css";
 
 function getToken() {
-  const raw = localStorage.getItem("token")
-  if (!raw) return null
+  const raw = localStorage.getItem("token");
+  if (!raw) return null;
   try {
-    const parsed = JSON.parse(raw)
-    return typeof parsed === "string" ? parsed : parsed.token
+    const parsed = JSON.parse(raw);
+    return typeof parsed === "string" ? parsed : parsed.token;
   } catch {
-    return raw
+    return raw;
   }
 }
 
 function decodeJwt(token) {
   try {
-    const payload = token.split(".")[1]
-    const json = atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
-    return JSON.parse(decodeURIComponent(escape(json)))
+    const payload = token.split(".")[1];
+    const json = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
+    return JSON.parse(decodeURIComponent(escape(json)));
   } catch {
-    return null
+    return null;
   }
 }
 
 function extractRoles(claims) {
-  if (!claims) return []
-  // Common role claim shapes
+  if (!claims) return [];
   const candidates = [
     claims.roles,
     claims.role,
     claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
     claims["roles"],
-  ]
-  const found =
-    candidates?.find((v) => v !== undefined) ??
-    []
-  return Array.isArray(found) ? found : [found]
+  ];
+  const found = candidates.find((v) => v !== undefined) ?? [];
+  return Array.isArray(found) ? found : [found];
 }
 
 export default function BecomeOwner() {
-  const navigate = useNavigate()
+  const { t } = useTranslation("becomeOwner");
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const [loading, setLoading] = useState(false)
-  const [testResponse, setResponse] = useState(null)
-  const [darkMode, setDarkMode] = useState(() => {
-    return (
-      localStorage.getItem("becomeOwnerDarkMode") === "true" ||
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    )
-  })
+  const frontendBase =
+    process.env.REACT_APP_CLIENT_BASE_URL || window.location.origin;
+  const apiBase =
+    process.env.REACT_APP_API_BASE_URL || "http://77.242.26.150:8000";
 
-  const publishableKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY
-  const stripePromise = useMemo(
-    () => (publishableKey ? loadStripe(publishableKey) : null),
-    [publishableKey]
-  )
-
-  const frontendBase = process.env.REACT_APP_CLIENT_BASE_URL || window.location.origin
-  const apiBase = process.env.REACT_APP_API_BASE_URL || "http://77.242.26.150:8000"
-
-  // Redirect Admins away from this page
   useEffect(() => {
-    const jwt = getToken()
-    if (!jwt) return
-
-    const claims = decodeJwt(jwt)
-    const roles = extractRoles(claims).map(String)
-    const isAdmin = roles.some((r) => r.toLowerCase() === "admin")
-
+    const jwt = getToken();
+    if (!jwt) return;
+    const claims = decodeJwt(jwt);
+    const roles = extractRoles(claims).map(String);
+    const isAdmin = roles.some((r) => r.toLowerCase() === "admin");
     if (isAdmin) {
-      navigate("/unauthorized", { replace: true })
+      navigate("/unauthorized", { replace: true });
     }
-  }, [navigate])
-
-  useEffect(() => {
-    localStorage.setItem("becomeOwnerDarkMode", darkMode)
-  }, [darkMode])
-
+  }, [navigate]);
 
   async function handleSubscribe() {
-    const jwt = getToken()
+    const jwt = getToken();
     if (!jwt) {
-      alert("Please log in to start your amazing journey!")
-      return
+      alert(t("alerts.login_required", { defaultValue: "Please log in to continue." }));
+      return;
     }
 
-    setLoading(true)
-    const successUrl = `${frontendBase}/create-shop`
-    const cancelUrl = `${frontendBase}/payment-cancel`
+    setLoading(true);
+    const successUrl = `${frontendBase}/create-shop`;
+    const cancelUrl = `${frontendBase}/payment-cancel`;
     const endpoint =
       `${apiBase}/api/payment/create-session?` +
       `successUrl=${encodeURIComponent(successUrl)}` +
-      `&cancelUrl=${encodeURIComponent(cancelUrl)}`
+      `&cancelUrl=${encodeURIComponent(cancelUrl)}`;
 
     try {
       const res = await fetch(endpoint, {
@@ -102,180 +81,134 @@ export default function BecomeOwner() {
           Authorization: `Bearer ${jwt}`,
           "Content-Type": "application/json",
         },
-      })
+      });
 
       if (!res.ok) {
-        console.error("Failed to create checkout session:", await res.text())
-        setLoading(false)
-        return
+        console.error("Failed to create checkout session:", await res.text());
+        setLoading(false);
+        return;
       }
 
-      const { url: checkoutUrl } = await res.json()
-      window.location.href = checkoutUrl
+      const { url: checkoutUrl } = await res.json();
+      window.location.href = checkoutUrl;
     } catch (error) {
-      console.error("Error:", error)
-      setLoading(false)
+      console.error("Error:", error);
+      setLoading(false);
     }
   }
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode)
-  }
-
   return (
-    <div>
+    <div className="bo-page">
       <Navbar />
-      <div className={`become-owner-page ${darkMode ? "dark-theme" : "light-theme"}`}>
+      <main className="bo-main" role="main">
+        <section className="bo-container">
+          <div className="bo-card">
+            {/* Left: value proposition */}
+            <div className="bo-copy">
+              <h1 className="bo-title">
+                {t("hero.title", { defaultValue: "Open your shop with confidence" })}
+              </h1>
+              <p className="bo-subtitle">
+                {t("hero.subtitle", {
+                  defaultValue:
+                    "Create a verified presence, manage inventory and team members, and reach customers who are ready to buy in-store today.",
+                })}
+              </p>
 
-        {/* Animated background elements */}
-        <div className="become-owner-background-elements">
-          <div className="become-owner-bg-orb become-owner-bg-orb-1"></div>
-          <div className="become-owner-bg-orb become-owner-bg-orb-2"></div>
-          <div className="become-owner-bg-orb become-owner-bg-orb-3"></div>
-        </div>
+              <ul className="bo-bullets" aria-label={t("aria.features", { defaultValue: "Included features" })}>
+                <li>{t("features.profile", { defaultValue: "Dedicated shop profile with custom URL" })}</li>
+                <li>{t("features.inventory", { defaultValue: "Inventory & category management" })}</li>
+                <li>{t("features.roles", { defaultValue: "Employee roles & access controls" })}</li>
+                <li>{t("features.analytics", { defaultValue: "Analytics and shop activity overview" })}</li>
+                <li>{t("features.support", { defaultValue: "Priority support" })}</li>
+              </ul>
 
-        <div className="become-owner-container">
-          <div className="become-owner-card">
-            <div className="become-owner-card-content">
-              {/* Left side - Main content */}
-              <div className="become-owner-main-content">
-                <div className="become-owner-header-section">
-                  <div className="become-owner-badge">
-                    <span className="become-owner-badge-icon">✨</span>
-                    Something Amazing Awaits
-                  </div>
-
-                  <h1 className="become-owner-title">
-                    Welcome to Your
-                    <span className="become-owner-title-highlight">Dream Business!</span>
-                  </h1>
-
-                  <p className="become-owner-subtitle">
-                    🎉 <strong>Congratulations!</strong> You're about to embark on the most exciting entrepreneurial
-                    journey of your life. We're absolutely <em>thrilled</em> to have you here!
-                  </p>
-                </div>
-
-                <div className="become-owner-features-section">
-                  <div className="become-owner-package-card">
-                    <div className="become-owner-package-header">
-                      <div className="become-owner-package-icon">
-                        <span>👑</span>
-                      </div>
-                      <div className="become-owner-package-info">
-                        <h3>Your VIP Business Package</h3>
-                        <p className="become-owner-package-price">Just $20/month - Incredible Value!</p>
-                      </div>
-                    </div>
-
-                    <div className="become-owner-features-grid">
-                      <div className="become-owner-feature-item">
-                        <span className="become-owner-check-icon">✅</span>
-                        <span>Your Own Shop</span>
-                      </div>
-                      <div className="become-owner-feature-item">
-                        <span className="become-owner-check-icon">✅</span>
-                        <span>Inventory Management</span>
-                      </div>
-                      <div className="become-owner-feature-item">
-                        <span className="become-owner-check-icon">✅</span>
-                        <span>Team Management</span>
-                      </div>
-                      <div className="become-owner-feature-item">
-                        <span className="become-owner-check-icon">✅</span>
-                        <span>Customer Analytics</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="become-owner-cta-section">
-                    <p className="become-owner-thankyou">
-                      💝 <strong>Thank you</strong> for choosing us to be part of your success story. Together, we're
-                      going to build something absolutely <em>extraordinary</em>!
-                    </p>
-
-                    <button className="become-owner-subscribe-button" onClick={handleSubscribe} disabled={loading}>
-                      {loading ? (
-                        <>
-                          <span className="become-owner-loading-spinner"></span>
-                          Creating Your Empire...
-                        </>
-                      ) : (
-                        <>
-                          <span className="become-owner-button-icon">⚡</span>
-                          Start My Business Journey
-                          <span className="become-owner-button-arrow">→</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                {testResponse && (
-                  <div className="become-owner-status-card">
-                    <strong>System Status:</strong> {testResponse}
-                  </div>
-                )}
-              </div>
-
-              {/* Right side - Visual elements */}
-              <div className="become-owner-visual-section">
-                <div className="become-owner-visual-content">
-                  <div className="become-owner-visual-header">
-                    <div className="become-owner-visual-icon">
-                      <span>🛍️</span>
-                    </div>
-                    <h2>Your Success Story Starts Here</h2>
-                    <p>Join thousands of successful entrepreneurs who trusted us with their dreams</p>
-                  </div>
-
-                  <div className="become-owner-stats-grid">
-                    <div className="become-owner-stat-item">
-                      <div className="become-owner-stat-icon">
-                        <span>👥</span>
-                      </div>
-                      <p>10K+ Happy Owners</p>
-                    </div>
-                    <div className="become-owner-stat-item">
-                      <div className="become-owner-stat-icon">
-                        <span>📈</span>
-                      </div>
-                      <p>95% Success Rate</p>
-                    </div>
-                    <div className="become-owner-stat-item">
-                      <div className="become-owner-stat-icon">
-                        <span>⭐</span>
-                      </div>
-                      <p>5-Star Support</p>
-                    </div>
-                  </div>
-
-                  <div className="become-owner-special-offer">
-                    <p className="become-owner-offer-title">💫 Special Launch Offer</p>
-                    <p className="become-owner-offer-description">
-                      First month includes premium onboarding, personal success coach, and exclusive resources - all
-                      FREE!
-                    </p>
-                  </div>
-                </div>
-
-                {/* Decorative elements */}
-                <div className="become-owner-decorative-elements">
-                  <div className="become-owner-deco-circle become-owner-deco-1"></div>
-                  <div className="become-owner-deco-circle become-owner-deco-2"></div>
-                  <div className="become-owner-deco-dot become-owner-dot-1"></div>
-                  <div className="become-owner-deco-dot become-owner-dot-2"></div>
-                </div>
+              <div className="bo-note">
+                {t("hero.note", {
+                  defaultValue:
+                    "Secure checkout is handled externally. You’ll be redirected to complete payment and then brought back to finish setting up your shop.",
+                })}
               </div>
             </div>
+
+            {/* Right: plan & CTA */}
+            <aside className="bo-plan" aria-labelledby="plan-heading">
+              <div className="bo-plan-head">
+                <h2 id="plan-heading" className="bo-plan-title">
+                  {t("plan.title", { defaultValue: "Owner Subscription" })}
+                </h2>
+                <p className="bo-price">
+                  <span className="bo-price-amount">$20</span>
+                  <span className="bo-price-term">
+                    {t("plan.per_month", { defaultValue: "/month" })}
+                  </span>
+                </p>
+              </div>
+
+              <div className="bo-divider" role="separator" aria-hidden="true" />
+
+              <ul className="bo-includes">
+                <li>{t("plan.includes.core", { defaultValue: "All core owner features" })}</li>
+                <li>{t("plan.includes.no_fees", { defaultValue: "No hidden fees" })}</li>
+              </ul>
+
+              <button
+                type="button"
+                className="bo-cta"
+                onClick={handleSubscribe}
+                disabled={loading}
+                aria-busy={loading ? "true" : "false"}
+              >
+                {loading
+                  ? t("cta.preparing", { defaultValue: "Preparing checkout…" })
+                  : t("cta.start", { defaultValue: "Start subscription" })}
+              </button>
+
+              <p className="bo-terms">
+                {t("legal.continue_agree", {
+                  defaultValue: "By continuing you agree to our Terms and Privacy Policy.",
+                })}
+              </p>
+
+              <div className="bo-processor" aria-label={t("aria.processor", { defaultValue: "Payment processor" })}>
+                <a
+                  href="https://stripe.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bo-stripe-badge"
+                  aria-label={t("stripe.badge_aria", { defaultValue: "Payments powered by Stripe" })}
+                >
+                  <svg
+                    className="bo-lock"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M7 10V8a5 5 0 0 1 10 0v2h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1zm2 0h6V8a3 3 0 0 0-6 0v2z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  <span className="bo-stripe-text">
+                    {t("stripe.badge_text", { defaultValue: "Payments powered by Stripe" })}
+                  </span>
+                </a>
+              </div>
+            </aside>
           </div>
 
-          {/* Optional theme toggle control; keep if you have a switch in your design */}
-          <button className="become-owner-theme-toggle" onClick={toggleDarkMode} type="button" aria-label="Toggle theme">
-            Toggle theme
-          </button>
-        </div>
-      </div>
+          {/* Trust bar */}
+          <div className="bo-trust">
+            <span className="bo-dot" aria-hidden="true" />
+            <span>{t("trust.encrypted", { defaultValue: "Encrypted payments via Stripe" })}</span>
+            <span className="bo-sep" aria-hidden="true">•</span>
+            <span>{t("trust.receipts", { defaultValue: "Email receipt & invoices" })}</span>
+            <span className="bo-sep" aria-hidden="true">•</span>
+            <span>{t("trust.roles", { defaultValue: "Role-based access for staff" })}</span>
+          </div>
+        </section>
+      </main>
     </div>
-  )
+  );
 }

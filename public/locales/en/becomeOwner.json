@@ -1,0 +1,45 @@
+{
+  "alerts": {
+    "login_required": "Please log in to continue."
+  },
+  "aria": {
+    "features": "Included features",
+    "processor": "Payment processor"
+  },
+  "hero": {
+    "title": "Open your shop with confidence",
+    "subtitle": "Create a verified presence, manage inventory and team members, and reach customers who are ready to buy in-store today.",
+    "note": "Secure checkout is handled externally. You’ll be redirected to complete payment and then brought back to finish setting up your shop."
+  },
+  "features": {
+    "profile": "Dedicated shop profile with custom URL",
+    "inventory": "Inventory & category management",
+    "roles": "Employee roles & access controls",
+    "analytics": "Analytics and shop activity overview",
+    "support": "Priority support"
+  },
+  "plan": {
+    "title": "Owner Subscription",
+    "per_month": "/ month",
+    "includes": {
+      "core": "All core owner features",
+      "no_fees": "No hidden fees"
+    }
+  },
+  "cta": {
+    "start": "Start subscription",
+    "preparing": "Preparing checkout…"
+  },
+  "legal": {
+    "continue_agree": "By continuing you agree to our Terms and Privacy Policy."
+  },
+  "stripe": {
+    "badge_text": "Payments powered by Stripe",
+    "badge_aria": "Payments powered by Stripe"
+  },
+  "trust": {
+    "encrypted": "Encrypted payments via Stripe",
+    "receipts": "Email receipt & invoices",
+    "roles": "Role-based access for staff"
+  }
+}
