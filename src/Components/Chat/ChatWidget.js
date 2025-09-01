@@ -8,17 +8,21 @@ import "../../Styling/chat.css"
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false)
-  const [threads, setThreads] = useState([])
-  const [activeThreadId, setActiveThreadId] = useState(null)
+  const [threads, setThreads] = useState([])               // <-- no <any[]>
+  const [activeThreadId, setActiveThreadId] = useState(null) // <-- no <string | null>
   const [loading, setLoading] = useState(false)
-  // mobile-only drawer state
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
-  // Refs to detect outside clicks
   const containerRef = useRef(null)
   const launcherRef = useRef(null)
+  const scrollYRef = useRef(0) // for mobile body scroll-lock
 
   const isAuthed = useMemo(() => !!getToken(), [])
+
+  const activeThread = useMemo(
+    () => threads.find((t) => t.threadId === activeThreadId) || null,
+    [threads, activeThreadId]
+  )
 
   const loadMyThreads = async () => {
     if (!isAuthed) return
@@ -38,6 +42,50 @@ export default function ChatWidget() {
     }
   }
 
+  // Mobile body scroll lock while widget is open
+  useEffect(() => {
+    const isMobile = () => window.matchMedia("(max-width: 640px)").matches
+
+    const lock = () => {
+      if (!isMobile()) return
+      scrollYRef.current = window.scrollY || window.pageYOffset || 0
+      document.body.classList.add("chat-scroll-lock")
+      document.body.style.top = `-${scrollYRef.current}px`
+      document.body.style.left = "0"
+      document.body.style.right = "0"
+      document.body.style.width = "100%"
+    }
+
+    const unlock = () => {
+      const y = scrollYRef.current || 0
+      document.body.classList.remove("chat-scroll-lock")
+      document.body.style.top = ""
+      document.body.style.left = ""
+      document.body.style.right = ""
+      document.body.style.width = ""
+      window.scrollTo(0, y)
+    }
+
+    if (open) lock()
+    else unlock()
+
+    const onResize = () => {
+      if (!open) return
+      if (isMobile()) {
+        if (!document.body.classList.contains("chat-scroll-lock")) lock()
+      } else {
+        unlock()
+      }
+    }
+    window.addEventListener("resize", onResize)
+    window.addEventListener("orientationchange", onResize)
+    return () => {
+      window.removeEventListener("resize", onResize)
+      window.removeEventListener("orientationchange", onResize)
+      if (open) unlock()
+    }
+  }, [open])
+
   useEffect(() => {
     if (open) loadMyThreads()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,10 +98,8 @@ export default function ChatWidget() {
     const handlePointer = (e) => {
       const container = containerRef.current
       const launcher = launcherRef.current
-      // If click is inside the chat container or the launcher button, ignore
       if (container && container.contains(e.target)) return
       if (launcher && launcher.contains(e.target)) return
-      // Otherwise, close whole widget and collapse drawer
       setOpen(false)
       setMobileNavOpen(false)
     }
@@ -77,11 +123,7 @@ export default function ChatWidget() {
   }, [open])
 
   const startNew = async (topic, message, businessId) => {
-    const payload = {
-      topic,
-      initialMessage: message,
-      businessId: businessId ?? null,
-    }
+    const payload = { topic, initialMessage: message, businessId: businessId ?? null }
     const res = await fetch(`${API_BASE}/Support/threads`, {
       method: "POST",
       headers: authHeaders(),
@@ -100,24 +142,19 @@ export default function ChatWidget() {
       ...prev,
     ])
     setActiveThreadId(dto.threadId)
-    // close the mobile drawer after creating a chat
     setMobileNavOpen(false)
   }
 
-  // Helper function to format date properly
   const formatDate = (dateString) => {
     if (!dateString) return "Just now"
     try {
       const date = new Date(dateString)
       if (isNaN(date.getTime())) return "Just now"
-
       const now = new Date()
-      const diffInMinutes = Math.floor((now - date) / (1000 * 60))
-
-      if (diffInMinutes < 1) return "Just now"
-      if (diffInMinutes < 60) return `${diffInMinutes}m ago`
-      if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`
-
+      const mins = Math.floor((now - date) / 60000)
+      if (mins < 1) return "Just now"
+      if (mins < 60) return `${mins}m ago`
+      if (mins < 1440) return `${Math.floor(mins / 60)}h ago`
       return date.toLocaleDateString()
     } catch {
       return "Just now"
@@ -137,13 +174,13 @@ export default function ChatWidget() {
         ref={launcherRef}
         className="chat-launcher"
         onClick={(e) => {
-          // prevent any parent handlers from seeing this as an "outside" click
           e.stopPropagation()
           setOpen((o) => !o)
-          // always reset drawer when toggling widget
           setMobileNavOpen(false)
         }}
         aria-label="Open support chat"
+        aria-expanded={open}
+        aria-controls="chat-widget-container"
       >
         {open ? "×" : "Support"}
       </button>
@@ -151,27 +188,32 @@ export default function ChatWidget() {
       {open && (
         <div
           ref={containerRef}
+          id="chat-widget-container"
           className={`chat-container ${mobileNavOpen ? "drawer-open" : ""}`}
+          role="dialog"
+          aria-modal="true"
         >
-          {/* Mobile dim overlay (inside container so outside-click logic doesn't fire) */}
+          {/* Mobile scrim (tap to close drawer) */}
           <div
             className="chat-drawer-scrim"
             onClick={() => setMobileNavOpen(false)}
             aria-hidden="true"
           />
 
+          {/* Sidebar / drawer */}
           <div className="chat-sidebar">
             <div className="chat-sidebar-header">
               <strong>Help & Support</strong>
               <div className="chat-actions">
-            <button
-              className="chat-close mobile-only"
-              aria-label="Close support"
-              title="Close"
-              onClick={handleClose}
-            >
-              Exit Support
-            </button>
+                {/* visible only on mobile via CSS .mobile-only */}
+                <button
+                  className="chat-close mobile-only"
+                  aria-label="Close support"
+                  title="Close"
+                  onClick={handleClose}
+                >
+                  Exit
+                </button>
               </div>
             </div>
 
@@ -189,7 +231,7 @@ export default function ChatWidget() {
                   className={`chat-thread-item ${activeThreadId === t.threadId ? "active" : ""}`}
                   onClick={() => {
                     setActiveThreadId(t.threadId)
-                    setMobileNavOpen(false) // close drawer on select (mobile)
+                    setMobileNavOpen(false)
                   }}
                 >
                   <div className="chat-thread-topic">{t.topic || "Untitled"}</div>
@@ -205,10 +247,23 @@ export default function ChatWidget() {
             </div>
           </div>
 
+          {/* Main chat panel */}
           {activeThreadId ? (
             <SupportChatWindow
               threadId={activeThreadId}
+              threadStatus={activeThread && activeThread.status} // let window disable input if closed
               onToggleDrawer={() => setMobileNavOpen((v) => !v)}
+              onDeleted={(tid) => {
+                setThreads((prev) => {
+                  const next = prev.filter((t) => t.threadId !== tid)
+                  setActiveThreadId((id) => (id === tid ? (next[0]?.threadId || null) : id))
+                  if (next.length === 0) {
+                    setOpen(false)
+                    setMobileNavOpen(false)
+                  }
+                  return next
+                })
+              }}
             />
           ) : (
             <div className="chat-window-placeholder">

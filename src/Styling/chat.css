@@ -144,7 +144,7 @@
   appearance:none; border:0; background:transparent;
   width:40px; height:32px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center;
   color:inherit; cursor:pointer; transition:background .15s ease, transform .05s ease, opacity .15s ease;
-  position: relative; left: 20px; top: 5px;
+  position: relative; left: 10px; top: 5px;
 }
 .topic-edit-btn:hover,.chat-delete-btn:hover{ background:rgba(0,0,0,.06); }
 .topic-edit-btn:active,.chat-delete-btn:active{ transform:translateY(1px); }
@@ -338,6 +338,11 @@
     left: 95px;
   }
 
+  .chat-delete-btn{
+    position: relative;
+    right: 10px;
+  }
+
 }
 
 /* Short landscape phones */
@@ -350,4 +355,17 @@
 /* Optional high-contrast tweak */
 @media (prefers-contrast: high){
   :root{ --chat-border:#000; --chat-text-muted:#333; }
+}
+
+/* ===== Scroll lock when chat is open on mobile ===== */
+@media (max-width: 640px) {
+  body.chat-scroll-lock {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+  }
+  /* Optional: also clamp the chat's own scroll chaining */
+  .chat-container {
+    overscroll-behavior: contain;
+  }
 }

@@ -66,6 +66,7 @@ function resolveFromToken() {
       const v = d?.[k]
       if (v != null && `${v}`.trim() !== "") { id = `${v}`.trim(); break }
     }
+    // Build a friendly name if possible
     let name =
       (d?.given_name && d?.family_name
         ? `${d.given_name} ${d.family_name}`.trim()
@@ -90,21 +91,14 @@ const fileUrl = (u) => {
   return `${apiOrigin}${u.startsWith("/") ? u : `/${u}`}`
 }
 
-// Merge forwarded ref + local ref safely
-function setRefs(node, forwardedRef, localRef) {
-  localRef.current = node
-  if (!forwardedRef) return
-  if (typeof forwardedRef === "function") forwardedRef(node)
-  else forwardedRef.current = node
-}
-
 const SupportChatWindow = forwardRef(function SupportChatWindow(
-  { threadId, onDeleted, onToggleDrawer }, // onToggleDrawer is optional
+  { threadId, onDeleted, onToggleDrawer, onHamburger }, // onHamburger supported as fallback
   ref
 ) {
   const [topic, setTopic] = useState("")
   const [editingTopic, setEditingTopic] = useState(false)
   const [topicDraft, setTopicDraft] = useState("")
+
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState("")
   const [sending, setSending] = useState(false)
@@ -112,8 +106,10 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
   const [connected, setConnected] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
-  // Drawer state (for aria + morphing hamburger)
-  const [drawerOpen, setDrawerOpen] = useState(false)
+  // NEW: track server thread status
+  const [threadStatus, setThreadStatus] = useState("open")
+  const closedKeywords = ["closed", "resolved", "archived", "locked"]
+  const canPost = !closedKeywords.includes((threadStatus || "").toLowerCase())
 
   // Current (end) user identity for avatar + name on their messages
   const [meAvatar, setMeAvatar] = useState(DEFAULT_AVATAR)
@@ -125,69 +121,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
   const endRef = useRef(null)
   const fileInputRef = useRef(null)
   const inputRef = useRef(null)
-  const rootRef = useRef(null)
-  const scrimRef = useRef(null)
-
-  // Helpers to get the nearest .chat-container
-  const getContainer = () => rootRef.current?.closest(".chat-container") || null
-  const openDrawer = () => {
-    const c = getContainer()
-    if (!c) return
-    c.classList.add("drawer-open")
-    setDrawerOpen(true)
-  }
-  const closeDrawer = () => {
-    const c = getContainer()
-    if (!c) return
-    c.classList.remove("drawer-open")
-    setDrawerOpen(false)
-  }
-  const toggleDrawer = () => {
-    if (typeof onToggleDrawer === "function") {
-      onToggleDrawer()
-      return
-    }
-    const c = getContainer()
-    if (!c) return
-    const willOpen = !c.classList.contains("drawer-open")
-    c.classList.toggle("drawer-open", willOpen)
-    setDrawerOpen(willOpen)
-  }
-
-  // Create scrim if not present; add Esc close
-  useEffect(() => {
-    const c = getContainer()
-    if (!c) return
-
-    // sync initial state
-    setDrawerOpen(c.classList.contains("drawer-open"))
-
-    let scrim = c.querySelector(".chat-drawer-scrim")
-    let created = false
-    if (!scrim) {
-      scrim = document.createElement("div")
-      scrim.className = "chat-drawer-scrim"
-      c.appendChild(scrim)
-      created = true
-    }
-    scrimRef.current = scrim
-    const onScrimClick = () => closeDrawer()
-    scrim.addEventListener("click", onScrimClick)
-
-    const onKey = (e) => {
-      if (e.key === "Escape") closeDrawer()
-    }
-    window.addEventListener("keydown", onKey)
-
-    // Cleanup
-    return () => {
-      scrim?.removeEventListener("click", onScrimClick)
-      window.removeEventListener("keydown", onKey)
-      // If we created the scrim, remove on unmount
-      if (created && scrim?.parentElement === c) c.removeChild(scrim)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const scrollToBottom = () => endRef.current?.scrollIntoView({ behavior: "smooth" })
   useEffect(() => { scrollToBottom() }, [messages])
@@ -241,6 +174,9 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
       setTopic(t)
       setTopicDraft(t)
       setMessages(Array.isArray(dto.messages) ? dto.messages : [])
+
+      // NEW: capture status from backend
+      setThreadStatus(dto.status || "open")
 
       await connectToHub(threadId)
       requestAnimationFrame(() => inputRef.current?.focus())
@@ -305,9 +241,11 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
 
   const keepFocus = () => requestAnimationFrame(() => inputRef.current?.focus())
 
+  // Block sends when closed
   const sendText = async () => {
     const text = input.trim()
     if (!text || !connRef.current || !threadId || sending) return
+    if (!canPost) { alert("This conversation is closed. Start a new chat to continue."); keepFocus(); return }
     setSending(true)
     try {
       await connRef.current.invoke("SendMessage", threadId, text)
@@ -324,6 +262,7 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
   // ---------- Image upload ----------
   const onPickImage = async (file) => {
     if (!file || uploading) return
+    if (!canPost) { alert("This conversation is closed. Uploads are disabled."); keepFocus(); return }
     if (!file.type.startsWith("image/")) { alert("Please choose an image."); return }
     if (file.size > 10 * 1024 * 1024) { alert("Image is too large (max 10MB)."); return }
 
@@ -362,9 +301,14 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
   }
 
   // Drag & drop handlers
-  const onDragOver = (e) => { e.preventDefault(); setIsDragging(true) }
+  const onDragOver = (e) => {
+    if (!canPost) return // do nothing when closed
+    e.preventDefault()
+    setIsDragging(true)
+  }
   const onDragLeave = () => setIsDragging(false)
   const onDrop = (e) => {
+    if (!canPost) return
     e.preventDefault()
     setIsDragging(false)
     const file = e.dataTransfer?.files?.[0]
@@ -422,7 +366,9 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
       setTopic("(deleted)")
       setTopicDraft("(deleted)")
 
-      if (typeof onDeleted === "function") onDeleted(threadId)
+      if (typeof onDeleted === "function") {
+        onDeleted(threadId)
+      }
     } catch (e) {
       console.error(e)
       alert("Couldn't delete this conversation.")
@@ -445,21 +391,32 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
-      ref={(node) => setRefs(node, ref, rootRef)}
+      ref={ref}
     >
       <div className="chat-window-header">
         <button
           className="hamburger-btn"
-          aria-label={drawerOpen ? "Close chat list" : "Open chat list"}
-          aria-expanded={drawerOpen}
-          onClick={toggleDrawer}
+          aria-label="Open chat list"
+          onClick={() => {
+            // Support either prop name
+            if (typeof onToggleDrawer === "function") {
+              onToggleDrawer()
+              return
+            }
+            if (typeof onHamburger === "function") {
+              onHamburger()
+              return
+            }
+            // Fallback: toggle the nearest .chat-container
+            document.querySelector(".chat-container")?.classList.toggle("drawer-open")
+          }}
         >
           <span className="hamburger-bar" />
           <span className="hamburger-bar" />
           <span className="hamburger-bar" />
         </button>
 
-        <div className="chat-window-title">
+        <div className="chat-window-title" style={{ gap: 8 }}>
           {editingTopic ? (
             <div className="topic-edit">
               <input
@@ -477,7 +434,7 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
                 title="Save"
                 disabled={deleting}
               >
-                <Check className="w-4 h-4" style={{color: "black"}}/>
+                <Check className="w-4 h-4" />
               </button>
               <button
                 className="topic-cancel"
@@ -490,7 +447,7 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
                 title="Cancel"
                 disabled={deleting}
               >
-                <X className="w-4 h-4" style={{color: "black"}}/>
+                <X className="w-4 h-4" />
               </button>
             </div>
           ) : (
@@ -528,13 +485,15 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
         </div>
       </div>
 
-      {isDragging && (
+      {/* Drop overlay */}
+      {isDragging && canPost && (
         <div className="chat-drop-overlay">
           <ImageIcon className="w-8 h-8" />
           <div>Drop image to upload</div>
         </div>
       )}
 
+      {/* Messages */}
       <div className="chat-messages">
         {messages.length === 0 ? (
           <div className="chat-messages-empty">
@@ -548,7 +507,9 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
                 m.messageId ||
                 `${m.createdAt}-${m.senderUserId || (m.isSystem ? "sys" : "u")}`
               }
-              className={`chat-msg ${m.isSystem ? "system" : m.senderIsAdmin ? "agent" : "user"}`}
+              className={`chat-msg ${
+                m.isSystem ? "system" : m.senderIsAdmin ? "agent" : "user"
+              }`}
             >
               <div className="chat-avatar">
                 {m.isSystem ? (
@@ -576,7 +537,9 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
 
               <div className="chat-bubble">
                 <div className="chat-author">{authorNameFor(m)}</div>
+
                 {m.body && <div className="chat-text">{m.body}</div>}
+
                 {Array.isArray(m.attachments) && m.attachments.length > 0 && (
                   <div className="chat-attachments-grid">
                     {m.attachments.map((a) =>
@@ -598,6 +561,7 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
                     )}
                   </div>
                 )}
+
                 <div className="chat-time">{formatTime(m.createdAt)}</div>
               </div>
             </div>
@@ -606,6 +570,7 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
         <div ref={endRef} />
       </div>
 
+      {/* Input + actions */}
       <div className="chat-input-row">
         <input
           type="file"
@@ -622,10 +587,14 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
           className="chat-img-btn"
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => fileInputRef.current?.click()}
-          disabled={uploading || deleting}
-          title="Send a photo"
+          disabled={uploading || deleting || !canPost}
+          title={canPost ? "Send a photo" : "This conversation is closed"}
         >
-          {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
+          {uploading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <ImageIcon className="w-4 h-4" />
+          )}
         </button>
 
         <textarea
@@ -640,17 +609,29 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
           }}
           className="chat-input"
           rows={1}
-          placeholder={deleting ? "Deleting…" : uploading ? "Uploading…" : "Type a message…"}
-          disabled={uploading || sending || deleting}
+          placeholder={
+            deleting
+              ? "Deleting…"
+              : uploading
+              ? "Uploading…"
+              : canPost
+              ? "Type a message…"
+              : "This conversation is closed"
+          }
+          disabled={uploading || sending || deleting || !canPost}
         />
         <button
           className="chat-send-btn"
           onMouseDown={(e) => e.preventDefault()}
           onClick={sendText}
-          disabled={!input.trim() || sending || uploading || deleting}
-          title="Send"
+          disabled={!input.trim() || sending || uploading || deleting || !canPost}
+          title={canPost ? "Send" : "This conversation is closed"}
         >
-          {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+          {sending ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Send className="w-4 h-4" />
+          )}
         </button>
       </div>
     </div>
