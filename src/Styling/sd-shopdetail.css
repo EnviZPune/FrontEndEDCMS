@@ -721,6 +721,8 @@ body {
   .sd-shop-share {
     padding: 1.2rem;
   }
+
+
 }
 
 @media (max-width: 480px) {
@@ -746,6 +748,7 @@ body {
     font-size: 0.85rem;
     padding: 0.5rem 2.5rem;
     max-width: 200px;
+    text-align: center;
   }
 
   .sd-shop-name {

@@ -1,0 +1,15 @@
+{
+  "placeholder": "Search shops, items, sizes (e.g., M, 42), categories, or users...",
+  "groups": {
+    "shops": "Shops",
+    "items": "Clothing Items",
+    "categories": "Categories",
+    "users": "Users"
+  },
+  "mustLogin": {
+    "title": "You must have an account to use search!",
+    "login": "Log in",
+    "register": "Create an Account"
+  },
+  "noResults": "No results found"
+}

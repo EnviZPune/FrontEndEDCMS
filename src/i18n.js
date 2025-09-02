@@ -12,7 +12,7 @@ if (!i18n.isInitialized) {
       supportedLngs: ['en', 'sq'],
       nonExplicitSupportedLngs: true,
       fallbackLng: 'en',
-      ns: ["common", "navbar", "login", "register", "shoplist", "profile", "shopdetails", "productdetail", "footer", "notifications", "about", "terms", "privacy", "settings", "businessinfo", "productpanel", "sales", "categories", "photos", "employees", "changes", "reservations", "myshops", "deletebusiness", "becomeOwner"],
+      ns: ["common", "navbar", "login", "register", "shoplist", "profile", "shopdetails", "productdetail", "footer", "notifications", "about", "terms", "privacy", "settings", "businessinfo", "productpanel", "sales", "categories", "photos", "employees", "changes", "reservations", "myshops", "deletebusiness", "becomeOwner", "searchbar"],
       defaultNS: 'common',
       load: 'languageOnly',
       lowerCaseLng: true,

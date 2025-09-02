@@ -3,20 +3,22 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import Fuse from "fuse.js";
+import { useTranslation } from "react-i18next";
 import "../Styling/searchbar.css";
 
 const API_BASE = "http://77.242.26.150:8000/api";
 
 /* ---------- THEME-AWARE DEFAULT LOGOS ---------- */
-const DEFAULT_LOGO_LIGHT  = '/Assets/default-shop-logo-light.png';
-const DEFAULT_LOGO_DARK   = '/Assets/default-shop-logo-dark.png';
+const DEFAULT_LOGO_LIGHT  = "/Assets/default-shop-logo-light.png";
+const DEFAULT_LOGO_DARK   = "/Assets/default-shop-logo-dark.png";
 /* ----------------------------------------------- */
 
 function getToken() {
   const raw = localStorage.getItem("token");
   if (!raw) return null;
   try {
-    return JSON.parse(raw).token;
+    const parsed = JSON.parse(raw);
+    return parsed.token ?? raw;
   } catch {
     return raw;
   }
@@ -31,11 +33,10 @@ const slugify = (str) =>
 
 /* ------------------------- Size helpers ------------------------- */
 const LETTER_SIZES = [
-  "XXXS","XXS","XS","S","M","L","XL","XXL","XXXL","XXXXL","4XL","5XL","6XL"
+  "XXXS", "XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL", "XXXXL", "4XL", "5XL", "6XL"
 ];
 
-const normalizeSizeToken = (s) =>
-  String(s).trim().toUpperCase().replace(/\s+/g, "");
+const normalizeSizeToken = (s) => String(s).trim().toUpperCase().replace(/\s+/g, "");
 
 function pickSizeLabel(item) {
   if (!item) return "";
@@ -107,7 +108,11 @@ function extractSizeTokens(item) {
 
   const label = pickSizeLabel(item);
   if (label) {
-    label.split(/[,\|/ ]+/).map((s) => s.trim()).filter(Boolean).forEach(pushToken);
+    label
+      .split(/[,\|/ ]+/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .forEach(pushToken);
   }
 
   const rawArrays = [
@@ -153,6 +158,7 @@ function parseSizeFromQuery(q) {
 /* --------------------------------------------------------------- */
 
 export default function SearchBar() {
+  const { t } = useTranslation("searchbar");
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery]     = useState("");
   const [shops, setShops]                 = useState([]);
@@ -220,7 +226,7 @@ export default function SearchBar() {
               id:            b.businessId,
               slug:          b.slug || slugify(b.name),
               name:          b.name,
-              logoUrl:       (b.profilePictureUrl || "").trim(), // <-- raw value only
+              logoUrl:       (b.profilePictureUrl || "").trim(), // raw value only
               address:       b.address,
               phoneNumber:   b.businessPhoneNumber,
               NIPT:          b.nipt,
@@ -297,7 +303,7 @@ export default function SearchBar() {
         { name: "category", weight: 0.25 },
         { name: "description", weight: 0.2 },
         { name: "sizeLabel", weight: 0.6 },
-        { name: "sizeTokens", weight: 0.9 },
+        { name: "sizeTokens", weight: 0.9 }
       ],
     }),
     []
@@ -358,7 +364,7 @@ export default function SearchBar() {
         itemMatches = fuseItems.search(q).map((r) => r.item);
       }
 
-      // THEME-AWARE FALLBACK LOGO HERE
+      // Theme-aware fallback logo
       const fallbackLogo = isDarkMode ? DEFAULT_LOGO_DARK : DEFAULT_LOGO_LIGHT;
 
       const shopsGroup = shopMatches.map((s) => ({
@@ -391,18 +397,36 @@ export default function SearchBar() {
         imageUrl: u.imageUrl,
       }));
 
+      // Localized group titles
+      const groupTitles = {
+        shops:      t("groups.shops", { defaultValue: "Shops" }),
+        items:      t("groups.items", { defaultValue: "Clothing Items" }),
+        categories: t("groups.categories", { defaultValue: "Categories" }),
+        users:      t("groups.users", { defaultValue: "Users" })
+      };
+
       const newGroups = [];
-      if (shopsGroup.length)      newGroups.push({ category: "Shops",          results: shopsGroup });
-      if (itemsGroup.length)      newGroups.push({ category: "Clothing Items", results: itemsGroup });
-      if (categoriesGroup.length) newGroups.push({ category: "Categories",     results: categoriesGroup });
-      if (usersGroup.length)      newGroups.push({ category: "Users",          results: usersGroup });
+      if (shopsGroup.length)      newGroups.push({ category: groupTitles.shops,      results: shopsGroup });
+      if (itemsGroup.length)      newGroups.push({ category: groupTitles.items,      results: itemsGroup });
+      if (categoriesGroup.length) newGroups.push({ category: groupTitles.categories, results: categoriesGroup });
+      if (usersGroup.length)      newGroups.push({ category: groupTitles.users,      results: usersGroup });
 
       setGroups(newGroups);
     }, 250);
 
     return () => clearTimeout(timer);
-  // re-run on theme change so fallback logo updates without typing
-  }, [searchQuery, fuseShops, fuseItems, fuseItemsBaseOptions, fuseCategories, fuseUsers, flatItems, isDarkMode]);
+    // re-run on theme or language changes so fallback logo and titles update
+  }, [
+    searchQuery,
+    fuseShops,
+    fuseItems,
+    fuseItemsBaseOptions,
+    fuseCategories,
+    fuseUsers,
+    flatItems,
+    isDarkMode,
+    t
+  ]);
 
   // Redirect on Enter
   const handleSubmit = (e) => {
@@ -456,7 +480,9 @@ export default function SearchBar() {
       <div className="search-input-container">
         <input
           type="text"
-          placeholder="Search shops, items, sizes (e.g., M, 42), categories, or users..."
+          placeholder={t("placeholder", {
+            defaultValue: "Search shops, items, sizes (e.g., M, 42), categories, or users..."
+          })}
           className="search-input"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -478,15 +504,28 @@ export default function SearchBar() {
         <div className="search-dropdown active">
           {!currentUserId ? (
             <div className="search-category">
-              <p className="no-results"><b>You must have an account to use search!</b></p>
+              <p className="no-results">
+                <b>
+                  {t("mustLogin.title", {
+                    defaultValue: "You must have an account to use search!"
+                  })}
+                </b>
+              </p>
               <p>
-                <a href="/login">Log in</a> or{" "}
-                <a href="/register">Create an Account</a>
+                <a href="/login">
+                  {t("mustLogin.login", { defaultValue: "Log in" })}
+                </a>{" "}
+                {t("text.or", { defaultValue: "or" })}{" "}
+                <a href="/register">
+                  {t("mustLogin.register", { defaultValue: "Create an Account" })}
+                </a>
               </p>
             </div>
           ) : groups.length === 0 ? (
             <div className="search-category">
-              <p className="no-results">No results found</p>
+              <p className="no-results">
+                {t("noResults", { defaultValue: "No results found" })}
+              </p>
             </div>
           ) : (
             groups.map((g) => (
@@ -495,7 +534,7 @@ export default function SearchBar() {
                 <ul>
                   {g.results.map((item) => (
                     <li
-                      key={`${item.type}-${item.id}-${item.name}`}
+                      key={`${item.type}-${item.id ?? item.name}-${item.name}`}
                       className="search-result-item"
                       onClick={(e) => handleClick(item, e)}
                     >

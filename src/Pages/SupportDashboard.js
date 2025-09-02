@@ -22,9 +22,9 @@ import {
 } from "lucide-react"
 import "../Styling/support-dashboard.css"
 
- const USER_PROFILE_BASE = "/profile";
- const profilePath = (id) => `${USER_PROFILE_BASE}/${id}`;
- const DEFAULT_AVATAR_PATH = "Assets/default-avatar.jpg"
+const USER_PROFILE_BASE = "/profile";
+const profilePath = (id) => `${USER_PROFILE_BASE}/${id}`;
+const DEFAULT_AVATAR_PATH = "Assets/default-avatar.jpg"
 
 // Safely pick common avatar fields
 const pickAvatarUrl = (u) =>
@@ -55,9 +55,16 @@ export default function SupportDashboard() {
   const [authChecked, setAuthChecked] = useState(false)
   const [authorized, setAuthorized] = useState(false)
 
+  // Assignment view: 'awaiting' (unassigned) | 'assigned' (mine)
+  const [assignView, setAssignView] = useState("awaiting")
+
+  // Mobile drawer open/close
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const scrollYRef = useRef(0)
+
   // Data/UI state
-  const [threads, setThreads] = useState([])
-  const [myThreads, setMyThreads] = useState([])
+  const [threads, setThreads] = useState([])     // queue (unassigned or all)
+  const [myThreads, setMyThreads] = useState([]) // assigned to me
   const [filterUnassigned, setFilterUnassigned] = useState(true)
   const [activeThreadId, setActiveThreadId] = useState(null)
   const [activeStatus, setActiveStatus] = useState(null) // "Open" | "Pending" | "Closed"
@@ -128,14 +135,62 @@ export default function SupportDashboard() {
     }
   }, [])
 
+  // Keep filter flag in sync with segmented control
+  useEffect(() => {
+    setFilterUnassigned(assignView === "awaiting")
+  }, [assignView])
+
+  // ----- Body scroll-lock when drawer open (mobile only) -----
+  useEffect(() => {
+    const isMobile = () => window.matchMedia("(max-width: 640px)").matches
+    const lock = () => {
+      if (!isMobile()) return
+      scrollYRef.current = window.scrollY || window.pageYOffset || 0
+      document.body.classList.add("sd-scroll-lock")
+      document.body.style.top = `-${scrollYRef.current}px`
+      document.body.style.left = "0"
+      document.body.style.right = "0"
+      document.body.style.width = "100%"
+    }
+    const unlock = () => {
+      const y = scrollYRef.current || 0
+      document.body.classList.remove("sd-scroll-lock")
+      document.body.style.top = ""
+      document.body.style.left = ""
+      document.body.style.right = ""
+      document.body.style.width = ""
+      window.scrollTo(0, y)
+    }
+
+    if (drawerOpen) lock()
+    else unlock()
+
+    const onResize = () => {
+      if (!drawerOpen) return
+      if (!isMobile()) unlock()
+    }
+    window.addEventListener("resize", onResize)
+    window.addEventListener("orientationchange", onResize)
+    return () => {
+      window.removeEventListener("resize", onResize)
+      window.removeEventListener("orientationchange", onResize)
+      if (drawerOpen) unlock()
+    }
+  }, [drawerOpen])
+
+  // Close drawer with ESC
+  useEffect(() => {
+    if (!drawerOpen) return
+    const onKey = (e) => { if (e.key === "Escape") setDrawerOpen(false) }
+    document.addEventListener("keydown", onKey)
+    return () => document.removeEventListener("keydown", onKey)
+  }, [drawerOpen])
+
   // ----- Helpers -----
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+  useEffect(() => { scrollToBottom() }, [messages])
 
   const fetchJson = async (url, init = {}) => {
     const res = await fetch(url, { headers: authHeaders(), ...init })
@@ -161,7 +216,7 @@ export default function SupportDashboard() {
   }
 
   // ----- Profiles (avatar + name) fetcher for end-users in the thread -----
-  const fetchMissingProfiles = async (userIds /* array<string> */) => {
+  const fetchMissingProfiles = async (userIds) => {
     if (!userIds.length) return
     try {
       const results = await Promise.all(
@@ -205,7 +260,6 @@ export default function SupportDashboard() {
     }
   }
 
-  // Determine which user IDs we still need profiles for (only end-users)
   const missingProfileIds = useMemo(() => {
     if (!messages?.length) return []
     const ids = new Set()
@@ -214,7 +268,6 @@ export default function SupportDashboard() {
       const raw = m?.senderUserId
       const strId = String(raw ?? "")
       if (!strId) continue
-      if (!Number.isFinite(Number(strId))) continue
       if (!profiles[strId] && !pendingProfileIdsRef.current.has(strId)) {
         ids.add(strId)
       }
@@ -222,7 +275,6 @@ export default function SupportDashboard() {
     return Array.from(ids)
   }, [messages, profiles])
 
-  // Fetch missing profiles as they appear
   useEffect(() => {
     if (!missingProfileIds.length) return
     missingProfileIds.forEach((id) => pendingProfileIdsRef.current.add(String(id)))
@@ -245,20 +297,19 @@ export default function SupportDashboard() {
     const initialMessages = Array.isArray(dto.messages) ? dto.messages : []
     setMessages(initialMessages)
     for (const m of initialMessages) {
-      if (m?.messageId != null) {
-        seenMessageIdsRef.current.add(String(m.messageId))
-      }
+      if (m?.messageId != null) seenMessageIdsRef.current.add(String(m.messageId))
     }
 
     setActiveStatus(dto.status || "Open")
     await connectToHub(id)
+
+    // on mobile: close drawer after selecting a thread
+    setDrawerOpen(false)
   }
 
   const connectToHub = async (threadId) => {
     if (connRef.current) {
-      try {
-        await connRef.current.stop()
-      } catch {}
+      try { await connRef.current.stop() } catch {}
     }
     const token = getToken()
     const connection = new signalR.HubConnectionBuilder()
@@ -335,24 +386,23 @@ export default function SupportDashboard() {
     await loadMine()
   }
 
- const send = async () => {
-  const text = input.trim()
-  if (!text || !connRef.current || !activeThreadId || sending) return
-  if ((activeStatus || "").toLowerCase() === "closed") return
+  const send = async () => {
+    const text = input.trim()
+    if (!text || !connRef.current || !activeThreadId || sending) return
+    if ((activeStatus || "").toLowerCase() === "closed") return
 
-  setSending(true)
-  try {
-    await connRef.current.invoke("SendMessage", activeThreadId, text)
-    setInput("")
-    requestAnimationFrame(() => inputRef.current?.focus()) // ← keep focus after send
-  } catch (e) {
-    console.error(e)
-    requestAnimationFrame(() => inputRef.current?.focus()) // still refocus on error
-  } finally {
-    setSending(false)
+    setSending(true)
+    try {
+      await connRef.current.invoke("SendMessage", activeThreadId, text)
+      setInput("")
+      requestAnimationFrame(() => inputRef.current?.focus())
+    } catch (e) {
+      console.error(e)
+      requestAnimationFrame(() => inputRef.current?.focus())
+    } finally {
+      setSending(false)
+    }
   }
-}
-
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -417,7 +467,6 @@ export default function SupportDashboard() {
       setTopic(t)
       setEditingTopic(false)
 
-      // Update lists
       setThreads((prev) => prev.map(x => x.threadId === activeThreadId ? { ...x, topic: t, title: t } : x))
       setMyThreads((prev) => prev.map(x => x.threadId === activeThreadId ? { ...x, topic: t, title: t } : x))
     } catch (e) {
@@ -429,27 +478,19 @@ export default function SupportDashboard() {
   // ----- UI helpers -----
   const getStatusIcon = (status) => {
     switch ((status || "").toLowerCase()) {
-      case "open":
-        return <CheckCircle className="w-3 h-3" />
-      case "pending":
-        return <Clock className="w-3 h-3" />
-      case "closed":
-        return <AlertCircle className="w-3 h-3" />
-      default:
-        return <MessageCircle className="w-3 h-3" />
+      case "open": return <CheckCircle className="w-3 h-3" />
+      case "pending": return <Clock className="w-3 h-3" />
+      case "closed": return <AlertCircle className="w-3 h-3" />
+      default: return <MessageCircle className="w-3 h-3" />
     }
   }
 
   const getStatusColor = (status) => {
     switch ((status || "").toLowerCase()) {
-      case "open":
-        return "status-open"
-      case "pending":
-        return "status-pending"
-      case "closed":
-        return "status-closed"
-      default:
-        return "status-default"
+      case "open": return "status-open"
+      case "pending": return "status-pending"
+      case "closed": return "status-closed"
+      default: return "status-default"
     }
   }
 
@@ -464,7 +505,6 @@ export default function SupportDashboard() {
     return date.toLocaleDateString()
   }
 
-  // Resolve author label for a message (admin’s view)
   const authorNameFor = (m) => {
     if (m.isSystem) return "System"
     if (m.senderIsAdmin) return (m.senderName && m.senderName.trim()) || "Support"
@@ -472,6 +512,13 @@ export default function SupportDashboard() {
     const profile = key ? profiles[key] : null
     return (m.senderName && m.senderName.trim()) || profile?.name || (key ? `User #${key}` : "User")
   }
+
+  // Hide the floating "Support" widget while the dashboard is open
+  useEffect(() => {
+  document.body.classList.add("hide-support-widget");
+  return () => document.body.classList.remove("hide-support-widget");
+}, []);
+
 
   // ----- Initial loads (after auth) -----
   useEffect(() => {
@@ -489,9 +536,7 @@ export default function SupportDashboard() {
       </div>
     )
   }
-
   if (!authorized) return null
-
   if (denied) {
     return (
       <div className="sd-denied">
@@ -504,176 +549,211 @@ export default function SupportDashboard() {
 
   // ----- Render -----
   return (
-    <div className="sd-root">
-      {/* Left Sidebar */}
-      <div className="sd-sidebar">
-        {/* Queue Section */}
-        <div className="sd-section">
-          <div className="sd-section-header">
-            <div className="sd-section-title">
-              <Users className="w-5 h-5" />
-              <h2>Support Queue</h2>
-              <span className="sd-count">{threads.length}</span>
-            </div>
-            <label className="sd-toggle">
-              <input
-                type="checkbox"
-                checked={filterUnassigned}
-                onChange={(e) => setFilterUnassigned(e.target.checked)}
-              />
-              <span className="sd-toggle-slider"></span>
-              <span className="sd-toggle-label">Unassigned only</span>
-            </label>
-          </div>
+    <div className={`sd-root ${drawerOpen ? "drawer-open" : ""}`}>
+      {/* Scrim for mobile drawer */}
+      <div
+        className="sd-drawer-scrim"
+        onClick={() => setDrawerOpen(false)}
+        aria-hidden="true"
+      />
 
-          <div className="sd-list">
-            {loading ? (
-              <div className="sd-loading">
-                <Loader2 className="w-6 h-6 animate-spin" />
-                <span>Loading threads...</span>
+      {/* Sidebar (drawer on mobile, docked on desktop) */}
+      <aside className="sd-sidebar" aria-label="Conversation lists">
+        <div className="sd-sidebar-header mobile-only">
+          <strong>Filters</strong>
+          <button className="sd-close" onClick={() => setDrawerOpen(false)} aria-label="Close">Close</button>
+        </div>
+
+        <div className="sd-segmented">
+          <button
+            className={assignView === "awaiting" ? "active" : ""}
+            onClick={() => setAssignView("awaiting")}
+          >
+            Awaiting
+          </button>
+          <button
+            className={assignView === "assigned" ? "active" : ""}
+            onClick={() => setAssignView("assigned")}
+          >
+            Assigned
+          </button>
+        </div>
+
+        {/* Awaiting (unassigned) list */}
+        {assignView === "awaiting" && (
+          <div className="sd-section">
+            <div className="sd-section-header">
+              <div className="sd-section-title">
+                <Users className="w-5 h-5" />
+                <h2>Support Queue</h2>
+                <span className="sd-count">{threads.length}</span>
               </div>
-            ) : threads.length === 0 ? (
-              <div className="sd-empty">
-                <MessageCircle className="w-8 h-8 opacity-50" />
-                <span>No conversations yet</span>
+            </div>
+
+            <div className="sd-list">
+              {loading ? (
+                <div className="sd-loading">
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                  <span>Loading threads...</span>
+                </div>
+              ) : threads.length === 0 ? (
+                <div className="sd-empty">
+                  <MessageCircle className="w-8 h-8 opacity-50" style={{position : "relative", top : "6px"}} />
+                  <span>   No conversations yet</span>
+                </div>
+              ) : (
+                threads.map((t) => {
+                  const last = t.lastMessageAt || t.updatedAt || t.createdAt
+                  return (
+                    <div key={t.threadId} className="sd-thread-card">
+                      <div
+                        className={`sd-thread-main ${activeThreadId === t.threadId ? "active" : ""}`}
+                        onClick={() => openThread(t.threadId)}
+                      >
+                        <div className="sd-thread-header">
+                          <h3 className="sd-thread-title">{t.topic || t.title || `Thread #${t.threadId}`}</h3>
+                          <span className="sd-thread-time">{formatTime(last)}</span>
+                        </div>
+                        <div className="sd-thread-meta">
+                          <span className={`sd-status ${getStatusColor(t.status)}`}>
+                            {getStatusIcon(t.status)}
+                            {t.status}
+                          </span>
+                          {t.priority && <span className={`sd-priority priority-${t.priority}`}>{t.priority}</span>}
+                        </div>
+                      </div>
+                      {!t.assigneeUserId && (
+                        <div className="sd-thread-actions">
+                          <button className="sd-assign-btn" onClick={() => assignToMe(t.threadId)}>
+                            Assign to me
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Assigned (my threads) list */}
+        {assignView === "assigned" && (
+          <div className="sd-section">
+            <div className="sd-section-header">
+              <div className="sd-section-title">
+                <UserIcon className="w-5 h-5" />
+                <h3>My Threads</h3>
+                <span className="sd-count">{myThreads.length}</span>
               </div>
-            ) : (
-              threads.map((t) => {
-                const last = t.lastMessageAt || t.updatedAt || t.createdAt
-                return (
-                  <div key={t.threadId} className="sd-thread-card">
+            </div>
+
+            <div className="sd-list">
+              {myThreads.length === 0 ? (
+                <div className="sd-empty">
+                  <UserIcon className="w-6 h-6 opacity-50" />
+                  <span>No assigned threads</span>
+                </div>
+              ) : (
+                myThreads.map((t) => {
+                  const last = t.lastMessageAt || t.updatedAt || t.createdAt
+                  return (
                     <div
-                      className={`sd-thread-main ${activeThreadId === t.threadId ? "active" : ""}`}
+                      key={t.threadId}
+                      className={`sd-my-thread ${activeThreadId === t.threadId ? "active" : ""}`}
                       onClick={() => openThread(t.threadId)}
                     >
                       <div className="sd-thread-header">
-                        <h3 className="sd-thread-title">{t.topic || t.title || `Thread #${t.threadId}`}</h3>
+                        <h4 className="sd-thread-title">{t.topic || t.title || `Thread #${t.threadId}`}</h4>
                         <span className="sd-thread-time">{formatTime(last)}</span>
                       </div>
-                      <div className="sd-thread-meta">
-                        <span className={`sd-status ${getStatusColor(t.status)}`}>
-                          {getStatusIcon(t.status)}
-                          {t.status}
-                        </span>
-                        {t.priority && <span className={`sd-priority priority-${t.priority}`}>{t.priority}</span>}
-                      </div>
+                      <span className={`sd-status ${getStatusColor(t.status)}`}>
+                        {getStatusIcon(t.status)}
+                        {t.status}
+                      </span>
                     </div>
-                    {!t.assigneeUserId && (
-                      <div className="sd-thread-actions">
-                        <button className="sd-assign-btn" onClick={() => assignToMe(t.threadId)}>
-                          Assign to me
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )
-              })
-            )}
-          </div>
-        </div>
-
-        {/* My Threads Section */}
-        <div className="sd-section">
-          <div className="sd-section-header">
-            <div className="sd-section-title">
-              <UserIcon className="w-5 h-5" />
-              <h3>My Threads</h3>
-              <span className="sd-count">{myThreads.length}</span>
+                  )
+                })
+              )}
             </div>
           </div>
-
-          <div className="sd-list">
-            {myThreads.length === 0 ? (
-              <div className="sd-empty">
-                <UserIcon className="w-6 h-6 opacity-50" />
-                <span>No assigned threads</span>
-              </div>
-            ) : (
-              myThreads.map((t) => {
-                const last = t.lastMessageAt || t.updatedAt || t.createdAt
-                return (
-                  <div
-                    key={t.threadId}
-                    className={`sd-my-thread ${activeThreadId === t.threadId ? "active" : ""}`}
-                    onClick={() => openThread(t.threadId)}
-                  >
-                    <div className="sd-thread-header">
-                      <h4 className="sd-thread-title">{t.topic || t.title || `Thread #${t.threadId}`}</h4>
-                      <span className="sd-thread-time">{formatTime(last)}</span>
-                    </div>
-                    <span className={`sd-status ${getStatusColor(t.status)}`}>
-                      {getStatusIcon(t.status)}
-                      {t.status}
-                    </span>
-                  </div>
-                )
-              })
-            )}
-          </div>
-        </div>
-      </div>
+        )}
+      </aside>
 
       {/* Main Chat Area */}
       <div className="sd-main">
-        {activeThreadId ? (
-          <div className="sd-chat">
-            {/* Chat Header */}
-            <div className="sd-chat-header">
-              <div className="sd-chat-info">
-                {!editingTopic ? (
-                  <div className="sd-chat-title-row">
-                    <h1 className="sd-chat-title">{topic}</h1>
-                    <button className="topic-edit-btn" onClick={() => setEditingTopic(true)} title="Rename subject">
-                      <Pencil className="w-4 h-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="topic-edit">
-                    <input
-                      className="topic-input"
-                      value={topicDraft}
-                      onChange={(e) => setTopicDraft(e.target.value)}
-                      maxLength={300}
-                      autoFocus
-                    />
-                    <button className="topic-commit" onClick={saveTopic} title="Save">
-                      <Check className="w-4 h-4" />
-                    </button>
-                    <button className="topic-cancel" onClick={() => { setTopicDraft(topic); setEditingTopic(false) }} title="Cancel">
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                )}
-                <span className="sd-chat-id">Thread #{activeThreadId}</span>
-                <span className={`sd-status ml-2 ${getStatusColor(activeStatus)}`}>
-                  {getStatusIcon(activeStatus)}
-                  {activeStatus || "—"}
-                </span>
-              </div>
-              <div className="sd-chat-actions">
-                <button
-                  className="sd-close-btn"
-                  onClick={closeThread}
-                  disabled={(activeStatus || "").toLowerCase() === "closed" || closing}
-                  title={(activeStatus || "").toLowerCase() === "closed" ? "Already closed" : "Close this thread"}
-                >
-                  {closing ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <>
-                      <XCircle className="w-4 h-4" />
-                      <span>Close thread</span>
-                    </>
-                  )}
-                </button>
-                <div className="sd-chat-status">
-                  <div className={`sd-status-indicator ${connected ? "online" : "offline"}`}></div>
-                  <span>{connected ? "Connected" : "Disconnected"}</span>
-                </div>
-              </div>
-            </div>
+        {/* Chat Header */}
+        <div className="sd-chat-header">
+          {/* Hamburger (mobile) */}
+          <button
+            className={`sd-hamburger mobile-only ${drawerOpen ? "is-open" : ""}`}
+            aria-label={drawerOpen ? "Close lists" : "Open lists"}
+            aria-expanded={drawerOpen}
+            onClick={() => setDrawerOpen(v => !v)}
+          >
+            <span className="hb" aria-hidden="true" />
+          </button>
 
-            {/* Messages */}
+          <div className="sd-chat-info">
+            {!editingTopic ? (
+              <div className="sd-chat-title-row">
+                <h1 className="sd-chat-title">{topic || "Support"}</h1>
+                {activeThreadId && (
+                  <button className="topic-edit-btn" onClick={() => setEditingTopic(true)} title="Rename subject">
+                    <Pencil className="w-4 h-4" style={{marginRight5 : "5px"}}/>
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="topic-edit">
+                <input
+                  className="topic-input"
+                  value={topicDraft}
+                  onChange={(e) => setTopicDraft(e.target.value)}
+                  maxLength={300}
+                  autoFocus
+                />
+                <button className="topic-commit" onClick={saveTopic} title="Save">
+                  <Check className="w-4 h-4" />
+                </button>
+                <button
+                  className="topic-cancel"
+                  onClick={() => { setTopicDraft(topic); setEditingTopic(false) }}
+                  title="Cancel"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+            {activeThreadId && <span className="sd-chat-id">Thread #{activeThreadId}</span>}
+          </div>
+
+          <div className="sd-chat-actions">
+            <button
+              className="sd-close-btn"
+              onClick={closeThread}
+              disabled={!activeThreadId || (activeStatus || "").toLowerCase() === "closed" || closing}
+              title={(activeStatus || "").toLowerCase() === "closed" ? "Already closed" : "Close this thread"}
+            >
+              {closing ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <>
+                  <XCircle className="w-4 h-4" style={{position : "relative", top : "2px", right : "3px"}}/>
+                  <span style={{position : "relative", bottom : "5px"}}>Close thread</span>
+                </>
+              )}
+            </button>
+            <div className="sd-chat-status hide-on-mobile">
+              <div className={`sd-status-indicator ${connected ? "online" : "offline"}`} />
+              <span>{connected ? "Connected" : "Disconnected"}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Messages */}
+        {activeThreadId ? (
+          <>
             <div className="sd-messages">
               {messages.length === 0 ? (
                 <div className="sd-messages-empty">
@@ -705,7 +785,7 @@ export default function SupportDashboard() {
                             <Bot className="w-4 h-4" />
                           </div>
                         ) : (
-                     <div className="sd-avatar user">
+                          <div className="sd-avatar user">
                             <Link
                               to={profilePath(m.senderUserId)}
                               className="sd-avatar-link"
@@ -729,13 +809,9 @@ export default function SupportDashboard() {
                       </div>
 
                       <div className="sd-message-content">
-                        {/* Author name line */}
                         <div className="sd-author">{authorNameFor(m)}</div>
-
-                        {/* Body */}
                         {m.body && <div className="sd-message-body">{m.body}</div>}
 
-                        {/* Attachments */}
                         {Array.isArray(m.attachments) && m.attachments.length > 0 && (
                           <div className="sd-attachments-grid">
                             {m.attachments.map((a) =>
@@ -797,7 +873,7 @@ export default function SupportDashboard() {
                 </div>
               )}
             </div>
-          </div>
+          </>
         ) : (
           <div className="sd-placeholder">
             <MessageCircle className="w-16 h-16 opacity-30" />
