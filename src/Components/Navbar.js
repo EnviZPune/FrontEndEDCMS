@@ -330,7 +330,7 @@ const Navbar = () => {
                 <span>✨</span> {t("register", { defaultValue: "Register" })}
               </button>
             </div>
-          )}
+          )} •
             <li role="none">
             <button
               className="lang-toggle-button"
