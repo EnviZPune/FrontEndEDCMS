@@ -507,9 +507,7 @@ export default function UserSettings() {
               ← {t("footer.back_to_profile", { defaultValue: "Back to Profile" })}
             </button>
             <div className="help-links">
-              <a href="/help" className="help-link">
-                {t("footer.need_help", { defaultValue: "Need Help?" })}
-              </a>
+                {t("footer.need_help", { defaultValue: "Need Help? Contact Our Support" })}
               <span className="separator">•</span>
               <a href="/privacy" className="help-link">
                 {t("footer.privacy", { defaultValue: "Privacy Policy" })}
