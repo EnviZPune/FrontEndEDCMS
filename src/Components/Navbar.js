@@ -203,8 +203,8 @@ const Navbar = () => {
   const nextLang = normalized === "sq" ? "en" : "sq";
   const switchLabel =
     normalized === "sq"
-      ? t("switchToEnglish", { defaultValue: "EN" })
-      : t("switchToAlbanian", { defaultValue: "SQ" });
+      ? t("switchToEnglish", { defaultValue: "ENG" })
+      : t("switchToAlbanian", { defaultValue: "ALB" });
 
   const toggleLanguage = () => changeLang(nextLang);
 

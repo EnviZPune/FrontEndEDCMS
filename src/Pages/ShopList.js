@@ -214,7 +214,6 @@ export default function ShopList() {
       </section>
 
       <main className="main-container">
-        {/* Featured / New Shops */}
         <section className="featured-section" aria-label={t("featured_aria", { defaultValue: "New shops" })}>
           <div className="section-header">
             <h2 className="section-title">
