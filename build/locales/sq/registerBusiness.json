@@ -1,0 +1,74 @@
+{
+  "days": {
+    "monday": "E hënë",
+    "tuesday": "E martë",
+    "wednesday": "E mërkurë",
+    "thursday": "E enjte",
+    "friday": "E premte",
+    "saturday": "E shtunë",
+    "sunday": "E diel"
+  },
+  "hours": {
+    "use_monday": "Përdor të hënën për të gjitha",
+    "mark_all_closed": "Shënoji të gjitha të mbyllura",
+    "day": "Dita",
+    "open": "Hapja",
+    "close": "Mbyllja",
+    "closed": "Mbyllur",
+    "open_ph": "Hapja",
+    "close_ph": "Mbyllja",
+    "closed_on": "Mbyllur ditën {{day}}"
+  },
+  "hero": {
+    "title": "Regjistro Biznesin Tuaj",
+    "subtitle": "Krijoni profilin e biznesit dhe arrini klientët që nga sot"
+  },
+  "progress": {
+    "aria": "Progresi i formularit"
+  },
+  "fields": {
+    "name": { "label": "Emri i biznesit *", "ph": "Shkruani emrin e biznesit" },
+    "description": { "label": "Përshkrimi *", "ph": "Përshkruani biznesin dhe shërbimet" },
+    "email": { "label": "Email i biznesit *", "ph": "Shkruani emailin e biznesit" },
+    "phone": { "label": "Numri i telefonit *", "ph": "Shkruani numrin e telefonit të biznesit" },
+    "nipt": { "label": "NIPT (Numri i tatimit)", "ph": "Shkruani numrin e identifikimit tatimor" },
+    "hours": { "label": "Orari i punës" },
+    "location": { "label": "Vendndodhja *", "ph": "Filloni të shkruani për të kërkuar vendndodhjen...", "clear": "Pastro vendndodhjen" },
+    "profile": { "label": "Foto profili *", "pick": "Zgjidhni fotografinë e profilit", "alt": "Parapamje profili", "remove": "Hiqni foton" },
+    "cover": { "label": "Foto kopertine *", "pick": "Zgjidhni fotografinë e kopertinës", "alt": "Parapamje kopertine", "remove": "Hiqni foton" }
+  },
+  "map": {
+    "label": "Zgjidhni vendndodhjen në hartë",
+    "help": "Klikoni në hartë për të vendosur shenjuesin tek vendndodhja e biznesit",
+    "zoom_in": "Zmadho",
+    "zoom_out": "Zvogëlo",
+    "center": "Centro tek shenjuesi"
+  },
+  "cta": {
+    "register": "Regjistro biznesin",
+    "registering": "Po regjistrohet biznesi..."
+  },
+  "status": {
+    "validating_token": "Po verifikohet token-i i aksesit..."
+  },
+  "denied": {
+    "title": "Akses i refuzuar"
+  },
+  "errors": {
+    "missing_token": "Mungon token-i i aksesit",
+    "invalid_token": "Token i pavlefshëm ose i skaduar",
+    "image_upload_failed": "Ngarkimi i imazhit dështoi",
+    "upload_failed": "Ngarkimi dështoi",
+    "name_required": "Kërkohet emri i biznesit",
+    "desc_required": "Kërkohet përshkrimi",
+    "phone_required": "Kërkohet numri i telefonit",
+    "email_required": "Kërkohet emaili i biznesit",
+    "hours_invalid": "Vendosni orar të vlefshëm (hapja < mbyllja) dhe të paktën një ditë të hapur",
+    "hours_length": "Teksti i orarit duhet të jetë ≤ 1000 karaktere",
+    "location_required": "Ju lutemi zgjidhni një vendndodhje",
+    "fill_required": "Ju lutemi plotësoni të gjitha fushat e kërkuara"
+  },
+  "success": {
+    "registered": "Biznesi u regjistrua me sukses!"
+  }
+}

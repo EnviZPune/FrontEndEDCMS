@@ -1,0 +1,46 @@
+{
+  "title": "Privacy Policy",
+  "last_updated": "Last Updated: April 2025",
+  "intro": "At <strong>E &amp; D</strong>, your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information when you use our platform.",
+  "info_collect": {
+    "title": "Information We Collect",
+    "items": {
+      "account": {
+        "label": "Account Information:",
+        "desc": "Name, email address, password, and profile picture."
+      },
+      "business": {
+        "label": "Business Information:",
+        "desc": "Shop name, location, inventory, and contact details."
+      },
+      "usage": {
+        "label": "Usage Data:",
+        "desc": "Pages visited, search queries, and interactions with the site."
+      }
+    }
+  },
+  "use_info": {
+    "title": "How We Use Your Information",
+    "items": {
+      "display": "To display accurate product availability in nearby stores.",
+      "improve": "To improve user experience through analytics and personalization.",
+      "communicate": "To communicate updates, changes, or promotions."
+    }
+  },
+  "data_protection": {
+    "title": "Data Protection",
+    "body": "All personal data is stored securely and only accessed by authorized personnel. We do not sell or share your information with third parties unless required by law."
+  },
+  "rights": {
+    "title": "Your Rights",
+    "items": {
+      "access": "You can request to view, update, or delete your personal data at any time.",
+      "optout": "You can opt-out of marketing communications via your profile settings."
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "body": "If you have any questions about this policy or our practices, feel free to reach out at: <strong>{{email}}</strong>"
+  },
+  "consent": "By using E & D, you agree to this Privacy Policy."
+}

@@ -1,0 +1,46 @@
+{
+  "title": "Politika e Privatësisë",
+  "last_updated": "Përditësuar së fundmi: Prill 2025",
+  "intro": "Tek <strong>E &amp; D</strong>, privatësia juaj është e rëndësishme për ne. Kjo Politikë Privatësie shpjegon se si mbledhim, përdorim dhe mbrojmë informacionin tuaj personal kur përdorni platformën tonë.",
+  "info_collect": {
+    "title": "Informacioni që Mbledhim",
+    "items": {
+      "account": {
+        "label": "Të dhënat e llogarisë:",
+        "desc": "Emri, adresa e emailit, fjalëkalimi dhe foto e profilit."
+      },
+      "business": {
+        "label": "Të dhënat e biznesit:",
+        "desc": "Emri i dyqanit, vendndodhja, inventari dhe kontaktet."
+      },
+      "usage": {
+        "label": "Të dhënat e përdorimit:",
+        "desc": "Faqet e vizituara, kërkimet dhe ndërveprimet me faqen."
+      }
+    }
+  },
+  "use_info": {
+    "title": "Si e Përdorim Informacionin Tuaj",
+    "items": {
+      "display": "Për të shfaqur disponueshmëri të saktë të produkteve në dyqanet pranë jush.",
+      "improve": "Për të përmirësuar përvojën e përdoruesit përmes analizave dhe personalizimit.",
+      "communicate": "Për t'ju dërguar njoftime, përditësime ose promovime."
+    }
+  },
+  "data_protection": {
+    "title": "Mbrojtja e të Dhënave",
+    "body": "E gjithë të dhëna personale ruhen në mënyrë të sigurt dhe aksesohen vetëm nga personel i autorizuar. Ne nuk shesim ose ndajmë informacionin tuaj me palë të treta, përveç kur kërkohet nga ligji."
+  },
+  "rights": {
+    "title": "Të Drejtat Tuaja",
+    "items": {
+      "access": "Mund të kërkoni të shihni, përditësoni ose fshini të dhënat tuaja personale në çdo kohë.",
+      "optout": "Mund të çaktivizoni komunikimet marketing nga cilësimet e profilit."
+    }
+  },
+  "contact": {
+    "title": "Na kontaktoni",
+    "body": "Për pyetje rreth kësaj politike ose praktikave tona, na shkruani në: <strong>{{email}}</strong>"
+  },
+  "consent": "Duke përdorur E & D, ju pranoni këtë Politikë Privatësie."
+}

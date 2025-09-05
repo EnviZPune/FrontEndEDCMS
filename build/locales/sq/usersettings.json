@@ -1,0 +1,84 @@
+{
+  "title": "Cilësimet e Llogarisë",
+  "subtitle": "Menaxhoni profilin dhe preferencat e llogarisë",
+
+  "sections": {
+    "profile_info": "Informacioni i Profilit",
+    "change_password": "Ndrysho Fjalëkalimin"
+  },
+
+  "fields": {
+    "profile_picture": "Foto e Profilit",
+    "full_name": "Emri i Plotë",
+    "email": "Adresa e Email-it",
+    "phone": "Numri i Telefonit",
+    "dob": "Data e Lindjes",
+    "new_password": "Fjalëkalimi i Ri",
+    "confirm_new_password": "Konfirmo Fjalëkalimin e Ri"
+  },
+
+  "placeholders": {
+    "full_name": "Shkruani emrin tuaj të plotë",
+    "email": "Shkruani email-in",
+    "phone": "Shkruani numrin e telefonit",
+    "new_password": "Shkruani fjalëkalimin e ri",
+    "confirm_new_password": "Konfirmoni fjalëkalimin e ri"
+  },
+
+  "requirements": {
+    "at_least": "Të paktën 8 karaktere",
+    "lowercase": "Një shkronjë e vogël",
+    "uppercase": "Një shkronjë e madhe",
+    "number": "Një numër",
+    "special": "Një karakter special"
+  },
+
+  "strength": {
+    "weak": "I dobët",
+    "fair": "Mesatar",
+    "good": "I mirë",
+    "strong": "I fortë"
+  },
+
+  "info": {
+    "passwords_match": "Fjalëkalimet përputhen"
+  },
+
+  "cta": {
+    "save": "Ruaj Ndryshimet",
+    "saving": "Duke ruajtur ndryshimet..."
+  },
+
+  "danger": {
+    "title": "Zona e Rrezikut",
+    "subtitle": "Pasi të fshini llogarinë, të gjitha dyqanet që mund të keni do të fshihen dhe nuk ka kthim prapa. Ju lutemi sigurohuni.",
+    "delete_btn": "Fshi Llogarinë Time",
+    "confirm": "Jeni të sigurt që doni të fshini llogarinë? Ky veprim nuk mund të zhbëhet."
+  },
+
+  "footer": {
+    "back_to_profile": "Kthehu te Profili",
+    "need_help": "Keni nevojë për ndihmë? Kontaktoni Supportin Tone.",
+    "privacy": "Politika e Privatësisë"
+  },
+
+  "aria": {
+    "profile_preview": "Parapamje e profilit",
+    "no_picture": "Pa foto",
+    "show_password": "Shfaq fjalëkalimin",
+    "hide_password": "Fshih fjalëkalimin"
+  },
+
+  "errors": {
+    "load_profile": "Nuk u arrit të ngarkohet profili.",
+    "image_upload": "Ngarkimi i imazhit dështoi.",
+    "passwords_mismatch": "Fjalëkalimet nuk përputhen.",
+    "password_too_weak": "Fjalëkalimi është shumë i dobët. Ju lutemi zgjidhni një më të fortë.",
+    "update_failed": "Përditësimi dështoi. Ju lutemi provoni përsëri.",
+    "delete_failed": "Fshirja dështoi. Ju lutemi provoni përsëri."
+  },
+
+  "success": {
+    "updated": "Profili u përditësua me sukses!"
+  }
+}

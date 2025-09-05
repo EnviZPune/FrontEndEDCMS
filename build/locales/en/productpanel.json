@@ -1,0 +1,97 @@
+{
+  "common": {
+    "error": "Error",
+    "close": "Close",
+    "saving": "⏳ Saving...",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "products": {
+    "titles": { "add": "Add New Product", "edit": "Edit Product" },
+    "fields": {
+      "name_req": "Product Name *",
+      "brand": "Brand",
+      "model": "Model",
+      "price_req": "Price in LEK *",
+      "description": "Description",
+      "quantity_req": "Quantity *",
+      "category": "Category",
+      "size": "Size",
+      "colors": "Colors",
+      "material": "Material",
+      "photos": "Product Photos"
+    },
+    "placeholders": {
+      "name": "Enter product name",
+      "brand": "Enter brand name",
+      "model": "Enter model",
+      "description": "Enter product description",
+      "category": "Select category...",
+      "size": "e.g. M, 32W, One-Size",
+      "colors": "Red, Blue, Green (comma separated)",
+      "material": "Cotton, Polyester, etc."
+    },
+    "upload": {
+      "button": "📁 Upload Photos",
+      "uploading": "⏳ Uploading...",
+      "drop_hint": "📸 Drop photos here or click upload button",
+      "photo_alt": "Product photo {{n}}",
+      "remove": "Remove photo",
+      "main_photo_title": "Main photo",
+      "set_main_title": "Click to set as main photo",
+      "main_badge": "Main",
+      "help": "Click a photo to set it as the main image. Max 10 photos."
+    },
+    "actions": { "add": "Add Product", "update": "Update Product" },
+    "list": {
+      "title_with_count": "Products ({{count}})",
+      "loading": "Loading products...",
+      "empty": "No products found."
+    },
+    "search": {
+      "placeholder": "Search products...",
+      "no_match": "No products match your search."
+    },
+    "badges": {
+      "model": "Model",
+      "price": "Price",
+      "size": "Size",
+      "qty": "Qty"
+    },
+    "sale": {
+      "button": "Sale",
+      "selling": "Selling…",
+      "tooltip": "Record a sale (reduce stock by 1)"
+    },
+    "empty": {
+      "no_business_title": "No Business Selected",
+      "no_business_desc": "Please select a business to manage products."
+    },
+    "alerts": {
+      "change_proposed": "Your change has been proposed and is pending approval.",
+      "saved": "Product saved successfully!",
+      "delete_proposed": "Delete request submitted for approval.",
+      "deleted": "Product deleted successfully."
+    },
+    "confirms": {
+      "delete_request": "Submit delete request for approval?",
+      "delete_permanent": "Permanently delete this product?"
+    },
+    "errors": {
+      "name_required": "Product name is required",
+      "price_required": "Valid price is required",
+      "quantity_required": "Valid quantity is required",
+      "load_failed": "Failed to load data. Please try again.",
+      "file_too_large": "File size must be less than 5MB",
+      "bad_filetype": "Only JPEG, PNG, WebP, and GIF images are allowed",
+      "upload_failed": "Failed to upload images",
+      "save_failed_with_reason": "Failed to save product: {{reason}}",
+      "save_failed": "Failed to save product. Please check console/network for details.",
+      "delete_failed_with_reason": "Failed to delete product: {{reason}}",
+      "delete_failed": "Failed to delete product. Please check console/network for details.",
+      "select_business_first": "Select a business first.",
+      "sale_failed": "Failed to record sale."
+    }
+  }
+}

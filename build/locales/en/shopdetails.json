@@ -1,0 +1,70 @@
+{
+  "loading": "Loading shop...",
+  "errors": {
+    "login_required": "Please log in.",
+    "load_failed": "Failed to load shop.",
+    "not_found": "Shop not found"
+  },
+
+  "categories_aria": "Item categories",
+  "categories_all": "All",
+
+  "lists": {
+    "all_items": "All Items",
+    "empty_category": "Sorry, there are no items in this category yet.",
+    "prev": "Prev",
+    "next": "Next",
+    "page_x_of_y": "Page {{page}} of {{total}}"
+  },
+
+  "product": {
+    "alt": "Product from {{shop}}",
+    "price": "{{value}} LEK"
+  },
+
+  "info": {
+    "description": "Description",
+    "contact": "Contact",
+    "phone": "Phone",
+    "email": "Business Email",
+    "hours": "Hours",
+    "weekly": "Weekly",
+    "today": "Today",
+    "status": "Status",
+    "open": "Open",
+    "closed": "Closed",
+    "next_closes_at": "Closes at {{time}}",
+    "next_opens_at": "Opens at {{time}}",
+    "next_opens_on_at": "Opens {{day}} at {{time}}"
+  },
+
+  "favorite": {
+    "title": "Favorite",
+    "cta": "Make this shop your favourite:",
+    "aria_add": "Favorite this shop",
+    "aria_remove": "Unfavorite this shop"
+  },
+
+  "location": {
+    "title": "Location on Map",
+    "open_in_maps": "Open in Google Maps"
+  },
+
+  "share": {
+    "section_title": "Share \"{{name}}\"",
+    "aria_link": "Shareable link",
+    "copy": "Copy Link",
+    "copied": "Link Copied!",
+    "facebook": "Share on Facebook",
+    "twitter": "Share on X",
+    "whatsapp": "Share on WhatsApp",
+    "telegram": "Share on Telegram"
+  },
+
+  "schedule": {
+    "closed_all": "Closed",
+    "varies": "Varies by day",
+    "daily": "Daily {{open}} - {{close}}",
+    "range": "{{start}}-{{end}} {{open}} - {{close}}"
+  }
+}

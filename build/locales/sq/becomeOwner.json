@@ -1,0 +1,45 @@
+{
+  "alerts": {
+    "login_required": "Ju lutem hyni për të vazhduar."
+  },
+  "aria": {
+    "features": "Veçoritë e përfshira",
+    "processor": "Përpunuesi i pagesave"
+  },
+  "hero": {
+    "title": "Hapni dyqanin tuaj me siguri",
+    "subtitle": "Krijoni një prani të verifikuar, menaxhoni inventarin dhe ekipin, dhe arrini klientë që janë gati të blejnë në dyqan sot.",
+    "note": "Pagesa e sigurt kryhet jashtë faqes. Do të ridrejtoheni për të përfunduar pagesën dhe më pas do të ktheheni për të përfunduar krijimin e dyqanit."
+  },
+  "features": {
+    "profile": "Profil i dedikuar i dyqanit me URL të personalizuar",
+    "inventory": "Menaxhim inventari & kategorish",
+    "roles": "Roli i punonjësve & kontrolli i aksesit",
+    "analytics": "Analitika dhe pasqyrë e aktivitetit të dyqanit",
+    "support": "Asistencë prioritare"
+  },
+  "plan": {
+    "title": "Abonimi i Pronarit",
+    "per_month": "/ muaj",
+    "includes": {
+      "core": "Të gjitha veçoritë bazë për pronarët",
+      "no_fees": "Pa tarifa të fshehura"
+    }
+  },
+  "cta": {
+    "start": "Fillo abonimin",
+    "preparing": "Po përgatitet pagesa…"
+  },
+  "legal": {
+    "continue_agree": "Duke vazhduar pajtoheni me Kushtet dhe Politiken e Privatësisë."
+  },
+  "stripe": {
+    "badge_text": "Pagesat mundësohen nga Stripe",
+    "badge_aria": "Pagesat mundësohen nga Stripe"
+  },
+  "trust": {
+    "encrypted": "Pagesa të enkriptuara përmes Stripe",
+    "receipts": "Faturë & kupon pagesash në email",
+    "roles": "Akses sipas roleve për stafin"
+  }
+}

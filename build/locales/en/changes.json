@@ -1,0 +1,47 @@
+{
+  "pending": {
+    "loading": "Loading pending changes…",
+    "error": "Error loading changes.",
+    "title": "Pending Changes",
+    "empty": "No pending changes.",
+    "invalid_details": "Invalid details",
+    "no_field_changes": "No field changes.",
+    "table": {
+      "field": "Field",
+      "current": "Current",
+      "requested": "Requested"
+    },
+    "fields": {
+      "name": "Name",
+      "description": "Description",
+      "price": "Price",
+      "quantity": "Quantity",
+      "category": "Category",
+      "brand": "Brand",
+      "model": "Model",
+      "material": "Material"
+    },
+    "meta": {
+      "employee": "Employee",
+      "requested_at": "Date and Time of the request"
+    },
+    "photos": {
+      "profile": "Profile:",
+      "cover": "Cover:",
+      "profile_alt": "Profile preview",
+      "cover_alt": "Cover preview"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "approving": "Approving…",
+      "rejecting": "Rejecting…"
+    },
+    "operations": {
+      "Create": "Create",
+      "Update": "Update",
+      "Delete": "Delete",
+      "UpdatePhotos": "Update Photos"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "delete": {
+    "title": "Fshi Biznesin",
+    "no_business": "Ju lutem zgjidhni fillimisht një biznes.",
+    "confirm": "Ky veprim është i pakthyeshëm. Jeni i sigurt që doni ta fshini këtë biznes?",
+    "success": "Biznesi u fshi me sukses.",
+    "error": "Fshirja dështoi. Ju lutem provoni përsëri.",
+    "warning_label": "Kujdes:",
+    "warning_body": "Fshirja e një biznesi është e përhershme dhe nuk mund të zhbëhet.",
+    "button": "Fshi Biznesin",
+    "button_deleting": "Duke fshirë…"
+  }
+}

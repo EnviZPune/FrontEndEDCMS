@@ -1,0 +1,57 @@
+{
+  "panel": {
+    "title": "Njoftimet",
+    "clear_all": "Pastro të gjitha",
+    "clearing": "Duke pastruar..."
+  },
+  "bell": {
+    "title": "{{count}} njoftime"
+  },
+  "sections": {
+    "invitations": "Ftesat"
+  },
+  "invite": {
+    "from": "Ftesë nga {{name}}"
+  },
+  "note": {
+    "seen": "Lexuar",
+    "mark_seen": "Shëno si të lexuar"
+  },
+  "empty": {
+    "title": "Je në rregull!",
+    "message": "Nuk ka njoftime të reja tani"
+  },
+  "notify_titles": {
+    "new_invite": "Ftesë e re",
+    "new_notification": "Njoftim i ri"
+  },
+  "notify_bodies": {
+    "invite_from": "Ftesë nga {{name}}"
+  },
+  "toast": {
+    "invite_accepted": "Ftese u pranua",
+    "invite_declined": "Ftesa u refuzua",
+    "invite_accepted_body": "E pranuat ftesën.",
+    "invite_declined_body": "E refuzuat ftesën."
+  },
+  "errors": {
+    "mark_seen_failed": "Dështoi shënimi i njoftimit si i lexuar.",
+    "network_mark_seen": "Gabim rrjeti gjatë shënimit si i lexuar.",
+    "invite_respond_failed": "Dështoi të {{action}} ftesën: {{message}}",
+    "invite_respond_network": "Gabim gjatë përpjekjes për të {{action}} ftesën",
+    "clear_failed": "Dështoi pastrimi i njoftimeve"
+  },
+  "common": {
+    "accept": "Prano",
+    "decline": "Refuzo"
+  },
+  "unknown_business": "Biznes i panjohur",
+  "status": {
+    "connecting": "Duke u lidhur",
+    "connected": "I lidhur",
+    "reconnecting": "Duke u rilidhur",
+    "disconnected": "I shkëputur",
+    "failed": "Dështoi",
+    "no_token": "Pa token"
+  }
+}

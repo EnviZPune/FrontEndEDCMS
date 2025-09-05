@@ -1,0 +1,23 @@
+{
+  "footer": {
+    "logo_alt": "E & D Logo",
+    "slogan": "E & D — Albania’s First Real-Time Online Shopping Mall. Connecting real shops with real people.",
+    "company": "Company",
+    "explore": "Explore",
+    "contact": "Contact",
+    "links": {
+      "about": "About Us",
+      "terms": "Terms & Conditions",
+      "privacy": "Privacy Policy",
+      "find_shops": "Find Shops",
+      "find_users": "Find Users",
+      "map": "Map"
+    },
+    "contact_labels": {
+      "email": "Email",
+      "phone": "Phone",
+      "location": "Location"
+    },
+    "copyright": "© {{year}} E & D. All rights reserved."
+  }
+}

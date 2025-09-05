@@ -1,0 +1,37 @@
+{
+  "reservations": {
+    "title": "Rezervimet e Produkteve",
+    "loading": "Po ngarkohen rezervimet…",
+    "error": "Gabim gjatë ngarkimit të rezervimeve.",
+    "sections": {
+      "confirmed": "Rezervime të miratuara",
+      "pending": "Rezervime në pritje"
+    },
+    "empty": {
+      "approved": "Nuk ka rezervime të miratuara.",
+      "pending": "Nuk ka rezervime në pritje."
+    },
+    "table": {
+      "id": "ID",
+      "product": "Produkt",
+      "customer": "Klienti",
+      "created_at": "Krijuar më",
+      "actions": "Veprime"
+    },
+    "actions": {
+      "mark_completed": "Shëno e përfunduar",
+      "no_show": "Nuk u paraqit",
+      "approve": "Mirato",
+      "reject": "Refuzo",
+      "no_show_tooltip": "Klienti nuk u paraqit; ktheje artikullin në stok (+1)"
+    },
+    "confirm": {
+      "no_show": "Ta shënoj si 'Nuk u paraqit' dhe të kthehet 1 artikull në stok?"
+    },
+    "alerts": {
+      "complete_failed": "Dështoi shënimi i rezervimit si i përfunduar.",
+      "status_failed": "Dështoi përditësimi i statusit të rezervimit.",
+      "no_show_failed": "Dështoi shënimi si 'Nuk u paraqit'."
+    }
+  }
+}

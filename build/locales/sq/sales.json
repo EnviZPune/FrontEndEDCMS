@@ -1,0 +1,26 @@
+{
+  "sales": {
+    "title": "Shitjet",
+    "select_business": "Zgjidhni një biznes për të parë shitjet.",
+    "business_label": "Biznesi:",
+    "refresh": "Rifresko",
+    "refreshing": "Duke rifreskuar…",
+    "loading": "Duke ngarkuar shitjet…",
+    "empty_month": "Nuk ka shitje këtë muaj.",
+    "today": "Sot",
+    "yesterday": "Dje",
+    "qty": "Sasia",
+    "at_time": "në",
+    "sku": "SKU",
+    "sold_by": "shitje nga:",
+    "prev": "Prapa",
+    "next": "Para",
+    "page_x": "Faqja {{page}}",
+    "errors": {
+      "unauthorized": "I paautorizuar (401): mungon token/cookie ose ka skaduar.",
+      "forbidden": "E ndaluar (403): nuk keni rolin e duhur.",
+      "not_found": "Nuk u gjet (404): kontrolloni API_BASE ose rrugën.",
+      "load_failed": "Dështoi ngarkimi i shitjeve."
+    }
+  }
+}

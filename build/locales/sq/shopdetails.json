@@ -1,0 +1,70 @@
+{
+  "loading": "Duke ngarkuar dyqanin...",
+  "errors": {
+    "login_required": "Ju lutem, hyni.",
+    "load_failed": "Dështoi ngarkimi i dyqanit.",
+    "not_found": "Dyqani nuk u gjet"
+  },
+
+  "categories_aria": "Kategoritë e artikujve",
+  "categories_all": "Të gjitha",
+
+  "lists": {
+    "all_items": "Të gjitha produktet",
+    "empty_category": "Na vjen keq, nuk ka ende artikuj në këtë kategori.",
+    "prev": "Prapa",
+    "next": "Para",
+    "page_x_of_y": "Faqja {{page}} nga {{total}}"
+  },
+
+  "product": {
+    "alt": "Produkt nga {{shop}}",
+    "price": "{{value}} LEK"
+  },
+
+  "info": {
+    "description": "Përshkrimi",
+    "contact": "Kontakti",
+    "phone": "Telefoni",
+    "email": "Email i biznesit",
+    "hours": "Orari",
+    "weekly": "Javor",
+    "today": "Sot",
+    "status": "Statusi",
+    "open": "Hapur",
+    "closed": "Mbyllur",
+    "next_closes_at": "Mbyllet në {{time}}",
+    "next_opens_at": "Hapet në {{time}}",
+    "next_opens_on_at": "Hapet {{day}} në {{time}}"
+  },
+
+  "favorite": {
+    "title": "I preferuar",
+    "cta": "Bëje këtë dyqan një nga të preferuarit e tu:",
+    "aria_add": "Shto te të preferuarit",
+    "aria_remove": "Hiq nga të preferuarit"
+  },
+
+  "location": {
+    "title": "Vendndodhja në hartë",
+    "open_in_maps": "Hap në Google Maps"
+  },
+
+  "share": {
+    "section_title": "Shpërnda \"{{name}}\"",
+    "aria_link": "Lidhja për ndarje",
+    "copy": "Kopjo Lidhjen",
+    "copied": "Lidhja u kopjua!",
+    "facebook": "Ndaje në Facebook",
+    "twitter": "Ndaje në X",
+    "whatsapp": "Ndaje në WhatsApp",
+    "telegram": "Ndaje në Telegram"
+  },
+
+  "schedule": {
+    "closed_all": "Mbyllur",
+    "varies": "Ndryshon sipas ditës",
+    "daily": "Çdo ditë {{open}} - {{close}}",
+    "range": "{{start}}-{{end}} {{open}} - {{close}}"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "loading": "Loading your amazing profile...",
+  "offline_banner": "You're currently offline. Some features may be limited.",
+  "error": {
+    "invalid_user": "Invalid user ID.",
+    "go_home": "Go Home"
+  },
+  "badges": {
+    "verified": "Verified",
+    "member": "Member"
+  },
+  "actions": {
+    "edit_profile": "Edit Profile"
+  },
+  "activity": {
+    "title": "Activity Overview",
+    "subtitle": "Your current engagement score. Complete the suggested tasks below to reach 100% and increase visibility.",
+    "stats": {
+      "shops": "Shops",
+      "hours": "Hours",
+      "days": "Days",
+      "years_old": "Years Old"
+    },
+    "profile_completion": "Profile Completion:",
+    "shop_setup": "Shop Setup:",
+    "shop_setup_done": "Done",
+    "shop_setup_incomplete": "Incomplete",
+    "overall_score": "Overall Activity Score:",
+    "next_steps_title": "How to reach 100%",
+    "tasks": {
+      "upload_picture": "Upload profile picture",
+      "add_dob": "Add date of birth",
+      "add_phone": "Add phone number",
+      "create_first_shop": "Create your first shop"
+    },
+    "guidance_text": "Completing these tasks increases your activity score and unlocks more visibility and credibility on the platform.",
+    "congrats": "You've reached 100% activity! Keep engaging to maintain momentum."
+  },
+  "shops": {
+    "title": "My Shops",
+    "add_shop": "Add Shop",
+    "edit_shop": "Edit Shop",
+    "badge_open": "Open",
+    "badge_closed": "Closed",
+    "empty_title": "No shops yet",
+    "empty_desc": "Start your entrepreneurial journey by creating your first shop",
+    "create_first": "Create Your First Shop",
+    "hours_label": "Hours"
+  },
+  "bookings": {
+    "title": "My Bookings",
+    "loading": "Loading your bookings...",
+    "empty_title": "No bookings yet",
+    "empty_desc": "Your booked products will appear here",
+    "view": "View",
+    "prev": "Previous",
+    "next": "Next",
+    "page_of": "Page {{current}} of {{total}}"
+  }
+}

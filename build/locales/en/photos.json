@@ -1,0 +1,29 @@
+{
+  "photos": {
+    "title": "Edit Profile & Cover Photos",
+    "profile_label": "Profile Photo",
+    "profile_preview_alt": "Profile preview",
+    "no_profile": "No profile photo",
+    "upload_new": "Upload new profile photo",
+    "upload_input_label": "Choose profile photo",
+    "cover_label": "Cover Photo",
+    "cover_preview_alt": "Cover preview",
+    "no_cover": "No cover photo",
+    "upload_new_cover": "Upload new cover photo",
+    "upload_input_label_cover": "Choose cover photo",
+    "save_button": "Save Photos",
+    "zoom": "Zoom",
+    "crop_upload": "Crop & Upload",
+    "loading_business": "Loading business data…",
+    "updated": "Photos updated successfully!"
+  },
+  "errors": {
+    "crop_upload_failed": "Failed to crop or upload image.",
+    "save_failed": "Save failed: {{message}}",
+    "business_load": "Couldn't load business info."
+  },
+  "common": {
+    "saving": "Saving…",
+    "cancel": "Cancel"
+  }
+}

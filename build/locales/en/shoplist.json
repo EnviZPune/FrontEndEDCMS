@@ -1,0 +1,36 @@
+{
+  "hero_aria": "Hero",
+  "hero_title_prefix": "Welcome to",
+  "brand_name": "EDCMS",
+  "hero_subtitle": "Discover thousands of clothing brands and shops in one place. Search, explore, discover and find exactly what you're looking for.",
+
+  "stats_aria": "Site statistics",
+  "stats_shops": "Shops",
+  "stats_categories": "Categories",
+  "stats_support": "Support",
+
+  "featured_aria": "New shops",
+  "featured_title": "New Shops",
+  "featured_subtitle": "Discover the latest shops and newest brands in our marketplace",
+  "brand_placeholder_aria": "Shop placeholder",
+  "view_shop": "View Shop",
+  "badge_new": "New",
+  "empty_new_title": "No New Shops",
+  "empty_new_desc": "Check back later for new shops and latest brands.",
+
+  "browse_aria": "Browse shops",
+  "browse_title": "Browse Shops",
+  "browse_subtitle": "Explore our complete collection of clothing shops and brands",
+  "error_shops_title": "Error Loading Shops",
+  "empty_browse_title": "No Shops Found",
+  "empty_browse_desc": "Try adjusting your search or check back later for new shops.",
+
+  "categories_aria": "Categories",
+  "categories_title": "Shop by Category",
+  "categories_subtitle": "Browse through our organized categories to find exactly what you need",
+  "error_categories_title": "Error Loading Categories",
+  "category_card_aria": "Open category",
+  "category_cta": "Click To See Featured Shops",
+  "empty_categories_title": "No Categories Available",
+  "empty_categories_desc": "Categories will appear here once they are added to the system."
+}

@@ -1,0 +1,39 @@
+{
+  "title": "Welcome Back",
+  "subtitle": "Log in to see our fullest extent!",
+
+  "aria": {
+    "go_home": "Go to homepage",
+    "logo_alt": "Logo"
+  },
+
+  "fields": {
+    "email_label": "Email",
+    "email_placeholder": "Enter your email",
+    "password_label": "Password",
+    "password_placeholder": "Enter your password",
+    "show_password": "Show password",
+    "hide_password": "Hide password"
+  },
+
+  "options": {
+    "remember_me": "Remember Me",
+    "forgot_password": "Forgot Password?"
+  },
+
+  "cta": {
+    "sign_in": "Sign In",
+    "logging_in": "Logging in..."
+  },
+
+  "footer": {
+    "no_account": "Don't have an account?",
+    "sign_up": "Sign up"
+  },
+
+  "errors": {
+    "login_failed": "Login failed",
+    "no_token": "No token returned from server.",
+    "unknown": "Something went wrong."
+  }
+}

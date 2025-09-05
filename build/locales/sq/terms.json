@@ -1,0 +1,73 @@
+{
+  "title": "Kushtet & Termat",
+  "intro": "Mirë se vini në <strong>E &amp; D</strong> (\"ne\"). Duke hyrë ose përdorur faqen tonë në <em>edshopping.al</em> dhe shërbimet e lidhura, ju pranoni të respektoni këto Kushte & Terma.",
+  "acceptance": {
+    "title": "1. Pranimi i Kushteve",
+    "body": "Duke u regjistruar, shfletuar ose përdorur platformën tonë, ju deklaroni se i keni lexuar, kuptuar dhe pranoni të respektoni këto Kushte & Terma dhe të gjitha ligjet dhe rregulloret përkatëse."
+  },
+  "service_overview": {
+    "title": "2. Përmbledhje e Shërbimit",
+    "body": "E & D ofron një listim dhe kërkim në kohë reale për stoqet e dyqaneve fizike të veshjeve. Ne nuk shesim ose dërgojmë produkte vetë; ne lidhim klientët me pronarë të verifikuar dyqanesh përmes kërkimit, hartës dhe filtrave të kategorive."
+  },
+  "user_accounts": {
+    "title": "3. Llogaritë e Përdoruesit",
+    "items": {
+      "age": "Duhet të jeni të paktën 18 vjeç për t'u regjistruar.",
+      "security": "Regjistrimi kërkon një email të vlefshëm. Ju jeni përgjegjës për sigurinë e llogarisë dhe fjalëkalimit tuaj.",
+      "notify": "Na njoftoni menjëherë për çdo përdorim të paautorizuar ose shkelje sigurie."
+    }
+  },
+  "payments": {
+    "title": "4. Abonimi & Pagesat",
+    "body": "Pronarët e dyqaneve abonohen përmes sistemit tonë të pagesave në sandbox te <OwnerLink>Become Owner</OwnerLink> me një pagesë mujore prej $20. Pagesat përpunohen përmes Stripe. Abonimet rinovohen automatikisht deri në anulim. Mund të anuloni në çdo kohë nga <SettingsLink>Settings</SettingsLink>, te <em>Delete Business</em>. Nuk ka rimbursime për periudha të pjesshme."
+  },
+  "owner_dashboard": {
+    "title": "5. Paneli i Pronarit",
+    "intro": "Pasi të abonohen, pronarët hyjnë te Settings për të menaxhuar:",
+    "items": {
+      "business_info": { "label": "Të dhënat e biznesit:", "desc": "Emri, përshkrimi, adresa, telefoni, orari." },
+      "products": { "label": "Produktet:", "desc": "Shto/ndrysho/fshij artikuj me deri në 10 imazhe secili." },
+      "sales": { "label" : "Shitjet", "desc": "Shiko te gjitha shitjet e bera sot"},
+      "categories": { "label": "Kategoritë:", "desc": "Krijo, cakto ngjyra/ikona, filtro produktet." },
+      "photos": { "label": "Fotot:", "desc": "Ngarko imazh kopertine dhe logo (përmes Google Cloud Storage)." },
+      "employees": { "label": "Punonjësit:", "desc": "Promovo përdorues në punonjës që mund të propozojnë ndryshime." },
+      "pending": { "label": "Ndryshimet në Pritje:", "desc": "Mirato ose refuzo propozimet e punonjësve." },
+      "reservations": { "label": "Rezervimet:", "desc": "Shiko dhe menaxho kërkesat e rezervimeve të klientëve." },
+      "notifications": { "label": "Njoftimet:", "desc": "Shiko të gjitha njoftimet dhe alarmet e sistemit." },
+      "myshops": { "label": "Dyqanet e mia:", "desc": "Kalo mes profileve të shumta të dyqaneve." },
+      "delete": { "label": "Fshi biznesin:", "desc": "Hiq përgjithmonë dyqanin (e pakthyeshme)." }
+    }
+  },
+  "responsibilities": {
+    "title": "6. Detyrimet e Përdoruesit",
+    "items": {
+      "lawful": "Përdorni platformën në mënyrë të ligjshme dhe me respekt.",
+      "accuracy": "Siguroni saktësinë e të gjitha të dhënave që dërgoni.",
+      "impersonation": "Mos imitoni të tjerët dhe mos keqpërdorni veçoritë."
+    }
+  },
+  "ip": {
+    "title": "7. Prona Intelektuale",
+    "body": "I gjithë përmbajtja, dizajni, markat tregtare dhe kodi në E & D janë pronë e jonë. Nuk lejohet riprodhimi ose përdorimi pa leje me shkrim."
+  },
+  "disclaimers": {
+    "title": "8. Përjashtime & Kufizim i Përgjegjësisë",
+    "body": "Faqja ofrohet “siç është” pa garanci, dhe përjashtohen të gjitha garancitë e nënkuptuara. Ne nuk mbajmë përgjegjësi për dëme direkte, indirekte ose pasuese që lindin nga përdorimi i platformës, përfshirë mosmarrëveshjet mes klientëve dhe pronarëve të dyqaneve."
+  },
+  "termination": {
+    "title": "9. Përfundimi",
+    "body": "Mund të pezullojmë ose përfundojmë aksesin tuaj në çdo kohë, pa njoftim, për shkelje të këtyre kushteve."
+  },
+  "changes": {
+    "title": "10. Ndryshime të Kushteve",
+    "body": "Ne mund të ndryshojmë këto Kushte & Terma në çdo kohë. Përdorimi i vazhdueshëm pas ndryshimeve nënkupton pranimin e tyre."
+  },
+  "law": {
+    "title": "11. Ligji në fuqi",
+    "body": "Këto kushte rregullohen nga ligjet e Shqipërisë. Çdo mosmarrëveshje do te zgjidhet në gjykatat e Tiranës."
+  },
+  "contact": {
+    "title": "12. Na kontaktoni",
+    "body": "Për pyetje rreth këtyre kushteve, na shkruani në <strong>{{email}}</strong>."
+    }
+}

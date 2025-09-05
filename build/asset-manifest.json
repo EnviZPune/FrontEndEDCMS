@@ -1,19 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.e8635c29.css",
-    "main.js": "/static/js/main.b89bacda.js",
-    "static/js/453.313ca408.chunk.js": "/static/js/453.313ca408.chunk.js",
-    "static/media/passicon.png": "/static/media/passicon.3834c8a36eac26ed76a7.png",
-    "static/media/edlogo.png": "/static/media/edlogo.4d29ba34f237a92cc8fd.png",
-    "static/media/logo.png": "/static/media/logo.1b204bc6cac9eeec835d.png",
-    "static/media/usericon.png": "/static/media/usericon.422b89900f65e431c91b.png",
+    "main.css": "/static/css/main.7690baa2.css",
+    "main.js": "/static/js/main.28ceb199.js",
+    "static/js/38.d9f41489.chunk.js": "/static/js/38.d9f41489.chunk.js",
     "index.html": "/index.html",
-    "main.e8635c29.css.map": "/static/css/main.e8635c29.css.map",
-    "main.b89bacda.js.map": "/static/js/main.b89bacda.js.map",
-    "453.313ca408.chunk.js.map": "/static/js/453.313ca408.chunk.js.map"
+    "main.7690baa2.css.map": "/static/css/main.7690baa2.css.map",
+    "main.28ceb199.js.map": "/static/js/main.28ceb199.js.map",
+    "38.d9f41489.chunk.js.map": "/static/js/38.d9f41489.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e8635c29.css",
-    "static/js/main.b89bacda.js"
+    "static/css/main.7690baa2.css",
+    "static/js/main.28ceb199.js"
   ]
 }

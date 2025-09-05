@@ -1,0 +1,13 @@
+{
+  "myshops": {
+    "title": "My Shops",
+    "favorites": "Favorites",
+    "alt_cover": "{{name}} cover",
+    "placeholder": "No Image",
+    "empty": "No shops to display.",
+    "pagination": {
+      "prev": "Prev",
+      "next": "Next"
+    }
+  }
+}

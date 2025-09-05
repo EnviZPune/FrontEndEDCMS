@@ -1,0 +1,36 @@
+{
+  "hero_aria": "Seksioni kryesor",
+  "hero_title_prefix": "Mirë se vini në",
+  "brand_name": "EDCMS",
+  "hero_subtitle": "Zbuloni mijëra marka dhe dyqane veshjesh në një vend. Kërkoni, eksploroni dhe gjeni saktësisht atë që kërkoni.",
+
+  "stats_aria": "Statistikat e faqes",
+  "stats_shops": "Dyqane",
+  "stats_categories": "Kategori",
+  "stats_support": "Mbështetje",
+
+  "featured_aria": "Dyqanet e reja",
+  "featured_title": "Dyqane të Reja",
+  "featured_subtitle": "Zbuloni dyqanet dhe markat më të reja në tregun tonë",
+  "brand_placeholder_aria": "Zëvendësues i dyqanit",
+  "view_shop": "Shiko Dyqanin",
+  "badge_new": "E re",
+  "empty_new_title": "Nuk ka Dyqane të Reja",
+  "empty_new_desc": "Kthehuni më vonë për dyqane dhe marka të reja.",
+
+  "browse_aria": "Shfletoni dyqanet",
+  "browse_title": "Shfleto Dyqanet",
+  "browse_subtitle": "Eksploroni koleksionin tonë të plotë të dyqaneve dhe markave të veshjeve",
+  "error_shops_title": "Gabim gjatë ngarkimit të dyqaneve",
+  "empty_browse_title": "Nuk u gjetën dyqane",
+  "empty_browse_desc": "Provoni të ndryshoni kërkimin ose kthehuni më vonë për dyqane të reja.",
+
+  "categories_aria": "Kategori",
+  "categories_title": "Bli sipas Kategorisë",
+  "categories_subtitle": "Shfletoni kategoritë e organizuara për të gjetur saktësisht atë që ju nevojitet",
+  "error_categories_title": "Gabim gjatë ngarkimit të kategorive",
+  "category_card_aria": "Hap kategorinë",
+  "category_cta": "Kliko për të parë dyqanet e veçuara",
+  "empty_categories_title": "Nuk ka Kategori",
+  "empty_categories_desc": "Këtu do të shfaqen kategoritë sapo të shtohen në sistem."
+}

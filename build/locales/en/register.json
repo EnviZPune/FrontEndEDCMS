@@ -1,0 +1,72 @@
+{
+  "title": "Create Your Account",
+  "subtitle": "Join our community and start your journey",
+
+  "aria": {
+    "go_home": "Go to homepage",
+    "logo_alt": "Logo",
+    "show_password": "Show password",
+    "hide_password": "Hide password"
+  },
+
+  "fields": {
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "dob": "Date of Birth",
+    "username": "Username",
+    "phone": "Phone Number",
+    "email": "Email Address",
+    "create_password": "Create Password",
+    "confirm_password": "Confirm Password"
+  },
+
+  "placeholders": {
+    "first_name": "Enter your first name",
+    "last_name": "Enter your last name",
+    "username": "Choose a username",
+    "phone": "0691234567",
+    "email": "your@email.com",
+    "create_password": "Create a strong password",
+    "confirm_password": "Confirm your password"
+  },
+
+  "requirements": {
+    "at_least": "At least 8 characters",
+    "lowercase": "One lowercase letter",
+    "uppercase": "One uppercase letter",
+    "number": "One number",
+    "special": "One special character"
+  },
+
+  "strength": {
+    "weak": "weak",
+    "fair": "fair",
+    "good": "good",
+    "strong": "strong"
+  },
+
+  "info": {
+    "passwords_match": "Passwords match"
+  },
+
+  "errors": {
+    "missing_field": "Please fill in all fields. Missing: {{field}}",
+    "passwords_mismatch": "Passwords do not match.",
+    "password_too_weak": "Password is too weak. Please choose a stronger password.",
+    "register_failed": "An error occurred while registering."
+  },
+
+  "success": {
+    "registered": "Successfully Registered. Check your email to verify your account!"
+  },
+
+  "cta": {
+    "create_account": "Create Account",
+    "creating_account": "Creating Account..."
+  },
+
+  "footer": {
+    "have_account": "Already have an account?",
+    "sign_in_here": "Sign in here"
+  }
+}

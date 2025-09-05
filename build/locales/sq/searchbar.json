@@ -1,0 +1,15 @@
+{
+  "placeholder": "Kërkoni dyqane, produkte, madhësi (p.sh., M, 42), kategori ose përdorues...",
+  "groups": {
+    "shops": "Dyqane",
+    "items": "Artikuj veshjeje",
+    "categories": "Kategori",
+    "users": "Përdorues"
+  },
+  "mustLogin": {
+    "title": "Duhet të keni një llogari për të përdorur kërkimin!",
+    "login": "Hyni",
+    "register": "Krijoni llogari"
+  },
+  "noResults": "Nuk u gjetën rezultate"
+}

@@ -1,0 +1,23 @@
+{
+  "titles": { "edit": "Ndrysho informacionin e biznesit" },
+  "fields": {
+    "name": "Emri i biznesit",
+    "description": "Përshkrimi",
+    "nipt": "NIPT",
+    "email": "Email i biznesit",
+    "location": "Vendndodhja",
+    "opening_hours": "Orari i hapjes",
+    "phone": "Numri i telefonit të biznesit"
+  },
+  "opening_preview": "Parapamje:",
+  "actions": { "save": "Ruaj ndryshimet" },
+  "state": { "loading": "Duke u ngarkuar…", "error_loading": "Gabim gjatë ngarkimit." },
+  "placeholders": { "location": "Filloni të shkruani…" },
+  "alerts": {
+    "pick_location": "Ju lutemi zgjidhni një vendndodhje (në hartë ose sugjerime).",
+    "invalid_hours": "Orari i pavlefshëm. Sigurohuni që të paktën një ditë të jetë e hapur dhe Ora e hapjes < Ora e mbylljes.",
+    "updated": "Informacioni i biznesit u përditësua!",
+    "save_failed": "Dështoi ruajtja e informacionit të biznesit."
+  },
+  "aria": { "map": "Harta e vendndodhjes së biznesit" }
+}
