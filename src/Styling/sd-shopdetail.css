@@ -1,7 +1,5 @@
-/* src/Styling/AllShops.css */
 
 :root {
-  /* Bright Color Palette */
   --primary: #ff6b6b;
   --secondary: #4ecdc4;
   --accent: #45b7d1;
@@ -460,7 +458,7 @@ body {
   margin-bottom: 1rem;
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--primary); /* Fixed: Use primary color */
+  color: var(--primary);
 }
 
 .sd-location-map {

@@ -184,7 +184,6 @@ const About = () => {
           </div>
         </div>
 
-        {/* Stats Section */}
         <div className="about-stats">
           <div className="about-stat">
             <div className="about-stat-value">
