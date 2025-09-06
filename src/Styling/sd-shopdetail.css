@@ -641,10 +641,15 @@ body {
   }
 
   .sd-category-pill {
-    font-size: 0.95rem;
-    padding: 0.6rem 1.4rem;
-    max-width: fit-content;
+    font-size: 0.85rem;
+    padding: 0.5rem 2.5rem;
+    text-align: center;
+    justify-content: center;
+    display:flex;
+    align-items: center;
+    min-width: fit-content;
   }
+
 
   .sd-info-col {
     margin-top: 2rem;
@@ -677,10 +682,13 @@ body {
   }
 
   .sd-category-pill {
-    min-width: auto;
-    padding: 0.6rem 1.2rem;
-    font-size: 0.9rem;
-    max-width: 150px;
+    font-size: 0.85rem;
+    padding: 0.5rem 2.5rem;
+    text-align: center;
+    justify-content: center;
+    display:flex;
+    align-items: center;
+    min-width: fit-content;
   }
 
   .sd-info-col {
@@ -812,8 +820,13 @@ body {
   }
 
   .sd-category-pill {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    padding: 0.5rem 2.5rem;
+    text-align: center;
+    justify-content: center;
+    display:flex;
+    align-items: center;
+    min-width: fit-content;
   }
 
   .sd-shop-name {

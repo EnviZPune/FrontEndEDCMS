@@ -377,6 +377,29 @@ body.hide-support-widget .chat-container {
   .sd-placeholder, .sd-denied { padding: 24px; }
 }
 
+.sd-attach-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--sd-gray-200, #e5e7eb);
+  background: var(--sd-white, #fff);
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.sd-attach-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.sd-uploading {
+  display: inline-flex;
+  align-items: center;
+}
+
+
 /* ------------------------------------------------------------------ */
 /* Mobile drawer & segmented toggle (<=640px)                          */
 /* ------------------------------------------------------------------ */

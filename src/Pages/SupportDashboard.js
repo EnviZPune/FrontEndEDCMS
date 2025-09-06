@@ -24,9 +24,20 @@ import "../Styling/support-dashboard.css"
 
 const USER_PROFILE_BASE = "/profile";
 const profilePath = (id) => `${USER_PROFILE_BASE}/${id}`;
-const DEFAULT_AVATAR_PATH = "Assets/default-avatar.jpg"
+const DEFAULT_AVATAR_PATH = "Assets/default-avatar.jpg"  // ← root-relative PNG
 
-// Safely pick common avatar fields
+// ---------- GCS config (matches PhotoPanel) ----------
+const GCS_BUCKET = "edcms_bucket"
+const GCS_BASE = `https://storage.googleapis.com/${GCS_BUCKET}`
+
+// Utility
+const makeSafeName = (name = "") =>
+  name
+    .toString()
+    .replace(/[^a-zA-Z0-9.-]/g, "_")
+    .replace(/_+/g, "_")
+    .slice(0, 120)
+
 const pickAvatarUrl = (u) =>
   u?.profileImage ||
   u?.profilePictureUrl ||
@@ -34,7 +45,6 @@ const pickAvatarUrl = (u) =>
   u?.photoUrl ||
   ""
 
-// Safely pick a display name
 const pickDisplayName = (u) => {
   const joined = [u?.firstName, u?.lastName].filter(Boolean).join(" ").trim()
   return (
@@ -48,6 +58,11 @@ const pickDisplayName = (u) => {
   )
 }
 
+// Parse URLs from message body so plain image links show as thumbs
+const URL_REGEX = /https?:\/\/[^\s<>")]+/gi
+const extractUrls = (text = "") => (typeof text === "string" ? text.match(URL_REGEX) || [] : [])
+const isImageUrl = (u = "") => /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test((u.split("?")[0] || ""))
+
 export default function SupportDashboard() {
   const navigate = useNavigate()
 
@@ -55,19 +70,24 @@ export default function SupportDashboard() {
   const [authChecked, setAuthChecked] = useState(false)
   const [authorized, setAuthorized] = useState(false)
 
-  // Assignment view: 'awaiting' (unassigned) | 'assigned' (mine)
+  // Upload UI state
+  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const fileInputRef = useRef(null)
+
+  // Assignment view
   const [assignView, setAssignView] = useState("awaiting")
 
-  // Mobile drawer open/close
+  // Mobile drawer
   const [drawerOpen, setDrawerOpen] = useState(false)
   const scrollYRef = useRef(0)
 
   // Data/UI state
-  const [threads, setThreads] = useState([])     // queue (unassigned or all)
-  const [myThreads, setMyThreads] = useState([]) // assigned to me
+  const [threads, setThreads] = useState([])
+  const [myThreads, setMyThreads] = useState([])
   const [filterUnassigned, setFilterUnassigned] = useState(true)
   const [activeThreadId, setActiveThreadId] = useState(null)
-  const [activeStatus, setActiveStatus] = useState(null) // "Open" | "Pending" | "Closed"
+  const [activeStatus, setActiveStatus] = useState(null)
   const [messages, setMessages] = useState([])
   const [topic, setTopic] = useState("")
   const [editingTopic, setEditingTopic] = useState(false)
@@ -79,14 +99,14 @@ export default function SupportDashboard() {
   const [closing, setClosing] = useState(false)
   const inputRef = useRef(null)
 
-  // Connection state
+  // Connection
   const [connected, setConnected] = useState(false)
 
-  // Profiles cache: { [userId: string]: { avatar: string, name: string } }
+  // Profiles cache
   const [profiles, setProfiles] = useState({})
   const pendingProfileIdsRef = useRef(new Set())
 
-  // Track message IDs we've already rendered (prevents duplicate renders/remounts)
+  // Dedupe messages
   const seenMessageIdsRef = useRef(new Set())
 
   // Refs
@@ -135,10 +155,100 @@ export default function SupportDashboard() {
     }
   }, [])
 
-  // Keep filter flag in sync with segmented control
-  useEffect(() => {
-    setFilterUnassigned(assignView === "awaiting")
-  }, [assignView])
+  // Helpers
+  const isImageAttachment = (a) =>
+    (a?.kind && String(a.kind).toLowerCase() === "image") ||
+    /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(a?.fileName || a?.url || "")
+
+  // ---- Upload image to GCS (direct PUT + .txt), with URL-encoded name ----
+  const uploadImageToGCS = async (file) => {
+    if (!file) return null
+
+    // Only images, and <= 10MB
+    if (!/^image\//i.test(file.type)) {
+      throw new Error("Only image files are allowed.")
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error("Image is too large (max 10MB).")
+    }
+
+    const safe = makeSafeName(file.name || "support")
+    const hasExt = /\.[a-z0-9]+$/i.test(safe)
+    const objectName = `${Date.now()}-${hasExt ? safe : `${safe}.jpg`}`
+    const encoded = encodeURIComponent(objectName) // IMPORTANT
+
+    const imgUrl = `${GCS_BASE}/${encoded}`
+    const txtUrl = `${imgUrl}.txt`
+    const contentType = file.type || "image/jpeg"
+
+    // Upload image
+    const imgRes = await fetch(imgUrl, {
+      method: "PUT",
+      headers: { "Content-Type": contentType },
+      body: file,
+    })
+    if (!imgRes.ok) {
+      let errText = ""
+      try { errText = await imgRes.text() } catch {}
+      throw new Error(`GCS image PUT failed (${imgRes.status}) ${errText}`)
+    }
+
+    // Upload companion .txt
+    const txtRes = await fetch(txtUrl, {
+      method: "PUT",
+      headers: { "Content-Type": "text/plain" },
+      body: imgUrl,
+    })
+    if (!txtRes.ok) {
+      let errText = ""
+      try { errText = await txtRes.text() } catch {}
+      console.warn("Companion .txt PUT failed:", txtRes.status, errText)
+    }
+
+    return imgUrl
+  }
+
+  // Handle <input type="file"> change — NO server endpoint needed
+  const onPickImages = async (e) => {
+    if (!activeThreadId || uploading) return
+    const files = Array.from(e.target.files || []).filter(Boolean)
+    if (!files.length) return
+
+    setUploading(true)
+    setUploadProgress(0)
+
+    try {
+      const validFiles = files.filter(f => /^image\//i.test(f.type) && f.size <= 10 * 1024 * 1024)
+      if (validFiles.length === 0) {
+        throw new Error("No valid images selected (only images up to 10MB).")
+      }
+
+      const urls = []
+      for (let i = 0; i < validFiles.length; i++) {
+        const url = await uploadImageToGCS(validFiles[i])
+        urls.push(url)
+        setUploadProgress(Math.round(((i + 1) / validFiles.length) * 100))
+      }
+
+      // Send URLs as a normal chat message (renderer shows thumbnails)
+      if (connRef.current) {
+        const body = urls.join("\n")
+        await connRef.current.invoke("SendMessage", activeThreadId, body)
+      }
+
+      // NOTE: do NOT optimistically echo here — hub will echo back.
+    } catch (err) {
+      console.error(err)
+      alert(err?.message || "Image upload failed. Please check bucket billing/ACL and try again.")
+    } finally {
+      setUploading(false)
+      setUploadProgress(0)
+      if (fileInputRef.current) fileInputRef.current.value = ""
+    }
+  }
+
+  // Keep filter flag in sync
+  useEffect(() => { setFilterUnassigned(assignView === "awaiting") }, [assignView])
 
   // ----- Body scroll-lock when drawer open (mobile only) -----
   useEffect(() => {
@@ -162,13 +272,9 @@ export default function SupportDashboard() {
       window.scrollTo(0, y)
     }
 
-    if (drawerOpen) lock()
-    else unlock()
+    if (drawerOpen) lock(); else unlock()
 
-    const onResize = () => {
-      if (!drawerOpen) return
-      if (!isMobile()) unlock()
-    }
+    const onResize = () => { if (drawerOpen && !isMobile()) unlock() }
     window.addEventListener("resize", onResize)
     window.addEventListener("orientationchange", onResize)
     return () => {
@@ -186,18 +292,14 @@ export default function SupportDashboard() {
     return () => document.removeEventListener("keydown", onKey)
   }, [drawerOpen])
 
-  // ----- Helpers -----
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+  // Scroll to bottom when messages change
+  const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   useEffect(() => { scrollToBottom() }, [messages])
 
+  // Fetch JSON
   const fetchJson = async (url, init = {}) => {
     const res = await fetch(url, { headers: authHeaders(), ...init })
-    if (res.status === 401 || res.status === 403) {
-      setDenied(true)
-      return null
-    }
+    if (res.status === 401 || res.status === 403) { setDenied(true); return null }
     setDenied(false)
     if (res.status === 204) return {}
     return res.ok ? res.json() : null
@@ -215,7 +317,7 @@ export default function SupportDashboard() {
     if (data) setMyThreads(Array.isArray(data) ? data : [])
   }
 
-  // ----- Profiles (avatar + name) fetcher for end-users in the thread -----
+  // ----- Profiles (avatar + name) fetcher -----
   const fetchMissingProfiles = async (userIds) => {
     if (!userIds.length) return
     try {
@@ -223,9 +325,7 @@ export default function SupportDashboard() {
         userIds.map(async (uid) => {
           try {
             const res = await fetch(`${API_BASE}/User/${uid}`, { headers: authHeaders() })
-            if (!res.ok) {
-              return [uid, { avatar: DEFAULT_AVATAR_PATH, name: `User #${uid}` }]
-            }
+            if (!res.ok) return [uid, { avatar: DEFAULT_AVATAR_PATH, name: `User #${uid}` }]
             const u = await res.json()
             const url = pickAvatarUrl(u)
             const name = pickDisplayName(u)
@@ -268,9 +368,7 @@ export default function SupportDashboard() {
       const raw = m?.senderUserId
       const strId = String(raw ?? "")
       if (!strId) continue
-      if (!profiles[strId] && !pendingProfileIdsRef.current.has(strId)) {
-        ids.add(strId)
-      }
+      if (!profiles[strId] && !pendingProfileIdsRef.current.has(strId)) ids.add(strId)
     }
     return Array.from(ids)
   }, [messages, profiles])
@@ -302,15 +400,11 @@ export default function SupportDashboard() {
 
     setActiveStatus(dto.status || "Open")
     await connectToHub(id)
-
-    // on mobile: close drawer after selecting a thread
     setDrawerOpen(false)
   }
 
   const connectToHub = async (threadId) => {
-    if (connRef.current) {
-      try { await connRef.current.stop() } catch {}
-    }
+    if (connRef.current) { try { await connRef.current.stop() } catch {} }
     const token = getToken()
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(HUB_URL, { accessTokenFactory: () => token || "" })
@@ -346,11 +440,7 @@ export default function SupportDashboard() {
         setActiveStatus("Closed")
         setMessages((prev) => [
           ...prev,
-          {
-            isSystem: true,
-            body: "Thread was closed.",
-            createdAt: dto.closedAt || new Date().toISOString()
-          }
+          { isSystem: true, body: "Thread was closed.", createdAt: dto.closedAt || new Date().toISOString() }
         ])
         loadQueue()
         loadMine()
@@ -378,10 +468,7 @@ export default function SupportDashboard() {
       headers: authHeaders(),
       body: ""
     })
-    if (res.status === 401 || res.status === 403) {
-      setDenied(true)
-      return
-    }
+    if (res.status === 401 || res.status === 403) { setDenied(true); return }
     await loadQueue()
     await loadMine()
   }
@@ -422,10 +509,7 @@ export default function SupportDashboard() {
         headers: { ...authHeaders(), "Content-Type": "application/json" },
         body: JSON.stringify("Resolved by support.")
       })
-      if (res.status === 401 || res.status === 403) {
-        setDenied(true)
-        return
-      }
+      if (res.status === 401 || res.status === 403) { setDenied(true); return }
       if (!res.ok && res.status !== 204) {
         const body = await res.text()
         throw new Error(body || `Failed to close: ${res.status}`)
@@ -447,7 +531,7 @@ export default function SupportDashboard() {
     }
   }
 
-  // Rename topic (admin)
+  // Rename topic
   const saveTopic = async () => {
     if (!activeThreadId) return
     const newTopic = topicDraft.trim()
@@ -475,7 +559,7 @@ export default function SupportDashboard() {
     }
   }
 
-  // ----- UI helpers -----
+  // UI helpers
   const getStatusIcon = (status) => {
     switch ((status || "").toLowerCase()) {
       case "open": return <CheckCircle className="w-3 h-3" />
@@ -484,7 +568,6 @@ export default function SupportDashboard() {
       default: return <MessageCircle className="w-3 h-3" />
     }
   }
-
   const getStatusColor = (status) => {
     switch ((status || "").toLowerCase()) {
       case "open": return "status-open"
@@ -493,7 +576,6 @@ export default function SupportDashboard() {
       default: return "status-default"
     }
   }
-
   const formatTime = (dateString) => {
     if (!dateString) return ""
     const date = new Date(dateString)
@@ -504,7 +586,6 @@ export default function SupportDashboard() {
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`
     return date.toLocaleDateString()
   }
-
   const authorNameFor = (m) => {
     if (m.isSystem) return "System"
     if (m.senderIsAdmin) return (m.senderName && m.senderName.trim()) || "Support"
@@ -513,21 +594,20 @@ export default function SupportDashboard() {
     return (m.senderName && m.senderName.trim()) || profile?.name || (key ? `User #${key}` : "User")
   }
 
-  // Hide the floating "Support" widget while the dashboard is open
+  // Hide floating widget while open
   useEffect(() => {
-  document.body.classList.add("hide-support-widget");
-  return () => document.body.classList.remove("hide-support-widget");
-}, []);
+    document.body.classList.add("hide-support-widget");
+    return () => document.body.classList.remove("hide-support-widget");
+  }, []);
 
-
-  // ----- Initial loads (after auth) -----
+  // Initial loads
   useEffect(() => {
     if (!authChecked || !authorized) return
     loadQueue()
     loadMine()
   }, [authChecked, authorized, filterUnassigned])
 
-  // ----- Early returns -----
+  // ----- Render -----
   if (!authChecked) {
     return (
       <div className="sd-loading">
@@ -547,17 +627,12 @@ export default function SupportDashboard() {
     )
   }
 
-  // ----- Render -----
   return (
     <div className={`sd-root ${drawerOpen ? "drawer-open" : ""}`}>
       {/* Scrim for mobile drawer */}
-      <div
-        className="sd-drawer-scrim"
-        onClick={() => setDrawerOpen(false)}
-        aria-hidden="true"
-      />
+      <div className="sd-drawer-scrim" onClick={() => setDrawerOpen(false)} aria-hidden="true" />
 
-      {/* Sidebar (drawer on mobile, docked on desktop) */}
+      {/* Sidebar */}
       <aside className="sd-sidebar" aria-label="Conversation lists">
         <div className="sd-sidebar-header mobile-only">
           <strong>Filters</strong>
@@ -565,21 +640,15 @@ export default function SupportDashboard() {
         </div>
 
         <div className="sd-segmented">
-          <button
-            className={assignView === "awaiting" ? "active" : ""}
-            onClick={() => setAssignView("awaiting")}
-          >
+          <button className={assignView === "awaiting" ? "active" : ""} onClick={() => setAssignView("awaiting")}>
             Awaiting
           </button>
-          <button
-            className={assignView === "assigned" ? "active" : ""}
-            onClick={() => setAssignView("assigned")}
-          >
+          <button className={assignView === "assigned" ? "active" : ""} onClick={() => setAssignView("assigned")}>
             Assigned
           </button>
         </div>
 
-        {/* Awaiting (unassigned) list */}
+        {/* Awaiting */}
         {assignView === "awaiting" && (
           <div className="sd-section">
             <div className="sd-section-header">
@@ -637,7 +706,7 @@ export default function SupportDashboard() {
           </div>
         )}
 
-        {/* Assigned (my threads) list */}
+        {/* Assigned */}
         {assignView === "assigned" && (
           <div className="sd-section">
             <div className="sd-section-header">
@@ -684,7 +753,6 @@ export default function SupportDashboard() {
       <div className="sd-main">
         {/* Chat Header */}
         <div className="sd-chat-header">
-          {/* Hamburger (mobile) */}
           <button
             className={`sd-hamburger mobile-only ${drawerOpen ? "is-open" : ""}`}
             aria-label={drawerOpen ? "Close lists" : "Open lists"}
@@ -700,7 +768,7 @@ export default function SupportDashboard() {
                 <h1 className="sd-chat-title">{topic || "Support"}</h1>
                 {activeThreadId && (
                   <button className="topic-edit-btn" onClick={() => setEditingTopic(true)} title="Rename subject">
-                    <Pencil className="w-4 h-4" style={{marginRight5 : "5px"}}/>
+                    <Pencil className="w-4 h-4" style={{ marginRight: "5px" }} />
                   </button>
                 )}
               </div>
@@ -770,6 +838,11 @@ export default function SupportDashboard() {
                     ? null
                     : profiles[key]?.avatar || DEFAULT_AVATAR_PATH
 
+                  // Parse URLs from body to show images/links when no attachments array is present
+                  const urls = extractUrls(m.body)
+                  const imageUrls = urls.filter(isImageUrl)
+                  const linkUrls = urls.filter((u) => !isImageUrl(u))
+
                   return (
                     <div
                       key={m.messageId ?? `${m.createdAt}-${m.senderUserId ?? m.senderIsAdmin ?? "sys"}`}
@@ -810,12 +883,12 @@ export default function SupportDashboard() {
 
                       <div className="sd-message-content">
                         <div className="sd-author">{authorNameFor(m)}</div>
-                        {m.body && <div className="sd-message-body">{m.body}</div>}
 
+                        {/* Attachments from server */}
                         {Array.isArray(m.attachments) && m.attachments.length > 0 && (
                           <div className="sd-attachments-grid">
                             {m.attachments.map((a) =>
-                              a.kind === "image" ? (
+                              isImageAttachment(a) ? (
                                 <a
                                   key={a.attachmentId || a.url}
                                   href={a.url}
@@ -824,10 +897,37 @@ export default function SupportDashboard() {
                                   className="sd-attachment"
                                   title={a.fileName || "image"}
                                 >
-                                  <img src={a.url} alt={a.fileName || "attachment"} loading="lazy" draggable={false} />
+                                  <img
+                                    src={a.url}
+                                    alt={a.fileName || "attachment"}
+                                    loading="lazy"
+                                    draggable={false}
+                                  />
                                 </a>
                               ) : null
                             )}
+                          </div>
+                        )}
+
+                        {/* Images found in body */}
+                        {(!m.attachments || m.attachments.length === 0) && imageUrls.length > 0 && (
+                          <div className="sd-attachments-grid">
+                            {imageUrls.map((u) => (
+                              <a key={u} href={u} target="_blank" rel="noreferrer" className="sd-attachment" title="image">
+                                <img src={u} alt="attachment" loading="lazy" draggable={false} />
+                              </a>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Non-image links */}
+                        {linkUrls.length > 0 && (
+                          <div className="sd-links">
+                            {linkUrls.map((u) => (
+                              <a key={u} href={u} target="_blank" rel="noreferrer" className="sd-link">
+                                {u}
+                              </a>
+                            ))}
                           </div>
                         )}
 
@@ -843,16 +943,40 @@ export default function SupportDashboard() {
             {/* Input */}
             <div className="sd-input-area">
               <div className="sd-input-container">
+                {/* Hidden file input for image attachments */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={onPickImages}
+                  style={{ display: "none" }}
+                />
+
+                {/* Attach button */}
+                <button
+                  type="button"
+                  className="sd-attach-btn"
+                  onClick={() => fileInputRef.current?.click()}
+                  title="Attach images"
+                  disabled={!activeThreadId || uploading || (activeStatus || "").toLowerCase() === "closed"}
+                >
+                  {uploading ? (
+                    <span className="sd-uploading">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span style={{ marginLeft: 6 }}>{uploadProgress}%</span>
+                    </span>
+                  ) : (
+                    <>Attach</>
+                  )}
+                </button>
+
                 <textarea
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder={
-                    (activeStatus || "").toLowerCase() === "closed"
-                      ? "Thread is closed."
-                      : "Type your reply..."
-                  }
+                  placeholder={(activeStatus || "").toLowerCase() === "closed" ? "Thread is closed." : "Type your reply..."}
                   className="sd-input"
                   rows={1}
                   disabled={sending || (activeStatus || "").toLowerCase() === "closed"}
