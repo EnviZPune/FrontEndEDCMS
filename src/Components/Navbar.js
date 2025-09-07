@@ -228,11 +228,9 @@ const Navbar = () => {
           <Link
             to="/"
             onClick={() => {
-              // Toggle the background music when brand text is clicked
               try {
                 toggleMusic();
               } catch (e) {
-                // If provider isn't mounted for some reason, fail silently
                 console.warn("AudioProvider not mounted?", e);
               }
             }}
@@ -241,7 +239,7 @@ const Navbar = () => {
             className="brand-link"
             style={{ textDecoration: "none", color: "inherit" }}
           >
-            <h3>{t("brand_name", { defaultValue: "Triwears" })}</h3>
+            <h3 style={{cursor: "default"}}>{t("brand_name")}</h3>
           </Link>
         </div>
 
