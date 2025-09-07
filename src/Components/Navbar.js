@@ -6,6 +6,7 @@ import { isFounder, canAccessPanel } from "../utils/auth";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../Styling/navbar.css";
+import { useAudio } from "./AudioProvider.tsx"
 
 const API_BASE = "http://77.242.26.150:8000";
 
@@ -30,6 +31,9 @@ const getHeaders = () => {
 const Navbar = () => {
   // Use the 'navbar' namespace. We use the hook's i18n instance (no extra import).
   const { t, i18n } = useTranslation("navbar");
+
+  // 🔊 Grab music toggle from AudioProvider
+  const { toggle: toggleMusic } = useAudio();
 
   const [loggedUser, setLoggedUser] = useState(null);
   const [myBusinesses, setMyBusinesses] = useState([]);
@@ -212,10 +216,33 @@ const Navbar = () => {
     <div className={`navbar_container ${isScrolled ? "scrolled" : ""}`}>
       <nav className="navbar" role="navigation" aria-label={t("aria_main_nav", { defaultValue: "Main navigation" })}>
         <div className="logo-container">
+          {/* Logo -> home (existing behavior) */}
           <Link to="/" aria-label={t("aria_go_home", { defaultValue: "Go to homepage" })}>
-            <img src={`${process.env.PUBLIC_URL}/Assets/triwearsicon.png`} alt={t("alt_logo", { defaultValue: "Triwears Logo" })} />
+            <img
+              src={`${process.env.PUBLIC_URL}/Assets/triwearsicon.png`}
+              alt={t("alt_logo", { defaultValue: "Triwears Logo" })}
+            />
           </Link>
-          <h3>{t("brand_name", { defaultValue: "Triwears" })}</h3>
+
+          {/* Brand name -> home + 🔊 Easter Egg toggle */}
+          <Link
+            to="/"
+            onClick={() => {
+              // Toggle the background music when brand text is clicked
+              try {
+                toggleMusic();
+              } catch (e) {
+                // If provider isn't mounted for some reason, fail silently
+                console.warn("AudioProvider not mounted?", e);
+              }
+            }}
+            aria-label={t("aria_go_home", { defaultValue: "Go to homepage" })}
+            title={t("brand_name", { defaultValue: "Triwears" })}
+            className="brand-link"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <h3>{t("brand_name", { defaultValue: "Triwears" })}</h3>
+          </Link>
         </div>
 
         <button
@@ -290,7 +317,6 @@ const Navbar = () => {
                       )}
                     </div>
 
-
                     {!isOwner && !isAdmin && (
                       <Link to="/become-owner" className="dropdown-item" role="menuitem">
                         {t("create_your_shop", { defaultValue: "🏬 Create Your Shop" })}
@@ -331,7 +357,7 @@ const Navbar = () => {
               </button>
             </div>
           )} •
-            <li role="none">
+          <li role="none">
             <button
               className="lang-toggle-button"
               onClick={toggleLanguage}
