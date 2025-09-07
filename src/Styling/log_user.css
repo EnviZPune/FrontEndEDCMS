@@ -37,7 +37,7 @@
   padding: 2rem 1rem;
   position: relative;
   font-family: var(--font-sans);
-  box-shadow: 0 9px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
 }
 
 .login-page::before {
@@ -79,7 +79,7 @@
 /* Header Styles */
 .login-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 5rem;
 }
 
 .logo-link {
@@ -93,9 +93,13 @@
 }
 
 .login-logo {
-  width: 120px;
-  height: auto;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  display: block;
+  margin: 0 auto 1rem auto;       /* center and add spacing below */
+  width: 150px;                    /* a bit smaller for balance */
+  max-width: 100%;                /* prevent overflow */
+  height: auto;                   /* keep proportions */
+  object-fit: contain;            /* ensure it doesn’t stretch */
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08)); /* lighter shadow */
 }
 
 .login-title {

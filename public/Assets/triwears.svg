@@ -1,0 +1,12 @@
+<!-- public/Assets/triwearsicon.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Triwears">
+  <!-- solid, high-contrast mark; sized with inner padding for tiny sizes -->
+  <g fill="#111">
+    <!-- top triangle -->
+    <polygon points="32,8 18,32 46,32"></polygon>
+    <!-- bottom-left triangle -->
+    <polygon points="18,36 4,60 32,60"></polygon>
+    <!-- bottom-right triangle -->
+    <polygon points="46,36 32,60 60,60"></polygon>
+  </g>
+</svg>

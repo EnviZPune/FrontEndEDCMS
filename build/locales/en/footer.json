@@ -1,7 +1,7 @@
 {
   "footer": {
-    "logo_alt": "E & D Logo",
-    "slogan": "E & D — Albania’s First Real-Time Online Shopping Mall. Connecting real shops with real people.",
+    "logo_alt": "Triwears Logo",
+    "slogan": "Triwears — Albania’s First Real-Time Online Shopping Mall. Connecting real shops with real people.",
     "company": "Company",
     "explore": "Explore",
     "contact": "Contact",
@@ -18,6 +18,6 @@
       "phone": "Phone",
       "location": "Location"
     },
-    "copyright": "© {{year}} E & D. All rights reserved."
+    "copyright": "© {{year}} Triwears. All rights reserved."
   }
 }

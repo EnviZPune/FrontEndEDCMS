@@ -35,11 +35,13 @@
   flex: 1 1 280px; /* Adjusted flex basis */
   display: flex;
   flex-direction: column;
+  position: relative;
+  bottom: 40px;
   align-items: flex-start;
 }
 
 .footer-logo {
-  height: 60px; /* Slightly larger logo */
+  height: 120px; /* Slightly larger logo */
   margin-bottom: var(--space-3);
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }

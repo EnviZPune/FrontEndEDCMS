@@ -1,15 +1,15 @@
 {
   "hero": {
-    "title": "Rreth E & D",
+    "title": "Rreth Triwears",
     "subtitle": "Qendra e parë tregtare online në Shqipëri",
-    "logo_alt": "Logo E & D",
+    "logo_alt": "Logo Triwears",
     "slogan": "Kërko me mençuri. Bli më shpejt. Mundësuar nga dyqanet në kohë reale."
   },
   "sections": {
     "welcome": {
-      "title": "Mirë se vini në E & D",
+      "title": "Mirë se vini në Triwears",
       "p1": {
-        "a": "Në E & D, ne nuk jemi thjesht një faqe tjetër e-commerce. Jemi diçka krejt ndryshe — një",
+        "a": "Në Triwears, ne nuk jemi thjesht një faqe tjetër e-commerce. Jemi diçka krejt ndryshe — një",
         "b_highlight": "drejtori dixhitale në kohë reale",
         "c": "e dyqaneve fizike të veshjeve nga i gjithë vendi. Qëllimi ynë? T’ju tregojmë",
         "d_highlight": "çfarë ka në stok, tani",
@@ -19,7 +19,7 @@
     "how": {
       "title": "Si Funksionon",
       "p1": {
-        "a": "Qoftë në laptop apo në telefon, E & D ju lejon të kërkoni çdo veshje që kërkoni. Sistemi ynë skanon të gjithë dyqanet e regjistruara në Shqipëri dhe ju tregon",
+        "a": "Qoftë në laptop apo në telefon, Triwears ju lejon të kërkoni çdo veshje që kërkoni. Sistemi ynë skanon të gjithë dyqanet e regjistruara në Shqipëri dhe ju tregon",
         "b_highlight": "pikërisht cilët dyqane e kanë produktin sot.",
         "c": "S’ka më telefonata. S’ka më ecje dyqan më dyqan. Vetëm kërko, dhe do dish ku të shkosh."
       }
@@ -27,7 +27,7 @@
     "real": {
       "title": "Dyqane të Vërteta, Njerëz të Vërtetë",
       "p1": {
-        "a": "Ne lidhim dyqane të vërteta me njerëz të vërtetë. Çdo biznes që bashkohet me E & D menaxhon profilin e dyqanit dhe ngarkon stokun aktual — jo thjesht katalogë, por",
+        "a": "Ne lidhim dyqane të vërteta me njerëz të vërtetë. Çdo biznes që bashkohet me Triwears menaxhon profilin e dyqanit dhe ngarkon stokun aktual — jo thjesht katalogë, por",
         "b_highlight": "atë që është realisht në dyqan sot."
       },
       "p2": "Çdo dyqan verifikohet, dhe pronarët/punonjësit mbajnë listimet të përditësuara që përvoja e blerjes të jetë e qetë, e sigurt dhe e thjeshtë."
@@ -36,9 +36,9 @@
       "title": "Premtimi Ynë",
       "p1": {
         "a": "Nëse dikush në vend e ka atë që kërkon,",
-        "b_highlight": "E & D do ta gjejë"
+        "b_highlight": "Triwears do ta gjejë"
       },
-      "p2": "Sepse blerja e mençur s’duhet të kërkojë përpjekje — mjafton E & D."
+      "p2": "Sepse blerja e mençur s’duhet të kërkojë përpjekje — mjafton Triwears."
     }
   },
   "features": {
@@ -63,7 +63,7 @@
   },
   "cta": {
     "title": "Gati për të filluar blerjet?",
-    "text": "Bashkohu me mijëra blerës të zgjuar që përdorin E & D për të gjetur saktësisht atë që kërkojnë.",
+    "text": "Bashkohu me mijëra blerës të zgjuar që përdorin Triwears për të gjetur saktësisht atë që kërkojnë.",
     "explore": "Eksploro Dyqanet",
     "explore_aria": "Eksploro të gjitha dyqanet"
   }

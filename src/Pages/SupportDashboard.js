@@ -27,7 +27,7 @@ const profilePath = (id) => `${USER_PROFILE_BASE}/${id}`;
 const DEFAULT_AVATAR_PATH = "Assets/default-avatar.jpg"  // ← root-relative PNG
 
 // ---------- GCS config (matches PhotoPanel) ----------
-const GCS_BUCKET = "edcms_bucket"
+const GCS_BUCKET = "Assets/triwearsiconbigger.png_bucket"
 const GCS_BASE = `https://storage.googleapis.com/${GCS_BUCKET}`
 
 // Utility

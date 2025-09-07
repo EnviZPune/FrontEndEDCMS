@@ -181,7 +181,7 @@ function RegisterFormUser() {
         <div className="register-header">
           <a href="/" className="logo-link" aria-label={t("aria.go_home", { defaultValue: "Go to homepage" })}>
             <img
-              src={`${process.env.PUBLIC_URL}/Assets/edlogo.png`}
+              src={`${process.env.PUBLIC_URL}/Assets/triwearslogo.png`}
               alt={t("aria.logo_alt", { defaultValue: "Logo" })}
               className="register-logo"
             />

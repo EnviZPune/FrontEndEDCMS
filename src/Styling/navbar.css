@@ -93,6 +93,7 @@
   left: 0;
   right: 0;
   width: 100%;
+  height: 140px; 
   background: var(--navbar-bg);
   backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--navbar-border);
@@ -108,7 +109,7 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.3));
   opacity: 0;
   transition: opacity var(--transition-normal);
 }
@@ -139,49 +140,46 @@
    ENHANCED LOGO SECTION
 ---------------------------------------- */
 
+:root { --logo-size: 32px; }
+
+/* Lock the whole logo block */
 .logo-container {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-3);
   text-decoration: none;
-  transition: transform var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;          /* prevent wrap */
+  line-height: 1;               /* align text + icon baseline */
+  transform: none !important;   /* stop hover scale from moving it */
 }
 
-.logo-container:hover {
-  transform: scale(1.02);
-}
-
+/* Keep the image perfectly square and centered */
 .logo-container img {
-  height: 44px;
-  width: auto;
+  width: var(--logo-size);
+  height: var(--logo-size);
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  display: block;               /* remove baseline gap */
+  flex-shrink: 0;               /* never squish */
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-fast);
+  transform: none !important;   /* no rotation/scale (prevents jitter) */
 }
 
-.logo-container:hover img {
-  box-shadow: var(--shadow-md);
-  transform: rotate(2deg);
-}
-
+/* Title aligned and stable */
 .logo-container h3 {
-  margin: 0;
-  font-size: 1.375rem;
+  font-size: 1.125rem;  
+  margin-left: -20px; 
   font-weight: var(--font-weight-bold);
   background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-500) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: -0.01em;
-  transition: all var(--transition-fast);
 }
 
-.logo-container:hover h3 {
-  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-400) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+/* Optional: subtle hover without moving layout */
+.logo-container:hover h3 { opacity: 0.9; }
+
 
 /* ----------------------------------------
    ENHANCED NAVIGATION LINKS

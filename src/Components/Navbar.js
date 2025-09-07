@@ -213,9 +213,9 @@ const Navbar = () => {
       <nav className="navbar" role="navigation" aria-label={t("aria_main_nav", { defaultValue: "Main navigation" })}>
         <div className="logo-container">
           <Link to="/" aria-label={t("aria_go_home", { defaultValue: "Go to homepage" })}>
-            <img src={`${process.env.PUBLIC_URL}/Assets/edlogo.png`} alt={t("alt_logo", { defaultValue: "E & D Logo" })} />
+            <img src={`${process.env.PUBLIC_URL}/Assets/triwearsicon.png`} alt={t("alt_logo", { defaultValue: "Triwears Logo" })} />
           </Link>
-          <h3>{t("brand_name", { defaultValue: "EDCMS" })}</h3>
+          <h3>{t("brand_name", { defaultValue: "Triwears" })}</h3>
         </div>
 
         <button

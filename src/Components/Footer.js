@@ -11,14 +11,14 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-logo-section">
           <img
-            src={`${process.env.PUBLIC_URL}/Assets/edlogo.png`}
-            alt={t("footer.logo_alt", { defaultValue: "E & D Logo" })}
+            src={`${process.env.PUBLIC_URL}/Assets/triwearslogowhite.png`}
+            alt={t("footer.logo_alt", { defaultValue: "Triwears Logo" })}
             className="footer-logo"
           />
           <p className="footer-slogan">
             {t("footer.slogan", {
               defaultValue:
-                "E & D — Albania’s First Real-Time Online Shopping Mall. Connecting real shops with real people.",
+                "Triwears — Albania’s First Real-Time Online Shopping Mall. Connecting real shops with real people.",
             })}
           </p>
         </div>
@@ -60,7 +60,7 @@ const Footer = () => {
         <p>
           {t("footer.copyright", {
             year: new Date().getFullYear(),
-            defaultValue: `© ${new Date().getFullYear()} E & D. All rights reserved.`,
+            defaultValue: `© ${new Date().getFullYear()} Triwears. All rights reserved.`,
           })}
         </p>
       </div>

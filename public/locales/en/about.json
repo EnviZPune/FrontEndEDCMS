@@ -1,15 +1,15 @@
 {
   "hero": {
-    "title": "About E & D",
+    "title": "About Triwears",
     "subtitle": "Albania's First Online Shopping Mall",
-    "logo_alt": "E & D Logo",
+    "logo_alt": "Triwears Logo",
     "slogan": "Search smart. Shop faster. Powered by real-time stores."
   },
   "sections": {
     "welcome": {
-      "title": "Welcome to E & D",
+      "title": "Welcome to Triwears",
       "p1": {
-        "a": "At E & D, we're not just another e-commerce site. We're something completely different — a",
+        "a": "At Triwears, we're not just another e-commerce site. We're something completely different — a",
         "b_highlight": "real-time digital directory",
         "c": "of physical clothing stores from all around the country. Our goal? To show you",
         "d_highlight": "what's in stock, right now",
@@ -19,7 +19,7 @@
     "how": {
       "title": "How It Works",
       "p1": {
-        "a": "Whether you're on your laptop or on your phone, E & D lets you search for any clothing item you're looking for. Our system scans all registered shops across Albania and shows you",
+        "a": "Whether you're on your laptop or on your phone, Triwears lets you search for any clothing item you're looking for. Our system scans all registered shops across Albania and shows you",
         "b_highlight": "exactly which stores have that product available today.",
         "c": "No more calling around. No more walking shop to shop. Just search, and you'll know where to go."
       }
@@ -27,7 +27,7 @@
     "real": {
       "title": "Real Shops, Real People",
       "p1": {
-        "a": "We connect real shops with real people. Every business that joins E & D manages their own shop profile and uploads their current inventory — not just generic catalog items, but",
+        "a": "We connect real shops with real people. Every business that joins Triwears manages their own shop profile and uploads their current inventory — not just generic catalog items, but",
         "b_highlight": "what's physically available in-store today."
       },
       "p2": "Each shop is verified, and their owners and employees help maintain updated listings to make your shopping experience smooth, secure, and simple."
@@ -36,9 +36,9 @@
       "title": "Our Promise",
       "p1": {
         "a": "If someone around the country has what you're looking for,",
-        "b_highlight": "E & D will find it"
+        "b_highlight": "Triwears will find it"
       },
-      "p2": "Because smart shopping shouldn't take effort — it should just take E & D."
+      "p2": "Because smart shopping shouldn't take effort — it should just take Triwears."
     }
   },
   "features": {
@@ -63,7 +63,7 @@
   },
   "cta": {
     "title": "Ready to Start Shopping?",
-    "text": "Join thousands of smart shoppers who use E & D to find exactly what they're looking for.",
+    "text": "Join thousands of smart shoppers who use Triwears to find exactly what they're looking for.",
     "explore": "Explore Stores",
     "explore_aria": "Explore all stores"
   }

@@ -180,7 +180,7 @@ export default function ShopList() {
         <div className="hero-content">
           <h1 className="hero-title">
             {t("hero_title_prefix", { defaultValue: "Welcome, To" })}{" "}
-            <span className="hero-title-accent">{t("brand_name", { defaultValue: "EDCMS" })}</span>
+            <span className="hero-title-accent">{t("brand_name", { defaultValue: "Triwears" })}</span>
           </h1>
 
           <p className="hero-subtitle">

@@ -1,7 +1,7 @@
 {
   "footer": {
-    "logo_alt": "Logo E & D",
-    "slogan": "E & D — Qendra e parë tregtare online në kohë reale në Shqipëri. Lidh dyqanet reale me njerëz realë.",
+    "logo_alt": "Logo Triwears",
+    "slogan": "Triwears — Qendra e parë tregtare online në kohë reale në Shqipëri. Lidh dyqanet reale me njerëz realë.",
     "company": "Kompania",
     "explore": "Eksploro",
     "contact": "Kontakt",
@@ -18,6 +18,6 @@
       "phone": "Telefoni",
       "location": "Vendndodhja"
     },
-    "copyright": "© {{year}} E & D. Të gjitha të drejtat e rezervuara."
+    "copyright": "© {{year}} Triwears. Të gjitha të drejtat e rezervuara."
   }
 }
