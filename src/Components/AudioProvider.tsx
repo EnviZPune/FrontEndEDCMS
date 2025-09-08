@@ -26,9 +26,10 @@ export function AudioProvider({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [enabled, setEnabled] = useState<boolean>(() => {
     const raw = localStorage.getItem(storageKey);
-    return raw ? raw === "1" : false;
+    return raw === "1"; // saved state, but will only play on toggle
   });
 
+  // Create audio element once
   useEffect(() => {
     if (!audioRef.current) {
       const el = new Audio(src);
@@ -39,6 +40,7 @@ export function AudioProvider({
     }
   }, [src]);
 
+  // React to enabled toggle
   useEffect(() => {
     const el = audioRef.current;
     if (!el) return;
@@ -47,7 +49,7 @@ export function AudioProvider({
       try {
         await el.play();
       } catch {
-        // Autoplay blocked → wait for user interaction
+        // If autoplay blocked, wait for the next gesture
         const handler = async () => {
           try {
             await el.play();
@@ -60,8 +62,11 @@ export function AudioProvider({
       }
     };
 
-    if (enabled) tryPlay();
-    else el.pause();
+    if (enabled) {
+      tryPlay();
+    } else {
+      el.pause(); // just pause, don't reset
+    }
 
     localStorage.setItem(storageKey, enabled ? "1" : "0");
   }, [enabled, storageKey]);
