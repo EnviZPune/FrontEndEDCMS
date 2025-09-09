@@ -1,5 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script>
+(function () {
+  var OLD = 'http://77.242.26.150:8000';
+  var NEW = 'https://api.triwears.com';
+  var onProd = /^https:\/\/(www\.)?triwears\.com$/i.test(location.origin);
+  if (!onProd) return;
+
+  // Patch fetch
+  var of = window.fetch && window.fetch.bind(window);
+  if (of) {
+    window.fetch = function (input, init) {
+      try {
+        if (typeof input === 'string' && input.indexOf(OLD) === 0) {
+          input = NEW + input.slice(OLD.length);
+        } else if (input && typeof input === 'object' && 'url' in input && input.url.indexOf(OLD) === 0) {
+          input = new Request(NEW + input.url.slice(OLD.length), input);
+        }
+      } catch {}
+      return of(input, init);
+    };
+  }
+
+  // Patch XHR (for any libs using it)
+  var OX = window.XMLHttpRequest;
+  if (OX) {
+    function PatchedXHR() {
+      var x = new OX();
+      var open = x.open;
+      x.open = function (m, u) {
+        try {
+          if (typeof u === 'string' && u.indexOf(OLD) === 0) {
+            u = NEW + u.slice(OLD.length);
+          }
+        } catch {}
+        return open.apply(this, [m, u].concat([].slice.call(arguments, 2)));
+      };
+      return x;
+    }
+    PatchedXHR.prototype = OX.prototype;
+    window.XMLHttpRequest = PatchedXHR;
+  }
+})();
+</script>
+
   <head>
     <meta charset="utf-8" />
 
