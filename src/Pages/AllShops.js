@@ -7,7 +7,7 @@ import Footer from "../Components/Footer"
 import Pagination from "../Components/Pagination.tsx"
 import "../Styling/AllShops.css"
 
-const API_URL = "http://77.242.26.150:8000/api/Business"
+const API_URL = "https://api.triwears.com/api/Business"
 const PAGE_SIZE = 6
 
 // Fallback slug generator

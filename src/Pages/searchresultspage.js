@@ -6,7 +6,7 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import "../Styling/searchresults.css";
 
-const API_BASE = "http://77.242.26.150:8000/api";
+const API_BASE = "https://api.triwears.com/api";
 
 function getToken() {
   const raw = localStorage.getItem("token");

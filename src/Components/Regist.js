@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "../Styling/regist.css";
 import { useTranslation } from "react-i18next";
 
-const API_BASE = "http://77.242.26.150:8000/api";
+const API_BASE = "https://api.triwears.com/api";
 
 function RegisterFormUser() {
   const { t } = useTranslation("register");

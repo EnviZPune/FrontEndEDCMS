@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 
-const API_BASE = (import.meta?.env?.VITE_API_BASE_URL || "http://77.242.26.150:8000").replace(/\/+$/,"")
+const API_BASE = (import.meta?.env?.VITE_API_BASE_URL || "https://api.triwears.com").replace(/\/+$/,"")
 const USE_COOKIES = false  // flip to true if you use cookie-based auth
 
 function getToken() {

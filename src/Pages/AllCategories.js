@@ -19,7 +19,7 @@ export default function AllCategories() {
   const fetchAllCategories = async () => {
     // fetch every business
     const bizRes = await fetch(
-      'http://77.242.26.150:8000/api/Business/paginated?pageNumber=1&pageSize=10000'
+      'https://api.triwears.com/api/Business/paginated?pageNumber=1&pageSize=10000'
     );
     if (!bizRes.ok) throw new Error(await bizRes.text() || bizRes.statusText);
     const { items: allBiz } = await bizRes.json();
@@ -28,7 +28,7 @@ export default function AllCategories() {
     const arrays = await Promise.all(
       allBiz.map(b =>
         fetch(
-          `http://77.242.26.150:8000/api/ClothingCategory/business/${b.businessId}`
+          `https://api.triwears.com/api/ClothingCategory/business/${b.businessId}`
         ).then(r => (r.ok ? r.json() : []))
       )
     );

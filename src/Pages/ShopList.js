@@ -7,7 +7,7 @@ import Pagination from "../Components/Pagination.tsx";
 import { useTranslation } from "react-i18next";
 import "../Styling/shoplist.css";
 
-const API_BASE = "http://77.242.26.150:8000/api";
+const API_BASE = "https://api.triwears.com/api";
 const PAGE_SIZE = 9;
 const SPOTLIGHT_SIZE = 8;
 

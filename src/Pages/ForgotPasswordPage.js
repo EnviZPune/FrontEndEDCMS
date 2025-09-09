@@ -5,7 +5,7 @@ import "../Styling/forgot-password-page.css"
 import Navbar from "../Components/Navbar"
 import Footer from "../Components/Footer"
 
-const API_BASE = "http://77.242.26.150:8000/api/PasswordReset"
+const API_BASE = "https://api.triwears.com/api/PasswordReset"
 
 const ForgotPasswordPage = () => {
   const { t } = useTranslation("forgotpassword")

@@ -4,7 +4,7 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import "../Styling/about.css";
 
-const API_BASE = "http://77.242.26.150:8000";
+const API_BASE = "https://api.triwears.com";
 
 /* ---------- auth helpers (no Bearer when missing) ---------- */
 const getToken = () => {

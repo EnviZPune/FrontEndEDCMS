@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const API_BASE = "http://77.242.26.150:8000";
+const API_BASE = "https://api.triwears.com";
 
 export default function RepaySuccess() {
   const { search } = useLocation();

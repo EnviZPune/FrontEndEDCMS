@@ -27,7 +27,7 @@ export default function CategoryFilter() {
       setError('');
       try {
         const res = await fetch(
-          `http://77.242.26.150:8000/api/Business/category-name/${encodeURIComponent(categoryName)}`
+          `https://api.triwears.com/api/Business/category-name/${encodeURIComponent(categoryName)}`
         );
         if (!res.ok) throw new Error(await res.text() || res.statusText);
         const data = await res.json();

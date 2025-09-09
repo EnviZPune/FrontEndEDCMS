@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const SERVER = 'http://77.242.26.150:8000';
+const SERVER = 'https://api.triwears.com';
 
 export default function EmailConfirmation() {
   // ← remove the <>-generic here

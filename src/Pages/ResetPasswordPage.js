@@ -6,7 +6,7 @@ import "../Styling/auth-forms.css"
 import Navbar from "../Components/Navbar"
 import Footer from "../Components/Footer"
 
-const API_BASE = "http://77.242.26.150:8000/api/PasswordReset"
+const API_BASE = "https://api.triwears.com/api/PasswordReset"
 
 export default function ResetPasswordPage() {
   const { t } = useTranslation("resetpassword")

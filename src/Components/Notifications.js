@@ -6,7 +6,7 @@ import { FaBell } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import "../Styling/Notifications.css";
 
-const API_BASE = "http://77.242.26.150:8000";
+const API_BASE = "https://api.triwears.com";
 
 /* --------------------- Auth helpers --------------------- */
 const getToken = () => {

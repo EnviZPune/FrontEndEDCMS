@@ -5,7 +5,7 @@ import { Map, Marker, Overlay } from "pigeon-maps"
 import { Link } from "react-router-dom"
 import "../Styling/map.css"
 
-const API_BASE = "http://77.242.26.150:8000/api"
+const API_BASE = "https://api.triwears.com/api"
 const PAGE_SIZE = 100
 const IP_GEO_API = "https://ipapi.co/json/"
 

@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { useAuth } from './useAuth'
 
 // Base URL for your API; you can set REACT_APP_API_BASE_URL in your .env
-const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://77.242.26.150:8000'
+const API_BASE = process.env.REACT_APP_API_BASE_URL || 'https://api.triwears.com'
 
 export function useApiClient() {
   const { token } = useAuth()

@@ -46,7 +46,7 @@ export default function BecomeOwner() {
   const frontendBase =
     process.env.REACT_APP_CLIENT_BASE_URL || window.location.origin;
   const apiBase =
-    process.env.REACT_APP_API_BASE_URL || "http://77.242.26.150:8000";
+    process.env.REACT_APP_API_BASE_URL || "https://api.triwears.com";
 
   useEffect(() => {
     const jwt = getToken();

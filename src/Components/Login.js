@@ -3,7 +3,7 @@ import "../Styling/log_user.css";
 import { jwtDecode } from "jwt-decode";
 import { useTranslation } from "react-i18next";
 
-const API_BASE = "http://77.242.26.150:8000/api";
+const API_BASE = "https://api.triwears.com/api";
 
 // --- helpers ---------------------------------------------------------
 const looksLikeJwt = (val) => typeof val === "string" && val.split(".").length === 3;
