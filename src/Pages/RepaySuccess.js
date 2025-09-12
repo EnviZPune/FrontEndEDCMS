@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const API_BASE = "https://api.triwears.com";
+const API_BASE = "https://api.triwears.com/api";
 
 export default function RepaySuccess() {
   const { search } = useLocation();

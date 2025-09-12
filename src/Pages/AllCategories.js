@@ -28,7 +28,7 @@ export default function AllCategories() {
     const arrays = await Promise.all(
       allBiz.map(b =>
         fetch(
-          `https://api.triwears.com/api/ClothingCategory/business/${b.businessId}`
+          `https://api.triwears.com/api/api/ClothingCategory/business/${b.businessId}`
         ).then(r => (r.ok ? r.json() : []))
       )
     );

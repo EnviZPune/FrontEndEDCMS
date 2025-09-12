@@ -20,7 +20,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 })
 
-const API_BASE = "https://api.triwears.com/api"
+const API_BASE = "https://api.triwears.com/api/api"
 const GCS_BUCKET = "https://storage.googleapis.com/edcms_bucket"
 
 // 15-minute increments 00:00 → 23:45

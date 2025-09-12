@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const SERVER = 'https://api.triwears.com';
+const SERVER = 'https://api.triwears.com/api';
 
 export default function EmailConfirmation() {
   // ← remove the <>-generic here

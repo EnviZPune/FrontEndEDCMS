@@ -4,7 +4,7 @@ import Navbar from "../Components/Navbar"
 import Footer from "../Components/Footer"
 import "../Styling/publicprofile.css"
 
-const API_BASE = "https://api.triwears.com"
+const API_BASE = "https://api.triwears.com/api"
 
 // Slugify helper (fallback only if actual slug is missing)
 const slugify = (str) =>

@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import "../Styling/navbar.css";
 import { useAudio } from "./AudioProvider.tsx"
 
-const API_BASE = "https://api.triwears.com";
+const API_BASE = "https://api.triwears.com/api";
 
 const getToken = () => {
   const raw = localStorage.getItem("token") || localStorage.getItem("authToken");

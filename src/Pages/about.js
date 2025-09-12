@@ -4,7 +4,7 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import "../Styling/about.css";
 
-const API_BASE = "https://api.triwears.com";
+const API_BASE = "https://api.triwears.com/api";
 
 /* ---------- auth helpers (no Bearer when missing) ---------- */
 const getToken = () => {

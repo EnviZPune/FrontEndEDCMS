@@ -8,7 +8,7 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import "../Styling/sd-shopdetail.css";
 
-const API_BASE = "https://api.triwears.com";
+const API_BASE = "https://api.triwears.com/api";
 const PAGE_SIZE = 8;
 
 /* ====================== THEME-AWARE DEFAULT IMAGES ====================== */

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // Set this to your API origin (or leave "" if you use a dev proxy on /api)
-const API_BASE = 'https://api.triwears.com';
+const API_BASE = 'https://api.triwears.com/api';
 
 function useQuery() {
   const { search } = useLocation();
