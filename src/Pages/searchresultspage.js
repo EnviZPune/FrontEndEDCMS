@@ -8,6 +8,7 @@ import "../Styling/searchresults.css";
 
 const API_BASE = "https://api.triwears.com/api";
 
+
 function getToken() {
   const raw = localStorage.getItem("token");
   if (!raw) return null;
