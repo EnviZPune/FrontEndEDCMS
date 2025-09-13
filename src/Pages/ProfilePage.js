@@ -7,7 +7,7 @@ import Navbar from "../Components/Navbar";
 import { useTranslation } from "react-i18next";
 import "../Styling/myprofile.css";
 
-const API_BASE = "https://api.triwears.com/api";
+const API_BASE = "https://api.triwears.com";
 
 // Default shop logos for light/dark modes
 const DEFAULT_LOGO_LIGHT = "/Assets/default-shop-logo-light.png";

@@ -6,16 +6,24 @@ import { FaBell } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import "../Styling/Notifications.css";
 
-const API_BASE = "https://api.triwears.com/api";
+/** ========= API ENDPOINTS (FIXED) =========
+ *  REST lives under /api
+ *  SignalR hub is at /notificationHub (no /api prefix)
+ */
+const API_ORIGIN = "https://api.triwears.com";
+const REST = (p) => `${API_ORIGIN}/api${p}`;
+const HUB_URL = `${API_ORIGIN}/notificationHub`;
 
 /* --------------------- Auth helpers --------------------- */
 const getToken = () => {
-  const raw = localStorage.getItem("token") || localStorage.getItem("authToken");
+  const raw =
+    localStorage.getItem("token") || localStorage.getItem("authToken");
   if (!raw || raw.trim() === "") return null;
   try {
     const parsed = JSON.parse(raw);
     return parsed.token || parsed;
   } catch {
+    // remove extra quotes if stored as a stringified string
     return raw.replace(/^"|"$/g, "");
   }
 };
@@ -50,8 +58,8 @@ export default function Notifications() {
     setIsLoading(true);
     try {
       const [invRes, noteRes] = await Promise.all([
-        fetch(`${API_BASE}/api/Business/employees/pending`, { headers: getHeaders() }),
-        fetch(`${API_BASE}/api/Notification`, { headers: getHeaders() })
+        fetch(REST("/Business/employees/pending"), { headers: getHeaders() }),
+        fetch(REST("/Notification"), { headers: getHeaders() }),
       ]);
 
       if (invRes.ok) {
@@ -59,8 +67,16 @@ export default function Notifications() {
         setInvites(
           (Array.isArray(pending) ? pending : []).map((inv) => ({
             businessId: inv.businessId ?? inv.BusinessId,
-            businessName: inv.businessName ?? inv.name ?? inv.Name ?? t("unknown_business"),
-            invitedAt: inv.invitedAt ?? inv.requestedAt ?? inv.RequestedAt ?? new Date().toISOString()
+            businessName:
+              inv.businessName ??
+              inv.name ??
+              inv.Name ??
+              t("unknown_business"),
+            invitedAt:
+              inv.invitedAt ??
+              inv.requestedAt ??
+              inv.RequestedAt ??
+              new Date().toISOString(),
           }))
         );
       } else {
@@ -75,8 +91,9 @@ export default function Notifications() {
             return {
               id: n.id ?? n.Id,
               message: n.message ?? n.Message ?? "",
-              createdAt: n.createdAt ?? n.CreatedAt ?? new Date().toISOString(),
-              seen: !!isRead
+              createdAt:
+                n.createdAt ?? n.CreatedAt ?? new Date().toISOString(),
+              seen: !!isRead,
             };
           })
         );
@@ -110,7 +127,9 @@ export default function Notifications() {
     }
 
     const connection = new HubConnectionBuilder()
-      .withUrl(`${API_BASE}/notificationHub`, { accessTokenFactory: () => getToken() || "" })
+      .withUrl(HUB_URL, {
+        accessTokenFactory: () => getToken() || "",
+      })
       .configureLogging(LogLevel.Information)
       .withAutomaticReconnect([0, 2000, 10000, 30000])
       .build();
@@ -128,16 +147,23 @@ export default function Notifications() {
         if (id && prev.some((x) => x.businessId === id)) return prev;
         const newInv = {
           businessId: id,
-          businessName: inv.businessName ?? inv.name ?? t("unknown_business"),
-          invitedAt: inv.invitedAt ?? inv.requestedAt ?? new Date().toISOString()
+          businessName:
+            inv.businessName ?? inv.name ?? t("unknown_business"),
+          invitedAt:
+            inv.invitedAt ?? inv.requestedAt ?? new Date().toISOString(),
         };
         return [...prev, newInv];
       });
 
-      if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+      if (
+        typeof Notification !== "undefined" &&
+        Notification.permission === "granted"
+      ) {
         new Notification(t("notify_titles.new_invite"), {
-          body: t("notify_bodies.invite_from", { name: inv.businessName ?? inv.name ?? t("unknown_business") }),
-          icon: "/favicon.ico"
+          body: t("notify_bodies.invite_from", {
+            name: inv.businessName ?? inv.name ?? t("unknown_business"),
+          }),
+          icon: "/favicon.ico",
         });
       }
     });
@@ -151,16 +177,20 @@ export default function Notifications() {
         const newNote = {
           id,
           message: note.message ?? note.Message ?? "",
-          createdAt: note.createdAt ?? note.CreatedAt ?? new Date().toISOString(),
-          seen: !!isRead
+          createdAt:
+            note.createdAt ?? note.CreatedAt ?? new Date().toISOString(),
+          seen: !!isRead,
         };
         return [newNote, ...prev];
       });
 
-      if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+      if (
+        typeof Notification !== "undefined" &&
+        Notification.permission === "granted"
+      ) {
         new Notification(t("notify_titles.new_notification"), {
           body: note.message ?? note.Message ?? "",
-          icon: "/favicon.ico"
+          icon: "/favicon.ico",
         });
       }
     });
@@ -171,7 +201,6 @@ export default function Notifications() {
     } catch (err) {
       console.error("SignalR start failed:", err);
       setConnectionStatus("Failed");
-      // retry gently
       setTimeout(() => {
         setupSignalRConnection();
       }, 5000);
@@ -184,7 +213,9 @@ export default function Notifications() {
     if (Notification.permission === "default") {
       try {
         await Notification.requestPermission();
-      } catch {}
+      } catch {
+        /* ignore */
+      }
     }
   }, []);
 
@@ -194,30 +225,36 @@ export default function Notifications() {
       const target = notifications.find((n) => n.id === id);
       if (!target || target.seen) return;
 
-      // optimistic
-      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, seen: true } : n)));
+      // optimistic update
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, seen: true } : n))
+      );
 
       try {
-        let res = await fetch(`${API_BASE}/api/Notification/${id}/read`, {
+        let res = await fetch(REST(`/Notification/${id}/read`), {
           method: "PUT",
-          headers: getHeaders()
+          headers: getHeaders(),
         });
         if (!res.ok) {
-          // possible alias
-          res = await fetch(`${API_BASE}/api/Notification/${id}/seen`, {
+          // try /seen as alias
+          res = await fetch(REST(`/Notification/${id}/seen`), {
             method: "PUT",
-            headers: getHeaders()
+            headers: getHeaders(),
           });
         }
         if (!res.ok) {
-          // revert
-          setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, seen: false } : n)));
+          // revert on failure
+          setNotifications((prev) =>
+            prev.map((n) => (n.id === id ? { ...n, seen: false } : n))
+          );
           const txt = await res.text().catch(() => "");
           console.error("Mark seen failed:", res.status, txt);
           alert(t("errors.mark_seen_failed"));
         }
       } catch (err) {
-        setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, seen: false } : n)));
+        setNotifications((prev) =>
+          prev.map((n) => (n.id === id ? { ...n, seen: false } : n))
+        );
         console.error("Network error marking seen:", err);
         alert(t("errors.network_mark_seen"));
       }
@@ -230,27 +267,44 @@ export default function Notifications() {
     async (businessId, approve) => {
       try {
         const res = await fetch(
-          `${API_BASE}/api/Business/employees/respond/${businessId}?approve=${approve}`,
+          REST(`/Business/employees/respond/${businessId}?approve=${approve}`),
           { method: "PUT", headers: getHeaders() }
         );
 
         if (res.ok) {
           setInvites((prev) => prev.filter((i) => i.businessId !== businessId));
 
-          if (typeof Notification !== "undefined" && Notification.permission === "granted") {
-            new Notification(approve ? t("toast.invite_accepted") : t("toast.invite_declined"), {
-              body: approve ? t("toast.invite_accepted_body") : t("toast.invite_declined_body"),
-              icon: "/favicon.ico"
-            });
+          if (
+            typeof Notification !== "undefined" &&
+            Notification.permission === "granted"
+          ) {
+            new Notification(
+              approve ? t("toast.invite_accepted") : t("toast.invite_declined"),
+              {
+                body: approve
+                  ? t("toast.invite_accepted_body")
+                  : t("toast.invite_declined_body"),
+                icon: "/favicon.ico",
+              }
+            );
           }
         } else {
           const text = await res.text().catch(() => "");
           console.error("Failed to respond:", res.status, text);
-          alert(t("errors.invite_respond_failed", { action: approve ? t("common.accept") : t("common.decline"), message: text }));
+          alert(
+            t("errors.invite_respond_failed", {
+              action: approve ? t("common.accept") : t("common.decline"),
+              message: text,
+            })
+          );
         }
       } catch (err) {
         console.error(err);
-        alert(t("errors.invite_respond_network", { action: approve ? t("common.accept") : t("common.decline") }));
+        alert(
+          t("errors.invite_respond_network", {
+            action: approve ? t("common.accept") : t("common.decline"),
+          })
+        );
       }
     },
     [t]
@@ -260,9 +314,9 @@ export default function Notifications() {
   const clearAll = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/api/Notification`, {
+      const res = await fetch(REST("/Notification"), {
         method: "DELETE",
-        headers: getHeaders()
+        headers: getHeaders(),
       });
       if (!res.ok) throw new Error(await res.text());
       setNotifications([]);
@@ -282,7 +336,9 @@ export default function Notifications() {
 
     return () => {
       if (connectionRef.current) {
-        connectionRef.current.stop().catch((e) => console.error("Error stopping on unmount:", e));
+        connectionRef.current
+          .stop()
+          .catch((e) => console.error("Error stopping on unmount:", e));
         connectionRef.current = null;
       }
     };
@@ -300,19 +356,29 @@ export default function Notifications() {
   }, []);
 
   /* ---------------------- Derived count ---------------------- */
-  const totalCount = invites.length + notifications.filter((n) => !n.seen).length;
+  const totalCount =
+    invites.length + notifications.filter((n) => !n.seen).length;
 
   return (
     <div ref={wrapperRef} className="notification-wrapper">
-      <div className="notification-bell-container" onClick={() => setOpen((o) => !o)}>
+      <div
+        className="notification-bell-container"
+        onClick={() => setOpen((o) => !o)}
+      >
         <FaBell
-          className={`notification-bell ${connectionStatus === "Connected" ? "connected" : ""}`}
+          className={`notification-bell ${
+            connectionStatus === "Connected" ? "connected" : ""
+          }`}
           aria-expanded={open}
           aria-controls="notifications-panel"
           title={t("bell.title", { count: totalCount })}
         />
         {totalCount > 0 && (
-          <span className="notification-badge" aria-live="polite" aria-atomic="true">
+          <span
+            className="notification-badge"
+            aria-live="polite"
+            aria-atomic="true"
+          >
             {totalCount > 99 ? "99+" : totalCount}
           </span>
         )}
@@ -321,7 +387,9 @@ export default function Notifications() {
 
       <div
         id="notifications-panel"
-        className={`notifications-panel ${open ? "open" : ""} ${isLoading ? "loading" : ""}`}
+        className={`notifications-panel ${open ? "open" : ""} ${
+          isLoading ? "loading" : ""
+        }`}
         role="menu"
       >
         <div className="panel-header">
@@ -351,7 +419,9 @@ export default function Notifications() {
                       <div className="item-title">
                         {t("invite.from", { name: inv.businessName })}
                       </div>
-                      <div className="item-time">{new Date(inv.invitedAt).toLocaleString()}</div>
+                      <div className="item-time">
+                        {new Date(inv.invitedAt).toLocaleString()}
+                      </div>
                     </div>
                     <div className="item-actions">
                       <button
@@ -394,7 +464,9 @@ export default function Notifications() {
                   >
                     <div className="item-content">
                       <div className="item-message">{n.message}</div>
-                      <div className="item-time">{new Date(n.createdAt).toLocaleString()}</div>
+                      <div className="item-time">
+                        {new Date(n.createdAt).toLocaleString()}
+                      </div>
                     </div>
                   </div>
                 ))}

@@ -7,6 +7,9 @@ import { useAuth } from "../hooks/useAuth"
 import Pagination from "../../Pagination.tsx"
 import "../../../Styling/Settings/productpanel.css"
 
+// Adjust if your backend route differs
+const PIN_API = "/api/PinnedItems"
+
 export default function ProductPanel({ business }) {
   const { t } = useTranslation("productpanel")              // ⬅️ use settings namespace
   const { get, post, put, del } = useApiClient()
@@ -28,6 +31,10 @@ export default function ProductPanel({ business }) {
   const [error, setError] = useState(null)
   const [saleLoadingId, setSaleLoadingId] = useState(null)
   const pageSize = 10
+
+  // NEW: pin state
+  const [pinnedIds, setPinnedIds] = useState(() => new Set())
+  const [pinLoadingId, setPinLoadingId] = useState(null)
 
   const [form, setForm] = useState({
     name: "",
@@ -65,6 +72,15 @@ export default function ProductPanel({ business }) {
     return undefined
   }
 
+  // Normalize pinned payload (supports [number] or [{ clothingItemId }])
+  const normalizePinned = useCallback((payload) => {
+    if (!payload) return new Set()
+    const ids = Array.isArray(payload)
+      ? payload.map(x => (typeof x === "number" ? x : x?.clothingItemId)).filter(Boolean)
+      : []
+    return new Set(ids)
+  }, [])
+
   // ─── Load Data ───────────────────────────────────────────────────────────
   useEffect(() => {
     if (!businessId) return
@@ -74,19 +90,22 @@ export default function ProductPanel({ business }) {
       setLoading(true)
       setError(null)
       try {
-        const [prods, cats] = await Promise.all([
+        const [prods, cats, pins] = await Promise.all([
           getRef.current(`/api/ClothingItem/business/${businessId}`),
           getRef.current(`/api/ClothingCategory/business/${businessId}`),
+          getRef.current(`${PIN_API}/business/${businessId}`), // NEW: load pinned items
         ])
         if (!cancelled) {
           setProducts(prods || [])
           setCategories(cats || [])
+          setPinnedIds(normalizePinned(pins))
         }
       } catch (err) {
         console.error("Load error:", err)
         if (!cancelled) {
           setError(t("products.errors.load_failed", { defaultValue: "Failed to load data. Please try again." }))
           setProducts([]); setCategories([])
+          setPinnedIds(new Set())
         }
       } finally {
         if (!cancelled) setLoading(false)
@@ -95,7 +114,7 @@ export default function ProductPanel({ business }) {
 
     loadData()
     return () => { cancelled = true }
-  }, [businessId, t])
+  }, [businessId, t, normalizePinned])
 
   // Reset page when search or products change
   useEffect(() => { setPage(1) }, [searchQuery, products.length])
@@ -232,6 +251,12 @@ export default function ProductPanel({ business }) {
         await del(`/api/ClothingItem/${id}`)
         const updated = await getRef.current(`/api/ClothingItem/business/${businessId}`)
         setProducts(updated || [])
+        // keep pinnedIds in sync
+        setPinnedIds(prev => {
+          const next = new Set(prev)
+          next.delete(id)
+          return next
+        })
         alert(t("products.alerts.deleted", { defaultValue: "Product deleted successfully." }))
       }
     } catch (err) {
@@ -299,6 +324,41 @@ export default function ProductPanel({ business }) {
       setSaleLoadingId(null)
     }
   }, [businessId, post, userInfo, t])
+
+  // NEW: Pin helpers
+  const isPinned = useCallback((id) => pinnedIds.has(id), [pinnedIds])
+
+  const togglePin = useCallback(async (product) => {
+    if (!businessId) return
+    const id = product.clothingItemId
+    const currentlyPinned = isPinned(id)
+
+    try {
+      setPinLoadingId(id)
+      if (currentlyPinned) {
+        // Unpin
+        await del(`${PIN_API}/business/${businessId}/pin/${id}`)
+        setPinnedIds(prev => {
+          const next = new Set(prev)
+          next.delete(id)
+          return next
+        })
+      } else {
+        // Pin
+        await post(`${PIN_API}/business/${businessId}/pin/${id}`, {})
+        setPinnedIds(prev => {
+          const next = new Set(prev)
+          next.add(id)
+          return next
+        })
+      }
+    } catch (err) {
+      console.error("Pin toggle error:", err)
+      setError(err?.message || t("products.errors.pin_failed", { defaultValue: "Failed to toggle pin." }))
+    } finally {
+      setPinLoadingId(null)
+    }
+  }, [businessId, isPinned, post, del, t])
 
   // ─── Filter & Pagination ─────────────────────────────────────────────────
   const filteredProducts = useMemo(() => {
@@ -591,40 +651,77 @@ export default function ProductPanel({ business }) {
           ) : (
             <ul>
               {paginatedProducts.length > 0 ? (
-                paginatedProducts.map((p) => (
-                  <li key={p.clothingItemId}>
-                    <div className="product-name">
-                      {p.name}{p.brand && <span className="product-brand"> - {p.brand}</span>}
-                    </div>
-                    <div className="product-details">
-                      {p.model && <span>{t("products.badges.model", { defaultValue: "Model" })}: {p.model}</span>}
-                      <span className="price">{t("products.badges.price", { defaultValue: "Price" })}: LEK {p.price}</span>
-                      {p.sizes && <span>{t("products.badges.size", { defaultValue: "Size" })}: {p.sizes}</span>}
-                      <span className="quantity">{t("products.badges.qty", { defaultValue: "Qty" })}: {p.quantity}</span>
-                    </div>
-                    <div className="btns">
-                      <button onClick={() => startEdit(p)} disabled={loading} className="edit">✏️ {t("common.edit", { defaultValue: "Edit" })}</button>
-                      <button onClick={() => handleDelete(p.clothingItemId)} disabled={loading} className="delete">🗑️ {t("common.delete", { defaultValue: "Delete" })}</button>
+                paginatedProducts.map((p) => {
+                  const pinned = isPinned(p.clothingItemId)
+                  return (
+                    <li key={p.clothingItemId}>
+                      <div className="product-name">
+                        {p.name}{p.brand && <span className="product-brand"> - {p.brand}</span>}
+                        {pinned && (
+                          <span
+                            title={t("products.pin.pinned_badge", { defaultValue: "Pinned" })}
+                            style={{ marginLeft: 8, fontSize: "0.95em", verticalAlign: "middle" }}
+                          >
+                            📌
+                          </span>
+                        )}
+                      </div>
+                      <div className="product-details">
+                        {p.model && <span>{t("products.badges.model", { defaultValue: "Model" })}: {p.model}</span>}
+                        <span className="price">{t("products.badges.price", { defaultValue: "Price" })}: LEK {p.price}</span>
+                        {p.sizes && <span>{t("products.badges.size", { defaultValue: "Size" })}: {p.sizes}</span>}
+                        <span className="quantity">{t("products.badges.qty", { defaultValue: "Qty" })}: {p.quantity}</span>
+                      </div>
+                      <div className="btns">
+                        <button onClick={() => startEdit(p)} disabled={loading} className="edit">✏️ {t("common.edit", { defaultValue: "Edit" })}</button>
+                        <button onClick={() => handleDelete(p.clothingItemId)} disabled={loading} className="delete">🗑️ {t("common.delete", { defaultValue: "Delete" })}</button>
 
-                      <button
-                        onClick={() => handleSale(p)}
-                        className={`sale ${saleLoadingId === p.clothingItemId ? "loading" : ""}`}
-                        disabled={loading || saleLoadingId === p.clothingItemId || (p.quantity ?? 0) <= 0}
-                        title={t("products.sale.tooltip", { defaultValue: "Record a sale (reduce stock by 1)" })}
-                        style={{
-                          backgroundColor: "#16a34a",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: "8px",
-                          padding: "8px 12px",
-                          fontWeight: 600,
-                        }}
-                      >
-                        {saleLoadingId === p.clothingItemId ? t("products.sale.selling", { defaultValue: "Selling…" }) : t("products.sale.button", { defaultValue: "Sale" })}
-                      </button>
-                    </div>
-                  </li>
-                ))
+                        {/* NEW: Pin / Unpin */}
+                        <button
+                          onClick={() => togglePin(p)}
+                          disabled={loading || pinLoadingId === p.clothingItemId}
+                          className={`pin ${pinLoadingId === p.clothingItemId ? "loading" : ""}`}
+                          title={
+                            pinned
+                              ? t("products.pin.unpin_tooltip", { defaultValue: "Unpin this product" })
+                              : t("products.pin.pin_tooltip", { defaultValue: "Pin this product" })
+                          }
+                          style={{
+                            backgroundColor: pinned ? "#f59e0b" : "#0ea5e9",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "8px",
+                            padding: "8px 12px",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {pinLoadingId === p.clothingItemId
+                            ? t("products.pin.toggling", { defaultValue: "Updating…" })
+                            : pinned
+                              ? t("products.pin.unpin", { defaultValue: "Unpin" })
+                              : t("products.pin.pin", { defaultValue: "Pin" })}
+                        </button>
+
+                        <button
+                          onClick={() => handleSale(p)}
+                          className={`sale ${saleLoadingId === p.clothingItemId ? "loading" : ""}`}
+                          disabled={loading || saleLoadingId === p.clothingItemId || (p.quantity ?? 0) <= 0}
+                          title={t("products.sale.tooltip", { defaultValue: "Record a sale (reduce stock by 1)" })}
+                          style={{
+                            backgroundColor: "#16a34a",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "8px",
+                            padding: "8px 12px",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {saleLoadingId === p.clothingItemId ? t("products.sale.selling", { defaultValue: "Selling…" }) : t("products.sale.button", { defaultValue: "Sale" })}
+                        </button>
+                      </div>
+                    </li>
+                  )
+                })
               ) : (
                 <li className="no-results">
                   {searchQuery

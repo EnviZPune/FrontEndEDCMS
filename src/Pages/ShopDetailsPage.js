@@ -8,7 +8,7 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import "../Styling/sd-shopdetail.css";
 
-const API_BASE = "https://api.triwears.com/api";
+const API_BASE = "https://api.triwears.com"; // ✅ single base; we append /api/... below
 const PAGE_SIZE = 8;
 
 /* ====================== THEME-AWARE DEFAULT IMAGES ====================== */
@@ -272,6 +272,10 @@ export default function ShopDetailsPage() {
   const [isFavorited, setIsFavorited] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
 
+  // Pinned state
+  const [pinnedIds, setPinnedIds] = useState(() => new Set());
+  const [pinnedOrder, setPinnedOrder] = useState(() => new Map());
+
   // Share feedback state
   const [copied, setCopied] = useState(false);
 
@@ -306,6 +310,7 @@ export default function ShopDetailsPage() {
       setLoading(true);
       setError(null);
       try {
+        // ✅ fixed URL (no double /api)
         const shopRes = await fetch(`${API_BASE}/api/Business/slug/${encodeURIComponent(slug)}`, {
           headers: { ...authHeaders(token) }
         });
@@ -356,11 +361,10 @@ export default function ShopDetailsPage() {
         setLoading(false);
       }
     })();
-    // re-run if language changes to update injected "All" label
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, token, navigate, t]);
 
-  // fetch initial favorite state
+  // Fetch initial favorite state
   useEffect(() => {
     if (!token || !shop?.businessId) return;
     fetch(`${API_BASE}/api/favorites/${shop.businessId}/is-favorited`, {
@@ -371,6 +375,37 @@ export default function ShopDetailsPage() {
         if (j && typeof j.isFavorited !== "undefined") setIsFavorited(!!j.isFavorited);
       })
       .catch(() => {});
+  }, [token, shop?.businessId]);
+
+  // Fetch pinned items (ids + optional pinOrder)
+  useEffect(() => {
+    if (!token || !shop?.businessId) return;
+    fetch(`${API_BASE}/api/PinnedItems/business/${shop.businessId}`, {
+      headers: { ...authHeaders(token) }
+    })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        const ids = new Set();
+        const order = new Map();
+        if (Array.isArray(data)) {
+          for (const it of data) {
+            const id =
+              typeof it === "number"
+                ? it
+                : it?.clothingItemId ?? it?.clothingItemID ?? it?.itemId ?? null;
+            if (id != null) {
+              ids.add(id);
+              if (typeof it?.pinOrder === "number") order.set(id, it.pinOrder);
+            }
+          }
+        }
+        setPinnedIds(ids);
+        setPinnedOrder(order);
+      })
+      .catch(() => {
+        setPinnedIds(new Set());
+        setPinnedOrder(new Map());
+      });
   }, [token, shop?.businessId]);
 
   async function toggleFavorite() {
@@ -410,10 +445,33 @@ export default function ShopDetailsPage() {
     () => (selectedCategoryId === 0 ? items : items.filter((i) => i.clothingCategoryId === selectedCategoryId)),
     [items, selectedCategoryId]
   );
+
+  // ✅ sort with pinned-first (and respect pinOrder when available)
+  const sortedFilteredItems = useMemo(() => {
+    const arr = [...filteredItems];
+    arr.sort((a, b) => {
+      const aPinned = pinnedIds.has(a.clothingItemId);
+      const bPinned = pinnedIds.has(b.clothingItemId);
+      if (aPinned && bPinned) {
+        const ao = pinnedOrder.get(a.clothingItemId);
+        const bo = pinnedOrder.get(b.clothingItemId);
+        if (typeof ao === "number" && typeof bo === "number" && ao !== bo) return ao - bo;
+        // tie-break on name then id for stability
+        const byName = String(a.name ?? "").localeCompare(String(b.name ?? ""));
+        if (byName !== 0) return byName;
+        return (a.clothingItemId ?? 0) - (b.clothingItemId ?? 0);
+      }
+      if (aPinned) return -1;
+      if (bPinned) return 1;
+      return 0;
+    });
+    return arr;
+  }, [filteredItems, pinnedIds, pinnedOrder]);
+
   const pageItems = useMemo(() => {
     const startIdx = (page - 1) * PAGE_SIZE;
-    return filteredItems.slice(startIdx, startIdx + PAGE_SIZE);
-  }, [filteredItems, page]);
+    return sortedFilteredItems.slice(startIdx, startIdx + PAGE_SIZE);
+  }, [sortedFilteredItems, page]);
 
   // coords
   const coords = useMemo(() => {
@@ -515,7 +573,7 @@ export default function ShopDetailsPage() {
                   : categories.find((c) => c.clothingCategoryId === selectedCategoryId)?.name}
               </h2>
 
-              {filteredItems.length === 0 ? (
+              {sortedFilteredItems.length === 0 ? (
                 <p className="sd-no-items">{t("lists.empty_category")}</p>
               ) : (
                 <>
@@ -536,8 +594,28 @@ export default function ShopDetailsPage() {
                       const price = !isNaN(priceNum) ? t("product.price", { value: priceNum.toFixed(2) }) : "—";
                       const desc = typeof p.description === "string" ? p.description : "";
 
+                      const isPinnedCard = pinnedIds.has(p.clothingItemId);
+
                       return (
-                        <li key={p.clothingItemId} className="sd-product-card">
+                        <li key={p.clothingItemId} className="sd-product-card" style={{ position: "relative" }}>
+                          {/* 📌 small pin badge for pinned items */}
+                          {isPinnedCard && (
+                            <span
+                              aria-label={t("product.pinned_aria", { defaultValue: "Pinned item" })}
+                              title={t("product.pinned_title", { defaultValue: "Pinned item" })}
+                              style={{
+                                position: "absolute",
+                                top: 8,
+                                left: 8,
+                                fontSize: 18,
+                                lineHeight: 1,
+                                userSelect: "none"
+                              }}
+                            >
+                              📌
+                            </span>
+                          )}
+
                           <Link to={`/product/${p.clothingItemId}`} className="sd-product-link">
                             <img className="sd-product-image" src={img} alt={t("product.alt", { shop: shop.name })} />
                             <div className="sd-product-inline">
