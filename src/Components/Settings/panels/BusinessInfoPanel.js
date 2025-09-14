@@ -204,7 +204,7 @@ export default function BusinessInfoPanel({ business }) {
     setLoading(true);
 
     getRef
-      .current(`/api/Business/${business.businessId}`)
+      .current(`/Business/${business.businessId}`)
       .then((data) => {
         if (cancelled) return;
         setDetail(data);
@@ -370,7 +370,7 @@ export default function BusinessInfoPanel({ business }) {
     };
 
     try {
-      await putRef.current(`/api/Business/${detail.businessId}`, payload);
+      await putRef.current(`/Business/${detail.businessId}`, payload);
       alert(t("alerts.updated", { defaultValue: "Business info updated!" }));
     } catch (err) {
       try {

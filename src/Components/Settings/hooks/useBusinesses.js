@@ -23,7 +23,7 @@ export function useBusinesses() {
     let isMounted = true
     setLoading(true)
 
-    get('/api/Business/my/businesses')
+    get('/Business/my/businesses')
       .then(data => {
         if (isMounted) setBusinesses(data)
       })

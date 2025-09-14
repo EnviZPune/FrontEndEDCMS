@@ -26,11 +26,11 @@ export default function PendingChangesPanel({ business }) {
     if (!business?.businessId || !token) return;
     let cancelled = false;
 
-    get(`/api/Business/${business.businessId}/employees`)
+    get(`/Business/${business.businessId}/employees`)
       .then((data) => { if (!cancelled) setEmployees(data); })
       .catch(console.error);
 
-    get(`/api/ClothingItem/business/${business.businessId}`)
+    get(`/ClothingItem/business/${business.businessId}`)
       .then((data) => { if (!cancelled) setProducts(data); })
       .catch(console.error);
 
@@ -45,7 +45,7 @@ export default function PendingChangesPanel({ business }) {
     setLoading(true);
     setError(null);
 
-    get(`/api/ProposedChanges/pending/${business.businessId}`)
+    get(`/ProposedChanges/pending/${business.businessId}`)
       .then((data) => { if (!cancelled) setPendingChanges(data); })
       .catch((err) => {
         console.error('Failed to load pending changes:', err);
@@ -58,14 +58,14 @@ export default function PendingChangesPanel({ business }) {
   }, [business?.businessId, token]);
 
   const refreshPending = async () => {
-    const updated = await get(`/api/ProposedChanges/pending/${business.businessId}`);
+    const updated = await get(`/ProposedChanges/pending/${business.businessId}`);
     setPendingChanges(updated);
   };
 
   const approveChange = async (changeId) => {
     setActionBusy((prev) => ({ ...prev, [changeId]: 'approve' }));
     try {
-      await put(`/api/ProposedChanges/${changeId}?approve=true`);
+      await put(`/ProposedChanges/${changeId}?approve=true`);
       await refreshPending();
     } catch (e) {
       console.error('Approve failed', e);
@@ -80,7 +80,7 @@ export default function PendingChangesPanel({ business }) {
   const rejectChange = async (changeId) => {
     setActionBusy((prev) => ({ ...prev, [changeId]: 'reject' }));
     try {
-      await put(`/api/ProposedChanges/${changeId}?approve=false`);
+      await put(`/ProposedChanges/${changeId}?approve=false`);
       await refreshPending();
     } catch (e) {
       console.error('Reject failed', e);

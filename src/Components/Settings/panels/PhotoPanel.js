@@ -70,7 +70,7 @@ export default function PhotoPanel({ business }) {
     setLoadingDetail(true);
 
     getRef
-      .current(`/api/Business/${business.businessId}`)
+      .current(`/Business/${business.businessId}`)
       .then((data) => {
         if (cancelled) return;
         setDetail(data);

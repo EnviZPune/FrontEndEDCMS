@@ -6,7 +6,7 @@ import Fuse from "fuse.js";
 import { useTranslation } from "react-i18next";
 import "../Styling/searchbar.css";
 
-const API_BASE = "https://api.triwears.com/api/api";
+const API_BASE = "https://api.triwears.com/api";
 
 /* ---------- THEME-AWARE DEFAULT LOGOS ---------- */
 const DEFAULT_LOGO_LIGHT  = "/Assets/default-shop-logo-light.png";

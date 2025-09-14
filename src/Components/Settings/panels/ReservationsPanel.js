@@ -25,7 +25,7 @@ export default function ReservationsPanel({ business }) {
     setLoading(true);
     setError(null);
 
-    get(`/api/Reservation/business/${business.businessId}`)
+    get(`/Reservation/business/${business.businessId}`)
       .then(data => { if (!cancelled) setReservations(data); })
       .catch(err => {
         console.error('Failed to load reservations:', err);
@@ -38,14 +38,14 @@ export default function ReservationsPanel({ business }) {
   }, [business?.businessId, token]);
 
   const refresh = async () => {
-    const updated = await get(`/api/Reservation/business/${business.businessId}`);
+    const updated = await get(`/Reservation/business/${business.businessId}`);
     setReservations(updated);
   };
 
   const handleComplete = async (reservationId) => {
     try {
       setActionState({ id: reservationId, type: 'complete' });
-      await put(`/api/Reservation/${reservationId}/complete`);
+      await put(`/Reservation/${reservationId}/complete`);
       await refresh();
     } catch (err) {
       console.error('Error completing reservation:', err);
@@ -58,7 +58,7 @@ export default function ReservationsPanel({ business }) {
   const handleUpdateStatus = async (reservationId, status) => {
     try {
       setActionState({ id: reservationId, type: 'status' });
-      await put(`/api/Reservation/${reservationId}/status`, { status });
+      await put(`/Reservation/${reservationId}/status`, { status });
       await refresh();
     } catch (err) {
       console.error('Error updating reservation status:', err);
@@ -76,7 +76,7 @@ export default function ReservationsPanel({ business }) {
     if (!ok) return;
     try {
       setActionState({ id: reservationId, type: 'no-show' });
-      await put(`/api/Reservation/${reservationId}/no-show`);
+      await put(`/Reservation/${reservationId}/no-show`);
       await refresh();
     } catch (err) {
       console.error('Error marking reservation as no-show:', err);

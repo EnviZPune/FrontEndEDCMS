@@ -75,7 +75,7 @@ export default function CategoryPanel({ business }) {
   async function fetchCategories() {
     if (!business?.businessId) return
     try {
-      const data = await get(`/api/ClothingCategory/business/${business.businessId}`)
+      const data = await get(`/ClothingCategory/business/${business.businessId}`)
       const list = Array.isArray(data) ? data : []
       setCategories(list)
 
@@ -116,10 +116,10 @@ export default function CategoryPanel({ business }) {
     if (!payload.name) return
     try {
       if (editingCategory) {
-        await put(`/api/ClothingCategory/${editingCategory.clothingCategoryId}`, payload)
+        await put(`/ClothingCategory/${editingCategory.clothingCategoryId}`, payload)
         alert(t('categories.updated', { defaultValue: 'Category updated!' }))
       } else {
-        await post('/api/ClothingCategory', payload)
+        await post('/ClothingCategory', payload)
         alert(t('categories.added', { defaultValue: 'Category added!' }))
       }
       resetForm()
@@ -132,7 +132,7 @@ export default function CategoryPanel({ business }) {
   const handleDelete = async id => {
     if (!window.confirm(t('categories.confirm_delete', { defaultValue: 'Delete this category?' }))) return
     try {
-      await del(`/api/ClothingCategory/${id}`)
+      await del(`/ClothingCategory/${id}`)
       alert(t('categories.deleted', { defaultValue: 'Category deleted!' }))
       fetchCategories()
     } catch {
@@ -148,7 +148,7 @@ export default function CategoryPanel({ business }) {
   const handleAddPremade = async name => {
     // Save canonical English name to the API
     try {
-      await post('/api/ClothingCategory', { businessId: business.businessId, name })
+      await post('/ClothingCategory', { businessId: business.businessId, name })
       alert(t('categories.premade_added', { defaultValue: `'{{name}}' added!`, name: labelFor(name) }))
       fetchCategories()
     } catch {

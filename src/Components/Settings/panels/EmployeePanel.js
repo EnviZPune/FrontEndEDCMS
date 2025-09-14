@@ -23,7 +23,7 @@ export default function EmployeePanel({ business }) {
     let cancelled = false
     setLoading(true)
 
-    get(`/api/Business/${business.businessId}/employees`)
+    get(`/Business/${business.businessId}/employees`)
       .then(data => {
         if (!cancelled) setEmployees(Array.isArray(data) ? data : [])
       })
@@ -49,7 +49,7 @@ export default function EmployeePanel({ business }) {
       return
     }
     try {
-      const user = await get(`/api/User/email/${encodeURIComponent(email)}`)
+      const user = await get(`/User/email/${encodeURIComponent(email)}`)
       setFoundUser(user)
       setNewEmployee(ne => ({ ...ne, name: user.name || '' }))
       alert(
@@ -76,10 +76,10 @@ export default function EmployeePanel({ business }) {
       return
     }
     try {
-      await post(`/api/Business/${business.businessId}/assign/${foundUser.userId}`, {})
+      await post(`/Business/${business.businessId}/assign/${foundUser.userId}`, {})
       alert(t('employees.alerts.invite_sent', { defaultValue: 'Invitation sent!' }))
       // refresh list
-      const updated = await get(`/api/Business/${business.businessId}/employees`)
+      const updated = await get(`/Business/${business.businessId}/employees`)
       setEmployees(Array.isArray(updated) ? updated : [])
     } catch (err) {
       console.error('Invite failed:', err)
@@ -105,9 +105,9 @@ export default function EmployeePanel({ business }) {
     ) return
 
     try {
-      await del(`/api/Business/${business.businessId}/employees/${userId}`)
+      await del(`/Business/${business.businessId}/employees/${userId}`)
       alert(t('employees.alerts.fired', { defaultValue: 'Employee fired.' }))
-      const updated = await get(`/api/Business/${business.businessId}/employees`)
+      const updated = await get(`/Business/${business.businessId}/employees`)
       setEmployees(Array.isArray(updated) ? updated : [])
     } catch (err) {
       console.error('Fire Process failed:', err)

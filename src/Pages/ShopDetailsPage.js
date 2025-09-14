@@ -1,14 +1,14 @@
 // src/Pages/ShopDetailsPage.jsx
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Map, Marker } from "pigeon-maps";
+import { Map as PigeonMap, Marker } from "pigeon-maps";
 import { FaClock, FaPhoneAlt, FaInfoCircle, FaHeart } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import "../Styling/sd-shopdetail.css";
 
-const API_BASE = "https://api.triwears.com"; // ✅ single base; we append /api/... below
+const API_BASE = "https://api.triwears.com"; 
 const PAGE_SIZE = 8;
 
 /* ====================== THEME-AWARE DEFAULT IMAGES ====================== */
@@ -732,9 +732,9 @@ export default function ShopDetailsPage() {
                 <h3>{t("location.title")}</h3>
                 <small>{routeName || `${coords[0]}, ${coords[1]}`}</small>
                 <div className="sd-location-map">
-                  <Map height={300} defaultCenter={coords} defaultZoom={13} metaWheel mouseEvents>
+                  <PigeonMap height={300} defaultCenter={coords} defaultZoom={13} metaWheelZoom mouseEvents>
                     <Marker width={40} anchor={coords} />
-                  </Map>
+                  </PigeonMap>
                 </div>
                 <a
                   href={`https://www.google.com/maps?q=${coords[0]},${coords[1]}`}

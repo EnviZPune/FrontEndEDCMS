@@ -32,7 +32,7 @@ export default function MyShopsPanel({ businesses = [] }) {
     );
 
     toFetch.forEach((shop) => {
-      get(`/api/Business/${shop.businessId}`)
+      get(`/Business/${shop.businessId}`)
         .then((detail) => {
           if (cancelled) return;
           const url = detail.coverPictureUrl || detail.coverPhotoUrl || '';

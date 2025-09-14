@@ -5,7 +5,7 @@ import Footer from "../Components/Footer";
 import { useTranslation } from "react-i18next";
 import "../Styling/usersettings.css";
 
-const API_BASE = "https://api.triwears.com/api";
+const API_BASE = "https://api.triwears.com";
 
 // Password strength calculation
 const calculatePasswordStrength = (password) => {

@@ -26,7 +26,7 @@ export default function NotificationHistoryPanel({ business }) {
     setLoading(true)
     setError(null)
 
-    get(`/api/Notification/business/${business.businessId}/history`)
+    get(`/Notification/business/${business.businessId}/history`)
       .then(data => {
         if (!cancelled) setHistory(data)
       })

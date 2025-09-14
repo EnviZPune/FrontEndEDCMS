@@ -13,7 +13,6 @@ import ReservationsPanel from "./panels/ReservationsPanel";
 import NotificationHistoryPanel from "./panels/NotificationHistoryPanel";
 import MyShopsPanel from "./panels/MyShopsPanel";
 import DeleteBusinessPanel from "./panels/DeleteBusinessPanel";
-
 import { useBusinesses } from "./hooks/useBusinesses";
 import { useAuth } from "./hooks/useAuth";
 

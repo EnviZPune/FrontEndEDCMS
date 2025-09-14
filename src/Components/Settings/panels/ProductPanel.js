@@ -7,11 +7,11 @@ import { useAuth } from "../hooks/useAuth"
 import Pagination from "../../Pagination.tsx"
 import "../../../Styling/Settings/productpanel.css"
 
-// Adjust if your backend route differs
-const PIN_API = "/api/PinnedItems"
+// Base for the ClothingItem controller (useApiClient should prefix /api)
+const CLOTHING_ITEM_API = "/ClothingItem"
 
 export default function ProductPanel({ business }) {
-  const { t } = useTranslation("productpanel")              // ⬅️ use settings namespace
+  const { t } = useTranslation("productpanel")
   const { get, post, put, del } = useApiClient()
   const { role, userInfo } = useAuth()
   const fileInputRef = useRef(null)
@@ -72,12 +72,19 @@ export default function ProductPanel({ business }) {
     return undefined
   }
 
-  // Normalize pinned payload (supports [number] or [{ clothingItemId }])
+  // Normalize pinned payload (supports PaginatedResult or arrays)
   const normalizePinned = useCallback((payload) => {
     if (!payload) return new Set()
-    const ids = Array.isArray(payload)
-      ? payload.map(x => (typeof x === "number" ? x : x?.clothingItemId)).filter(Boolean)
-      : []
+    // Accept common shapes: { items: [...] } | { data: [...] } | { results: [...] } | [...]
+    const arr =
+      Array.isArray(payload) ? payload :
+      Array.isArray(payload.items) ? payload.items :
+      Array.isArray(payload.data) ? payload.data :
+      Array.isArray(payload.results) ? payload.results :
+      []
+    const ids = arr
+      .map(x => (typeof x === "number" ? x : x?.clothingItemId))
+      .filter(Boolean)
     return new Set(ids)
   }, [])
 
@@ -91,9 +98,10 @@ export default function ProductPanel({ business }) {
       setError(null)
       try {
         const [prods, cats, pins] = await Promise.all([
-          getRef.current(`/api/ClothingItem/business/${businessId}`),
-          getRef.current(`/api/ClothingCategory/business/${businessId}`),
-          getRef.current(`${PIN_API}/business/${businessId}`), // NEW: load pinned items
+          getRef.current(`/ClothingItem/business/${businessId}`),
+          getRef.current(`/ClothingCategory/business/${businessId}`),
+          // fetch pinned items (big page so we get all ids)
+          getRef.current(`${CLOTHING_ITEM_API}/clothingItems/${businessId}/pinned?pageNumber=1&pageSize=1000`),
         ])
         if (!cancelled) {
           setProducts(prods || [])
@@ -205,16 +213,16 @@ export default function ProductPanel({ business }) {
       }
 
       if (role === "employee") {
-        await post("/api/ProposedChanges/submit", {
+        await post("/ProposedChanges/submit", {
           businessId, type: editingId ? "Update" : "Create",
           itemDto: { ...dto, clothingItemId: editingId || 0 },
         })
         alert(t("products.alerts.change_proposed", { defaultValue: "Your change has been proposed and is pending approval." }))
       } else {
-        if (editingId) await put(`/api/ClothingItem/${editingId}`, dto)
-        else await post("/api/ClothingItem", dto)
+        if (editingId) await put(`/ClothingItem/${editingId}`, dto)
+        else await post("/ClothingItem", dto)
 
-        const updated = await getRef.current(`/api/ClothingItem/business/${businessId}`)
+        const updated = await getRef.current(`/ClothingItem/business/${businessId}`)
         setProducts(updated || [])
         alert(t("products.alerts.saved", { defaultValue: "Product saved successfully!" }))
       }
@@ -242,14 +250,14 @@ export default function ProductPanel({ business }) {
     setLoading(true); setError(null)
     try {
       if (role === "employee") {
-        await post("/api/ProposedChanges/submit", {
+        await post("/ProposedChanges/submit", {
           businessId, type: "Delete",
           itemDto: { clothingItemId: id, businessIds: [businessId] },
         })
         alert(t("products.alerts.delete_proposed", { defaultValue: "Delete request submitted for approval." }))
       } else {
-        await del(`/api/ClothingItem/${id}`)
-        const updated = await getRef.current(`/api/ClothingItem/business/${businessId}`)
+        await del(`/ClothingItem/${id}`)
+        const updated = await getRef.current(`/ClothingItem/business/${businessId}`)
         setProducts(updated || [])
         // keep pinnedIds in sync
         setPinnedIds(prev => {
@@ -300,7 +308,7 @@ export default function ProductPanel({ business }) {
 
     try {
       setSaleLoadingId(product.clothingItemId)
-      await post(`/api/Sales/ClothingItem/${product.clothingItemId}/sale`, {
+      await post(`/Sales/ClothingItem/${product.clothingItemId}/sale`, {
         quantity: 1,
         businessId: Number(businessId),
         soldByName: seller,
@@ -336,16 +344,16 @@ export default function ProductPanel({ business }) {
     try {
       setPinLoadingId(id)
       if (currentlyPinned) {
-        // Unpin
-        await del(`${PIN_API}/business/${businessId}/pin/${id}`)
+        // Unpin (PUT)
+        await put(`${CLOTHING_ITEM_API}/business/${businessId}/items/${id}/unpin`)
         setPinnedIds(prev => {
           const next = new Set(prev)
           next.delete(id)
           return next
         })
       } else {
-        // Pin
-        await post(`${PIN_API}/business/${businessId}/pin/${id}`, {})
+        // Pin (PUT) - add ?order= if you support ordering
+        await put(`${CLOTHING_ITEM_API}/business/${businessId}/items/${id}/pin`)
         setPinnedIds(prev => {
           const next = new Set(prev)
           next.add(id)
@@ -358,7 +366,7 @@ export default function ProductPanel({ business }) {
     } finally {
       setPinLoadingId(null)
     }
-  }, [businessId, isPinned, post, del, t])
+  }, [businessId, isPinned, put, t])
 
   // ─── Filter & Pagination ─────────────────────────────────────────────────
   const filteredProducts = useMemo(() => {

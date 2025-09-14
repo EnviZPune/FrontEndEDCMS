@@ -23,7 +23,7 @@ export default function DeleteBusinessPanel({ business }) {
 
     try {
       setDeleting(true);
-      await del(`/api/Business/${business.businessId}`);
+      await del(`/Business/${business.businessId}`);
       alert(
         t('delete.success', { defaultValue: 'Business deleted successfully.' })
       );
