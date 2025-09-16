@@ -40,7 +40,7 @@ const About = () => {
     const fetchStats = async () => {
       try {
         // Fetch all businesses
-        const storesRes = await fetch(`${API_BASE}/api/Business`, { headers: getHeaders() });
+        const storesRes = await fetch(`${API_BASE}/Business`, { headers: getHeaders() });
         if (!storesRes.ok) {
           console.error("Failed to fetch stores:", storesRes.status);
           if (!alive) return;
@@ -71,7 +71,7 @@ const About = () => {
               const businessId = store.id ?? store.businessId;
               if (businessId == null) return 0;
               try {
-                const res = await fetch(`${API_BASE}/api/ClothingItem/business/${businessId}`, {
+                const res = await fetch(`${API_BASE}/ClothingItem/business/${businessId}`, {
                   headers: getHeaders(),
                 });
                 if (!res.ok) return 0;

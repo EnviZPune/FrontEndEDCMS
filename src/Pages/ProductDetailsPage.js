@@ -8,6 +8,10 @@ import "../Styling/productdetails.css";
 
 const API_BASE = "https://api.triwears.com/api";
 
+// Theme-aware loading GIFs
+const LOADING_GIF_LIGHT = "/Assets/triwears-black-loading.gif"; // black on white
+const LOADING_GIF_DARK  = "/Assets/triwears-white-loading.gif"; // white on dark
+
 const getToken = () => {
   const raw = localStorage.getItem("token") || localStorage.getItem("authToken");
   if (!raw || raw.trim() === "") return null;
@@ -62,6 +66,21 @@ const ProductDetailsPage = () => {
   const [offset, setOffset] = useState({ x: 0, y: 0 }); // px offset while zoomed
   const dragStartRef = useRef({ x: 0, y: 0 });
   const offsetStartRef = useRef({ x: 0, y: 0 });
+
+  // 🌙 Detect OS/browser color scheme to choose loader GIF
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+  useEffect(() => {
+    if (!window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = (e) => setIsDarkMode(e.matches);
+    try { mq.addEventListener("change", onChange); } catch { mq.addListener(onChange); }
+    return () => {
+      try { mq.removeEventListener("change", onChange); } catch { mq.removeListener(onChange); }
+    };
+  }, []);
 
   // -------- Load "my bookings" count (client-side filter) --------
   const loadMyBookingCount = useCallback(async (clothingItemId) => {
@@ -355,32 +374,67 @@ const ProductDetailsPage = () => {
     navigate("/");
   };
 
-  // while translations load (and to avoid showing raw keys)
+  // while translations load (show GIF loader)
   if (!ready) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <div className="loading-text">
-          {t("loading", { defaultValue: "Loading product details..." })}
-        </div>
-      </div>
+      <>
+          <div
+            className="loading-container"
+            aria-live="polite"
+            aria-busy="true"
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "40px 0" }}
+          >
+            <img
+              className="loading-gif"
+              src={isDarkMode ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
+              alt="Loading"
+              width={140}
+              height={140}
+              style={{ objectFit: "contain" }}
+            />
+            <p className="loading-text">Loading ...</p>
+          </div>
+      </>
     );
   }
 
+  // product fetch loading (show GIF loader)
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <div className="loading-text">{t("loading", { defaultValue: "Loading product details..." })}</div>
-      </div>
+      <>
+        <Navbar />
+        <div className="product-detail-container" style={{ minHeight: "40vh" }}>
+          <div
+            className="loading-container"
+            aria-live="polite"
+            aria-busy="true"
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "40px 0" }}
+          >
+            <img
+              className="loading-gif"
+              src={isDarkMode ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
+              alt="Loading"
+              width={140}
+              height={140}
+              style={{ objectFit: "contain" }}
+            />
+            <p className="loading-text">Loading ...</p>
+          </div>
+        </div>
+        <Footer />
+      </>
     );
   }
 
   if (!product) {
     return (
-      <div className="error-container">
-        <div className="error-message">{t("errors.not_found", { defaultValue: "Product not found." })}</div>
-      </div>
+      <>
+        <Navbar />
+        <div className="error-container" style={{ minHeight: "40vh", display: "grid", placeItems: "center" }}>
+          <div className="error-message">{t("errors.not_found", { defaultValue: "Product not found." })}</div>
+        </div>
+        <Footer />
+      </>
     );
   }
 
@@ -495,7 +549,6 @@ const ProductDetailsPage = () => {
             </h1>
 
             <div className="product-info-grid">
-              {/* inside the product-info-grid */}
               <div className="info-card">
                 <p>
                   <strong>{t("fields.model", { defaultValue: "Model" })}:</strong> {product.model}

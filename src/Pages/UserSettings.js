@@ -7,6 +7,10 @@ import "../Styling/usersettings.css";
 
 const API_BASE = "https://api.triwears.com";
 
+// Loading GIFs (black for light mode, white for dark mode)
+const LOADING_GIF_LIGHT = "/Assets/triwears-black-loading.gif";
+const LOADING_GIF_DARK  = "/Assets/triwears-white-loading.gif";
+
 // Password strength calculation
 const calculatePasswordStrength = (password) => {
   if (!password) return { score: 0, label: "", width: 0, color: "" };
@@ -37,11 +41,40 @@ const getPasswordRequirements = (password) => [
   { key: "special", text: "One special character", met: /[!@#$%^&*(),.?\":{}|<>]/.test(password) },
 ];
 
+// Detect OS/browser color scheme (and react to changes)
+function usePrefersDark() {
+  const [isDark, setIsDark] = useState(() =>
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
+
+  useEffect(() => {
+    if (!window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e) => setIsDark(e.matches);
+    if (mq.addEventListener) mq.addEventListener("change", handler);
+    else mq.addListener?.(handler);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener("change", handler);
+      else mq.removeListener?.(handler);
+    };
+  }, []);
+
+  return isDark;
+}
+
 // GCS upload helper unchanged
+// GCS upload helper (fixed)
 const uploadImageToGCS = async (file) => {
   if (!file) return null;
+
   const timestamp = Date.now();
-  const fileName = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_")}`;
+  const originalName = file.name || "upload";
+  // Make a safe filename: allow letters, numbers, dot, underscore, hyphen
+  const safeName = originalName.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const fileName = `${timestamp}-${safeName}`;
+
   const uploadUrl = `https://storage.googleapis.com/edcms_bucket/${fileName}`;
   const txtUrl = `${uploadUrl}.txt`;
 
@@ -65,6 +98,7 @@ const uploadImageToGCS = async (file) => {
   }
 };
 
+
 const getToken = () => {
   const raw = localStorage.getItem("token");
   if (!raw) return null;
@@ -79,6 +113,7 @@ const getToken = () => {
 export default function UserSettings() {
   const { t } = useTranslation("usersettings");
   const navigate = useNavigate();
+  const prefersDark = usePrefersDark();
 
   const [profile, setProfile] = useState({
     userId: null,
@@ -95,7 +130,10 @@ export default function UserSettings() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  // loading = saving state; initialLoading = fetch/me state
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const token = getToken();
   const headers = {
@@ -140,6 +178,8 @@ export default function UserSettings() {
       } catch (err) {
         console.error("Failed to load profile:", err);
         setError(t("errors.load_profile", { defaultValue: "Could not load profile." }));
+      } finally {
+        setInitialLoading(false);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -200,7 +240,6 @@ export default function UserSettings() {
       if (profile.profilePictureUrl) {
         localStorage.setItem("latestProfilePicture", profile.profilePictureUrl);
         try {
-          // best-effort notify same-tab listeners
           window.dispatchEvent(new Event("latestProfilePicture"));
         } catch {}
       }
@@ -209,7 +248,6 @@ export default function UserSettings() {
       setNewPassword("");
       setConfirmPassword("");
 
-      // Redirect to "My Profile" page on success
       setTimeout(() => navigate("/my-profile"), 1500);
     } catch (err) {
       console.error(err);
@@ -242,6 +280,27 @@ export default function UserSettings() {
       alert(t("errors.delete_failed", { defaultValue: "Delete failed. Please try again." }));
     }
   };
+
+  // Page-level loading (same GIF + "Loading ...")
+  if (initialLoading) {
+    return (
+      <>
+        <div className="user-settings-page" style={{ minHeight: "40vh" }}>
+          <div className="loading-container" aria-live="polite" aria-busy="true" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "40px 0" }}>
+            <img
+              className="loading-gif"
+              src={prefersDark ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
+              alt="Loading"
+              width={140}
+              height={140}
+              style={{ objectFit: "contain" }}
+            />
+            <p className="loading-text">Loading ...</p>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -470,7 +529,13 @@ export default function UserSettings() {
               >
                 {loading ? (
                   <>
-                    <div className="loading-spinner" aria-hidden="true"></div>
+                    <img
+                      src={prefersDark ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
+                      alt=""
+                      width={22}
+                      height={22}
+                      style={{ objectFit: "contain", marginRight: 8 }}
+                    />
                     <span>{t("cta.saving", { defaultValue: "Saving Changes..." })}</span>
                   </>
                 ) : (
@@ -507,7 +572,7 @@ export default function UserSettings() {
               ← {t("footer.back_to_profile", { defaultValue: "Back to Profile" })}
             </button>
             <div className="help-links">
-                {t("footer.need_help", { defaultValue: "Need Help? Contact Our Support" })}
+              {t("footer.need_help", { defaultValue: "Need Help? Contact Our Support" })}
               <span className="separator">•</span>
               <a href="/privacy" className="help-link">
                 {t("footer.privacy", { defaultValue: "Privacy Policy" })}

@@ -594,15 +594,6 @@ body {
   background: linear-gradient(135deg, #0088cc 0%, #005885 100%);
 }
 
-.loading-spinner {
-  width: 48px;
-  height: 48px;
-  border: 5px solid rgba(0, 0, 0, 0.1);
-  border-top-color: #0ea5e9;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-}
 
 .sd-no-items {
   padding: 2rem;
@@ -963,11 +954,6 @@ body {
 
   .shop-status.open {
     color: var(--text-dark); /* Keep dark text on light background */
-  }
-
-  .loading-spinner {
-    border-color: var(--text-light);
-    border-top-color: var(--primary);
   }
 }
 

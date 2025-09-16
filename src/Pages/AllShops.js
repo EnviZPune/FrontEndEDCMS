@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import Navbar from "../Components/Navbar"
@@ -9,6 +7,10 @@ import "../Styling/AllShops.css"
 
 const API_URL = "https://api.triwears.com/api/Business"
 const PAGE_SIZE = 6
+
+// Loading GIFs (black for light mode, white for dark mode)
+const LOADING_GIF_LIGHT = "/Assets/triwears-black-loading.gif"
+const LOADING_GIF_DARK  = "/Assets/triwears-white-loading.gif"
 
 // Fallback slug generator
 const slugify = (str) =>
@@ -24,6 +26,29 @@ export default function AllShops() {
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  // 🌙 Detect dark mode (and react to OS/theme changes)
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return false
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+  })
+  useEffect(() => {
+    if (!window.matchMedia) return
+    const mq = window.matchMedia("(prefers-color-scheme: dark)")
+    const onChange = (e) => setIsDarkMode(e.matches)
+    try {
+      mq.addEventListener("change", onChange)
+    } catch {
+      mq.addListener(onChange) // Safari/older
+    }
+    return () => {
+      try {
+        mq.removeEventListener("change", onChange)
+      } catch {
+        mq.removeListener(onChange)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -64,14 +89,22 @@ export default function AllShops() {
   if (loading) {
     return (
       <>
-        <Navbar />
-        <div className="page-container">
-          <div className="loading-state">
-            <div className="loading-spinner"></div>
-            <p>Loading shops...</p>
+          <div
+            className="loading-container"
+            aria-live="polite"
+            aria-busy="true"
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "40px 0" }}
+          >
+            <img
+              className="loading-gif"
+              src={isDarkMode ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
+              alt="Loading"
+              width={140}
+              height={140}
+              style={{ objectFit: "contain" }}
+            />
+            <p className="loading-text">Loading ...</p>
           </div>
-        </div>
-        <Footer />
       </>
     )
   }
@@ -131,7 +164,6 @@ export default function AllShops() {
                     />
                     <div className="shop-details">
                       <h3 className="shop-name">{shop.name}</h3>
-                      <span className="shop-category">Shop</span>
                     </div>
                   </div>
                 </div>

@@ -13,6 +13,10 @@ const API_BASE = "https://api.triwears.com";
 const DEFAULT_LOGO_LIGHT = "/Assets/default-shop-logo-light.png";
 const DEFAULT_LOGO_DARK  = "/Assets/default-shop-logo-dark.png";
 
+// Loading GIFs (black for light mode, white for dark mode)
+const LOADING_GIF_LIGHT = "/Assets/triwears-black-loading.gif";
+const LOADING_GIF_DARK  = "/Assets/triwears-white-loading.gif";
+
 /* ----------------------- Opening-hours utilities ----------------------- */
 // Canonical day order/keys and labels
 const DAY_KEYS    = ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"];
@@ -84,7 +88,7 @@ const parseCompact = (raw) => {
     return idxShort;
   };
 
-  // Token pattern: "Mon" or "Monday" or "Mon-Fri" / "Monday-Friday" + time "9-18" or "09:00-18:00" or "Closed"
+  // Token pattern
   const re = /((?:Mo|Tu|We|Th|Fr|Sa|Su|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)(?:\s*-\s*(?:Mo|Tu|We|Th|Fr|Sa|Su|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))?)\s+(Closed|closed|(\d{1,2}(?::\d{2})?)\s*-\s*(\d{1,2}(?::\d{2})?))/g;
   let m;
   let matched = false;
@@ -528,10 +532,12 @@ function ShopsCard({ businesses = [] }) {
                     <h4 className="shop-name">{shop.name || shop.slug}</h4>
                     <div className="shop-meta">
                       <span className={`status-badge ${finalOpen ? "open" : "closed"}`}>
-                        {finalOpen
-                          ? `🟢 ${t("shops.badge_open", { defaultValue: "Open" })}`
-                          : `🔴 ${t("shops.badge_closed", { defaultValue: "Closed" })}`}
-                      </span>
+                    {finalOpen ? (
+                      <>🟢 {t("shops.badge_open", { defaultValue: "Open" })}</>
+                    ) : (
+                      <>🔴 {t("shops.badge_closed", { defaultValue: "Closed" })}</>
+                    )}
+                  </span>
                       <span className="hours">🕒 {weeklyText}</span>
                     </div>
                   </div>
@@ -570,6 +576,7 @@ function ShopsCard({ businesses = [] }) {
 function BookingsCard({ bookings = [], loading, error }) {
   const navigate = useNavigate();
   const { t } = useTranslation("profile");
+  const prefersDark = usePrefersDark();
 
   const activeBookings = (Array.isArray(bookings) ? bookings : []).filter((b) =>
     ["confirmed", "pending"].includes(String(b.status || "").toLowerCase())
@@ -603,9 +610,16 @@ function BookingsCard({ bookings = [], loading, error }) {
       </div>
       <div className="card-content">
         {loading && (
-          <div className="loading-state">
-            <div className="loading-spinner" />
-            <p>{t("bookings.loading", { defaultValue: "Loading your bookings..." })}</p>
+          <div className="loading-state" aria-live="polite" aria-busy="true">
+            <img
+              className="loading-gif"
+              src={prefersDark ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
+              alt="Loading"
+              width={100}
+              height={100}
+              style={{ objectFit: "contain" }}
+            />
+            <p className="loading-text">Loading ...</p>
           </div>
         )}
         {error && (
@@ -695,6 +709,8 @@ export default function ProfilePage() {
   const { t } = useTranslation("profile");
   const navigate = useNavigate();
   const token = getToken();
+  const prefersDark = usePrefersDark();
+
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -806,9 +822,16 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="enhanced-profile-container">
-        <div className="loading-container">
-          <div className="loading-spinner large" />
-          <p>{t("loading", { defaultValue: "Loading your amazing profile..." })}</p>
+        <div className="loading-container" aria-live="polite" aria-busy="true">
+          <img
+            className="loading-gif"
+            src={prefersDark ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
+            alt="Loading"
+            width={140}
+            height={140}
+            style={{ objectFit: "contain" }}
+          />
+          <p className="loading-text">Loading ...</p>
         </div>
       </div>
     );

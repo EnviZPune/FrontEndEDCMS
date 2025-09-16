@@ -37,7 +37,7 @@ const UsersPage = () => {
     const fetchUsers = async () => {
       const token = localStorage.getItem('token');
       try {
-        const res = await fetch(`${API_BASE}/api/User/all`, {
+        const res = await fetch(`${API_BASE}/User/all`, {
           headers: {
             'Content-Type': 'application/json',
             ...(token && { Authorization: `Bearer ${token}` }),

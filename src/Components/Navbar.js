@@ -6,9 +6,12 @@ import { isFounder, canAccessPanel } from "../utils/auth";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../Styling/navbar.css";
-import { useAudio } from "./AudioProvider.tsx"
+import { useAudio } from "./AudioProvider.tsx";
 
 const API_BASE = "https://api.triwears.com";
+
+const LOGO_LIGHT = `Assets/triwears-icon-black.png`; // light mode
+const LOGO_DARK  = `Assets/triwears-icon-white.png`; // dark mode
 
 const getToken = () => {
   const raw = localStorage.getItem("token") || localStorage.getItem("authToken");
@@ -29,10 +32,7 @@ const getHeaders = () => {
 };
 
 const Navbar = () => {
-  // Use the 'navbar' namespace. We use the hook's i18n instance (no extra import).
   const { t, i18n } = useTranslation("navbar");
-
-  // 🔊 Grab music toggle from AudioProvider
   const { toggle: toggleMusic } = useAudio();
 
   const [loggedUser, setLoggedUser] = useState(null);
@@ -44,7 +44,22 @@ const Navbar = () => {
   const [serverCanPanel, setServerCanPanel] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Safe language switch using the configured instance; waits for initialization if needed
+  // Detect system dark mode for logo swap
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+  useEffect(() => {
+    if (!window.matchMedia) return;
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = (e) => setIsDarkMode(e.matches);
+    try { mql.addEventListener("change", onChange); } catch { mql.addListener(onChange); }
+    return () => {
+      try { mql.removeEventListener("change", onChange); } catch { mql.removeListener(onChange); }
+    };
+  }, []);
+
+  // Safe language switch
   const changeLang = (lng) => {
     const apply = async () => {
       try {
@@ -65,7 +80,7 @@ const Navbar = () => {
     }
   };
 
-  // On first load, honor saved language but only after i18n is ready
+  // Honor saved language after i18n is ready
   useEffect(() => {
     const saved = (localStorage.getItem("i18nextLng") || "").toLowerCase();
     const kick = () => {
@@ -212,35 +227,46 @@ const Navbar = () => {
 
   const toggleLanguage = () => changeLang(nextLang);
 
+  // Only the name toggles music
+  const handleBrandNameClick = () => {
+    try {
+      toggleMusic();
+    } catch (e) {
+      console.warn("AudioProvider not mounted?", e);
+    }
+  };
+
   return (
     <div className={`navbar_container ${isScrolled ? "scrolled" : ""}`}>
       <nav className="navbar" role="navigation" aria-label={t("aria_main_nav", { defaultValue: "Main navigation" })}>
         <div className="logo-container">
-          {/* Logo -> home (existing behavior) */}
+          {/* Logo navigates home (no music) */}
           <Link to="/" aria-label={t("aria_go_home", { defaultValue: "Go to homepage" })}>
             <img
-              src={`${process.env.PUBLIC_URL}/Assets/triwearsicon.png`}
+              src={isDarkMode ? LOGO_DARK : LOGO_LIGHT}
               alt={t("alt_logo", { defaultValue: "Triwears Logo" })}
             />
           </Link>
 
-          {/* Brand name -> home + 🔊 Easter Egg toggle */}
-          <Link
-            to="/"
-            onClick={() => {
-              try {
-                toggleMusic();
-              } catch (e) {
-                console.warn("AudioProvider not mounted?", e);
-              }
-            }}
-            aria-label={t("aria_go_home", { defaultValue: "Go to homepage" })}
-            title={t("brand_name", { defaultValue: "Triwears" })}
+          {/* Brand name: toggles music ONLY, does not navigate */}
+          <button
+            type="button"
+            onClick={handleBrandNameClick}
             className="brand-link"
-            style={{ textDecoration: "none", color: "inherit" }}
+            aria-label={t("brand_name", { defaultValue: "Triwears" })}
+            title={t("brand_name", { defaultValue: "Triwears" })}
+            style={{
+              background: "transparent",
+              border: "none",
+              padding: 0,
+              margin: 0,
+              color: "inherit",
+              cursor: "default",
+              textDecoration: "none"
+            }}
           >
-            <h3 style={{cursor: "default"}}>{t("brand_name")}</h3>
-          </Link>
+            <h3 style={{ cursor: "default", margin: 0 }}>{t("brand_name")}</h3>
+          </button>
         </div>
 
         <button
@@ -354,7 +380,7 @@ const Navbar = () => {
                 <span>✨</span> {t("register", { defaultValue: "Register" })}
               </button>
             </div>
-          )} •
+          )}
           <li role="none">
             <button
               className="lang-toggle-button"

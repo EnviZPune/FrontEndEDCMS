@@ -24,11 +24,27 @@ export default function ResetPasswordPage() {
   const [passwordStrength, setPasswordStrength] = useState(0)
   const [redirectCountdown, setRedirectCountdown] = useState(0)
 
-  // Extract token from ?token=...
+  // Robust token extraction (handles wrongly encoded ? as %3F)
   useEffect(() => {
-    const tkn = searchParams.get("token")
+    // Normal case
+    let tkn = searchParams.get("token")
+
+    if (!tkn) {
+      // Try to recover from /reset-password%3Ftoken=... or /reset-password?token=...
+      const href = window.location.href
+      const m = href.match(/reset-password(?:%3F|\?)token=([^&#]+)/i)
+      if (m && m[1]) {
+        tkn = decodeURIComponent(m[1])
+        // Fix the address bar for a clean URL going forward
+        const clean = `/reset-password?token=${encodeURIComponent(tkn)}`
+        window.history.replaceState(null, "", clean)
+      }
+    }
+
     if (tkn) {
       setToken(tkn)
+      setStatus("")
+      setStatusType("")
     } else {
       setStatus(t("errors.invalidOrMissingToken", {
         defaultValue:
@@ -94,9 +110,9 @@ export default function ResetPasswordPage() {
 
     setLoading(true)
     try {
-      const res = await fetch(`${API_BASE}/reset-password`, {
+      const res = await fetch(`${API_BASE}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({ token, newPassword: password }),
       })
 

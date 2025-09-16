@@ -144,7 +144,7 @@
 
 /* Lock the whole logo block */
 .logo-container {
-  margin-top: -37px;
+  margin-top: -38px;
   display: inline-flex;
   align-items: center;
   text-decoration: none;
@@ -156,6 +156,7 @@
 
 /* Keep the image perfectly square and centered */
 .logo-container img {
+  position: relative;
   width: var(--logo-size);
   height: var(--logo-size);
   aspect-ratio: 1 / 1;
@@ -163,13 +164,15 @@
   display: block;               /* remove baseline gap */
   flex-shrink: 0;               /* never squish */
   border-radius: var(--radius-md);
-  transform: none !important;   /* no rotation/scale (prevents jitter) */
+  transform: none !important; 
+  top: 8px;
 }
 
 /* Title aligned and stable */
 .logo-container h3 {
+  position: relative;
+  right: 25px;
   font-size: 1.125rem;  
-  margin-left: -20px; 
   font-weight: var(--font-weight-bold);
   background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-500) 100%);
   -webkit-background-clip: text;
@@ -177,9 +180,6 @@
   background-clip: text;
   letter-spacing: -0.01em;
 }
-
-/* Optional: subtle hover without moving layout */
-.logo-container:hover h3 { opacity: 0.9; }
 
 
 /* ----------------------------------------

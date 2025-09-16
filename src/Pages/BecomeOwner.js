@@ -70,7 +70,7 @@ export default function BecomeOwner() {
     const successUrl = `${frontendBase}/create-shop`;
     const cancelUrl = `${frontendBase}/payment-cancel`;
     const endpoint =
-      `${apiBase}/api/payment/create-session?` +
+      `${apiBase}/payment/create-session?` +
       `successUrl=${encodeURIComponent(successUrl)}` +
       `&cancelUrl=${encodeURIComponent(cancelUrl)}`;
 

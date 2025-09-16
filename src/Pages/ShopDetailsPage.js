@@ -1,4 +1,3 @@
-// src/Pages/ShopDetailsPage.jsx
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Map as PigeonMap, Marker } from "pigeon-maps";
@@ -18,6 +17,12 @@ const DEFAULT_COVER_LIGHT = "/Assets/default-shop-cover-light.png";
 const DEFAULT_COVER_DARK = "/Assets/default-shop-cover-dark.png";
 const DEFAULT_PRODUCT = "/Assets/default-product.jpg";
 /* ======================================================================= */
+
+/* Loading Spinners */
+
+const LOADING_GIF_LIGHT = "/Assets/triwears-black-loading.gif";
+const LOADING_GIF_DARK  = "/Assets/triwears-white-loading.gif";
+
 
 /* ---------- Opening hours helpers (robust to JSON or compact strings) ---------- */
 const DAY_KEYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
@@ -537,7 +542,23 @@ export default function ShopDetailsPage() {
     }
   };
 
-  if (loading) return <div className="loading-spinner" aria-label={t("loading")} />;
+if (loading) {
+  return (
+    <>
+        <div className="loading-container" aria-live="polite" aria-busy="true" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "40px 0" }}>
+          <img
+            className="loading-gif"
+            src={isDarkMode ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
+            alt="Loading"
+            width={140}
+            height={140}
+            style={{ objectFit: "contain" }}
+          />
+          <p className="loading-text">Loading ...</p>
+        </div>
+    </>
+  );
+}
   if (error) return <p className="sd-error">{error}</p>;
   if (!shop) return <p className="sd-error">{t("errors.not_found")}</p>;
 

@@ -1235,6 +1235,11 @@
   color: #374151;
 }
 
+.loading-text{
+  position: relative;
+  bottom: 50px;
+}
+
 /* Dark mode loading states */
 .enhanced-profile-container.dark-mode .loading-container,
 .enhanced-profile-container.dark-mode .loading-state {

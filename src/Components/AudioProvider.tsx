@@ -24,54 +24,66 @@ export function AudioProvider({
   storageKey?: string;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Persisted state, but we WON'T auto-play on mount or route change.
   const [enabled, setEnabled] = useState<boolean>(() => {
-    const raw = localStorage.getItem(storageKey);
-    return raw === "1"; // saved state, but will only play on toggle
+    try {
+      return localStorage.getItem(storageKey) === "1";
+    } catch {
+      return false;
+    }
   });
 
   // Create audio element once
   useEffect(() => {
-    if (!audioRef.current) {
-      const el = new Audio(src);
-      el.loop = true;
-      el.preload = "auto";
-      el.volume = 0.25;
-      audioRef.current = el;
-    }
+    const el = new Audio(src);
+    el.loop = true;
+    el.preload = "auto";
+    el.volume = 0.25;
+    audioRef.current = el;
+
+    return () => {
+      try {
+        el.pause();
+        // release the element
+        audioRef.current = null;
+      } catch {}
+    };
+  }, []); // create once
+
+  // Update source if `src` prop changes
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.src = src;
   }, [src]);
 
-  // React to enabled toggle
+  // Only persist state and pause when disabled.
+  // IMPORTANT: do NOT auto-play here when enabled === true.
   useEffect(() => {
+    localStorage.setItem(storageKey, enabled ? "1" : "0");
+    if (!enabled && audioRef.current) {
+      audioRef.current.pause();
+    }
+  }, [enabled, storageKey]);
+
+  // Toggle explicitly controls playback. No global click listeners.
+  const toggle = () => {
     const el = audioRef.current;
     if (!el) return;
 
-    const tryPlay = async () => {
-      try {
-        await el.play();
-      } catch {
-        // If autoplay blocked, wait for the next gesture
-        const handler = async () => {
-          try {
-            await el.play();
-          } catch {}
-          window.removeEventListener("pointerdown", handler);
-          window.removeEventListener("keydown", handler);
-        };
-        window.addEventListener("pointerdown", handler, { once: true });
-        window.addEventListener("keydown", handler, { once: true });
+    setEnabled((prev) => {
+      const next = !prev;
+      if (next) {
+        // We are inside a user gesture (the toggle click), so play is allowed.
+        el.play().catch(() => {
+          // If it still fails (rare), revert state.
+          setEnabled(false);
+        });
+      } else {
+        el.pause();
       }
-    };
-
-    if (enabled) {
-      tryPlay();
-    } else {
-      el.pause(); // just pause, don't reset
-    }
-
-    localStorage.setItem(storageKey, enabled ? "1" : "0");
-  }, [enabled, storageKey]);
-
-  const toggle = () => setEnabled((e) => !e);
+      return next;
+    });
+  };
 
   return <Ctx.Provider value={{ enabled, toggle }}>{children}</Ctx.Provider>;
 }

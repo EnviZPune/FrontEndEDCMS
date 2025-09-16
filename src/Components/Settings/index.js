@@ -18,9 +18,35 @@ import { useAuth } from "./hooks/useAuth";
 
 const ALLOWED_ROLES = new Set(["owner", "employee"]);
 
+const LOADING_GIF_LIGHT = "Assets/triwears-black-loading.gif"; // black logo for light mode
+const LOADING_GIF_DARK = "Assets/triwears-white-loading.gif";  // white logo for dark mode
+
 export default function Settings() {
   const navigate = useNavigate();
   const { t } = useTranslation("settings");
+
+  // Detect system dark mode
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+  useEffect(() => {
+    if (!window.matchMedia) return;
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = (e) => setIsDarkMode(e.matches);
+    try {
+      mql.addEventListener("change", onChange);
+    } catch {
+      mql.addListener(onChange);
+    }
+    return () => {
+      try {
+        mql.removeEventListener("change", onChange);
+      } catch {
+        mql.removeListener(onChange);
+      }
+    };
+  }, []);
 
   const { businesses: rawBusinesses = [], loading, error } = useBusinesses();
   const { role, userInfo } = useAuth();
@@ -69,15 +95,18 @@ export default function Settings() {
     setSelectedPanel(panelKey);
   }, []);
 
+  // Loading state: GIF + "Loading ..."
   if (loading) {
     return (
       <div className="loading-overlay" aria-live="polite" aria-busy="true">
-        <div className="dots">
-          <div className="dot" />
-          <div className="dot" />
-          <div className="dot" />
-        </div>
-        <p className="loading-hint">{t("states.loading")}</p>
+        <img
+          className="loading-gif"
+          src={isDarkMode ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
+          alt="Loading"
+          width={140}
+          height={140}
+        />
+        <p className="loading-text">Loading ...</p>
       </div>
     );
   }
