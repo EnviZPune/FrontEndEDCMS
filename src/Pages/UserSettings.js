@@ -7,14 +7,12 @@ import "../Styling/usersettings.css";
 
 const API_BASE = "https://api.triwears.com";
 
-// Loading GIFs (black for light mode, white for dark mode)
 const LOADING_GIF_LIGHT = "/Assets/triwears-black-loading.gif";
 const LOADING_GIF_DARK  = "/Assets/triwears-white-loading.gif";
 
-// Password strength calculation
+/* ---------------- Password strength helpers ---------------- */
 const calculatePasswordStrength = (password) => {
   if (!password) return { score: 0, label: "", width: 0, color: "" };
-
   let score = 0;
   const checks = {
     length: password.length >= 8,
@@ -23,16 +21,13 @@ const calculatePasswordStrength = (password) => {
     numbers: /\d/.test(password),
     special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
   };
-
   score = Object.values(checks).filter(Boolean).length;
-
   if (score <= 2) return { score, label: "Weak", width: 25, color: "weak", checks };
   if (score === 3) return { score, label: "Fair", width: 50, color: "fair", checks };
   if (score === 4) return { score, label: "Good", width: 75, color: "good", checks };
   return { score, label: "Strong", width: 100, color: "strong", checks };
 };
 
-// Password requirements checker
 const getPasswordRequirements = (password) => [
   { key: "at_least", text: "At least 8 characters", met: password.length >= 8 },
   { key: "lowercase", text: "One lowercase letter", met: /[a-z]/.test(password) },
@@ -41,14 +36,13 @@ const getPasswordRequirements = (password) => [
   { key: "special", text: "One special character", met: /[!@#$%^&*(),.?\":{}|<>]/.test(password) },
 ];
 
-// Detect OS/browser color scheme (and react to changes)
+/* ---------------- Theme helper ---------------- */
 function usePrefersDark() {
   const [isDark, setIsDark] = useState(() =>
     typeof window !== "undefined" &&
     window.matchMedia &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
   );
-
   useEffect(() => {
     if (!window.matchMedia) return;
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -60,44 +54,27 @@ function usePrefersDark() {
       else mq.removeListener?.(handler);
     };
   }, []);
-
   return isDark;
 }
 
-// GCS upload helper unchanged
-// GCS upload helper (fixed)
+/* ---------------- GCS upload helper ---------------- */
 const uploadImageToGCS = async (file) => {
   if (!file) return null;
-
   const timestamp = Date.now();
   const originalName = file.name || "upload";
-  // Make a safe filename: allow letters, numbers, dot, underscore, hyphen
   const safeName = originalName.replace(/[^a-zA-Z0-9._-]/g, "_");
   const fileName = `${timestamp}-${safeName}`;
-
   const uploadUrl = `https://storage.googleapis.com/edcms_bucket/${fileName}`;
   const txtUrl = `${uploadUrl}.txt`;
-
   try {
-    await fetch(uploadUrl, {
-      method: "PUT",
-      headers: { "Content-Type": file.type },
-      body: file,
-    });
-
-    await fetch(txtUrl, {
-      method: "PUT",
-      headers: { "Content-Type": "text/plain" },
-      body: uploadUrl,
-    });
-
+    await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
+    await fetch(txtUrl, { method: "PUT", headers: { "Content-Type": "text/plain" }, body: uploadUrl });
     return uploadUrl;
   } catch (err) {
     console.error("Upload error:", err);
     return null;
   }
 };
-
 
 const getToken = () => {
   const raw = localStorage.getItem("token");
@@ -110,13 +87,30 @@ const getToken = () => {
   }
 };
 
+const decodeJwt = (jwt) => {
+  try {
+    const base64 = jwt.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+    const json = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
+        .join("")
+    );
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+};
+
 export default function UserSettings() {
   const { t } = useTranslation("usersettings");
   const navigate = useNavigate();
   const prefersDark = usePrefersDark();
 
+  /* ---------------- Profile state ---------------- */
   const [profile, setProfile] = useState({
     userId: null,
+    username: "",
     name: "",
     email: "",
     telephoneNumber: "",
@@ -124,14 +118,17 @@ export default function UserSettings() {
     dateOfBirth: "",
   });
 
+  const [initialUsername, setInitialUsername] = useState("");
+
+  /* ---------------- Password change state ---------------- */
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  /* ---------------- Status state ---------------- */
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  // loading = saving state; initialLoading = fetch/me state
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
@@ -141,40 +138,196 @@ export default function UserSettings() {
     ...(token && { Authorization: `Bearer ${token}` }),
   };
 
-  // Calculate password strength
+  /* ---------------- Username validation & availability ---------------- */
+  const USERNAME_REGEX = /^[A-Za-z0-9._]{3,20}$/;
+  const RESERVED_USERNAMES = new Set(["admin", "support", "help", "contact", "triwears", "root"]);
+
+  const [usernameValid, setUsernameValid] = useState(true);
+  const [usernameAvailable, setUsernameAvailable] = useState(true); // assume ok unless changed + check fails
+  const [checkingUsername, setCheckingUsername] = useState(false);
+  const [usernameMsg, setUsernameMsg] = useState("");
+
+  useEffect(() => {
+    const u = (profile.username || "").trim();
+
+    // If unchanged, valid/available; no hint
+    if (initialUsername && u.toLowerCase() === initialUsername.toLowerCase()) {
+      setUsernameValid(true);
+      setUsernameAvailable(true);
+      setUsernameMsg("");
+      return;
+    }
+
+    // If empty and we have no initial username (rare), allow blank (no blocking)
+    if (!u && !initialUsername) {
+      setUsernameValid(true);
+      setUsernameAvailable(true);
+      setUsernameMsg("");
+      return;
+    }
+
+    // If empty but we *do* have an initial username, copy it in (safety net)
+    if (!u && initialUsername) {
+      setProfile((p) => ({ ...p, username: initialUsername }));
+      setUsernameValid(true);
+      setUsernameAvailable(true);
+      setUsernameMsg("");
+      return;
+    }
+
+    // Changed: validate format & reserved
+    if (!USERNAME_REGEX.test(u)) {
+      setUsernameValid(false);
+      setUsernameAvailable(false);
+      setUsernameMsg(
+        t("username.rules", { defaultValue: "3–20 chars. Letters, numbers, dot or underscore." })
+      );
+      return;
+    }
+    if (RESERVED_USERNAMES.has(u.toLowerCase())) {
+      setUsernameValid(false);
+      setUsernameAvailable(false);
+      setUsernameMsg(t("username.reserved", { defaultValue: "This username is reserved." }));
+      return;
+    }
+
+    setUsernameValid(true);
+    setUsernameMsg("");
+
+    // Debounced availability check (only when changed)
+    let isCancelled = false;
+    const timer = setTimeout(async () => {
+      setCheckingUsername(true);
+      try {
+        const res = await fetch(
+          `${API_BASE}/api/User/check-username?username=${encodeURIComponent(u)}`
+        );
+        if (res.ok) {
+          const data = await res.json();
+          if (!isCancelled) {
+            const available = !!(data.available ?? data.isAvailable ?? data.Available);
+            setUsernameAvailable(available);
+            setUsernameMsg(
+              available
+                ? t("username.available", { defaultValue: "Username is available" })
+                : t("username.taken", { defaultValue: "Username is taken" })
+            );
+          }
+        } else {
+          if (!isCancelled) {
+            setUsernameAvailable(true);
+            setUsernameMsg("");
+          }
+        }
+      } catch {
+        if (!isCancelled) {
+          setUsernameAvailable(true);
+          setUsernameMsg("");
+        }
+      } finally {
+        if (!isCancelled) setCheckingUsername(false);
+      }
+    }, 400);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile.username, initialUsername]);
+
+  /* ---------------- Derived helpers ---------------- */
   const passwordStrength = calculatePasswordStrength(newPassword);
   const passwordRequirements = getPasswordRequirements(newPassword);
   const passwordsMatch = newPassword === confirmPassword && confirmPassword.length > 0;
   const passwordsDontMatch = confirmPassword.length > 0 && newPassword !== confirmPassword;
 
-  // Load user
+  const isCurrentUsername =
+    !!profile.username &&
+    !!initialUsername &&
+    profile.username.toLowerCase() === initialUsername.toLowerCase();
+
+  /* ---------------- Load profile (DB authoritative) ---------------- */
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/User/me`, { headers });
-        if (res.status === 401) {
+        // 1) who am i (to get the id)
+        const meRes = await fetch(`${API_BASE}/api/User/me`, { headers });
+        if (meRes.status === 401) {
           navigate("/login");
           return;
         }
-        if (!res.ok) throw new Error("Failed to fetch profile");
-        const dto = await res.json();
+        if (!meRes.ok) throw new Error("Failed to fetch /me");
+        const me = await meRes.json();
 
+        const userId = me.userId ?? me.id ?? me.UserId ?? null;
+
+        // 2) get the authoritative DB row
+        let db = null;
+        if (userId != null) {
+          const dbRes = await fetch(
+            `${API_BASE}/api/User/${userId}?_=${Date.now()}`, // cache-buster
+            { headers }
+          );
+          if (dbRes.ok) db = await dbRes.json();
+        }
+
+        // 3) resolve DOB (from DB first, then /me)
+        const dobRaw = db?.dateOfBirth ?? db?.birthday ?? me?.dateOfBirth ?? me?.birthday ?? "";
         let dob = "";
-        if (dto.dateOfBirth) {
+        if (dobRaw) {
           try {
-            const d = new Date(dto.dateOfBirth);
+            const d = new Date(dobRaw);
             if (!isNaN(d)) dob = d.toISOString().slice(0, 10);
           } catch {}
         }
 
+        // 4) resolve USERNAME — DB FIRST
+        const usernameFromDb =
+          db?.username ?? db?.userName ?? db?.Username ?? db?.user?.username ?? "";
+
+        // fallback chain if DB was empty
+        let usernameResolved = usernameFromDb;
+        if (!usernameResolved) {
+          const usernameFromApi =
+            me?.username ?? me?.userName ?? me?.Username ?? me?.user?.username ?? "";
+          if (usernameFromApi) {
+            usernameResolved = usernameFromApi;
+          } else {
+            // JWT fallback
+            let usernameFromJwt = "";
+            if (token) {
+              const payload = decodeJwt(token);
+              usernameFromJwt =
+                payload?.preferred_username ??
+                payload?.username ??
+                payload?.unique_name ??
+                payload?.name ??
+                "";
+            }
+            if (usernameFromJwt) {
+              usernameResolved = usernameFromJwt;
+            } else {
+              // email local-part fallback
+              const emailLocalPart =
+                (me?.email && typeof me.email === "string" && me.email.includes("@"))
+                  ? me.email.split("@")[0]
+                  : "";
+              usernameResolved = emailLocalPart || "";
+            }
+          }
+        }
+
         setProfile({
-          userId: dto.userId,
-          name: dto.name || "",
-          email: dto.email || "",
-          telephoneNumber: dto.telephoneNumber || "",
-          profilePictureUrl: dto.profilePictureUrl || "",
+          userId: userId,
+          username: usernameResolved,
+          name: db?.name ?? me?.name ?? "",
+          email: db?.email ?? me?.email ?? "",
+          telephoneNumber: db?.telephoneNumber ?? me?.telephoneNumber ?? "",
+          profilePictureUrl: db?.profilePictureUrl ?? me?.profilePictureUrl ?? "",
           dateOfBirth: dob,
         });
+        setInitialUsername(usernameResolved);
       } catch (err) {
         console.error("Failed to load profile:", err);
         setError(t("errors.load_profile", { defaultValue: "Could not load profile." }));
@@ -185,11 +338,10 @@ export default function UserSettings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Handlers
+  /* ---------------- Handlers ---------------- */
   const handleImageChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     const url = await uploadImageToGCS(file);
     if (url) setProfile((p) => ({ ...p, profilePictureUrl: url }));
     else setError(t("errors.image_upload", { defaultValue: "Image upload failed." }));
@@ -201,13 +353,37 @@ export default function UserSettings() {
     setSuccess("");
     setLoading(true);
 
+    const currentEqualsInitial =
+      !!initialUsername &&
+      !!profile.username &&
+      profile.username.toLowerCase() === initialUsername.toLowerCase();
+
+    // Only validate username if the user actually changed it
+    if (!currentEqualsInitial && profile.username?.trim()) {
+      const u = profile.username.trim();
+      if (!USERNAME_REGEX.test(u)) {
+        setError(t("username.rules", { defaultValue: "3–20 chars. Letters, numbers, dot or underscore." }));
+        setLoading(false);
+        return;
+      }
+      if (RESERVED_USERNAMES.has(u.toLowerCase())) {
+        setError(t("username.reserved", { defaultValue: "This username is reserved." }));
+        setLoading(false);
+        return;
+      }
+      if (usernameAvailable === false) {
+        setError(t("username.taken", { defaultValue: "Username is taken" }));
+        setLoading(false);
+        return;
+      }
+    }
+
     if (newPassword && newPassword !== confirmPassword) {
       setError(t("errors.passwords_mismatch", { defaultValue: "Passwords do not match." }));
       setLoading(false);
       return;
     }
-
-    if (newPassword && passwordStrength.score < 3) {
+    if (newPassword && calculatePasswordStrength(newPassword).score < 3) {
       setError(t("errors.password_too_weak", { defaultValue: "Password is too weak. Please choose a stronger password." }));
       setLoading(false);
       return;
@@ -223,6 +399,11 @@ export default function UserSettings() {
       ...(newPassword ? { password: newPassword } : {}),
     };
 
+    // Only send username if the user actually changed it
+    if (profile.username?.trim() && !currentEqualsInitial) {
+      payload.username = profile.username.trim();
+    }
+
     try {
       const res = await fetch(`${API_BASE}/api/User/${profile.userId}`, {
         method: "PUT",
@@ -236,17 +417,18 @@ export default function UserSettings() {
       }
       if (!res.ok) throw new Error("Update failed");
 
-      // Cache latest profile picture so profile page reflects immediately
       if (profile.profilePictureUrl) {
         localStorage.setItem("latestProfilePicture", profile.profilePictureUrl);
-        try {
-          window.dispatchEvent(new Event("latestProfilePicture"));
-        } catch {}
+        try { window.dispatchEvent(new Event("latestProfilePicture")); } catch {}
       }
 
       setSuccess(t("success.updated", { defaultValue: "Profile updated successfully!" }));
       setNewPassword("");
       setConfirmPassword("");
+
+      if (payload.username) {
+        setInitialUsername(payload.username);
+      }
 
       setTimeout(() => navigate("/my-profile"), 1500);
     } catch (err) {
@@ -281,12 +463,17 @@ export default function UserSettings() {
     }
   };
 
-  // Page-level loading (same GIF + "Loading ...")
+  /* ---------------- Initial loading ---------------- */
   if (initialLoading) {
     return (
       <>
         <div className="user-settings-page" style={{ minHeight: "40vh" }}>
-          <div className="loading-container" aria-live="polite" aria-busy="true" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "40px 0" }}>
+          <div
+            className="loading-container"
+            aria-live="polite"
+            aria-busy="true"
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "40px 0" }}
+          >
             <img
               className="loading-gif"
               src={prefersDark ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
@@ -302,6 +489,7 @@ export default function UserSettings() {
     );
   }
 
+  /* ---------------- Render ---------------- */
   return (
     <>
       <Navbar />
@@ -336,6 +524,7 @@ export default function UserSettings() {
                 {t("sections.profile_info", { defaultValue: "Profile Information" })}
               </h3>
 
+              {/* Picture */}
               <div className="form-group">
                 <label className="form-label">{t("fields.profile_picture", { defaultValue: "Profile Picture" })}</label>
                 <div className="image-upload-container">
@@ -352,19 +541,14 @@ export default function UserSettings() {
                       </div>
                     )}
                   </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="file-input"
-                    id="profile-image"
-                  />
+                  <input type="file" accept="image/*" onChange={handleImageChange} className="file-input" id="profile-image" />
                   <label htmlFor="profile-image" className="file-input-label">
                     {t("actions.choose_image", { defaultValue: "Choose Image" })}
                   </label>
                 </div>
               </div>
 
+              {/* Name & Email */}
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">{t("fields.full_name", { defaultValue: "Full Name" })}</label>
@@ -393,7 +577,42 @@ export default function UserSettings() {
                 </div>
               </div>
 
+              {/* Username & Phone */}
               <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">{t("fields.username", { defaultValue: "Username" })}</label>
+                  <div className="input-with-status">
+                    <input
+                      type="text"
+                      className={`form-input ${
+                        profile.username && (!usernameValid || usernameAvailable === false) ? "input-error" : ""
+                      }`}
+                      value={profile.username}
+                      onChange={(e) => setProfile({ ...profile, username: e.target.value })}
+                      placeholder={t("placeholders.username", { defaultValue: "Choose a username (e.g., ardit.k)" })}
+                      autoComplete="username"
+                      inputMode="email"
+                      pattern="[A-Za-z0-9._]{3,20}"
+                      aria-describedby={(checkingUsername || usernameMsg || isCurrentUsername) ? "usernameHelp" : undefined}
+                    />
+                    {(checkingUsername || usernameMsg || isCurrentUsername) && (
+                      <div
+                        id="usernameHelp"
+                        className={`input-hint ${isCurrentUsername && !checkingUsername && !usernameMsg ? "current" : ""}`}
+                        aria-live="polite"
+                      >
+                        {checkingUsername ? (
+                          <span>{t("username.checking", { defaultValue: "Checking availability..." })}</span>
+                        ) : usernameMsg ? (
+                          <span>{usernameMsg}</span>
+                        ) : (
+                          <span>{t("username.current", { defaultValue: "This is your current username." })}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 <div className="form-group">
                   <label className="form-label">{t("fields.phone", { defaultValue: "Phone Number" })}</label>
                   <input
@@ -405,6 +624,10 @@ export default function UserSettings() {
                     autoComplete="tel"
                   />
                 </div>
+              </div>
+
+              {/* DOB */}
+              <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">{t("fields.dob", { defaultValue: "Date of Birth" })}</label>
                   <input
@@ -419,6 +642,7 @@ export default function UserSettings() {
               </div>
             </div>
 
+            {/* Change Password */}
             <div className="form-section">
               <h3 className="section-title">
                 <span className="section-icon">🔒</span>
@@ -454,10 +678,7 @@ export default function UserSettings() {
                 {newPassword && (
                   <div className="password-strength" aria-live="polite">
                     <div className="strength-bar">
-                      <div
-                        className={`strength-fill ${passwordStrength.color}`}
-                        style={{ width: `${passwordStrength.width}%` }}
-                      />
+                      <div className={`strength-fill ${passwordStrength.color}`} style={{ width: `${passwordStrength.width}%` }} />
                     </div>
                     <span className={`strength-text ${passwordStrength.color}`}>
                       {t(`strength.${passwordStrength.label.toLowerCase()}`, { defaultValue: passwordStrength.label })}
@@ -512,7 +733,7 @@ export default function UserSettings() {
                   </div>
                 )}
 
-                {passwordsMatch && (
+                {passwordsMatch && confirmPassword && (
                   <div className="password-match">
                     <span className="match-icon">✅</span>
                     <span>{t("info.passwords_match", { defaultValue: "Passwords match" })}</span>
@@ -525,7 +746,13 @@ export default function UserSettings() {
               <button
                 type="submit"
                 className={`submit-button ${loading ? "loading" : ""}`}
-                disabled={loading || (newPassword && passwordStrength.score < 3)}
+                disabled={
+                  loading ||
+                  (newPassword && passwordStrength.score < 3) ||
+                  // Only block if user actually changed username and it's invalid/taken
+                  ((!initialUsername || profile.username.toLowerCase() !== initialUsername.toLowerCase()) &&
+                    (!usernameValid || usernameAvailable === false))
+                }
               >
                 {loading ? (
                   <>

@@ -240,7 +240,6 @@ const Navbar = () => {
     <div className={`navbar_container ${isScrolled ? "scrolled" : ""}`}>
       <nav className="navbar" role="navigation" aria-label={t("aria_main_nav", { defaultValue: "Main navigation" })}>
         <div className="logo-container">
-          {/* Logo navigates home (no music) */}
           <Link to="/" aria-label={t("aria_go_home", { defaultValue: "Go to homepage" })}>
             <img
               src={isDarkMode ? LOGO_DARK : LOGO_LIGHT}
@@ -253,8 +252,8 @@ const Navbar = () => {
             type="button"
             onClick={handleBrandNameClick}
             className="brand-link"
-            aria-label={t("brand_name", { defaultValue: "Triwears" })}
-            title={t("brand_name", { defaultValue: "Triwears" })}
+            aria-label={t("Triwears", { defaultValue: "Triwears" })}
+            title={t("Triwears", { defaultValue: "Triwears" })}
             style={{
               background: "transparent",
               border: "none",
@@ -265,7 +264,7 @@ const Navbar = () => {
               textDecoration: "none"
             }}
           >
-            <h3 style={{ cursor: "default", margin: 0 }}>{t("brand_name")}</h3>
+            <h3 style={{ cursor: "default", margin: 0 }}>{t("Triwears")}</h3>
           </button>
         </div>
 

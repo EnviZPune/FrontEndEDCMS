@@ -602,6 +602,41 @@
   color: var(--text-muted);
 }
 
+/* Username hint */
+.input-hint {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  color: #64748b;          /* slate-500 */
+  background: #f8fafc;     /* slate-50 */
+  border: 1px solid #e2e8f0;/* slate-200 */
+  padding: 8px 10px;
+  border-radius: 8px;
+  min-height: 32px;        /* keeps layout stable when message changes */
+}
+
+/* When the username hasn’t changed, keep it extra subtle */
+.input-hint.current {
+  background: transparent;
+  border-color: transparent;
+  color: #94a3b8;          /* slate-400 */
+  padding-left: 0;
+}
+
+/* Optional: if you ever show a spinner class here */
+.input-hint .spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  margin-right: 6px;
+  animation: rotate 0.8s linear infinite;
+}
+
+@keyframes rotate { to { transform: rotate(360deg); } }
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .user-settings-page {

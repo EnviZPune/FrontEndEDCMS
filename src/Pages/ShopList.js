@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
@@ -18,6 +18,69 @@ const toSlug = (str) =>
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
 
+/* ────────────────────────────────────────────────────────────────
+ * Near-me helpers
+ * ──────────────────────────────────────────────────────────────── */
+const coerceNum = (v) => {
+  const n = Number(String(v ?? "").replace(",", "."));
+  return Number.isFinite(n) ? n : null;
+};
+
+function parseCoordsFromBusiness(b) {
+  // Prefer explicit numeric fields
+  const lat =
+    coerceNum(b?.latitude) ??
+    coerceNum(b?.lat) ??
+    coerceNum(b?.Latitude) ??
+    coerceNum(b?.Location?.lat) ??
+    coerceNum(b?.location?.lat) ??
+    coerceNum(b?.geo?.lat);
+  const lon =
+    coerceNum(b?.longitude) ??
+    coerceNum(b?.lng) ??
+    coerceNum(b?.lon) ??
+    coerceNum(b?.Longitude) ??
+    coerceNum(b?.Location?.lng) ??
+    coerceNum(b?.location?.lng) ??
+    coerceNum(b?.geo?.lng);
+  if (lat != null && lon != null) return [lat, lon];
+
+  // Try string shapes like "41.32,19.82"
+  const strish =
+    b?.mapCoordinates ||
+    b?.coordinates ||
+    b?.locationCoordinates ||
+    b?.LocationCoordinates ||
+    b?.location;
+  if (strish && typeof strish === "string") {
+    const m = strish.match(/(-?\d+(?:[\.,]\d+)?)\s*,\s*(-?\d+(?:[\.,]\d+)?)/);
+    if (m) {
+      const la = coerceNum(m[1]);
+      const lo = coerceNum(m[2]);
+      if (la != null && lo != null) return [la, lo];
+    }
+  }
+  return null;
+}
+
+function haversineKm([lat1, lon1], [lat2, lon2]) {
+  const toRad = (d) => (d * Math.PI) / 180;
+  const R = 6371; // km
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function formatKm(km) {
+  if (km == null) return "";
+  if (km < 1) return `${Math.round(km * 1000)} m`;
+  return `${km.toFixed(km < 10 ? 1 : 0)} km`;
+}
+
 export default function ShopList() {
   const { t } = useTranslation("shoplist");
 
@@ -33,6 +96,14 @@ export default function ShopList() {
   const [errorCats, setErrorCats] = useState("");
   const navigate = useNavigate();
   const spotlightRef = useRef(null);
+
+  // NEW: near-me state
+  const [nearRaw, setNearRaw] = useState([]); // all shops with coords
+  const [nearLoading, setNearLoading] = useState(true);
+  const [nearError, setNearError] = useState("");
+  const [nearPage, setNearPage] = useState(1);
+  const [myPos, setMyPos] = useState(null); // [lat, lon]
+  const [posMsg, setPosMsg] = useState("");
 
   // Load spotlight shops (new/latest shops)
   useEffect(() => {
@@ -110,9 +181,93 @@ export default function ShopList() {
     };
   }, []);
 
+  // Fetch ALL shops once for Near Me (unpaginated) and parse coordinates
+  useEffect(() => {
+    let canceled = false;
+    (async () => {
+      setNearLoading(true);
+      setNearError("");
+      try {
+        const res = await fetch(`${API_BASE}/Business`);
+        if (!res.ok) throw new Error((await res.text()) || res.statusText);
+        const data = await res.json();
+        const withCoords = (Array.isArray(data) ? data : [])
+          .map((shop) => ({
+            id: shop.businessId,
+            name: shop.name,
+            slug: shop.slug || toSlug(shop.name),
+            profilePictureUrl: shop.profilePictureUrl,
+            address: shop.address,
+            phone: shop.businessPhoneNumber,
+            coords: parseCoordsFromBusiness(shop),
+          }))
+          .filter((s) => Array.isArray(s.coords));
+        if (!canceled) setNearRaw(withCoords);
+      } catch (err) {
+        if (!canceled) setNearError(err.message || "Failed to load shops for near me");
+      } finally {
+        if (!canceled) setNearLoading(false);
+      }
+    })();
+    return () => {
+      canceled = true;
+    };
+  }, []);
+
+  // Request location on mount (user will get a prompt); allow manual retry as well
+  useEffect(() => {
+    requestLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function requestLocation() {
+    if (!navigator.geolocation) {
+      setPosMsg(t("geoloc_unsupported", { defaultValue: "Your browser doesn't support location." }));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setMyPos([pos.coords.latitude, pos.coords.longitude]);
+        setPosMsg("");
+      },
+      (err) => {
+        const msg =
+          err?.code === 1
+            ? t("geoloc_denied", { defaultValue: "Allow location access to see shops near you." })
+            : t("geoloc_failed", { defaultValue: "Couldn't get your location. Try again." });
+        setPosMsg(msg);
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  }
+
+  // Compute sorted nearby list with distance
+  const nearSorted = useMemo(() => {
+    if (!myPos) return [];
+    return nearRaw
+      .map((s) => ({ ...s, distanceKm: haversineKm(myPos, s.coords) }))
+      .sort((a, b) => a.distanceKm - b.distanceKm);
+  }, [nearRaw, myPos]);
+
+  const nearTotal = nearSorted.length;
+  const nearStart = (nearPage - 1) * PAGE_SIZE;
+  const nearSlice = nearSorted.slice(nearStart, nearStart + PAGE_SIZE);
+
+  // Reset near-page when location changes or results length changes
+  useEffect(() => {
+    setNearPage(1);
+  }, [myPos, nearTotal]);
+
   const handlePageChange = (newPage) => {
     setPage(newPage);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleNearPageChange = (newPage) => {
+    setNearPage(newPage);
+    // scroll to near-me section anchor
+    const el = document.getElementById("near-me-section");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const onCategoryClick = (categoryName) => {
@@ -120,8 +275,9 @@ export default function ShopList() {
   };
 
   // Auto-scroll spotlight carousel
+  const spotlightRefLocal = spotlightRef; // just to satisfy lints when used twice
   useEffect(() => {
-    const carousel = spotlightRef.current;
+    const carousel = spotlightRefLocal.current;
     if (!carousel || spotlightShops.length === 0) return;
 
     let scrollInterval;
@@ -179,7 +335,7 @@ export default function ShopList() {
 
         <div className="hero-content">
           <h1 className="hero-title">
-            {t("hero_title_prefix", { defaultValue: "Welcome, To" })}{" "}
+            {t("hero_title_prefix", { defaultValue: "Welcome, To" })} {" "}
             <span className="hero-title-accent">{t("brand_name", { defaultValue: "Triwears" })}</span>
           </h1>
 
@@ -283,6 +439,88 @@ export default function ShopList() {
               </div>
             )}
           </div>
+        </section>
+
+        {/* ───────────────────────── Shops near me ───────────────────────── */}
+        <section id="near-me-section" className="nearby-section" aria-label={t("nearby_aria", { defaultValue: "Shops near me" })}>
+          <div className="section-header">
+            <h2 className="section-title">{t("nearby_title", { defaultValue: "Shops near me" })}</h2>
+            <p className="section-subtitle">
+              {t("nearby_subtitle", { defaultValue: "Check out shops standing near your current location" })}
+            </p>
+          </div>
+
+          {nearLoading ? (
+            <div className="brands-grid">
+              {[...Array(9)].map((_, i) => (
+                <div key={i} className="brand-card-skeleton" aria-hidden="true">
+                  <div className="skeleton-image">
+                    <div className="skeleton-shimmer"></div>
+                  </div>
+                  <div className="skeleton-content">
+                    <div className="skeleton-line"></div>
+                    <div className="skeleton-line short"></div>
+                    <div className="skeleton-tags">
+                      <div className="skeleton-tag"></div>
+                      <div className="skeleton-tag"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : nearError ? (
+            <div className="error-message" role="alert">
+              <svg className="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div>
+                <h4>{t("error_near_title", { defaultValue: "Error loading nearby shops" })}</h4>
+                <p>{nearError}</p>
+              </div>
+            </div>
+          ) : !myPos ? (
+            <div className="nearby-cta">
+              <p className="nearby-cta-text">{posMsg || t("nearby_cta", { defaultValue: "Turn on location to see shops closest to you." })}</p>
+              <button className="nearby-cta-btn" onClick={requestLocation}>{t("nearby_btn", { defaultValue: "Use my location" })}</button>
+            </div>
+          ) : nearSorted.length > 0 ? (
+            <>
+              <div className="brands-grid">
+                {nearSlice.map((shop) => (
+                  <Link key={shop.id} to={`/shop/${shop.slug}`} className="brand-card">
+                    <div className="brand-card-image">
+                      {shop.profilePictureUrl ? (
+                        <img src={shop.profilePictureUrl || "/placeholder.svg"} alt={shop.name} />
+                      ) : (
+                        <div className="brand-placeholder" aria-label={t("brand_placeholder_aria", { defaultValue: "Shop placeholder" })}>
+                          <div className="placeholder-glow"></div>
+                          <div className="placeholder-icon">🏪</div>
+                          <div className="placeholder-text">{(shop.name || "?").charAt(0)}</div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="brand-info">
+                      <h3 className="brand-name">{shop.name}</h3>
+                      <div className="brand-tags">
+                        <span className="brand-distance">{formatKm(shop.distanceKm)} {t("away", { defaultValue: "away" })}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              <div className="pagination-wrapper">
+                <Pagination page={nearPage} pageSize={PAGE_SIZE} totalCount={nearTotal} onPageChange={handleNearPageChange} />
+              </div>
+            </>
+          ) : (
+            <div className="empty-state">
+              <svg className="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              <h3>{t("empty_near_title", { defaultValue: "No nearby shops" })}</h3>
+              <p>{t("empty_near_desc", { defaultValue: "We couldn't find shops with valid location coordinates." })}</p>
+            </div>
+          )}
         </section>
 
         {/* Browse All Shops */}
@@ -425,9 +663,7 @@ export default function ShopList() {
                     </div>
                     <div className="category-content">
                       <h3 className="category-name">{cat.name}</h3>
-                      <p className="category-count">
-                        {t("category_cta", { defaultValue: "Click To See Featured Shops" })}
-                      </p>
+                      <p className="category-count">{t("category_cta", { defaultValue: "Click To See Featured Shops" })}</p>
                     </div>
                     <svg className="category-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

@@ -1,4 +1,3 @@
-// src/Components/Settings/panels/EmployeePanel.js
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useApiClient } from '../hooks/useApiClient'
@@ -10,13 +9,17 @@ export default function EmployeePanel({ business }) {
   const { t } = useTranslation('employees')
   const { get, post, del } = useApiClient()
   const { token } = useAuth()
+
   const [loading, setLoading] = useState(true)
   const [employees, setEmployees] = useState([])
   const [newEmployee, setNewEmployee] = useState({ name: '', email: '' })
   const [foundUser, setFoundUser] = useState(null)
   const [editingEmployee, setEditingEmployee] = useState(null)
 
-  // Fetch employees once we have a businessId and a token
+  // NEW: action states
+  const [finding, setFinding] = useState(false)
+  const [inviting, setInviting] = useState(false)
+
   useEffect(() => {
     if (!business?.businessId || !token) return
 
@@ -38,7 +41,6 @@ export default function EmployeePanel({ business }) {
     return () => {
       cancelled = true
     }
-    // only re-run when businessId or token changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [business?.businessId, token])
 
@@ -49,6 +51,7 @@ export default function EmployeePanel({ business }) {
       return
     }
     try {
+      setFinding(true)
       const user = await get(`/User/email/${encodeURIComponent(email)}`)
       setFoundUser(user)
       setNewEmployee(ne => ({ ...ne, name: user.name || '' }))
@@ -66,6 +69,8 @@ export default function EmployeePanel({ business }) {
           ? t('employees.alerts.user_not_found', { defaultValue: 'User not found.' })
           : t('employees.alerts.user_search_error', { defaultValue: 'Error when searching for user.' })
       )
+    } finally {
+      setFinding(false)
     }
   }
 
@@ -76,15 +81,16 @@ export default function EmployeePanel({ business }) {
       return
     }
     try {
+      setInviting(true)
       await post(`/Business/${business.businessId}/assign/${foundUser.userId}`, {})
       alert(t('employees.alerts.invite_sent', { defaultValue: 'Invitation sent!' }))
-      // refresh list
       const updated = await get(`/Business/${business.businessId}/employees`)
       setEmployees(Array.isArray(updated) ? updated : [])
     } catch (err) {
       console.error('Invite failed:', err)
       alert(t('employees.alerts.invite_failed', { defaultValue: 'Failed to invite user.' }))
     } finally {
+      setInviting(false)
       setFoundUser(null)
       setNewEmployee({ name: '', email: '' })
       setEditingEmployee(null)
@@ -123,8 +129,10 @@ export default function EmployeePanel({ business }) {
     )
   }
 
+  const isBusy = finding || inviting
+
   return (
-    <div className="employee-panel">
+    <div className="employee-panel" aria-busy={isBusy}>
       <h3>{t('employees.title', { defaultValue: 'Employee Management' })}</h3>
 
       <div className="employee-management-container">
@@ -144,6 +152,7 @@ export default function EmployeePanel({ business }) {
               value={newEmployee.name}
               onChange={e => setNewEmployee(ne => ({ ...ne, name: e.target.value }))}
               required
+              disabled={isBusy}
             />
 
             <label>{t('employees.form.email_label', { defaultValue: 'Email' })}</label>
@@ -153,19 +162,34 @@ export default function EmployeePanel({ business }) {
               value={newEmployee.email}
               onChange={e => setNewEmployee(ne => ({ ...ne, email: e.target.value }))}
               required
+              disabled={isBusy}
             />
 
             <div className="employee-form-buttons">
-              <button type="button" onClick={findUserByEmail}>
-                {t('employees.form.find_user', { defaultValue: 'Find User' })}
+              <button
+                type="button"
+                onClick={findUserByEmail}
+                disabled={finding || inviting}
+              >
+                {finding
+                  ? t('employees.form.finding', { defaultValue: 'Finding…' })
+                  : t('employees.form.find_user', { defaultValue: 'Find User' })}
               </button>
-              <button type="submit">
+
+              <button
+                type="submit"
+                disabled={inviting || finding}
+                title={!foundUser?.userId ? t('employees.alerts.find_user_first', { defaultValue: 'Find a user by email first.' }) : undefined}
+              >
                 {editingEmployee
                   ? t('employees.form.submit_update', { defaultValue: 'Update' })
-                  : t('employees.form.submit_add', { defaultValue: 'Add' })}
+                  : inviting
+                    ? t('employees.form.inviting', { defaultValue: 'Inviting…' })
+                    : t('employees.form.submit_add', { defaultValue: 'Add' })}
               </button>
+
               {editingEmployee && (
-                <button type="button" onClick={handleCancelEdit}>
+                <button type="button" onClick={handleCancelEdit} disabled={isBusy}>
                   {t('common.cancel', { defaultValue: 'Cancel' })}
                 </button>
               )}
@@ -184,7 +208,7 @@ export default function EmployeePanel({ business }) {
                     {emp.name} ({emp.email})
                   </span>
                   <div className="employee-actions">
-                    <button onClick={() => handleDeleteEmployee(emp.userId)}>
+                    <button onClick={() => handleDeleteEmployee(emp.userId)} disabled={isBusy}>
                       {t('employees.actions.fire', { defaultValue: 'Fire' })}
                     </button>
                   </div>

@@ -133,9 +133,11 @@ body {
   overflow-x: hidden;
 }
 
-/* ----------------------------------------
- STUNNING HERO SECTION
----------------------------------------- */
+.nearby-section {
+  order: 2;
+  margin-bottom: var(--space-24);
+}
+
 .hero-section {
   position: relative;
   min-height: 95vh;
@@ -384,6 +386,11 @@ body {
   margin-bottom: var(--space-24);
 }
 
+.nearby-section  { 
+
+  order: 2; 
+}
+
 .browse-section {
   order: 2;
   margin-bottom: var(--space-24);
@@ -439,7 +446,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 800;
-  color: (--primary-50);
+  color: var(--primary-50);
   margin-bottom: var(--space-6);
   line-height: 1.2;
   letter-spacing: -0.02em;

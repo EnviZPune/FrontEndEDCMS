@@ -27,8 +27,90 @@ function RegisterFormUser() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, text: "weak", checks: {} });
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const USERNAME_REGEX = /^[A-Za-z0-9._]{3,20}$/;
+  const RESERVED_USERNAMES = new Set(["admin", "support", "help", "contact", "triwears", "root"]);
+  const [usernameValid, setUsernameValid] = useState(false);
+  const [usernameAvailable, setUsernameAvailable] = useState(null);
+  const [checkingUsername, setCheckingUsername] = useState(false);
+  const [usernameMsg, setUsernameMsg] = useState("");
+  const usernameState =
+  checkingUsername ? "is-checking" :
+  usernameAvailable === true ? "is-ok" :
+  usernameAvailable === false ? "is-err" : "";
+  const showHint = checkingUsername || !!usernameMsg;
 
-  // Password strength calculation
+  useEffect(() => {
+    const u = (formData.username || "").trim();
+
+    if (!u) {
+      setUsernameValid(false);
+      setUsernameAvailable(null);
+      setUsernameMsg("");
+      return;
+    }
+
+    if (!USERNAME_REGEX.test(u)) {
+      setUsernameValid(false);
+      setUsernameAvailable(null);
+      setUsernameMsg(
+        t("username.rules", {
+          defaultValue: "3–20 chars. Letters, numbers, dot or underscore.",
+        })
+      );
+      return;
+    }
+
+    if (RESERVED_USERNAMES.has(u.toLowerCase())) {
+      setUsernameValid(false);
+      setUsernameAvailable(false);
+      setUsernameMsg(t("username.reserved", { defaultValue: "This username is reserved." }));
+      return;
+    }
+
+    setUsernameValid(true);
+    setUsernameMsg("");
+
+    // Debounced availability check
+    let isCancelled = false;
+    const timer = setTimeout(async () => {
+      setCheckingUsername(true);
+      try {
+        const res = await fetch(`${API_BASE}/User/check-username?username=${encodeURIComponent(u)}`);
+        if (res.ok) {
+          const data = await res.json(); // expect { available: boolean } or similar
+          if (!isCancelled) {
+            const available = !!(data.available ?? data.isAvailable ?? data.Available);
+            setUsernameAvailable(available);
+            setUsernameMsg(
+              available
+                ? t("username.available", { defaultValue: "Username is available" })
+                : t("username.taken", { defaultValue: "Username is taken" })
+            );
+          }
+        } else {
+          if (!isCancelled) {
+            setUsernameAvailable(null);
+            setUsernameMsg("");
+          }
+        }
+      } catch {
+        if (!isCancelled) {
+          setUsernameAvailable(null);
+          setUsernameMsg("");
+        }
+      } finally {
+        if (!isCancelled) setCheckingUsername(false);
+      }
+    }, 400);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData.username]);
+
+  // ── Password strength ────────────────────────────────────────────────
   const calculatePasswordStrength = (password) => {
     let score = 0;
     const checks = {
@@ -45,7 +127,6 @@ function RegisterFormUser() {
     return { score: 100, text: "strong", checks };
   };
 
-  // Update password strength when password changes
   useEffect(() => {
     if (formData.createPassword) {
       setPasswordStrength(calculatePasswordStrength(formData.createPassword));
@@ -54,7 +135,6 @@ function RegisterFormUser() {
     }
   }, [formData.createPassword]);
 
-  // Check if passwords match
   useEffect(() => {
     if (formData.confirmPassword) {
       setPasswordsMatch(formData.createPassword === formData.confirmPassword);
@@ -63,6 +143,19 @@ function RegisterFormUser() {
     }
   }, [formData.createPassword, formData.confirmPassword]);
 
+  // ── Derived UI state for the username hint (must be outside handleSubmit) ──
+  const hintState =
+    checkingUsername
+      ? "is-checking"
+      : usernameMsg
+        ? usernameAvailable === false
+          ? "is-err"
+          : usernameAvailable === true
+            ? "is-ok"
+            : "is-neutral"
+        : "is-neutral";
+
+  // ── Handlers ─────────────────────────────────────────────────────────
   const handleInputChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -91,10 +184,36 @@ function RegisterFormUser() {
 
     for (const field of requiredFields) {
       if (!formData[field]) {
-        setError(t("errors.missing_field", { field, defaultValue: "Please fill in all fields. Missing: {{field}}" }));
+        setError(
+          t("errors.missing_field", {
+            field,
+            defaultValue: "Please fill in all fields. Missing: {{field}}",
+          })
+        );
         setLoading(false);
         return;
       }
+    }
+
+    // Username checks
+    if (!USERNAME_REGEX.test(formData.username || "")) {
+      setError(
+        t("username.rules", {
+          defaultValue: "3–20 chars. Letters, numbers, dot or underscore.",
+        })
+      );
+      setLoading(false);
+      return;
+    }
+    if (RESERVED_USERNAMES.has((formData.username || "").toLowerCase())) {
+      setError(t("username.reserved", { defaultValue: "This username is reserved." }));
+      setLoading(false);
+      return;
+    }
+    if (usernameAvailable === false) {
+      setError(t("username.taken", { defaultValue: "Username is taken" }));
+      setLoading(false);
+      return;
     }
 
     if (formData.createPassword !== formData.confirmPassword) {
@@ -104,7 +223,11 @@ function RegisterFormUser() {
     }
 
     if (passwordStrength.score < 50) {
-      setError(t("errors.password_too_weak", { defaultValue: "Password is too weak. Please choose a stronger password." }));
+      setError(
+        t("errors.password_too_weak", {
+          defaultValue: "Password is too weak. Please choose a stronger password.",
+        })
+      );
       setLoading(false);
       return;
     }
@@ -119,6 +242,7 @@ function RegisterFormUser() {
       role: roleMap[formData.role],
       telephoneNumber: formData.phoneNumber,
       profilePictureUrl: formData.profilePictureUrl,
+      dateOfBirth: formData.dateOfBirth,
     };
 
     try {
@@ -135,21 +259,32 @@ function RegisterFormUser() {
         } catch {
           errorData = {};
         }
-        throw new Error(errorData.message || t("errors.register_failed", { defaultValue: "An error occurred while registering." }));
+        throw new Error(
+          errorData.message ||
+            t("errors.register_failed", { defaultValue: "An error occurred while registering." })
+        );
       }
 
-      // Send email confirmation (non-blocking; we show success even if this fails)
-      const confirmRes = await fetch(`${API_BASE}/Auth/send-confirmation`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: formData.email }),
-      });
-      if (!confirmRes.ok) {
-        const errorText = await confirmRes.text();
-        console.warn("Email confirmation request failed:", errorText);
+      // Ask backend to send email confirmation
+      try {
+        const confirmRes = await fetch(`${API_BASE}/Auth/send-confirmation`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: formData.email, clientUrl: window.location.origin }),
+        });
+        if (!confirmRes.ok) {
+          const errorText = await confirmRes.text();
+          console.warn("Email confirmation request failed:", errorText);
+        }
+      } catch (e) {
+        console.warn("Email confirmation call error:", e);
       }
 
-      setSuccess(t("success.registered", { defaultValue: "Successfully Registered. Check your email to verify your account!" }));
+      setSuccess(
+        t("success.registered", {
+          defaultValue: "Successfully Registered. Check your email to verify your account!",
+        })
+      );
 
       setFormData({
         firstName: "",
@@ -168,7 +303,10 @@ function RegisterFormUser() {
         window.location.href = "/login";
       }, 2000);
     } catch (err) {
-      setError(err.message || t("errors.register_failed", { defaultValue: "An error occurred while registering." }));
+      setError(
+        err.message ||
+          t("errors.register_failed", { defaultValue: "An error occurred while registering." })
+      );
       setLoading(false);
     }
   };
@@ -209,7 +347,9 @@ function RegisterFormUser() {
         <form onSubmit={handleSubmit} className="register-form" noValidate>
           <div className="form-row">
             <div className="form-group">
-              <label className="form-label" htmlFor="firstName">{t("fields.first_name", { defaultValue: "First Name" })}</label>
+              <label className="form-label" htmlFor="firstName">
+                {t("fields.first_name", { defaultValue: "First Name" })}
+              </label>
               <input
                 id="firstName"
                 type="text"
@@ -224,7 +364,9 @@ function RegisterFormUser() {
               />
             </div>
             <div className="form-group">
-              <label className="form-label" htmlFor="lastName">{t("fields.last_name", { defaultValue: "Last Name" })}</label>
+              <label className="form-label" htmlFor="lastName">
+                {t("fields.last_name", { defaultValue: "Last Name" })}
+              </label>
               <input
                 id="lastName"
                 type="text"
@@ -242,7 +384,9 @@ function RegisterFormUser() {
 
           <div className="form-row">
             <div className="form-group">
-              <label className="form-label" htmlFor="dateOfBirth">{t("fields.dob", { defaultValue: "Date of Birth" })}</label>
+              <label className="form-label" htmlFor="dateOfBirth">
+                {t("fields.dob", { defaultValue: "Date of Birth" })}
+              </label>
               <input
                 id="dateOfBirth"
                 type="date"
@@ -255,42 +399,84 @@ function RegisterFormUser() {
                 autoComplete="bday"
               />
             </div>
+
             <div className="form-group">
-              <label className="form-label" htmlFor="username">{t("fields.username", { defaultValue: "Username" })}</label>
-              <input
-                id="username"
-                type="text"
-                name="username"
-                className="form-input"
-                placeholder={t("placeholders.username", { defaultValue: "Choose a username" })}
-                required
-                value={formData.username}
-                onChange={handleInputChange}
-                disabled={loading}
-                autoComplete="username"
-              />
+              <label className="form-label" htmlFor="username">
+                {t("fields.username", { defaultValue: "Username" })}
+              </label>
+
+              <div className={`input-with-status ${usernameState}`}>
+                <input
+                  id="username"
+                  type="text"
+                  name="username"
+                  className={`form-input ${
+                    formData.username && (usernameAvailable === false || !usernameValid) ? "input-error" : ""
+                  }`}
+                  placeholder={t("placeholders.username", { defaultValue: "Choose a username" })}
+                  required
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  disabled={loading}
+                  autoComplete="username"
+                  inputMode="email"
+                  pattern="[A-Za-z0-9._]{3,20}"
+                  aria-describedby={showHint ? "usernameHelp" : undefined}
+                />
+
+                {showHint && (
+                  <div
+                    id="usernameHelp"
+                    className={`input-hint ${usernameState}`}
+                    aria-live="polite"
+                  >
+                    <span
+                      className={`hint-icon ${
+                        checkingUsername
+                          ? "spinner"
+                          : usernameAvailable === true
+                            ? "icon-ok"
+                            : "icon-err"
+                      }`}
+                      aria-hidden="true"
+                    />
+                    <span className="hint-text">
+                      {checkingUsername
+                        ? t("username.checking", { defaultValue: "Checking availability..." })
+                        : usernameMsg}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
           <div className="form-row">
-            <div className="form-group">
-              <label className="form-label" htmlFor="phoneNumber">{t("fields.phone", { defaultValue: "Phone Number" })}</label>
+              <div className="form-group">
+              <label className="form-label" htmlFor="phoneNumber">
+                {t("fields.phone", { defaultValue: "Phone Number" })}
+              </label>
               <input
                 id="phoneNumber"
                 type="tel"
                 name="phoneNumber"
                 className="form-input"
                 placeholder={t("placeholders.phone", { defaultValue: "0691234567" })}
-                pattern="^\d{10}$"
                 required
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
+                value={formData.phoneNumber}        // ← bind value
+                onChange={handleInputChange}        // ← update state
                 disabled={loading}
                 autoComplete="tel"
+                inputMode="tel"
+                pattern="^\\d{10}$"                 // ← escape backslash in JSX
+                title={t("fields.phone_help", { defaultValue: "Enter 10 digits (e.g., 0691234567)" })}
               />
             </div>
+
             <div className="form-group">
-              <label className="form-label" htmlFor="email">{t("fields.email", { defaultValue: "Email Address" })}</label>
+              <label className="form-label" htmlFor="email">
+                {t("fields.email", { defaultValue: "Email Address" })}
+              </label>
               <input
                 id="email"
                 type="email"
@@ -307,7 +493,9 @@ function RegisterFormUser() {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="createPassword">{t("fields.create_password", { defaultValue: "Create Password" })}</label>
+            <label className="form-label" htmlFor="createPassword">
+              {t("fields.create_password", { defaultValue: "Create Password" })}
+            </label>
             <div className="password-input-container">
               <input
                 id="createPassword"
@@ -326,11 +514,7 @@ function RegisterFormUser() {
                 className="password-toggle"
                 onClick={() => togglePasswordVisibility("password")}
                 disabled={loading}
-                aria-label={
-                  showPassword
-                    ? t("aria.hide_password", { defaultValue: "Hide password" })
-                    : t("aria.show_password", { defaultValue: "Show password" })
-                }
+                aria-label={showPassword ? t("aria.hide_password", { defaultValue: "Hide password" }) : t("aria.show_password", { defaultValue: "Show password" })}
               >
                 {showPassword ? "🙈" : "👁️"}
               </button>
@@ -339,10 +523,7 @@ function RegisterFormUser() {
             {formData.createPassword && (
               <div className="password-strength" aria-live="polite">
                 <div className="strength-bar">
-                  <div
-                    className={`strength-fill ${passwordStrength.text}`}
-                    style={{ width: `${passwordStrength.score}%` }}
-                  />
+                  <div className={`strength-fill ${passwordStrength.text}`} style={{ width: `${passwordStrength.score}%` }} />
                 </div>
                 <span className={`strength-text ${passwordStrength.text}`}>
                   {t(strengthTextKey, { defaultValue: passwordStrength.text })}
@@ -377,7 +558,9 @@ function RegisterFormUser() {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="confirmPassword">{t("fields.confirm_password", { defaultValue: "Confirm Password" })}</label>
+            <label className="form-label" htmlFor="confirmPassword">
+              {t("fields.confirm_password", { defaultValue: "Confirm Password" })}
+            </label>
             <div className="password-input-container">
               <input
                 id="confirmPassword"
@@ -396,11 +579,7 @@ function RegisterFormUser() {
                 className="password-toggle"
                 onClick={() => togglePasswordVisibility("confirm")}
                 disabled={loading}
-                aria-label={
-                  showConfirmPassword
-                    ? t("aria.hide_password", { defaultValue: "Hide password" })
-                    : t("aria.show_password", { defaultValue: "Show password" })
-                }
+                aria-label={showConfirmPassword ? t("aria.hide_password", { defaultValue: "Hide password" }) : t("aria.show_password", { defaultValue: "Show password" })}
               >
                 {showConfirmPassword ? "🙈" : "👁️"}
               </button>
@@ -424,7 +603,7 @@ function RegisterFormUser() {
           <button
             type="submit"
             className="submit-button"
-            disabled={loading || !passwordsMatch || passwordStrength.score < 50}
+            disabled={loading || !passwordsMatch || passwordStrength.score < 50 || !usernameValid || usernameAvailable === false}
           >
             {loading ? (
               <>
