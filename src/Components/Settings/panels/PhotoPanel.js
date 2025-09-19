@@ -153,7 +153,7 @@ export default function PhotoPanel({ business }) {
     if (!detail) return;
     setSaving(true);
     try {
-      await putRef.current(`/api/Business/${detail.businessId}`, {
+      await putRef.current(`/Business/${detail.businessId}`, {
         ...detail,
         profilePictureUrl: profileUrl,
         coverPictureUrl: coverUrl,

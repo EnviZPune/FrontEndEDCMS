@@ -453,6 +453,39 @@ export default function RegisterFormBusiness() {
     return () => document.removeEventListener("mousedown", onClickOutside)
   }, [])
 
+  // --- NEW: pull slug safely from response or header and redirect ---
+  const navigateToCreatedShop = async (res, result) => {
+    // 1) Try explicit redirectUrl from API
+    let redirectUrl = result?.redirectUrl || null
+
+    // 2) Else assemble from slug in body
+    let slug = result?.slug || result?.business?.slug
+
+    // 3) Else parse Location header like: /api/Business/slug/{slug}
+    if (!redirectUrl && !slug) {
+      const loc = res.headers.get("Location")
+      if (loc) {
+        const m = loc.match(/\/slug\/([^/?#]+)/i)
+        if (m && m[1]) slug = decodeURIComponent(m[1])
+      }
+    }
+
+    if (!redirectUrl && slug) redirectUrl = `/shop/${slug}`
+
+    if (!redirectUrl) {
+      throw new Error("Registration succeeded but no slug/redirect was returned.")
+    }
+
+    // Replace token immediately if backend returned one
+    if (result?.token) {
+      try {
+        localStorage.setItem("token", result.token) // getToken() can read string or JSON
+      } catch { /* ignore quota errors */ }
+    }
+
+    navigate(redirectUrl, { replace: true })
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError(null); setSuccess(null)
@@ -483,19 +516,28 @@ export default function RegisterFormBusiness() {
           body: JSON.stringify(payload),
         }
       )
+
       if (!res.ok) {
-        const msg = await res.text()
-        throw new Error(msg || "Registration failed")
+        const msgText = await res.text().catch(() => "")
+        // try to surface structured error if present
+        try {
+          const j = JSON.parse(msgText)
+          throw new Error(j?.error || j?.message || msgText || "Registration failed")
+        } catch {
+          throw new Error(msgText || "Registration failed")
+        }
       }
-      const result = await res.json()
+
+      const result = await res.json().catch(() => ({}))
       setSuccess(t("success.registered", { defaultValue: "Business registered successfully!" }))
-      setBusiness((b) => ({
-        ...b, name: "", description: "", location: "", businessPhoneNumber: "", nipt: "", openingHours: "",
-      }))
+
+      // reset form bits (non-blocking for redirect)
+      setBusiness((b) => ({ ...b, name: "", description: "", location: "", businessPhoneNumber: "", nipt: "", openingHours: "" }))
       setProfileUrl(""); setCoverUrl(""); setCoords(null)
       setSuggestions([]); setShowSuggestions(false)
       setValidationErrors({})
-      setTimeout(() => navigate(`/shop/${result.slug}`), 1500)
+
+      await navigateToCreatedShop(res, result)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -669,7 +711,7 @@ export default function RegisterFormBusiness() {
               </div>
             </div>
           </div>
-          <br></br>
+          <br />
 
           {/* Profile Photo */}
           <div className={`form-group ${validationErrors.profilePicture ? "error" : ""}`}>

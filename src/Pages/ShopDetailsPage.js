@@ -384,34 +384,46 @@ export default function ShopDetailsPage() {
 
   // Fetch pinned items (ids + optional pinOrder)
   useEffect(() => {
-    if (!token || !shop?.businessId) return;
-    fetch(`${API_BASE}/api/PinnedItems/business/${shop.businessId}`, {
-      headers: { ...authHeaders(token) }
-    })
-      .then((r) => (r.ok ? r.json() : []))
-      .then((data) => {
-        const ids = new Set();
-        const order = new Map();
-        if (Array.isArray(data)) {
-          for (const it of data) {
-            const id =
-              typeof it === "number"
-                ? it
-                : it?.clothingItemId ?? it?.clothingItemID ?? it?.itemId ?? null;
-            if (id != null) {
-              ids.add(id);
-              if (typeof it?.pinOrder === "number") order.set(id, it.pinOrder);
-            }
-          }
+  if (!token || !shop?.businessId) return;
+
+  fetch(
+    `${API_BASE}/api/ClothingItem/clothingItems/${shop.businessId}/pinned?pageNumber=1&pageSize=200`,
+    { headers: { ...authHeaders(token) } }
+  )
+    .then((r) => (r.ok ? r.json() : null))
+    .then((data) => {
+      // Controller returns PaginatedResult<ClothingItemDTO>
+      // Try common shapes: { items: [...] } or { Items: [...] } or plain array fallback
+      const list = Array.isArray(data)
+        ? data
+        : data?.items ?? data?.Items ?? data?.data ?? [];
+
+      const ids = new Set();
+      const order = new Map();
+
+      list.forEach((ci, i) => {
+        const id =
+          ci?.clothingItemId ??
+          ci?.clothingItemID ??
+          ci?.id ??
+          null;
+
+        if (id != null) {
+          ids.add(id);
+          // Respect backend order; fall back to index if pinOrder not present
+          const po = typeof ci?.pinOrder === "number" ? ci.pinOrder : i + 1;
+          order.set(id, po);
         }
-        setPinnedIds(ids);
-        setPinnedOrder(order);
-      })
-      .catch(() => {
-        setPinnedIds(new Set());
-        setPinnedOrder(new Map());
       });
-  }, [token, shop?.businessId]);
+
+      setPinnedIds(ids);
+      setPinnedOrder(order);
+    })
+    .catch(() => {
+      setPinnedIds(new Set());
+      setPinnedOrder(new Map());
+    });
+}, [token, shop?.businessId]);
 
   async function toggleFavorite() {
     if (!token || !shop?.businessId || favLoading) return;

@@ -373,6 +373,7 @@ export default function BusinessInfoPanel({ business }) {
       await putRef.current(`/Business/${detail.businessId}`, payload);
       alert(t("alerts.updated", { defaultValue: "Business info updated!" }));
     } catch (err) {
+      console.log(err)
       try {
         const text = await err?.response?.text?.();
         console.error("Save failed (body):", text || err);
@@ -500,9 +501,6 @@ export default function BusinessInfoPanel({ business }) {
         <b>{t("fields.opening_hours", { defaultValue: "Opening Hours" })}</b>
       </label>
       <HoursPicker value={schedule} onChange={setSchedule} />
-      <div className="oh-compact-preview" style={{ marginTop: 8, color: "#555" }}>
-        {t("opening_preview", { defaultValue: "Preview:" })} {compactPreview}
-      </div>
       <br />
       <br />
 
