@@ -586,6 +586,16 @@
   .navbar {
     justify-content: space-between;
   }
+  .logo-container h3 {
+    font-size: clamp(1rem, 5vw, 1.25rem);
+    position: relative;
+    top: 25px;
+  }
+  .logo-container img{
+    position: relative;
+    top: 30px;
+    right: 10px;
+  }
   .hamburger {
     display: flex; /* ensure hamburger is visible */
   }
@@ -645,6 +655,13 @@
   }
   .logo-container h3 {
     font-size: clamp(1rem, 5vw, 1.25rem);
+    position: relative;
+    top: 25px;
+  }
+  .logo-container img{
+    position: relative;
+    top: 30px;
+    right: 10px;
   }
   .notification-bell-container {
     width: 40px;

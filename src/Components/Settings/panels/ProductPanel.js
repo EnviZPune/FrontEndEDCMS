@@ -7,8 +7,11 @@ import { useAuth } from "../hooks/useAuth"
 import Pagination from "../../Pagination.tsx"
 import "../../../Styling/Settings/productpanel.css"
 
-// Base for the ClothingItem controller (useApiClient should prefix /api)
 const CLOTHING_ITEM_API = "/ClothingItem"
+
+// How many items we fetch per page from the API when we page through
+const LOAD_PAGE_SIZE = 50
+const LOAD_MAX_PAGES = 200 // hard safety cap (10k items)
 
 export default function ProductPanel({ business }) {
   const { t } = useTranslation("productpanel")
@@ -16,7 +19,7 @@ export default function ProductPanel({ business }) {
   const { role, userInfo } = useAuth()
   const fileInputRef = useRef(null)
 
-  // keep a stable reference to get to avoid effect loops
+  // Keep latest get in a ref so effects/callbacks don’t rebind unnecessarily
   const getRef = useRef(get)
   useEffect(() => { getRef.current = get }, [get])
 
@@ -32,7 +35,7 @@ export default function ProductPanel({ business }) {
   const [saleLoadingId, setSaleLoadingId] = useState(null)
   const pageSize = 10
 
-  // NEW: pin state
+  // Pin state
   const [pinnedIds, setPinnedIds] = useState(() => new Set())
   const [pinLoadingId, setPinLoadingId] = useState(null)
 
@@ -53,7 +56,10 @@ export default function ProductPanel({ business }) {
   const [mainPhotoIndex, setMainPhotoIndex] = useState(0)
   const [dragOver, setDragOver] = useState(false)
 
+  // businessId coming from parent (ensure number)
   const businessId = business?.businessId
+  const bId = Number(businessId)
+  const validBusinessId = Number.isInteger(bId) && bId > 0
 
   // ─── Helpers ─────────────────────────────────────────────────────────────
   const validateForm = useCallback(() => {
@@ -61,8 +67,9 @@ export default function ProductPanel({ business }) {
     if (!form.name.trim()) errors.push(t("products.errors.name_required", { defaultValue: "Product name is required" }))
     if (!form.price || Number.parseFloat(form.price) <= 0) errors.push(t("products.errors.price_required", { defaultValue: "Valid price is required" }))
     if (!form.quantity || Number.parseInt(form.quantity, 10) < 0) errors.push(t("products.errors.quantity_required", { defaultValue: "Valid quantity is required" }))
+    if (!validBusinessId) errors.push(t("products.errors.select_business_first", { defaultValue: "Select a business first." }))
     return errors
-  }, [form.name, form.price, form.quantity, t])
+  }, [form.name, form.price, form.quantity, t, validBusinessId])
 
   function myDisplayName(ui) {
     const full = `${ui?.firstName ?? ""} ${ui?.lastName ?? ""}`.trim()
@@ -72,10 +79,8 @@ export default function ProductPanel({ business }) {
     return undefined
   }
 
-  // Normalize pinned payload (supports PaginatedResult or arrays)
   const normalizePinned = useCallback((payload) => {
     if (!payload) return new Set()
-    // Accept common shapes: { items: [...] } | { data: [...] } | { results: [...] } | [...]
     const arr =
       Array.isArray(payload) ? payload :
       Array.isArray(payload.items) ? payload.items :
@@ -88,31 +93,50 @@ export default function ProductPanel({ business }) {
     return new Set(ids)
   }, [])
 
-  // ─── Load Data ───────────────────────────────────────────────────────────
+  // ─── Data loaders ────────────────────────────────────────────────────────
+ const loadAllProducts = useCallback(async (bizId) => {
+  // Only use the business endpoint; normalize whatever shape comes back.
+  const res = await getRef.current(`/ClothingItem/business/${bizId}`);
+
+  // Accept a few common shapes: array, { items: [...] }, { data: [...] }, { results: [...] }
+  const items =
+    Array.isArray(res) ? res :
+    (Array.isArray(res?.items) ? res.items :
+    (Array.isArray(res?.data) ? res.data :
+    (Array.isArray(res?.results) ? res.results : [])));
+
+  setProducts(items);
+}, []);
+
+  const loadCategories = useCallback(async (bizId) => {
+    const cats = await getRef.current(`/ClothingCategory/business/${bizId}`)
+    setCategories(cats || [])
+  }, [])
+
+  const loadPinned = useCallback(async (bizId) => {
+    const pins = await getRef.current(`${CLOTHING_ITEM_API}/clothingItems/${bizId}/pinned?pageNumber=1&pageSize=1000`)
+    setPinnedIds(normalizePinned(pins))
+  }, [normalizePinned])
+
   useEffect(() => {
-    if (!businessId) return
+    if (!validBusinessId) return
     let cancelled = false
 
     const loadData = async () => {
       setLoading(true)
       setError(null)
       try {
-        const [prods, cats, pins] = await Promise.all([
-          getRef.current(`/ClothingItem/business/${businessId}`),
-          getRef.current(`/ClothingCategory/business/${businessId}`),
-          // fetch pinned items (big page so we get all ids)
-          getRef.current(`${CLOTHING_ITEM_API}/clothingItems/${businessId}/pinned?pageNumber=1&pageSize=1000`),
+        await Promise.all([
+          loadAllProducts(bId),
+          loadCategories(bId),
+          loadPinned(bId),
         ])
-        if (!cancelled) {
-          setProducts(prods || [])
-          setCategories(cats || [])
-          setPinnedIds(normalizePinned(pins))
-        }
       } catch (err) {
         console.error("Load error:", err)
         if (!cancelled) {
           setError(t("products.errors.load_failed", { defaultValue: "Failed to load data. Please try again." }))
-          setProducts([]); setCategories([])
+          setProducts([])
+          setCategories([])
           setPinnedIds(new Set())
         }
       } finally {
@@ -122,27 +146,58 @@ export default function ProductPanel({ business }) {
 
     loadData()
     return () => { cancelled = true }
-  }, [businessId, t, normalizePinned])
+  }, [validBusinessId, bId, t, loadAllProducts, loadCategories, loadPinned])
 
-  // Reset page when search or products change
+  // Reset to page 1 when search or list size changes
   useEffect(() => { setPage(1) }, [searchQuery, products.length])
+
+  // Keep page within bounds if items shrink (e.g., after delete or filter)
+  const filteredProducts = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim()
+    if (!q) return products
+    return products.filter((product) =>
+      [product.name, product.brand, product.model, product.description]
+        .map(s => (s || "").toString().toLowerCase())
+        .join(" ")
+        .includes(q)
+    )
+  }, [products, searchQuery])
+
+  const totalCount = filteredProducts.length
+  useEffect(() => {
+    const maxPages = Math.max(1, Math.ceil(totalCount / pageSize))
+    if (page > maxPages) setPage(maxPages)
+  }, [totalCount, page, pageSize])
+
+  const paginatedProducts = useMemo(() => {
+    const start = (page - 1) * pageSize
+    return filteredProducts.slice(start, start + pageSize)
+  }, [filteredProducts, page, pageSize])
 
   // ─── Upload helpers ──────────────────────────────────────────────────────
   const uploadImageToGCS = useCallback(async (file) => {
     if (!file) return null
     const maxSize = 5 * 1024 * 1024
     if (file.size > maxSize) throw new Error(t("products.errors.file_too_large", { defaultValue: "File size must be less than 5MB" }))
-
     const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"]
     if (!allowedTypes.includes(file.type)) throw new Error(t("products.errors.bad_filetype", { defaultValue: "Only JPEG, PNG, WebP, and GIF images are allowed" }))
 
     const ts = Date.now()
-    const name = `${ts}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`
-    const imgUrl = `https://storage.googleapis.com/edcms_bucket/${name}`
+    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_")
+    const objectName = `${ts}-${safeName}`
+    const encoded = encodeURIComponent(objectName)
+    const imgUrl = `https://storage.googleapis.com/edcms_bucket/${encoded}`
     const txtUrl = `${imgUrl}.txt`
 
-    await fetch(imgUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file })
-    await fetch(txtUrl, { method: "PUT", headers: { "Content-Type": "text/plain" }, body: imgUrl })
+    const putImg = await fetch(imgUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file })
+    if (!putImg.ok) {
+      let text = ""
+      try { text = await putImg.text() } catch {}
+      throw new Error(`Upload failed (${putImg.status}) ${text}`)
+    }
+    // best-effort text sidecar
+    await fetch(txtUrl, { method: "PUT", headers: { "Content-Type": "text/plain" }, body: imgUrl }).catch(() => {})
+
     return imgUrl
   }, [t])
 
@@ -150,7 +205,8 @@ export default function ProductPanel({ business }) {
     if (!files || files.length === 0) return
     setUploading(true); setError(null)
     try {
-      const filesToUpload = Array.from(files).slice(0, 10 - form.photos.length)
+      const list = Array.from(files)
+      const filesToUpload = list.slice(0, Math.max(0, 10 - form.photos.length))
       const uploadedUrls = await Promise.all(filesToUpload.map(uploadImageToGCS))
       const validUrls = uploadedUrls.filter(Boolean)
       if (validUrls.length > 0) {
@@ -186,60 +242,91 @@ export default function ProductPanel({ business }) {
     setMainPhotoIndex(0); setError(null)
   }, [])
 
+  const buildDto = useCallback(() => {
+    const orderedPhotos = form.photos.length > 0
+      ? [form.photos[mainPhotoIndex], ...form.photos.filter((_, idx) => idx !== mainPhotoIndex)]
+      : []
+
+    // PascalCase to align with API expectations
+    return {
+      BusinessId: validBusinessId ? bId : null,
+      BusinessIds: validBusinessId ? [bId] : [],
+
+      Name: form.name.trim(),
+      Description: form.description.trim(),
+      Price: Number.parseFloat(form.price) || 0,
+      Quantity: Number.parseInt(form.quantity, 10) || 0,
+      ClothingCategoryId: form.categoryId ? +form.categoryId : null,
+      Brand: form.brand.trim(),
+      Model: form.model.trim(),
+      PictureUrls: orderedPhotos,
+      Colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
+      Sizes: (form.size || "").trim(),
+      Material: form.material.trim(),
+    }
+  }, [form, mainPhotoIndex, validBusinessId, bId])
+
+  // Verify the business exists before saving (helps avoid FK 23503)
+  const assertBusinessExists = useCallback(async () => {
+    try {
+      const biz = await getRef.current(`/Business/${bId}`)
+      if (!biz || !biz.businessId) throw new Error("Business not found on server.")
+    } catch {
+      throw new Error(t("products.errors.business_missing", { defaultValue: `Selected business (id ${bId}) does not exist on the server.` }))
+    }
+  }, [bId, t])
+
   const saveProduct = useCallback(async () => {
-    if (!businessId) return
     const validationErrors = validateForm()
     if (validationErrors.length > 0) { setError(validationErrors.join(", ")); return }
 
     setLoading(true); setError(null)
     try {
-      const orderedPhotos = form.photos.length > 0
-        ? [form.photos[mainPhotoIndex], ...form.photos.filter((_, idx) => idx !== mainPhotoIndex)]
-        : []
+      const dto = buildDto()
+      if (!dto.BusinessId) throw new Error(t("products.errors.select_business_first", { defaultValue: "Select a business first." }))
 
-      const dto = {
-        name: form.name.trim(),
-        businessIds: [businessId],
-        description: form.description.trim(),
-        price: Number.parseFloat(form.price) || 0,
-        quantity: Number.parseInt(form.quantity, 10) || 0,
-        clothingCategoryId: form.categoryId ? +form.categoryId : null,
-        brand: form.brand.trim(),
-        model: form.model.trim(),
-        pictureUrls: orderedPhotos,
-        colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
-        sizes: (form.size || "").trim(),
-        material: form.material.trim(),
-      }
+      await assertBusinessExists()
 
       if (role === "employee") {
         await post("/ProposedChanges/submit", {
-          businessId, type: editingId ? "Update" : "Create",
-          itemDto: { ...dto, clothingItemId: editingId || 0 },
+          BusinessId: dto.BusinessId,
+          Type: editingId ? "Update" : "Create",
+          ItemDto: { ...dto, ClothingItemId: editingId || 0 },
         })
         alert(t("products.alerts.change_proposed", { defaultValue: "Your change has been proposed and is pending approval." }))
       } else {
-        if (editingId) await put(`/ClothingItem/${editingId}`, dto)
-        else await post("/ClothingItem", dto)
-
-        const updated = await getRef.current(`/ClothingItem/business/${businessId}`)
-        setProducts(updated || [])
+        if (editingId) {
+          await put(`${CLOTHING_ITEM_API}/${editingId}`, dto)
+        } else {
+          await post(`${CLOTHING_ITEM_API}`, dto)
+        }
+        // Reload ALL items (not just the last one)
+        await loadAllProducts(bId)
         alert(t("products.alerts.saved", { defaultValue: "Product saved successfully!" }))
       }
 
       resetForm()
     } catch (err) {
       console.error("Save error detail:", err)
-      setError(
-        err?.message
-          ? t("products.errors.save_failed_with_reason", { defaultValue: "Failed to save product: {{reason}}", reason: err.message })
-          : t("products.errors.save_failed", { defaultValue: "Failed to save product. Please check console/network for details." })
-      )
+      const msg = err?.message || ""
+      if (/23503/.test(msg) || /foreign key/i.test(msg)) {
+        setError(
+          t("products.errors.fk_hint", {
+            defaultValue: `Can't save because BusinessId=${bId} doesn't exist in this environment. Double-check you're selecting a valid business on the same server as the API.`,
+          })
+        )
+      } else {
+        setError(
+          err?.message
+            ? t("products.errors.save_failed_with_reason", { defaultValue: "Failed to save product: {{reason}}", reason: err.message })
+            : t("products.errors.save_failed", { defaultValue: "Failed to save product. Please check console/network for details." })
+        )
+      }
     } finally { setLoading(false) }
-  }, [businessId, validateForm, form, mainPhotoIndex, editingId, role, post, put, resetForm, t])
+  }, [validateForm, buildDto, role, editingId, post, put, bId, resetForm, t, assertBusinessExists, loadAllProducts])
 
   const handleDelete = useCallback(async (id) => {
-    if (!businessId) return
+    if (!validBusinessId) return
     const confirmMessage =
       role === "employee"
         ? t("products.confirms.delete_request", { defaultValue: "Submit delete request for approval?" })
@@ -251,20 +338,15 @@ export default function ProductPanel({ business }) {
     try {
       if (role === "employee") {
         await post("/ProposedChanges/submit", {
-          businessId, type: "Delete",
-          itemDto: { clothingItemId: id, businessIds: [businessId] },
+          BusinessId: bId,
+          Type: "Delete",
+          ItemDto: { ClothingItemId: id, BusinessId: bId, BusinessIds: [bId] },
         })
         alert(t("products.alerts.delete_proposed", { defaultValue: "Delete request submitted for approval." }))
       } else {
-        await del(`/ClothingItem/${id}`)
-        const updated = await getRef.current(`/ClothingItem/business/${businessId}`)
-        setProducts(updated || [])
-        // keep pinnedIds in sync
-        setPinnedIds(prev => {
-          const next = new Set(prev)
-          next.delete(id)
-          return next
-        })
+        await del(`${CLOTHING_ITEM_API}/${id}`)
+        await loadAllProducts(bId)
+        setPinnedIds(prev => { const next = new Set(prev); next.delete(id); return next })
         alert(t("products.alerts.deleted", { defaultValue: "Product deleted successfully." }))
       }
     } catch (err) {
@@ -275,7 +357,7 @@ export default function ProductPanel({ business }) {
           : t("products.errors.delete_failed", { defaultValue: "Failed to delete product. Please check console/network for details." })
       )
     } finally { setLoading(false) }
-  }, [businessId, role, post, del, t])
+  }, [validBusinessId, role, post, del, t, bId, loadAllProducts])
 
   const startEdit = useCallback((product) => {
     setEditingId(product.clothingItemId)
@@ -289,7 +371,7 @@ export default function ProductPanel({ business }) {
       model: product.model || "",
       photos: product.pictureUrls || [],
       colors: Array.isArray(product.colors) ? product.colors.join(", ") : product.colors || "",
-      size: Array.isArray(product.sizes) ? product.sizes.join(", ") : product.sizes?.toString() || "",
+      size: Array.isArray(product.sizes) ? product.sizes.join(", ") : (product.sizes != null ? String(product.sizes) : ""),
       material: product.material || "",
     })
     setMainPhotoIndex(0); setError(null)
@@ -300,21 +382,20 @@ export default function ProductPanel({ business }) {
     setMainPhotoIndex((prevIndex) => (indexToRemove === prevIndex ? 0 : indexToRemove < prevIndex ? prevIndex - 1 : prevIndex))
   }, [])
 
-  // ✅ Record Sale: send soldByName so Sales shows the real employee name
+  // Record Sale
   const handleSale = useCallback(async (product) => {
-    if (!businessId) { setError(t("products.errors.select_business_first", { defaultValue: "Select a business first." })); return; }
+    if (!validBusinessId) { setError(t("products.errors.select_business_first", { defaultValue: "Select a business first." })); return; }
 
     const seller = myDisplayName(userInfo) || undefined
 
     try {
       setSaleLoadingId(product.clothingItemId)
       await post(`/Sales/ClothingItem/${product.clothingItemId}/sale`, {
-        quantity: 1,
-        businessId: Number(businessId),
-        soldByName: seller,
+        Quantity: 1,
+        BusinessId: bId,
+        SoldByName: seller,
       })
 
-      // Optimistic qty update
       setProducts(prev =>
         prev.map(p =>
           p.clothingItemId === product.clothingItemId
@@ -323,42 +404,31 @@ export default function ProductPanel({ business }) {
         )
       )
 
-      // Notify SalesPanel to refresh
-      window.dispatchEvent(new CustomEvent("sale-recorded", { detail: { businessId } }))
+      window.dispatchEvent(new CustomEvent("sale-recorded", { detail: { businessId: bId } }))
     } catch (err) {
       console.error("Sale error:", err)
       setError(err?.message || t("products.errors.sale_failed", { defaultValue: "Failed to record sale." }))
     } finally {
       setSaleLoadingId(null)
     }
-  }, [businessId, post, userInfo, t])
+  }, [validBusinessId, post, userInfo, t, bId])
 
-  // NEW: Pin helpers
+  // Pin helpers
   const isPinned = useCallback((id) => pinnedIds.has(id), [pinnedIds])
 
   const togglePin = useCallback(async (product) => {
-    if (!businessId) return
+    if (!validBusinessId) return
     const id = product.clothingItemId
     const currentlyPinned = isPinned(id)
 
     try {
       setPinLoadingId(id)
       if (currentlyPinned) {
-        // Unpin (PUT)
-        await put(`${CLOTHING_ITEM_API}/business/${businessId}/items/${id}/unpin`)
-        setPinnedIds(prev => {
-          const next = new Set(prev)
-          next.delete(id)
-          return next
-        })
+        await put(`${CLOTHING_ITEM_API}/business/${bId}/items/${id}/unpin`)
+        setPinnedIds(prev => { const next = new Set(prev); next.delete(id); return next })
       } else {
-        // Pin (PUT) - add ?order= if you support ordering
-        await put(`${CLOTHING_ITEM_API}/business/${businessId}/items/${id}/pin`)
-        setPinnedIds(prev => {
-          const next = new Set(prev)
-          next.add(id)
-          return next
-        })
+        await put(`${CLOTHING_ITEM_API}/business/${bId}/items/${id}/pin`)
+        setPinnedIds(prev => { const next = new Set(prev); next.add(id); return next })
       }
     } catch (err) {
       console.error("Pin toggle error:", err)
@@ -366,22 +436,7 @@ export default function ProductPanel({ business }) {
     } finally {
       setPinLoadingId(null)
     }
-  }, [businessId, isPinned, put, t])
-
-  // ─── Filter & Pagination ─────────────────────────────────────────────────
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) =>
-      [product.name, product.brand, product.model, product.description]
-        .join(" ")
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-    )
-  }, [products, searchQuery])
-
-  const totalCount = filteredProducts.length
-  const paginatedProducts = useMemo(() => {
-    return filteredProducts.slice((page - 1) * pageSize, page * pageSize)
-  }, [filteredProducts, page, pageSize])
+  }, [validBusinessId, isPinned, put, t, bId])
 
   // ─── Render ──────────────────────────────────────────────────────────────
   if (!business) {
@@ -555,14 +610,14 @@ export default function ProductPanel({ business }) {
         {/* Photos */}
         <div className="form-group">
           <label>{t("products.fields.photos", { defaultValue: "Product Photos" })}</label>
-          <label className="file-btn" disabled={uploading || loading}>
+          <label className="file-btn" aria-disabled={uploading || loading}>
             {uploading ? t("products.upload.uploading", { defaultValue: "⏳ Uploading..." }) : t("products.upload.button", { defaultValue: "📁 Upload Photos" })}
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*"
               multiple
-              onChange={(e) => handleFileUpload(e.target.files)}
+              onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
               disabled={uploading || loading}
             />
           </label>
@@ -574,9 +629,7 @@ export default function ProductPanel({ business }) {
             onDrop={handleDrop}
           >
             {form.photos.length === 0 && !uploading && (
-              <div className="empty-photos">
-                {t("products.upload.drop_hint", { defaultValue: "📸 Drop photos here or click upload button" })}
-              </div>
+              <div className="empty-photos">📸 {t("products.upload.drop_hint", { defaultValue: "Drop photos here or click upload button" })}</div>
             )}
 
             {form.photos.map((url, index) => (
@@ -666,12 +719,7 @@ export default function ProductPanel({ business }) {
                       <div className="product-name">
                         {p.name}{p.brand && <span className="product-brand"> - {p.brand}</span>}
                         {pinned && (
-                          <span
-                            title={t("products.pin.pinned_badge", { defaultValue: "Pinned" })}
-                            style={{ marginLeft: 8, fontSize: "0.95em", verticalAlign: "middle" }}
-                          >
-                            📌
-                          </span>
+                          <span title={t("products.pin.pinned_badge", { defaultValue: "Pinned" })} style={{ marginLeft: 8, fontSize: "0.95em", verticalAlign: "middle" }}>📌</span>
                         )}
                       </div>
                       <div className="product-details">
@@ -684,30 +732,14 @@ export default function ProductPanel({ business }) {
                         <button onClick={() => startEdit(p)} disabled={loading} className="edit">✏️ {t("common.edit", { defaultValue: "Edit" })}</button>
                         <button onClick={() => handleDelete(p.clothingItemId)} disabled={loading} className="delete">🗑️ {t("common.delete", { defaultValue: "Delete" })}</button>
 
-                        {/* NEW: Pin / Unpin */}
                         <button
                           onClick={() => togglePin(p)}
                           disabled={loading || pinLoadingId === p.clothingItemId}
                           className={`pin ${pinLoadingId === p.clothingItemId ? "loading" : ""}`}
-                          title={
-                            pinned
-                              ? t("products.pin.unpin_tooltip", { defaultValue: "Unpin this product" })
-                              : t("products.pin.pin_tooltip", { defaultValue: "Pin this product" })
-                          }
-                          style={{
-                            backgroundColor: pinned ? "#f59e0b" : "#0ea5e9",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "8px",
-                            padding: "8px 12px",
-                            fontWeight: 600,
-                          }}
+                          title={pinned ? t("products.pin.unpin_tooltip", { defaultValue: "Unpin this product" }) : t("products.pin.pin_tooltip", { defaultValue: "Pin this product" })}
+                          style={{ backgroundColor: pinned ? "#f59e0b" : "#0ea5e9", color: "#fff", border: "none", borderRadius: "8px", padding: "8px 12px", fontWeight: 600 }}
                         >
-                          {pinLoadingId === p.clothingItemId
-                            ? t("products.pin.toggling", { defaultValue: "Updating…" })
-                            : pinned
-                              ? t("products.pin.unpin", { defaultValue: "Unpin" })
-                              : t("products.pin.pin", { defaultValue: "Pin" })}
+                          {pinLoadingId === p.clothingItemId ? t("products.pin.toggling", { defaultValue: "Updating…" }) : pinned ? t("products.pin.unpin", { defaultValue: "Unpin" }) : t("products.pin.pin", { defaultValue: "Pin" })}
                         </button>
 
                         <button
@@ -715,14 +747,7 @@ export default function ProductPanel({ business }) {
                           className={`sale ${saleLoadingId === p.clothingItemId ? "loading" : ""}`}
                           disabled={loading || saleLoadingId === p.clothingItemId || (p.quantity ?? 0) <= 0}
                           title={t("products.sale.tooltip", { defaultValue: "Record a sale (reduce stock by 1)" })}
-                          style={{
-                            backgroundColor: "#16a34a",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "8px",
-                            padding: "8px 12px",
-                            fontWeight: 600,
-                          }}
+                          style={{ backgroundColor: "#16a34a", color: "#fff", border: "none", borderRadius: "8px", padding: "8px 12px", fontWeight: 600 }}
                         >
                           {saleLoadingId === p.clothingItemId ? t("products.sale.selling", { defaultValue: "Selling…" }) : t("products.sale.button", { defaultValue: "Sale" })}
                         </button>
@@ -732,25 +757,12 @@ export default function ProductPanel({ business }) {
                 })
               ) : (
                 <li className="no-results">
-                  {searchQuery
-                    ? t("products.search.no_match", { defaultValue: "No products match your search." })
-                    : t("products.list.empty", { defaultValue: "No products found." })}
+                  {searchQuery ? t("products.search.no_match", { defaultValue: "No products match your search." }) : t("products.list.empty", { defaultValue: "No products found." })}
                 </li>
               )}
             </ul>
           )}
 
-          {totalCount > pageSize && (
-            <Pagination
-              page={page}
-              pageSize={pageSize}
-              totalCount={totalCount}
-              onPageChange={setPage}
-              maxButtons={5}
-            />
-          )}
-        </div>
-      </div>
-    </>
+          {totalCount > pageSize && ( <Pagination page={page} pageSize={pageSize} totalCount={totalCount} onPageChange={setPage} maxButtons={5} /> )} </div> </div> </>
   )
 }

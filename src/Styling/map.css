@@ -388,6 +388,37 @@
   font-style: italic;
 }
 
+/* Generic clamp: only active while body has .hide-support (set by Map.jsx) */
+.hide-support #crisp-chatbox,
+.hide-support .crisp-client,
+.hide-support #intercom-container,
+.hide-support .intercom-lightweight-app,
+.hide-support .tawk-min-container,
+.hide-support #tawkchat-container,
+.hide-support #webWidget,
+.hide-support #launcher,
+.hide-support .zEWidget-launcher,
+.hide-support #tidio-chat,
+.hide-support #hubspot-messages-iframe-container,
+.hide-support .woot-widget-holder,
+.hide-support #gorgias-chat-container,
+.hide-support #chatbase-bubble,
+.hide-support #chatbase-bubble-button,
+.hide-support #chatbase-root,
+.hide-support #reamaze-widget,
+.hide-support #reamaze-widget-container,
+.hide-support .fc_widget,
+.hide-support #fc_frame,
+.hide-support #drift-widget,
+/* last-resort heuristic: any inline fixed bottom-right element */
+.hide-support *[style*="position: fixed"][style*="bottom"][style*="right"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .location-on-map {

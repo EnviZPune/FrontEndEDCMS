@@ -380,6 +380,9 @@ const Navbar = () => {
               </button>
             </div>
           )}
+
+          -
+
           <li role="none">
             <button
               className="lang-toggle-button"

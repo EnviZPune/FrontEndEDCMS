@@ -10,6 +10,7 @@ import "../Styling/shoplist.css";
 const API_BASE = "https://api.triwears.com/api";
 const PAGE_SIZE = 9;
 const SPOTLIGHT_SIZE = 8;
+const MAX_NEAR_KM = 3;
 
 const toSlug = (str) =>
   (str || "")
@@ -19,45 +20,94 @@ const toSlug = (str) =>
     .replace(/[^a-z0-9-]/g, "");
 
 /* ────────────────────────────────────────────────────────────────
- * Near-me helpers
+ * Helpers (robust coordinate parsing + distance)
  * ──────────────────────────────────────────────────────────────── */
 const coerceNum = (v) => {
   const n = Number(String(v ?? "").replace(",", "."));
   return Number.isFinite(n) ? n : null;
 };
+const isLat = (n) => Number.isFinite(n) && Math.abs(n) <= 90;
+const isLon = (n) => Number.isFinite(n) && Math.abs(n) <= 180;
+const validLatLon = ([lat, lon]) =>
+  isLat(lat) && isLon(lon) && !(lat === 0 && lon === 0);
 
+/** Try many common shapes:
+ * - explicit numeric fields (latitude/longitude, lat/lng, etc.)
+ * - nested objects: { location: { lat, lng } }, { geo: { lat, lng } }, …
+ * - arrays: coordinates: [lat, lon]
+ * - strings: "lat,lon" / "lat; lon" / "lat lon"
+ */
 function parseCoordsFromBusiness(b) {
-  // Prefer explicit numeric fields
-  const lat =
+  // explicit numeric fields on root
+  const la =
     coerceNum(b?.latitude) ??
-    coerceNum(b?.lat) ??
-    coerceNum(b?.Latitude) ??
-    coerceNum(b?.Location?.lat) ??
-    coerceNum(b?.location?.lat) ??
-    coerceNum(b?.geo?.lat);
-  const lon =
+    coerceNum(b?.Lat) ??
+    coerceNum(b?.Latitude);
+  const lo =
     coerceNum(b?.longitude) ??
     coerceNum(b?.lng) ??
     coerceNum(b?.lon) ??
-    coerceNum(b?.Longitude) ??
-    coerceNum(b?.Location?.lng) ??
-    coerceNum(b?.location?.lng) ??
-    coerceNum(b?.geo?.lng);
-  if (lat != null && lon != null) return [lat, lon];
+    coerceNum(b?.Longitude);
+  if (isLat(la) && isLon(lo)) return [la, lo];
 
-  // Try string shapes like "41.32,19.82"
-  const strish =
-    b?.mapCoordinates ||
-    b?.coordinates ||
-    b?.locationCoordinates ||
-    b?.LocationCoordinates ||
-    b?.location;
-  if (strish && typeof strish === "string") {
-    const m = strish.match(/(-?\d+(?:[\.,]\d+)?)\s*,\s*(-?\d+(?:[\.,]\d+)?)/);
+  // nested objects
+  const bases = [
+    b?.location,
+    b?.Location,
+    b?.geo,
+    b?.Geo,
+    b?.coords,
+    b?.Coords,
+    b?.position,
+    b?.Position,
+  ].filter(Boolean);
+
+  for (const base of bases) {
+    if (typeof base === "object") {
+      const _la =
+        coerceNum(base?.lat) ??
+        coerceNum(base?.Lat) ??
+        coerceNum(base?.latitude) ??
+        coerceNum(base?.Latitude);
+      const _lo =
+        coerceNum(base?.lng) ??
+        coerceNum(base?.Lng) ??
+        coerceNum(base?.lon) ??
+        coerceNum(base?.Lon) ??
+        coerceNum(base?.longitude) ??
+        coerceNum(base?.Longitude);
+      if (isLat(_la) && isLon(_lo)) return [_la, _lo];
+    }
+  }
+
+  // array-like
+  const arrayish =
+    (Array.isArray(b?.coordinates) && b.coordinates) ||
+    (Array.isArray(b?.coords) && b.coords) ||
+    (Array.isArray(b?.locationCoordinates) && b.locationCoordinates) ||
+    (Array.isArray(b?.LocationCoordinates) && b.LocationCoordinates) ||
+    null;
+  if (arrayish && arrayish.length >= 2) {
+    const a = coerceNum(arrayish[0]);
+    const c = coerceNum(arrayish[1]);
+    if (Number.isFinite(a) && Number.isFinite(c)) return [a, c];
+  }
+
+  // strings (including Business.Location)
+  const candidates = [
+    b?.mapCoordinates,
+    b?.coordinates,
+    b?.locationCoordinates,
+    b?.LocationCoordinates,
+    b?.location,
+    b?.Location,
+  ].filter((x) => typeof x === "string");
+  for (const s of candidates) {
+    const m = s.match(/(-?\d+(?:[\.,]\d+)?)\s*[;, ]\s*(-?\d+(?:[\.,]\d+)?)/);
     if (m) {
-      const la = coerceNum(m[1]);
-      const lo = coerceNum(m[2]);
-      if (la != null && lo != null) return [la, lo];
+      const a = coerceNum(m[1]);
+      const c = coerceNum(m[2]);
+      if (Number.isFinite(a) && Number.isFinite(c)) return [a, c];
     }
   }
   return null;
@@ -75,12 +125,47 @@ function haversineKm([lat1, lon1], [lat2, lon2]) {
   return R * c;
 }
 
+// Given a raw pair [a,b] that might be [lat,lon] or [lon,lat],
+// choose the most plausible one, preferring the closest to `hintPos`.
+function normalizeLatLon(rawPair, hintPos /* [lat,lon] or null */) {
+  if (!Array.isArray(rawPair) || rawPair.length !== 2) return null;
+  const [a, b] = rawPair;
+
+  const cand1 = isLat(a) && isLon(b) ? [a, b] : null; // assume [lat,lon]
+  const cand2 = isLat(b) && isLon(a) ? [b, a] : null; // assume [lon,lat] swapped
+
+  if (cand1 && !cand2) return validLatLon(cand1) ? cand1 : null;
+  if (!cand1 && cand2) return validLatLon(cand2) ? cand2 : null;
+
+  if (cand1 && cand2 && hintPos && isLat(hintPos[0]) && isLon(hintPos[1])) {
+    const d1 = haversineKm(hintPos, cand1);
+    const d2 = haversineKm(hintPos, cand2);
+    const best = d1 <= d2 ? cand1 : cand2;
+    return validLatLon(best) ? best : null;
+  }
+
+  return cand1 && validLatLon(cand1) ? cand1 : cand2 && validLatLon(cand2) ? cand2 : null;
+}
+
 function formatKm(km) {
   if (km == null) return "";
   if (km < 1) return `${Math.round(km * 1000)} m`;
   return `${km.toFixed(km < 10 ? 1 : 0)} km`;
 }
 
+const getCreatedTs = (b) => {
+  const candidates = [b?.createdAt, b?.CreatedAt, b?.updatedAt];
+  for (const v of candidates) {
+    if (!v) continue;
+    const t = new Date(v).getTime();
+    if (Number.isFinite(t)) return t;
+  }
+  return 0;
+};
+
+/* ────────────────────────────────────────────────────────────────
+ * Component
+ * ──────────────────────────────────────────────────────────────── */
 export default function ShopList() {
   const { t } = useTranslation("shoplist");
 
@@ -97,42 +182,54 @@ export default function ShopList() {
   const navigate = useNavigate();
   const spotlightRef = useRef(null);
 
-  // NEW: near-me state
-  const [nearRaw, setNearRaw] = useState([]); // all shops with coords
+  // Near-me state
+  const [nearRaw, setNearRaw] = useState([]); // all shops (coords parsed, order unknown)
   const [nearLoading, setNearLoading] = useState(true);
   const [nearError, setNearError] = useState("");
   const [nearPage, setNearPage] = useState(1);
   const [myPos, setMyPos] = useState(null); // [lat, lon]
   const [posMsg, setPosMsg] = useState("");
 
-  // Load spotlight shops (new/latest shops)
+  /* ────────────────────────────────────────────────────────────────
+   * Spotlight (New shops) — last 7 days, capped to 8
+   * ──────────────────────────────────────────────────────────────── */
   useEffect(() => {
-    let canceled = false;
+    let cancelled = false;
     (async () => {
       setSpotlightLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/Business/paginated?pageNumber=1&pageSize=${SPOTLIGHT_SIZE}`);
+        // This endpoint exists in your controller: GET /api/Business/latest?days=7
+        const res = await fetch(`${API_BASE}/Business/latest?days=7`);
         if (!res.ok) throw new Error((await res.text()) || res.statusText);
-        const { items } = await res.json();
-        const mapped = (items || []).map((shop) => ({
-          ...shop,
-          slug: shop.slug || toSlug(shop.name),
-        }));
-        if (!canceled) setSpotlightShops(mapped);
+        let data = await res.json();
+        if (!Array.isArray(data)) data = Array.isArray(data?.items) ? data.items : [];
+
+        // Sort newest first, cap to 8 (defensive if backend isn’t capping)
+        const mapped = data
+          .sort((a, b) => getCreatedTs(b) - getCreatedTs(a))
+          .slice(0, SPOTLIGHT_SIZE)
+          .map((shop) => ({
+            ...shop,
+            slug: shop.slug || toSlug(shop.name),
+          }));
+
+        if (!cancelled) setSpotlightShops(mapped);
       } catch (err) {
-        console.error("Error loading new shops:", err);
+        if (!cancelled) console.error("Error loading new shops:", err);
       } finally {
-        if (!canceled) setSpotlightLoading(false);
+        if (!cancelled) setSpotlightLoading(false);
       }
     })();
     return () => {
-      canceled = true;
+      cancelled = true;
     };
   }, []);
 
-  // Load paginated shops for browse section
+  /* ────────────────────────────────────────────────────────────────
+   * Browse (paginated) shops
+   * ──────────────────────────────────────────────────────────────── */
   useEffect(() => {
-    let canceled = false;
+    let cancelled = false;
     (async () => {
       setLoading(true);
       setError("");
@@ -140,28 +237,30 @@ export default function ShopList() {
         const res = await fetch(`${API_BASE}/Business/paginated?pageNumber=${page}&pageSize=${PAGE_SIZE}`);
         if (!res.ok) throw new Error((await res.text()) || res.statusText);
         const { items, totalCount: count } = await res.json();
-        const mapped = (items || []).map((shop) => ({
+        const mapped = (Array.isArray(items) ? items : []).map((shop) => ({
           ...shop,
           slug: shop.slug || toSlug(shop.name),
         }));
-        if (!canceled) {
+        if (!cancelled) {
           setShops(mapped);
-          setTotalCount(count || 0);
+          setTotalCount(Number.isFinite(count) ? count : 0);
         }
       } catch (err) {
-        if (!canceled) setError(err.message || "Failed to load shops");
+        if (!cancelled) setError(err.message || "Failed to load shops");
       } finally {
-        if (!canceled) setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     })();
     return () => {
-      canceled = true;
+      cancelled = true;
     };
   }, [page]);
 
-  // Fetch all categories once
+  /* ────────────────────────────────────────────────────────────────
+   * Categories — fetch once
+   * ──────────────────────────────────────────────────────────────── */
   useEffect(() => {
-    let canceled = false;
+    let cancelled = false;
     (async () => {
       setLoadingCats(true);
       setErrorCats("");
@@ -169,52 +268,54 @@ export default function ShopList() {
         const res = await fetch(`${API_BASE}/ClothingCategory/all`);
         if (!res.ok) throw new Error((await res.text()) || res.statusText);
         const data = await res.json();
-        if (!canceled) setCategories(Array.isArray(data) ? data : []);
+        if (!cancelled) setCategories(Array.isArray(data) ? data : []);
       } catch (err) {
-        if (!canceled) setErrorCats(err.message || "Failed to load categories");
+        if (!cancelled) setErrorCats(err.message || "Failed to load categories");
       } finally {
-        if (!canceled) setLoadingCats(false);
+        if (!cancelled) setLoadingCats(false);
       }
     })();
     return () => {
-      canceled = true;
+      cancelled = true;
     };
   }, []);
 
-  // Fetch ALL shops once for Near Me (unpaginated) and parse coordinates
+  /* ────────────────────────────────────────────────────────────────
+   * Near Me — fetch ALL shops once (unpaginated) and parse coordinates
+   * ──────────────────────────────────────────────────────────────── */
   useEffect(() => {
-    let canceled = false;
+    let cancelled = false;
     (async () => {
       setNearLoading(true);
       setNearError("");
       try {
-        const res = await fetch(`${API_BASE}/Business`);
+        const res = await fetch(`${API_BASE}/Business/geo`);
         if (!res.ok) throw new Error((await res.text()) || res.statusText);
         const data = await res.json();
-        const withCoords = (Array.isArray(data) ? data : [])
-          .map((shop) => ({
-            id: shop.businessId,
-            name: shop.name,
-            slug: shop.slug || toSlug(shop.name),
-            profilePictureUrl: shop.profilePictureUrl,
-            address: shop.address,
-            phone: shop.businessPhoneNumber,
-            coords: parseCoordsFromBusiness(shop),
-          }))
-          .filter((s) => Array.isArray(s.coords));
-        if (!canceled) setNearRaw(withCoords);
+        const withCoords = (Array.isArray(data) ? data : []).map((shop) => ({
+          id: shop.businessId ?? shop.id,
+          name: shop.name,
+          slug: shop.slug || toSlug(shop.name),
+          profilePictureUrl: shop.profilePictureUrl,
+          address: shop.location || shop.address,
+          phone: shop.businessPhoneNumber,
+          coords: parseCoordsFromBusiness(shop), // raw pair [lat,lon] or [lon,lat] or null
+        }));
+        if (!cancelled) setNearRaw(withCoords);
       } catch (err) {
-        if (!canceled) setNearError(err.message || "Failed to load shops for near me");
+        if (!cancelled) setNearError(err.message || "Failed to load shops for near me");
       } finally {
-        if (!canceled) setNearLoading(false);
+        if (!cancelled) setNearLoading(false);
       }
     })();
     return () => {
-      canceled = true;
+      cancelled = true;
     };
   }, []);
 
-  // Request location on mount (user will get a prompt); allow manual retry as well
+  /* ────────────────────────────────────────────────────────────────
+   * Request location on mount (user will get a prompt); allow manual retry
+   * ──────────────────────────────────────────────────────────────── */
   useEffect(() => {
     requestLocation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -237,21 +338,35 @@ export default function ShopList() {
             : t("geoloc_failed", { defaultValue: "Couldn't get your location. Try again." });
         setPosMsg(msg);
       },
-      { enableHighAccuracy: true, timeout: 8000 }
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,      // generous timeout for GPS
+        maximumAge: 60_000,  // reuse recent fix to speed things up
+      }
     );
   }
 
-  // Compute sorted nearby list with distance
-  const nearSorted = useMemo(() => {
+  /* ────────────────────────────────────────────────────────────────
+   * Compute nearby with normalization and distance
+   * ──────────────────────────────────────────────────────────────── */
+  const nearFiltered = useMemo(() => {
     if (!myPos) return [];
     return nearRaw
-      .map((s) => ({ ...s, distanceKm: haversineKm(myPos, s.coords) }))
+      .map((s) => {
+        const normalized = normalizeLatLon(s.coords, myPos);
+        if (!normalized || !validLatLon(normalized)) return null;
+        const distanceKm = haversineKm(myPos, normalized);
+        if (!Number.isFinite(distanceKm) || distanceKm > 20000) return null; // guard against bogus coords
+        return { ...s, coords: normalized, distanceKm };
+      })
+      .filter(Boolean)
+      .filter((s) => s.distanceKm <= MAX_NEAR_KM)
       .sort((a, b) => a.distanceKm - b.distanceKm);
   }, [nearRaw, myPos]);
 
-  const nearTotal = nearSorted.length;
+  const nearTotal = nearFiltered.length;
   const nearStart = (nearPage - 1) * PAGE_SIZE;
-  const nearSlice = nearSorted.slice(nearStart, nearStart + PAGE_SIZE);
+  const nearSlice = nearFiltered.slice(nearStart, nearStart + PAGE_SIZE);
 
   // Reset near-page when location changes or results length changes
   useEffect(() => {
@@ -275,9 +390,8 @@ export default function ShopList() {
   };
 
   // Auto-scroll spotlight carousel
-  const spotlightRefLocal = spotlightRef; // just to satisfy lints when used twice
   useEffect(() => {
-    const carousel = spotlightRefLocal.current;
+    const carousel = spotlightRef.current;
     if (!carousel || spotlightShops.length === 0) return;
 
     let scrollInterval;
@@ -335,7 +449,7 @@ export default function ShopList() {
 
         <div className="hero-content">
           <h1 className="hero-title">
-            {t("hero_title_prefix", { defaultValue: "Welcome, To" })} {" "}
+            {t("hero_title_prefix", { defaultValue: "Welcome, To" })}{" "}
             <span className="hero-title-accent">{t("brand_name", { defaultValue: "Triwears" })}</span>
           </h1>
 
@@ -403,7 +517,7 @@ export default function ShopList() {
               </div>
             ) : spotlightShops.length > 0 ? (
               spotlightShops.map((shop) => (
-                <Link key={shop.businessId} to={`/shop/${shop.slug}`} className="brand-card featured">
+                <Link key={shop.businessId ?? shop.id ?? shop.slug ?? shop.name} to={`/shop/${shop.slug}`} className="brand-card featured">
                   <div className="brand-card-image">
                     {shop.profilePictureUrl ? (
                       <img src={shop.profilePictureUrl || "/placeholder.svg"} alt={shop.name} />
@@ -483,11 +597,11 @@ export default function ShopList() {
               <p className="nearby-cta-text">{posMsg || t("nearby_cta", { defaultValue: "Turn on location to see shops closest to you." })}</p>
               <button className="nearby-cta-btn" onClick={requestLocation}>{t("nearby_btn", { defaultValue: "Use my location" })}</button>
             </div>
-          ) : nearSorted.length > 0 ? (
+          ) : nearFiltered.length > 0 ? (
             <>
               <div className="brands-grid">
                 {nearSlice.map((shop) => (
-                  <Link key={shop.id} to={`/shop/${shop.slug}`} className="brand-card">
+                  <Link key={shop.id ?? shop.businessId ?? shop.slug ?? shop.name} to={`/shop/${shop.slug}`} className="brand-card">
                     <div className="brand-card-image">
                       {shop.profilePictureUrl ? (
                         <img src={shop.profilePictureUrl || "/placeholder.svg"} alt={shop.name} />
@@ -517,8 +631,8 @@ export default function ShopList() {
               <svg className="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
-              <h3>{t("empty_near_title", { defaultValue: "No nearby shops" })}</h3>
-              <p>{t("empty_near_desc", { defaultValue: "We couldn't find shops with valid location coordinates." })}</p>
+              <h3>{t("empty_near_title", { defaultValue: "No shops within 3 km" })}</h3>
+             <p>{t("empty_near_desc", { defaultValue: "Try increasing the radius or enable location access." })}</p>
             </div>
           )}
         </section>
@@ -563,7 +677,7 @@ export default function ShopList() {
               ))
             ) : shops.length > 0 ? (
               shops.map((shop) => (
-                <Link key={shop.businessId} to={`/shop/${shop.slug}`} className="brand-card">
+                <Link key={shop.businessId ?? shop.id ?? shop.slug ?? shop.name} to={`/shop/${shop.slug}`} className="brand-card">
                   <div className="brand-card-image">
                     {shop.profilePictureUrl ? (
                       <img src={shop.profilePictureUrl || "/placeholder.svg"} alt={shop.name} />
@@ -645,7 +759,7 @@ export default function ShopList() {
                 .filter((cat, idx, self) => self.findIndex((c) => c.name === cat.name) === idx)
                 .map((cat) => (
                   <div
-                    key={cat.clothingCategoryId}
+                    key={cat.clothingCategoryId ?? cat.name}
                     className="category-card"
                     onClick={() => onCategoryClick(cat.name)}
                     role="button"

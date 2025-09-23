@@ -42,7 +42,7 @@ const PublicProfilePage = () => {
     async function loadProfile() {
       const token = localStorage.getItem("token")
       try {
-        const res = await fetch(`${API_BASE}/api/User/${userId}`, {
+        const res = await fetch(`${API_BASE}/User/${userId}`, {
           headers: {
             "Content-Type": "application/json",
             ...(token && { Authorization: `Bearer ${token}` }),

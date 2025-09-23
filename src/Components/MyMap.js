@@ -1,4 +1,4 @@
-// src/Pages/Map.jsx (or wherever your map page lives)
+// src/Pages/Map.jsx
 import React, { useState, useEffect } from "react";
 import { Map, Marker, Overlay } from "pigeon-maps";
 import { Link } from "react-router-dom";
@@ -66,10 +66,8 @@ function getPreciseLocationOnce() {
 
 async function getPreciseLocationWithRefine() {
   const first = await getPreciseLocationOnce();
-  // If already fairly accurate (<= 1000m), use it
   if (!first.coords.accuracy || first.coords.accuracy <= 1000) return first;
 
-  // Otherwise, try a short watch to refine for up to ~20s
   return new Promise((resolve) => {
     let best = first;
     let settled = false;
@@ -79,7 +77,6 @@ async function getPreciseLocationWithRefine() {
     const watchId = navigator.geolocation.watchPosition(
       (pos) => {
         if (!best || pos.coords.accuracy < best.coords.accuracy) best = pos;
-        // Good enough?
         if (pos.coords.accuracy && pos.coords.accuracy <= 1000 && !settled) {
           settled = true;
           clear();
@@ -89,7 +86,6 @@ async function getPreciseLocationWithRefine() {
       () => {}, // ignore interim errors
       { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 }
     );
-    // Stop trying after 20s and resolve with best we have
     setTimeout(() => {
       if (!settled) {
         settled = true;
@@ -105,27 +101,20 @@ async function fetchBestLocation() {
   const secure = window.isSecureContext || window.location.hostname === "localhost";
   const canGeo = "geolocation" in navigator && secure;
 
-  // If we can query permission, avoid prompting when already denied
   if (canGeo && navigator.permissions?.query) {
     try {
       const perm = await navigator.permissions.query({ name: "geolocation" });
       if (perm.state === "denied") {
-        // Permission denied → fall back to IP city-level
         return ipLookup();
       }
-    } catch {
-      // ignore
-    }
+    } catch {}
   }
 
   if (canGeo) {
     try {
       return await getPreciseLocationWithRefine();
-    } catch {
-      // fall through to IP if GPS fails
-    }
+    } catch {}
   }
-  // Fallback to IP-based lookup
   return ipLookup();
 }
 
@@ -171,6 +160,123 @@ export default function MyMap() {
     try { mq.addEventListener("change", onChange); } catch { mq.addListener(onChange); }
     return () => {
       try { mq.removeEventListener("change", onChange); } catch { mq.removeListener(onChange); }
+    };
+  }, []);
+
+  // 🚫 Hide global “Support” chat widgets while on this page (robust)
+  useEffect(() => {
+    const addClass = () => document.body.classList.add("hide-support");
+    const removeClass = () => document.body.classList.remove("hide-support");
+
+    // Known vendor containers/iframes
+    const knownSelectors = [
+      "#crisp-chatbox", ".crisp-client",
+      "#intercom-container", ".intercom-lightweight-app",
+      "#tawkchat-container", ".tawk-min-container",
+      "#webWidget", "#launcher", ".zEWidget-launcher", // Zendesk
+      "#tidio-chat", 'iframe[src*="tidio"]',
+      "#hubspot-messages-iframe-container", 'iframe[name="hubspot-messages-iframe-container"]',
+      "#fc_frame", ".fc_widget", 'iframe[id^="fc_widget"]', // Freshchat
+      "#drift-widget", 'iframe[src*="drift"]',
+      "#gorgias-chat-container",
+      ".woot-widget-holder", "#woot-widget-iframe", // Chatwoot
+      "#chatbase-bubble", "#chatbase-bubble-button", "#chatbase-root", 'iframe[title*="chatbase"]',
+      "#reamaze-widget", "#reamaze-widget-container", 'iframe[src*="reamaze"]'
+    ];
+
+    const hideViaVendorAPIs = () => {
+      try { window.$crisp?.push?.(["do", "chat:hide"]); } catch {}
+      try { window.Intercom?.("hide"); } catch {}
+      try { window.Tawk_API?.hideWidget?.(); } catch {}
+      try { window.zE?.("webWidget", "hide"); } catch {}
+      try { window.fcWidget?.hide?.(); } catch {}
+      try { window.drift?.api?.widget?.hide?.(); } catch {}
+      try { window.$chatwoot?.hide?.(); } catch {}
+    };
+
+    const hideNode = (el) => {
+      if (!el || el.dataset?.twHiddenByMap === "true") return;
+      el.dataset.twHiddenByMap = "true";
+      const s = el.style;
+      el.dataset.twPrevDisplay = s.display;
+      el.dataset.twPrevVisibility = s.visibility;
+      el.dataset.twPrevOpacity = s.opacity;
+      s.setProperty("display", "none", "important");
+      s.setProperty("visibility", "hidden", "important");
+      s.setProperty("opacity", "0", "important");
+      s.setProperty("pointer-events", "none", "important");
+    };
+
+    const unhideAll = () => {
+      document.querySelectorAll('[data-tw-hidden-by-map="true"]').forEach((el) => {
+        const s = el.style;
+        s.display = el.dataset.twPrevDisplay || "";
+        s.visibility = el.dataset.twPrevVisibility || "";
+        s.opacity = el.dataset.twPrevOpacity || "";
+        s.pointerEvents = "";
+        delete el.dataset.twHiddenByMap;
+        delete el.dataset.twPrevDisplay;
+        delete el.dataset.twPrevVisibility;
+        delete el.dataset.twPrevOpacity;
+      });
+    };
+
+    const isBottomRight = (el) => {
+      try {
+        const cs = getComputedStyle(el);
+        if (cs.position !== "fixed" && cs.position !== "sticky") return false;
+        const right = parseFloat(cs.right);
+        const bottom = parseFloat(cs.bottom);
+        return !Number.isNaN(right) && !Number.isNaN(bottom) && right <= 80 && bottom <= 80;
+      } catch { return false; }
+    };
+
+    const looksLikeSupport = (el) => {
+      const id = (el.id || "").toLowerCase();
+      const cls = (el.className?.toString() || "").toLowerCase();
+      const title = (el.getAttribute?.("title") || "").toLowerCase();
+      const aria = (el.getAttribute?.("aria-label") || "").toLowerCase();
+      const txt = (el.textContent || "").toLowerCase();
+      const hay = `${id} ${cls} ${title} ${aria} ${txt}`;
+      return /(support|chat|help|assistant|message|bot)/.test(hay);
+    };
+
+    const sweep = () => {
+      // 1) known containers
+      knownSelectors.forEach((sel) => {
+        document.querySelectorAll(sel).forEach(hideNode);
+      });
+      // 2) heuristic: bottom-right, looks like support/chat
+      document.querySelectorAll("iframe,div,button,a").forEach((el) => {
+        if (isBottomRight(el) && looksLikeSupport(el)) hideNode(el);
+      });
+      // 3) ask vendors to hide (if loaded)
+      hideViaVendorAPIs();
+    };
+
+    addClass();
+    sweep();
+
+    // Retry a couple of times in case widget injects late
+    const retry = setInterval(sweep, 1200);
+
+    // Watch DOM for new nodes (lazy-loaded widgets)
+    const mo = new MutationObserver(sweep);
+    mo.observe(document.documentElement, { childList: true, subtree: true });
+
+    return () => {
+      clearInterval(retry);
+      mo.disconnect();
+      removeClass();
+      unhideAll();
+      // Best effort: ask vendors to show again after leaving the map
+      try { window.$crisp?.push?.(["do", "chat:show"]); } catch {}
+      try { window.Intercom?.("show"); } catch {}
+      try { window.Tawk_API?.showWidget?.(); } catch {}
+      try { window.zE?.("webWidget", "show"); } catch {}
+      try { window.fcWidget?.show?.(); } catch {}
+      try { window.drift?.api?.widget?.show?.(); } catch {}
+      try { window.$chatwoot?.show?.(); } catch {}
     };
   }, []);
 

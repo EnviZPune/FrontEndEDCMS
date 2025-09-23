@@ -1,17 +1,23 @@
-"use client"
-
 import { useEffect, useMemo, useRef, useState } from "react"
 import { API_BASE } from "../../config"
 import { getToken, authHeaders } from "../../utils/auth"
 import SupportChatWindow from "../Chat/SupportChatWindow"
 import "../../Styling/chat.css"
 
+const DEFAULT_GREETING = "Hello, i need some assistence"
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false)
-  const [threads, setThreads] = useState([])               // <-- no <any[]>
-  const [activeThreadId, setActiveThreadId] = useState(null) // <-- no <string | null>
+  const [threads, setThreads] = useState([])
+  const [activeThreadId, setActiveThreadId] = useState(null)
   const [loading, setLoading] = useState(false)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
+
+  // NEW: subject prompt UI state
+  const [showNewForm, setShowNewForm] = useState(false)
+  const [newTopic, setNewTopic] = useState("")
+  const [startingNew, setStartingNew] = useState(false)
+  const newTopicInputRef = useRef(null)
 
   const containerRef = useRef(null)
   const launcherRef = useRef(null)
@@ -102,12 +108,16 @@ export default function ChatWidget() {
       if (launcher && launcher.contains(e.target)) return
       setOpen(false)
       setMobileNavOpen(false)
+      setShowNewForm(false)
+      setNewTopic("")
     }
 
     const handleKey = (e) => {
       if (e.key === "Escape") {
         setOpen(false)
         setMobileNavOpen(false)
+        setShowNewForm(false)
+        setNewTopic("")
       }
     }
 
@@ -122,27 +132,64 @@ export default function ChatWidget() {
     }
   }, [open])
 
+  const isMobileViewport = () =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 640px)").matches
+
+  useEffect(() => {
+    if (!open) return
+    if (isMobileViewport() && (!activeThreadId || threads.length === 0)) {
+      setMobileNavOpen(true) // show sidebar with "+ New chat" first
+    }
+  }, [open, activeThreadId, threads.length])
+
+  // Focus the subject input when the form is shown
+  useEffect(() => {
+    if (showNewForm) {
+      const id = requestAnimationFrame(() => newTopicInputRef.current?.focus())
+      return () => cancelAnimationFrame(id)
+    }
+  }, [showNewForm])
+
   const startNew = async (topic, message, businessId) => {
-    const payload = { topic, initialMessage: message, businessId: businessId ?? null }
-    const res = await fetch(`${API_BASE}/Support/threads`, {
-      method: "POST",
-      headers: authHeaders(),
-      body: JSON.stringify(payload),
-    })
-    if (!res.ok) return
-    const dto = await res.json()
-    setThreads((prev) => [
-      {
-        threadId: dto.threadId,
-        topic: dto.topic,
-        status: dto.status,
-        priority: dto.priority,
-        lastMessageAt: dto.lastMessageAt,
-      },
-      ...prev,
-    ])
-    setActiveThreadId(dto.threadId)
-    setMobileNavOpen(false)
+    setStartingNew(true)
+    try {
+      const payload = { topic, initialMessage: message, businessId: businessId ?? null }
+      const res = await fetch(`${API_BASE}/Support/threads`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) {
+        // optionally surface error text:
+        // const txt = await res.text().catch(()=> "")
+        setStartingNew(false)
+        return
+      }
+      const dto = await res.json()
+      setThreads((prev) => [
+        {
+          threadId: dto.threadId,
+          topic: dto.topic,
+          status: dto.status,
+          priority: dto.priority,
+          lastMessageAt: dto.lastMessageAt,
+        },
+        ...prev,
+      ])
+      setActiveThreadId(dto.threadId)
+      setShowNewForm(false)
+      setNewTopic("")
+      setMobileNavOpen(false)
+    } finally {
+      setStartingNew(false)
+    }
+  }
+
+  const handleSubmitNew = async () => {
+    const topic = newTopic.trim()
+    if (topic.length < 3) return // tiny guard; adjust as you like
+    await startNew(topic, DEFAULT_GREETING, null)
   }
 
   const formatDate = (dateString) => {
@@ -164,6 +211,8 @@ export default function ChatWidget() {
   const handleClose = () => {
     setOpen(false)
     setMobileNavOpen(false)
+    setShowNewForm(false)
+    setNewTopic("")
   }
 
   if (!isAuthed) return null
@@ -217,12 +266,64 @@ export default function ChatWidget() {
               </div>
             </div>
 
-            <button
-              className="chat-new-btn-support"
-              onClick={() => startNew("General help", "Hello, I need assistance.", null)}
-            >
-              + New chat
-            </button>
+            {/* NEW: Subject prompt or New chat button */}
+            {!showNewForm ? (
+              <button
+                className="chat-new-btn-support"
+                onClick={() => {
+                  setShowNewForm(true)
+                  setNewTopic("")
+                  setMobileNavOpen(true) // ensure sidebar is visible on mobile
+                }}
+              >
+                + New chat
+              </button>
+            ) : (
+              <div className="chat-new-form">
+                <label htmlFor="new-topic" className="chat-new-form-label">
+                  Subject
+                </label>
+                <input
+                  id="new-topic"
+                  ref={newTopicInputRef}
+                  className="chat-new-form-input"
+                  placeholder="Brief title of your problem…"
+                  value={newTopic}
+                  maxLength={120}
+                  onChange={(e) => setNewTopic(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault()
+                      handleSubmitNew()
+                    } else if (e.key === "Escape") {
+                      setShowNewForm(false)
+                      setNewTopic("")
+                    }
+                  }}
+                  disabled={startingNew}
+                />
+                <div className="chat-new-form-actions">
+                  <button
+                    className="chat-new-form-primary"
+                    onClick={handleSubmitNew}
+                    disabled={startingNew || newTopic.trim().length < 3}
+                    title="Create and send greeting"
+                  >
+                    {startingNew ? "Starting…" : "Start chat"}
+                  </button>
+                  <button
+                    className="chat-new-form-cancel"
+                    onClick={() => {
+                      setShowNewForm(false)
+                      setNewTopic("")
+                    }}
+                    disabled={startingNew}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
 
             <div className="chat-thread-list">
               {threads.map((t) => (
@@ -232,6 +333,8 @@ export default function ChatWidget() {
                   onClick={() => {
                     setActiveThreadId(t.threadId)
                     setMobileNavOpen(false)
+                    setShowNewForm(false)
+                    setNewTopic("")
                   }}
                 >
                   <div className="chat-thread-topic">{t.topic || "Untitled"}</div>
@@ -251,7 +354,7 @@ export default function ChatWidget() {
           {activeThreadId ? (
             <SupportChatWindow
               threadId={activeThreadId}
-              threadStatus={activeThread && activeThread.status} // let window disable input if closed
+              threadStatus={activeThread && activeThread.status}
               onToggleDrawer={() => setMobileNavOpen((v) => !v)}
               onDeleted={(tid) => {
                 setThreads((prev) => {
@@ -267,7 +370,9 @@ export default function ChatWidget() {
             />
           ) : (
             <div className="chat-window-placeholder">
-              Select a conversation or create a new one.
+              {showNewForm
+                ? "Type a subject on the left to begin."
+                : "Select a conversation or create a new one."}
             </div>
           )}
         </div>

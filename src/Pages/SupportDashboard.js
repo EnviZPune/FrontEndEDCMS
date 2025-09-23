@@ -22,40 +22,32 @@ import {
 } from "lucide-react"
 import "../Styling/support-dashboard.css"
 
-const USER_PROFILE_BASE = "/profile";
-const profilePath = (id) => `${USER_PROFILE_BASE}/${id}`;
-const DEFAULT_AVATAR_PATH = "Assets/default-avatar.jpg"  // ← root-relative PNG
+const USER_PROFILE_BASE = "/profile"
+const profilePath = (id) => `${USER_PROFILE_BASE}/${id}`
+const DEFAULT_AVATAR_PATH = "Assets/default-avatar.jpg"
 
-// ---------- GCS config (matches PhotoPanel) ----------
-const GCS_BUCKET = "Assets/triwearsiconbigger.png_bucket"
+// ---------- GCS config ----------
+const GCS_BUCKET = "edcms_bucket"                  // ✅ correct bucket
 const GCS_BASE = `https://storage.googleapis.com/${GCS_BUCKET}`
+
+// Simple URL normalizer for attachments that might be relative
+const apiOrigin = API_BASE.replace(/\/api\/?$/, "")
+const fileUrl = (u) => {
+  if (!u) return ""
+  if (/^(https?:|data:|blob:)/i.test(u)) return u
+  return `${apiOrigin}${u.startsWith("/") ? u : `/${u}`}`
+}
 
 // Utility
 const makeSafeName = (name = "") =>
-  name
-    .toString()
-    .replace(/[^a-zA-Z0-9.-]/g, "_")
-    .replace(/_+/g, "_")
-    .slice(0, 120)
+  name.toString().replace(/[^a-zA-Z0-9.-]/g, "_").replace(/_+/g, "_").slice(0, 120)
 
 const pickAvatarUrl = (u) =>
-  u?.profileImage ||
-  u?.profilePictureUrl ||
-  u?.avatarUrl ||
-  u?.photoUrl ||
-  ""
+  u?.profileImage || u?.profilePictureUrl || u?.avatarUrl || u?.photoUrl || ""
 
 const pickDisplayName = (u) => {
   const joined = [u?.firstName, u?.lastName].filter(Boolean).join(" ").trim()
-  return (
-    u?.displayName ||
-    u?.fullName ||
-    (joined || null) ||
-    u?.name ||
-    u?.username ||
-    u?.email ||
-    ""
-  )
+  return u?.displayName || u?.fullName || (joined || null) || u?.name || u?.username || u?.email || ""
 }
 
 // Parse URLs from message body so plain image links show as thumbs
@@ -175,13 +167,12 @@ export default function SupportDashboard() {
     const safe = makeSafeName(file.name || "support")
     const hasExt = /\.[a-z0-9]+$/i.test(safe)
     const objectName = `${Date.now()}-${hasExt ? safe : `${safe}.jpg`}`
-    const encoded = encodeURIComponent(objectName) // IMPORTANT
+    const encoded = encodeURIComponent(objectName)
 
     const imgUrl = `${GCS_BASE}/${encoded}`
     const txtUrl = `${imgUrl}.txt`
     const contentType = file.type || "image/jpeg"
 
-    // Upload image
     const imgRes = await fetch(imgUrl, {
       method: "PUT",
       headers: { "Content-Type": contentType },
@@ -193,7 +184,6 @@ export default function SupportDashboard() {
       throw new Error(`GCS image PUT failed (${imgRes.status}) ${errText}`)
     }
 
-    // Upload companion .txt
     const txtRes = await fetch(txtUrl, {
       method: "PUT",
       headers: { "Content-Type": "text/plain" },
@@ -230,13 +220,10 @@ export default function SupportDashboard() {
         setUploadProgress(Math.round(((i + 1) / validFiles.length) * 100))
       }
 
-      // Send URLs as a normal chat message (renderer shows thumbnails)
       if (connRef.current) {
         const body = urls.join("\n")
         await connRef.current.invoke("SendMessage", activeThreadId, body)
       }
-
-      // NOTE: do NOT optimistically echo here — hub will echo back.
     } catch (err) {
       console.error(err)
       alert(err?.message || "Image upload failed. Please check bucket billing/ACL and try again.")
@@ -332,7 +319,7 @@ export default function SupportDashboard() {
             return [
               uid,
               {
-                avatar: url && typeof url === "string" ? url : DEFAULT_AVATAR_PATH,
+                avatar: url && typeof url === "string" ? fileUrl(url) : DEFAULT_AVATAR_PATH, // ✅ normalize
                 name: name?.trim() ? name.trim() : `User #${uid}`
               }
             ]
@@ -447,7 +434,10 @@ export default function SupportDashboard() {
       }
     })
 
-    connection.onreconnected(() => setConnected(true))
+    connection.onreconnected(async () => {          // ✅ re-join the room
+      setConnected(true)
+      try { await connection.invoke("JoinThread", threadId) } catch {}
+    })
     connection.onreconnecting(() => setConnected(false))
     connection.onclose(() => setConnected(false))
 
@@ -596,9 +586,9 @@ export default function SupportDashboard() {
 
   // Hide floating widget while open
   useEffect(() => {
-    document.body.classList.add("hide-support-widget");
-    return () => document.body.classList.remove("hide-support-widget");
-  }, []);
+    document.body.classList.add("hide-support-widget")
+    return () => document.body.classList.remove("hide-support-widget")
+  }, [])
 
   // Initial loads
   useEffect(() => {
@@ -667,7 +657,7 @@ export default function SupportDashboard() {
                 </div>
               ) : threads.length === 0 ? (
                 <div className="sd-empty">
-                  <MessageCircle className="w-8 h-8 opacity-50" style={{position : "relative", top : "6px"}} />
+                  <MessageCircle className="w-8 h-8 opacity-50" style={{ position: "relative", top: "6px" }} />
                   <span>   No conversations yet</span>
                 </div>
               ) : (
@@ -807,8 +797,8 @@ export default function SupportDashboard() {
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <>
-                  <XCircle className="w-4 h-4" style={{position : "relative", top : "2px", right : "3px"}}/>
-                  <span style={{position : "relative", bottom : "5px"}}>Close thread</span>
+                  <XCircle className="w-4 h-4" style={{ position: "relative", top: "2px", right: "3px" }}/>
+                  <span style={{ position: "relative", bottom: "5px" }}>Close thread</span>
                 </>
               )}
             </button>
@@ -839,9 +829,10 @@ export default function SupportDashboard() {
                     : profiles[key]?.avatar || DEFAULT_AVATAR_PATH
 
                   // Parse URLs from body to show images/links when no attachments array is present
-                  const urls = extractUrls(m.body)
+                  const urls = extractUrls(m.body || "")
                   const imageUrls = urls.filter(isImageUrl)
                   const linkUrls = urls.filter((u) => !isImageUrl(u))
+                  const textOnly = (m.body || "").replace(URL_REGEX, "").trim() // ✅ render the actual text
 
                   return (
                     <div
@@ -884,6 +875,15 @@ export default function SupportDashboard() {
                       <div className="sd-message-content">
                         <div className="sd-author">{authorNameFor(m)}</div>
 
+                        {/* ✅ Text body */}
+                        {textOnly && (
+                          <div className="sd-text">
+                            {textOnly.split(/\n/g).map((line, i) => (
+                              <p key={i} style={{ margin: 0 }}>{line}</p>
+                            ))}
+                          </div>
+                        )}
+
                         {/* Attachments from server */}
                         {Array.isArray(m.attachments) && m.attachments.length > 0 && (
                           <div className="sd-attachments-grid">
@@ -891,14 +891,14 @@ export default function SupportDashboard() {
                               isImageAttachment(a) ? (
                                 <a
                                   key={a.attachmentId || a.url}
-                                  href={a.url}
+                                  href={fileUrl(a.url)}
                                   target="_blank"
                                   rel="noreferrer"
                                   className="sd-attachment"
                                   title={a.fileName || "image"}
                                 >
                                   <img
-                                    src={a.url}
+                                    src={fileUrl(a.url)}
                                     alt={a.fileName || "attachment"}
                                     loading="lazy"
                                     draggable={false}
@@ -912,7 +912,7 @@ export default function SupportDashboard() {
                         {/* Images found in body */}
                         {(!m.attachments || m.attachments.length === 0) && imageUrls.length > 0 && (
                           <div className="sd-attachments-grid">
-                            {imageUrls.map((u) => (
+                            {Array.from(new Set(imageUrls)).map((u) => (
                               <a key={u} href={u} target="_blank" rel="noreferrer" className="sd-attachment" title="image">
                                 <img src={u} alt="attachment" loading="lazy" draggable={false} />
                               </a>
@@ -923,7 +923,7 @@ export default function SupportDashboard() {
                         {/* Non-image links */}
                         {linkUrls.length > 0 && (
                           <div className="sd-links">
-                            {linkUrls.map((u) => (
+                            {Array.from(new Set(linkUrls)).map((u) => (
                               <a key={u} href={u} target="_blank" rel="noreferrer" className="sd-link">
                                 {u}
                               </a>

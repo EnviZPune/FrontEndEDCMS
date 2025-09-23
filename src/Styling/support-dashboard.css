@@ -414,6 +414,51 @@ body.hide-support-widget .chat-container {
 
   .sd-root { position: relative; height: 100dvh; overflow: hidden; }
 
+  /* === Support Dashboard — message bubbles (mirror user-side chat) === */
+
+.sd-message .sd-text{
+  display:inline-block;
+  max-width:70ch;
+  background:var(--chat-surface);
+  color:var(--chat-text);
+  padding:.75rem 1rem;
+  border:1px solid var(--chat-border);
+  border-radius:var(--chat-radius);
+  box-shadow:var(--chat-shadow-sm);
+  font-size:.875rem;
+  line-height:1.5;
+  word-wrap:break-word;
+  white-space:pre-wrap; /* keep user line breaks */
+}
+
+/* user = right bubble vibe */
+.sd-message.user .sd-text{
+  background:var(--chat-primary);
+  color:#fff;
+  border-color:transparent;
+}
+
+/* agent = neutral bubble */
+.sd-message.agent .sd-text{
+  background:var(--chat-surface);
+  color:var(--chat-text);
+}
+
+/* system = warning banner */
+.sd-message.system .sd-text{
+  background:var(--chat-warning);
+  color:#fff;
+  font-style:italic;
+  border-color:transparent;
+}
+
+/* tidy spacing with other blocks */
+.sd-text p + p{ margin-top:.5rem; }
+.sd-links{ margin-top:.35rem; }
+.sd-attachments-grid{ margin-top:.35rem; }
+.sd-message-time{ margin-top:.35rem; font-size:.75rem; color:var(--chat-text-light); }
+
+
   /* Off-canvas sidebar */
   .sd-sidebar {
     position: fixed;
