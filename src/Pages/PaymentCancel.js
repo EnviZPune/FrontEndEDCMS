@@ -1,32 +1,25 @@
-import React from "react";
-import { Link } from "react-router-dom";
+// src/Pages/PaymentCancel.js
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
+import { Link, useSearchParams } from "react-router-dom";
 
 export default function PaymentCancel() {
+  const [params] = useSearchParams();
+  const reason = params.get("reason");
+
   return (
     <>
-      <div className="page-wrapper" style={{ minHeight: "50vh", display: "grid", placeItems: "center" }}>
-        <div style={{ textAlign: "center", maxWidth: 560, padding: "24px" }}>
-          <h1 style={{ marginBottom: 8 }}>Payment Canceled</h1>
-          <p style={{ opacity: 0.8, marginBottom: 20 }}>
-            Your subscription/payment was not completed.
-          </p>
-          <Link
-            to="/become-owner"
-            className="btn-primary"
-            style={{
-              display: "inline-block",
-              padding: "10px 16px",
-              borderRadius: 8,
-              border: "1px solid #e5e7eb",
-              textDecoration: "none",
-            }}
-          >
-            Subscribe Now
-          </Link>
+      <Navbar />
+      <div className="container" style={{ minHeight: "50vh", display: "grid", placeItems: "center", padding: 24 }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: 48 }}>❌</div>
+          <h1>Payment Canceled</h1>
+          {reason && <p>Reason: {reason}</p>}
+          <p>You weren’t charged. You can try again any time.</p>
+          <p><Link to="/">Back to Home</Link></p>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
