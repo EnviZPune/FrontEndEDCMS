@@ -5,6 +5,19 @@ import { useAuth } from '../hooks/useAuth';
 import '../../../Styling/Settings/settings.css';
 import '../../../Styling/Settings/reservationspanel.css';
 
+// ADDED: enum mapping + helpers so we handle both strings and numbers
+const StatusMap = { Pending: 0, Confirmed: 1, Cancelled: 2, Completed: 3 };
+const toStatusNumber = (val) => {
+  if (typeof val === 'number') return val;
+  if (typeof val === 'string') {
+    if (val in StatusMap) return StatusMap[val];
+    const n = Number(val);
+    return Number.isFinite(n) ? n : StatusMap.Pending;
+  }
+  return StatusMap.Pending;
+};
+const isStatus = (reservation, name) => toStatusNumber(reservation?.status) === StatusMap[name];
+
 export default function ReservationsPanel({ business }) {
   const { t } = useTranslation('reservations');
   const { get, put } = useApiClient();
@@ -26,7 +39,7 @@ export default function ReservationsPanel({ business }) {
     setError(null);
 
     get(`/Reservation/business/${business.businessId}`)
-      .then(data => { if (!cancelled) setReservations(data); })
+      .then(data => { if (!cancelled) setReservations(Array.isArray(data) ? data : []); })
       .catch(err => {
         console.error('Failed to load reservations:', err);
         if (!cancelled) setError(err);
@@ -39,7 +52,7 @@ export default function ReservationsPanel({ business }) {
 
   const refresh = async () => {
     const updated = await get(`/Reservation/business/${business.businessId}`);
-    setReservations(updated);
+    setReservations(Array.isArray(updated) ? updated : []);
   };
 
   const handleComplete = async (reservationId) => {
@@ -55,9 +68,11 @@ export default function ReservationsPanel({ business }) {
     }
   };
 
-  const handleUpdateStatus = async (reservationId, status) => {
+  // CHANGED: send numeric enum to backend to be 100% compatible
+  const handleUpdateStatus = async (reservationId, statusName) => {
     try {
       setActionState({ id: reservationId, type: 'status' });
+      const status = StatusMap[statusName]; // -> number
       await put(`/Reservation/${reservationId}/status`, { status });
       await refresh();
     } catch (err) {
@@ -102,8 +117,9 @@ export default function ReservationsPanel({ business }) {
     );
   }
 
-  const confirmed = reservations.filter(r => r.status === 'Confirmed');
-  const pending   = reservations.filter(r => r.status === 'Pending');
+  // CHANGED: filter using helper that tolerates string OR numeric status
+  const confirmed = reservations.filter(r => isStatus(r, 'Confirmed'));
+  const pending   = reservations.filter(r => isStatus(r, 'Pending'));
 
   return (
     <div className="reservations-panel">

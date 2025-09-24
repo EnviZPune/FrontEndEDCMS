@@ -9,10 +9,6 @@ import "../../../Styling/Settings/productpanel.css"
 
 const CLOTHING_ITEM_API = "/ClothingItem"
 
-// How many items we fetch per page from the API when we page through
-const LOAD_PAGE_SIZE = 50
-const LOAD_MAX_PAGES = 200 // hard safety cap (10k items)
-
 export default function ProductPanel({ business }) {
   const { t } = useTranslation("productpanel")
   const { get, post, put, del } = useApiClient()
@@ -65,8 +61,17 @@ export default function ProductPanel({ business }) {
   const validateForm = useCallback(() => {
     const errors = []
     if (!form.name.trim()) errors.push(t("products.errors.name_required", { defaultValue: "Product name is required" }))
-    if (!form.price || Number.parseFloat(form.price) <= 0) errors.push(t("products.errors.price_required", { defaultValue: "Valid price is required" }))
-    if (!form.quantity || Number.parseInt(form.quantity, 10) < 0) errors.push(t("products.errors.quantity_required", { defaultValue: "Valid quantity is required" }))
+
+    const priceNum = Number.parseFloat(form.price)
+    if (form.price === "" || Number.isNaN(priceNum) || priceNum <= 0) {
+      errors.push(t("products.errors.price_required", { defaultValue: "Valid price is required" }))
+    }
+
+    const qtyNum = Number.parseInt(form.quantity, 10)
+    if (form.quantity === "" || Number.isNaN(qtyNum) || qtyNum < 0) {
+      errors.push(t("products.errors.quantity_required", { defaultValue: "Valid quantity is required" }))
+    }
+
     if (!validBusinessId) errors.push(t("products.errors.select_business_first", { defaultValue: "Select a business first." }))
     return errors
   }, [form.name, form.price, form.quantity, t, validBusinessId])
@@ -83,30 +88,26 @@ export default function ProductPanel({ business }) {
     if (!payload) return new Set()
     const arr =
       Array.isArray(payload) ? payload :
-      Array.isArray(payload.items) ? payload.items :
-      Array.isArray(payload.data) ? payload.data :
-      Array.isArray(payload.results) ? payload.results :
+      Array.isArray(payload?.items) ? payload.items :
+      Array.isArray(payload?.data) ? payload.data :
+      Array.isArray(payload?.results) ? payload.results :
       []
     const ids = arr
-      .map(x => (typeof x === "number" ? x : x?.clothingItemId))
-      .filter(Boolean)
+      .map((x) => (typeof x === "number" ? x : x?.clothingItemId))
+      .filter((v) => Number.isInteger(v))
     return new Set(ids)
   }, [])
 
   // ─── Data loaders ────────────────────────────────────────────────────────
- const loadAllProducts = useCallback(async (bizId) => {
-  // Only use the business endpoint; normalize whatever shape comes back.
-  const res = await getRef.current(`/ClothingItem/business/${bizId}`);
-
-  // Accept a few common shapes: array, { items: [...] }, { data: [...] }, { results: [...] }
-  const items =
-    Array.isArray(res) ? res :
-    (Array.isArray(res?.items) ? res.items :
-    (Array.isArray(res?.data) ? res.data :
-    (Array.isArray(res?.results) ? res.results : [])));
-
-  setProducts(items);
-}, []);
+  const loadAllProducts = useCallback(async (bizId) => {
+    const res = await getRef.current(`/ClothingItem/business/${bizId}`)
+    const items =
+      Array.isArray(res) ? res :
+      (Array.isArray(res?.items) ? res.items :
+      (Array.isArray(res?.data) ? res.data :
+      (Array.isArray(res?.results) ? res.results : [])))
+    setProducts(items || [])
+  }, [])
 
   const loadCategories = useCallback(async (bizId) => {
     const cats = await getRef.current(`/ClothingCategory/business/${bizId}`)
@@ -151,13 +152,12 @@ export default function ProductPanel({ business }) {
   // Reset to page 1 when search or list size changes
   useEffect(() => { setPage(1) }, [searchQuery, products.length])
 
-  // Keep page within bounds if items shrink (e.g., after delete or filter)
   const filteredProducts = useMemo(() => {
     const q = searchQuery.toLowerCase().trim()
     if (!q) return products
     return products.filter((product) =>
       [product.name, product.brand, product.model, product.description]
-        .map(s => (s || "").toString().toLowerCase())
+        .map((s) => (s || "").toString().toLowerCase())
         .join(" ")
         .includes(q)
     )
@@ -207,7 +207,7 @@ export default function ProductPanel({ business }) {
     try {
       const list = Array.from(files)
       const filesToUpload = list.slice(0, Math.max(0, 10 - form.photos.length))
-      const uploadedUrls = await Promise.all(filesToUpload.map(uploadImageToGCS))
+      const uploadedUrls = await Promise.all(list.slice(0, filesToUpload.length).map(uploadImageToGCS))
       const validUrls = uploadedUrls.filter(Boolean)
       if (validUrls.length > 0) {
         setForm((prev) => ({ ...prev, photos: [...prev.photos, ...validUrls] }))
@@ -242,31 +242,33 @@ export default function ProductPanel({ business }) {
     setMainPhotoIndex(0); setError(null)
   }, [])
 
+  // Build camelCase DTO for ClothingItem endpoints
   const buildDto = useCallback(() => {
-    const orderedPhotos = form.photos.length > 0
-      ? [form.photos[mainPhotoIndex], ...form.photos.filter((_, idx) => idx !== mainPhotoIndex)]
-      : []
+    const orderedPhotos =
+      form.photos.length > 0
+        ? [form.photos[mainPhotoIndex], ...form.photos.filter((_, idx) => idx !== mainPhotoIndex)]
+        : []
 
-    // PascalCase to align with API expectations
     return {
-      BusinessId: validBusinessId ? bId : null,
-      BusinessIds: validBusinessId ? [bId] : [],
+      businessId: validBusinessId ? bId : null,
+      businessIds: validBusinessId ? [bId] : [],
+      clothingItemId: editingId ?? undefined, // harmless on create
 
-      Name: form.name.trim(),
-      Description: form.description.trim(),
-      Price: Number.parseFloat(form.price) || 0,
-      Quantity: Number.parseInt(form.quantity, 10) || 0,
-      ClothingCategoryId: form.categoryId ? +form.categoryId : null,
-      Brand: form.brand.trim(),
-      Model: form.model.trim(),
-      PictureUrls: orderedPhotos,
-      Colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
-      Sizes: (form.size || "").trim(),
-      Material: form.material.trim(),
+      name: form.name.trim(),
+      description: form.description.trim(),
+      price: Number.parseFloat(form.price) || 0,
+      quantity: Number.parseInt(form.quantity, 10) || 0,
+      clothingCategoryId: form.categoryId ? +form.categoryId : null,
+      brand: form.brand.trim(),
+      model: form.model.trim(),
+      pictureUrls: orderedPhotos,
+      colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
+      sizes: (form.size || "").trim(),
+      material: form.material.trim(),
     }
-  }, [form, mainPhotoIndex, validBusinessId, bId])
+  }, [form, mainPhotoIndex, validBusinessId, bId, editingId])
 
-  // Verify the business exists before saving (helps avoid FK 23503)
+  // Verify business exists before saving (avoid FK errors)
   const assertBusinessExists = useCallback(async () => {
     try {
       const biz = await getRef.current(`/Business/${bId}`)
@@ -276,6 +278,37 @@ export default function ProductPanel({ business }) {
     }
   }, [bId, t])
 
+  // ---- Smart endpoint fallbacks for PUT/DELETE ----
+  const smartPutClothingItem = useCallback(async (id, dto) => {
+    // 1) Plain: /ClothingItem/{id}
+    try {
+      return await put(`${CLOTHING_ITEM_API}/${id}`, dto)
+    } catch (e1) {
+      // 2) /ClothingItem/business/{bizId}/items/{id}
+      try {
+        return await put(`${CLOTHING_ITEM_API}/business/${bId}/items/${id}`, dto)
+      } catch (e2) {
+        // 3) /ClothingItem/{id}?businessId={bizId}
+        return await put(`${CLOTHING_ITEM_API}/${id}?businessId=${bId}`, dto)
+      }
+    }
+  }, [put, bId])
+
+  const smartDeleteClothingItem = useCallback(async (id) => {
+    // 1) Plain: /ClothingItem/{id}
+    try {
+      return await del(`${CLOTHING_ITEM_API}/${id}`)
+    } catch (e1) {
+      // 2) /ClothingItem/business/{bizId}/items/{id}
+      try {
+        return await del(`${CLOTHING_ITEM_API}/business/${bId}/items/${id}`)
+      } catch (e2) {
+        // 3) /ClothingItem/{id}?businessId={bizId}
+        return await del(`${CLOTHING_ITEM_API}/${id}?businessId=${bId}`)
+      }
+    }
+  }, [del, bId])
+
   const saveProduct = useCallback(async () => {
     const validationErrors = validateForm()
     if (validationErrors.length > 0) { setError(validationErrors.join(", ")); return }
@@ -283,24 +316,43 @@ export default function ProductPanel({ business }) {
     setLoading(true); setError(null)
     try {
       const dto = buildDto()
-      if (!dto.BusinessId) throw new Error(t("products.errors.select_business_first", { defaultValue: "Select a business first." }))
+      if (!dto.businessId || !Array.isArray(dto.businessIds) || dto.businessIds.length === 0) {
+        throw new Error(t("products.errors.select_business_first", { defaultValue: "Select a business first." }))
+      }
 
       await assertBusinessExists()
 
       if (role === "employee") {
+        // PascalCase for ProposedChanges endpoint
+        const itemDtoProposal = {
+          BusinessId: dto.businessId,
+          BusinessIds: dto.businessIds,
+          ClothingItemId: editingId || 0,
+          Name: dto.name,
+          Description: dto.description,
+          Price: dto.price,
+          Quantity: dto.quantity,
+          ClothingCategoryId: dto.clothingCategoryId,
+          Brand: dto.brand,
+          Model: dto.model,
+          PictureUrls: dto.pictureUrls,
+          Colors: dto.colors,
+          Sizes: dto.sizes,
+          Material: dto.material,
+        }
+
         await post("/ProposedChanges/submit", {
-          BusinessId: dto.BusinessId,
+          BusinessId: dto.businessId,
           Type: editingId ? "Update" : "Create",
-          ItemDto: { ...dto, ClothingItemId: editingId || 0 },
+          ItemDto: itemDtoProposal,
         })
         alert(t("products.alerts.change_proposed", { defaultValue: "Your change has been proposed and is pending approval." }))
       } else {
         if (editingId) {
-          await put(`${CLOTHING_ITEM_API}/${editingId}`, dto)
+          await smartPutClothingItem(editingId, dto)
         } else {
           await post(`${CLOTHING_ITEM_API}`, dto)
         }
-        // Reload ALL items (not just the last one)
         await loadAllProducts(bId)
         alert(t("products.alerts.saved", { defaultValue: "Product saved successfully!" }))
       }
@@ -317,13 +369,13 @@ export default function ProductPanel({ business }) {
         )
       } else {
         setError(
-          err?.message
-            ? t("products.errors.save_failed_with_reason", { defaultValue: "Failed to save product: {{reason}}", reason: err.message })
+          msg
+            ? t("products.errors.save_failed_with_reason", { defaultValue: "Failed to save product: {{reason}}", reason: msg })
             : t("products.errors.save_failed", { defaultValue: "Failed to save product. Please check console/network for details." })
         )
       }
     } finally { setLoading(false) }
-  }, [validateForm, buildDto, role, editingId, post, put, bId, resetForm, t, assertBusinessExists, loadAllProducts])
+  }, [validateForm, buildDto, role, editingId, post, bId, resetForm, t, assertBusinessExists, loadAllProducts, smartPutClothingItem])
 
   const handleDelete = useCallback(async (id) => {
     if (!validBusinessId) return
@@ -344,7 +396,7 @@ export default function ProductPanel({ business }) {
         })
         alert(t("products.alerts.delete_proposed", { defaultValue: "Delete request submitted for approval." }))
       } else {
-        await del(`${CLOTHING_ITEM_API}/${id}`)
+        await smartDeleteClothingItem(id)
         await loadAllProducts(bId)
         setPinnedIds(prev => { const next = new Set(prev); next.delete(id); return next })
         alert(t("products.alerts.deleted", { defaultValue: "Product deleted successfully." }))
@@ -357,19 +409,34 @@ export default function ProductPanel({ business }) {
           : t("products.errors.delete_failed", { defaultValue: "Failed to delete product. Please check console/network for details." })
       )
     } finally { setLoading(false) }
-  }, [validBusinessId, role, post, del, t, bId, loadAllProducts])
+  }, [validBusinessId, role, post, t, bId, loadAllProducts, smartDeleteClothingItem])
 
   const startEdit = useCallback((product) => {
+    // Normalize pictureUrls from array | string | JSON-string
+    const pics =
+      Array.isArray(product.pictureUrls)
+        ? product.pictureUrls
+        : typeof product.pictureUrls === "string" && product.pictureUrls.trim()
+          ? (() => {
+              try {
+                const arr = JSON.parse(product.pictureUrls)
+                return Array.isArray(arr) ? arr : [product.pictureUrls]
+              } catch {
+                return [product.pictureUrls]
+              }
+            })()
+          : []
+
     setEditingId(product.clothingItemId)
     setForm({
       name: product.name || "",
       description: product.description || "",
-      price: product.price?.toString() || "",
-      quantity: product.quantity?.toString() || "",
-      categoryId: product.clothingCategoryId?.toString() || "",
+      price: (product.price != null ? String(product.price) : "") || "",
+      quantity: (product.quantity != null ? String(product.quantity) : "") || "",
+      categoryId: product.clothingCategoryId != null ? String(product.clothingCategoryId) : "",
       brand: product.brand || "",
       model: product.model || "",
-      photos: product.pictureUrls || [],
+      photos: pics,
       colors: Array.isArray(product.colors) ? product.colors.join(", ") : product.colors || "",
       size: Array.isArray(product.sizes) ? product.sizes.join(", ") : (product.sizes != null ? String(product.sizes) : ""),
       material: product.material || "",
@@ -582,31 +649,6 @@ export default function ProductPanel({ business }) {
           </div>
         </div>
 
-        <div className="form-group">
-          <div className="grid two-cols">
-            <div className="form-group">
-              <label htmlFor="product-colors">{t("products.fields.colors", { defaultValue: "Colors" })}</label>
-              <input
-                id="product-colors"
-                placeholder={t("products.placeholders.colors", { defaultValue: "Red, Blue, Green (comma separated)" })}
-                value={form.colors}
-                onChange={(e) => setForm((f) => ({ ...f, colors: e.target.value }))}
-                disabled={loading}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="product-material">{t("products.fields.material", { defaultValue: "Material" })}</label>
-              <input
-                id="product-material"
-                placeholder={t("products.placeholders.material", { defaultValue: "Cotton, Polyester, etc." })}
-                value={form.material}
-                onChange={(e) => setForm((f) => ({ ...f, material: e.target.value }))}
-                disabled={loading}
-              />
-            </div>
-          </div>
-        </div>
-
         {/* Photos */}
         <div className="form-group">
           <label>{t("products.fields.photos", { defaultValue: "Product Photos" })}</label>
@@ -729,8 +771,8 @@ export default function ProductPanel({ business }) {
                         <span className="quantity">{t("products.badges.qty", { defaultValue: "Qty" })}: {p.quantity}</span>
                       </div>
                       <div className="btns">
-                        <button onClick={() => startEdit(p)} disabled={loading} className="edit">✏️ {t("common.edit", { defaultValue: "Edit" })}</button>
-                        <button onClick={() => handleDelete(p.clothingItemId)} disabled={loading} className="delete">🗑️ {t("common.delete", { defaultValue: "Delete" })}</button>
+                        <button onClick={() => startEdit(p)} disabled={loading} className="edit"> {t("common.edit", { defaultValue: "Edit" })}</button>
+                        <button onClick={() => handleDelete(p.clothingItemId)} disabled={loading} className="delete"> {t("common.delete", { defaultValue: "Delete" })}</button>
 
                         <button
                           onClick={() => togglePin(p)}
@@ -763,6 +805,17 @@ export default function ProductPanel({ business }) {
             </ul>
           )}
 
-          {totalCount > pageSize && ( <Pagination page={page} pageSize={pageSize} totalCount={totalCount} onPageChange={setPage} maxButtons={5} /> )} </div> </div> </>
+          {totalCount > pageSize && (
+            <Pagination
+              page={page}
+              pageSize={pageSize}
+              totalCount={totalCount}
+              onPageChange={setPage}
+              maxButtons={5}
+            />
+          )}
+        </div>
+      </div>
+    </>
   )
 }

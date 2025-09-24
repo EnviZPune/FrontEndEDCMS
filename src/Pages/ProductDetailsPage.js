@@ -82,6 +82,7 @@ const ProductDetailsPage = () => {
     };
   }, []);
 
+
   // -------- Load "my bookings" count (client-side filter) --------
   const loadMyBookingCount = useCallback(async (clothingItemId) => {
     const token = getToken();
@@ -296,20 +297,27 @@ const ProductDetailsPage = () => {
   }, [viewerOpen, dragging]);
 
   const handleReserve = async () => {
-    if (!product) return;
-    const token = getToken();
-    if (!token) {
-      alert(t("booking.login_required", { defaultValue: "Please log in to make a reservation." }));
-      return;
-    }
+  if (!product) return;
 
-    setBooking(true);
-    try {
-      const res = await fetch(`${API_BASE}/Reservation`, {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify({ clothingItemId: product.clothingItemId }),
-      });
+  // NEW: block when out of stock
+  if (!isNaN(Number(product.quantity)) && Number(product.quantity) <= 0) {
+    alert(t("booking.out_of_stock_msg", { defaultValue: "Out Of Stock, Please Come Back Later" }));
+    return;
+  }
+
+  const token = getToken();
+  if (!token) {
+    alert(t("booking.login_required", { defaultValue: "Please log in to make a reservation." }));
+    return;
+  }
+
+  setBooking(true);
+  try {
+    const res = await fetch(`${API_BASE}/Reservation`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify({ clothingItemId: product.clothingItemId }),
+    });
 
       if (res.status === 401) {
         navigate("/login");
@@ -467,6 +475,9 @@ const ProductDetailsPage = () => {
     ? t("price_fmt", { value: priceNumber.toFixed(2), defaultValue: `${priceNumber.toFixed(2)} LEK` })
     : t("price_fmt", { value: product.price, defaultValue: `${product.price} LEK` });
 
+    const qtyNumber = Number(product.quantity);
+    const isOutOfStock = !isNaN(qtyNumber) && qtyNumber <= 0;
+
   return (
     <>
       <Navbar />
@@ -565,10 +576,15 @@ const ProductDetailsPage = () => {
                 </p>
               </div>
               <div className="info-card">
-                <p>
-                  <strong>{t("fields.quantity", { defaultValue: "Quantity" })}:</strong> {product.quantity}
-                </p>
-              </div>
+                  <p>
+                    <strong>{t("fields.quantity", { defaultValue: "Quantity" })}:</strong> {product.quantity}
+                    {isOutOfStock && (
+                      <span style={{ marginLeft: 8, color: "#b91c1c", fontWeight: 600 }}>
+                        {t("stock.out_now", { defaultValue: "Currently Out Of Stock" })}
+                      </span>
+                    )}
+                  </p>
+                </div>
               <div className="info-card">
                 <p>
                   <strong>{t("fields.material", { defaultValue: "Material" })}:</strong> {product.material}
@@ -588,18 +604,19 @@ const ProductDetailsPage = () => {
             </div>
 
             {/* Booking controls */}
-            <button
-              onClick={handleReserve}
-              disabled={booking}
-              className="rezerve-button"
-            >
-              {booking
-                ? t("booking.reserving", { defaultValue: "Booking this product..." })
-                : myBookingCount > 0
-                ? t("booking.reserve_another", { defaultValue: "Book Another" })
-                : t("booking.reserve", { defaultValue: "Book Product" })}
-            </button>
-
+           <button
+  onClick={handleReserve}
+  disabled={booking || isOutOfStock}
+  className="rezerve-button"
+>
+  {booking
+    ? t("booking.reserving", { defaultValue: "Booking this product..." })
+    : isOutOfStock
+    ? t("stock.out_now", { defaultValue: "Currently Out Of Stock" })
+    : myBookingCount > 0
+    ? t("booking.reserve_another", { defaultValue: "Book Another" })
+    : t("booking.reserve", { defaultValue: "Book Product" })}
+</button>
             {myBookingCount > 0 && (
               <div className="info-card" style={{ marginTop: 8 }}>
                 <p>

@@ -631,7 +631,6 @@ if (loading) {
 
                       return (
                         <li key={p.clothingItemId} className="sd-product-card" style={{ position: "relative" }}>
-                          {/* 📌 small pin badge for pinned items */}
                           {isPinnedCard && (
                             <span
                               aria-label={t("product.pinned_aria", { defaultValue: "Pinned item" })}
@@ -646,9 +645,27 @@ if (loading) {
                               }}
                             >
                               📌
+                            </span>                         
+                          )}
+                          {(Number(p.quantity) <= 0) && (
+                            <span
+                              title={t("stock.out_now", { defaultValue: "Currently Out Of Stock" })}
+                              style={{
+                                position: "absolute",
+                                top: 8,
+                                right: 8,
+                                background: "#991b1b",
+                                color: "#fff",
+                                fontSize: 12,
+                                padding: "4px 8px",
+                                borderRadius: 999,
+                                fontWeight: 600
+                              }}
+                            >
+                              {t("stock.out_now", { defaultValue: "Out Of Stock" })}
                             </span>
                           )}
-
+                          
                           <Link to={`/product/${p.clothingItemId}`} className="sd-product-link">
                             <img className="sd-product-image" src={img} alt={t("product.alt", { shop: shop.name })} />
                             <div className="sd-product-inline">
