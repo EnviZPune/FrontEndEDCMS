@@ -1,182 +1,219 @@
+/* ================================
+   Opening Hours (full CSS)
+   ================================ */
+
 /* ===== Opening Hours Container ===== */
-.opening-hours-container {
-  /* Adding !important to all CSS properties to override external styles */
-  background: #f9fafb !important;
-  border: 1px solid #e5e7eb !important;
-  border-radius: 12px !important;
-  padding: 20px !important;
-  margin: 16px 0 !important;
+.opening-hours-container{
+  background:#f9fafb !important;
+  border:1px solid #e5e7eb !important;
+  border-radius:12px !important;
+  padding:20px !important;
+  margin:16px 0 !important;
 }
 
-.opening-hours-header h3 {
-  margin: 0 0 16px 0 !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  color: #6b7280 !important;
-  letter-spacing: 0.05em !important;
-  text-transform: uppercase !important;
+.opening-hours-header h3{
+  margin:0 0 16px 0 !important;
+  font-size:14px !important;
+  font-weight:600 !important;
+  color:#6b7280 !important;
+  letter-spacing:.05em !important;
+  text-transform:uppercase !important;
 }
 
-.opening-hours-footer {
-  font-size: 12px !important;
-  color: #6b7280 !important;
-  margin-top: 12px !important;
+.opening-hours-footer{
+  font-size:12px !important;
+  color:#6b7280 !important;
+  margin-top:12px !important;
 }
 
 /* ===== Opening Hours picker ===== */
-.hours-picker {
-  display: grid !important;
-  gap: 12px !important;
-}
+.hours-picker{ display:grid !important; gap:12px !important; }
 
-/* Updated toolbar buttons to match target design */
-.hours-toolbar {
-  display: flex !important;
-  gap: 8px !important;
+/* Toolbar */
+.hours-toolbar{ display:flex !important; gap:8px !important; }
+.hours-toolbar>button{
+  appearance:none !important;
+  border:1px solid #d1d5db !important;
+  background:#f9fafb !important;
+  color:#374151 !important;
+  padding:8px 12px !important;
+  border-radius:6px !important;
+  font-size:13px !important;
+  font-weight:400 !important;
+  cursor:pointer !important;
+  transition:background .15s ease, border-color .15s ease !important;
 }
-
-.hours-toolbar > button {
-  appearance: none !important;
-  border: 1px solid #d1d5db !important;
-  background: #f9fafb !important;
-  color: #374151 !important;
-  padding: 8px 12px !important;
-  border-radius: 6px !important;
-  font-size: 13px !important;
-  font-weight: 400 !important;
-  cursor: pointer !important;
-  transition: background .15s ease, border-color .15s ease !important;
-}
-
-.hours-toolbar > button:hover {
-  background: #f3f4f6 !important;
-  border-color: #9ca3af !important;
-}
+.hours-toolbar>button:hover{ background:#f3f4f6 !important; border-color:#9ca3af !important; }
 
 /* Grid */
-.hours-grid {
-  display: grid !important;
-  gap: 8px !important;
-}
+.hours-grid{ display:grid !important; gap:8px !important; }
 
 .hours-grid-head,
-.hours-row {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr 1fr auto !important;
-  align-items: center !important;
-  gap: 8px !important;
+.hours-row{
+  display:grid !important;
+  grid-template-columns:1fr 1fr 1fr auto !important;
+  align-items:center !important;
+  gap:8px !important;
 }
 
-.hours-grid-head {
-  font-weight: 500 !important;
-  color: #374151 !important;
-  font-size: 14px !important;
+.hours-grid-head{
+  font-weight:500 !important;
+  color:#374151 !important;
+  font-size:14px !important;
 }
 
-.hours-day {
-  color: #111827 !important;
-  font-size: 14px !important;
+.hours-day{ color:#111827 !important; font-size:14px !important; }
+
+.hours-cell.disabled{ opacity:.5 !important; pointer-events:none !important; }
+
+/* ===== Select (shadcn SelectTrigger) ===== */
+.time-trigger,
+.time-select{ /* .time-select kept as fallback */
+  width:100% !important;
+  height:36px !important;
+  border:1px solid #d1d5db !important;
+  border-radius:6px !important;
+  background:#fff !important;
+  padding:0 8px !important;
+  font-size:14px !important;
+  color:#111827 !important;
+  outline:none !important;
+  appearance:none !important;
+  background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position:right 8px center !important;
+  background-repeat:no-repeat !important;
+  background-size:16px !important;
+  padding-right:32px !important;
+}
+.time-trigger:focus,
+.time-select:focus{
+  border-color:#9ca3af !important;
+  box-shadow:0 0 0 1px rgba(156,163,175,.3) !important;
+}
+.time-trigger[disabled],
+.time-select:disabled{
+  background-color:#f9fafb !important;
+  color:#9ca3af !important;
 }
 
-.hours-cell.disabled {
-  opacity: 0.5 !important;
-  pointer-events: none !important;
+/* ===== Toggle (match look from screenshot #2) =====
+   Works for shadcn/Radix: <button role="switch"><span/></button>
+   and for your custom .toggle-switch/.toggle-thumb fallback.
+*/
+.hours-row [role="switch"],
+.toggle-switch{
+  /* tokens */
+  --sw-w: 36px;           /* track width  */
+  --sw-h: 20px;           /* track height */
+  --sw-bd: 1px;           /* border width */
+  --sw-off: #e5e7eb;      /* track off bg (slate-200) */
+  --sw-bdc: #cbd5e1;      /* track border (slate-300) */
+  --sw-on:  #374151;      /* track on bg (slate-700) */
+
+  position:relative !important;
+  width:var(--sw-w) !important;
+  height:var(--sw-h) !important;
+  border-radius:calc(var(--sw-h)/2) !important;
+  background:var(--sw-off) !important;
+  border:var(--sw-bd) solid var(--sw-bdc) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.6),
+    inset 0 -1px 0 rgba(0,0,0,.02) !important;
+  cursor:pointer !important;
+  padding:0 !important;
+  outline:none !important;
+  transition:background .2s ease, border-color .2s ease !important;
+  -webkit-tap-highlight-color:transparent;
 }
 
-/* Updated select styling to match target design */
-.time-select {
-  width: 100% !important;
-  height: 36px !important;
-  border: 1px solid #d1d5db !important;
-  border-radius: 6px !important;
-  background: #fff !important;
-  padding: 0 8px !important;
-  font-size: 14px !important;
-  color: #111827 !important;
-  outline: none !important;
-  appearance: none !important;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
-  background-position: right 8px center !important;
-  background-repeat: no-repeat !important;
-  background-size: 16px !important;
-  padding-right: 32px !important;
+.hours-row [role="switch"]:focus-visible,
+.toggle-switch:focus{
+  box-shadow:0 0 0 2px rgba(156,163,175,.35) !important;
 }
 
-.time-select:focus {
-  border-color: #9ca3af !important;
-  box-shadow: 0 0 0 1px rgba(156, 163, 175, 0.3) !important;
+.hours-row [role="switch"][aria-disabled="true"],
+.hours-row [role="switch"][disabled],
+.toggle-switch[disabled]{
+  cursor:not-allowed !important;
+  opacity:.55 !important;
 }
 
-.time-select:disabled {
-  background-color: #f9fafb !important;
-  color: #9ca3af !important;
+/* ON state */
+.hours-row [role="switch"][data-state="checked"],
+.hours-row [role="switch"][aria-checked="true"],
+.toggle-switch.checked{
+  background:var(--sw-on) !important;
+  border-color:var(--sw-on) !important;
 }
 
-/* Updated toggle switch to match target design */
-.toggle-switch {
-  width: 44px !important;
-  height: 24px !important;
-  border: none !important;
-  border-radius: 12px !important;
-  background: #d1d5db !important;
-  position: relative !important;
-  cursor: pointer !important;
-  transition: background .2s ease !important;
-  padding: 0 !important;
-  outline: none !important;
+/* Knob (shadcn/Radix) */
+.hours-row [role="switch"]>span{
+  position:absolute !important;
+  top:calc(var(--sw-bd) + 1px) !important;
+  left:calc(var(--sw-bd) + 1px) !important;
+  width:calc(var(--sw-h) - (var(--sw-bd)*2) - 2px) !important;
+  height:calc(var(--sw-h) - (var(--sw-bd)*2) - 2px) !important;
+  border-radius:9999px !important;
+  background:#fff !important;
+  border:1px solid rgba(0,0,0,.06) !important;
+  box-shadow:0 1px 1px rgba(0,0,0,.08) !important;
+  transform:translateX(0) !important;
+  transition:transform .2s ease !important;
+}
+.hours-row [role="switch"][data-state="checked"]>span,
+.hours-row [role="switch"][aria-checked="true"]>span{
+  transform:translateX(calc(var(--sw-w) - var(--sw-h))) !important;
 }
 
-.toggle-switch:focus {
-  box-shadow: 0 0 0 2px rgba(156, 163, 175, 0.3) !important;
+/* Fallback custom markup */
+.toggle-thumb{
+  position:absolute !important;
+  top:calc(var(--sw-bd) + 1px) !important;
+  left:calc(var(--sw-bd) + 1px) !important;
+  width:calc(var(--sw-h) - (var(--sw-bd)*2) - 2px) !important;
+  height:calc(var(--sw-h) - (var(--sw-bd)*2) - 2px) !important;
+  border-radius:9999px !important;
+  background:#fff !important;
+  border:1px solid rgba(0,0,0,.06) !important;
+  box-shadow:0 1px 1px rgba(0,0,0,.08) !important;
+  transition:transform .2s ease !important;
+}
+.toggle-switch.checked .toggle-thumb{
+  transform:translateX(calc(var(--sw-w) - var(--sw-h))) !important;
 }
 
-.toggle-switch.checked {
-  background: #374151 !important;
-}
+/* ===== Responsive ===== */
+@media (max-width:640px){
+  /* Thinner, narrower toggle on mobile */
+  .hours-row [role="switch"], .toggle-switch{
+    --sw-w: 28px;
+    --sw-h: 16px;
+  }
 
-.toggle-thumb {
-  position: absolute !important;
-  top: 2px !important;
-  left: 2px !important;
-  width: 20px !important;
-  height: 20px !important;
-  border-radius: 10px !important;
-  background: #fff !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-  transition: transform .2s ease !important;
-  display: block !important;
-}
-
-.toggle-switch.checked .toggle-thumb {
-  transform: translateX(20px) !important;
-}
-
-/* Responsive: stack fields on small screens */
-@media (max-width: 640px) {
   .hours-grid-head,
-  .hours-row {
-    grid-template-columns: 1fr 1fr !important;
+  .hours-row{
+    grid-template-columns:1fr 1fr !important;
     grid-template-areas:
       "day closed"
       "open open"
       "close close" !important;
-    row-gap: 6px !important;
+    row-gap:6px !important;
   }
 
-  .hours-day {
-    grid-area: day !important;
+  .hours-day{ grid-area:day !important; }
+  .hours-row .hours-cell:nth-child(2){ grid-area:open !important; }
+  .hours-row .hours-cell:nth-child(3){ grid-area:close !important; }
+  .hours-row .hours-cell:nth-child(4){
+    grid-area:closed !important;
+    justify-self:end !important;
+    align-self:center !important;
   }
+}
 
-  .hours-row .hours-cell:nth-child(2) {
-    grid-area: open !important;
-  }
-
-  .hours-row .hours-cell:nth-child(3) {
-    grid-area: close !important;
-  }
-
-  .hours-row .hours-cell:nth-child(4) {
-    grid-area: closed !important;
-    justify-self: end !important;
+/* Larger tap target on touch */
+@media (pointer:coarse){
+  .hours-row [role="switch"]::after,
+  .toggle-switch::after{
+    content:""; position:absolute; inset:-8px; border-radius:16px;
   }
 }

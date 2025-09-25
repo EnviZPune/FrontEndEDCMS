@@ -158,9 +158,9 @@ body {
 .hero-gradient {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+  background: radial-gradient(circle at 30% 20%, rgba(24, 107, 231, 0.932) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(55, 69, 253, 0.904) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(60, 10, 243, 0.575) 0%, transparent 50%);
 }
 
 

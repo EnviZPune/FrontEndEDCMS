@@ -803,32 +803,40 @@
 }
 .time-content [role="option"]:hover { background: #f9fafb; }
 
-/* Switch (closed toggle) */
-.hours-row [role="switch"] {
-  width: 36px;
-  height: 20px;
+/* Base (desktop) */
+.hours-row [role="switch"]{
+  --track-w: 36px;           /* track width  */
+  --track-h: 20px;           /* track height */
+  --bg-off: #d1d5db;
+  --bg-on:  #111827;
+
+  width: var(--track-w);
+  height: var(--track-h);
   border: none;
   border-radius: 9999px;
-  background: #d1d5db;
+  background: var(--bg-off);
   position: relative;
   cursor: pointer;
   transition: background .2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.hours-row [role="switch"][disabled] { cursor: not-allowed; opacity: .5; }
-.hours-row [role="switch"][aria-checked="true"] { background: #111827; }
+.hours-row [role="switch"][disabled]{ cursor:not-allowed; opacity:.5; }
+.hours-row [role="switch"][aria-checked="true"]{ background: var(--bg-on); }
 
-.hours-row [role="switch"] > span {
+.hours-row [role="switch"] > span{
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 16px;
-  height: 16px;
+  top: 2px; left: 2px;
+  width: calc(var(--track-h) - 4px);     /* knob = track height - 4 */
+  height: calc(var(--track-h) - 4px);
   border-radius: 9999px;
   background: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,.15);
   transition: transform .2s ease;
 }
-.hours-row [role="switch"][aria-checked="true"] > span { transform: translateX(16px); }
+/* Shift = track width - track height (works for any sizes above) */
+.hours-row [role="switch"][aria-checked="true"] > span{
+  transform: translateX(calc(var(--track-w) - var(--track-h)));
+}
 
 /* Responsive: stack fields on small screens */
 @media (max-width: 640px) {
@@ -1080,6 +1088,20 @@
     margin: var(--space-6) auto;
     padding: var(--space-6);
   }
+
+@media (max-width: 480px){
+  .hours-row [role="switch"]{
+    --track-w: 28px;
+    --track-h: 16px; /* closer to width => “rounder” look */
+  }
+}
+
+/* Optional: improve tap target on touch without changing layout */
+@media (pointer: coarse){
+  .hours-row [role="switch"]::after{
+    content:""; position:absolute; inset:-10px; border-radius:16px;
+  }
+}
 
   .form-header h2 {
     font-size: var(--text-xl);

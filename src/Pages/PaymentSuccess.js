@@ -1,77 +1,74 @@
-// src/Pages/PaymentSuccess.js
 import { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
+import "../Styling/payment-success.css";
 
-const API_BASE = "https://api.triwears.com/api"; // backend api root
+function Safe({ children }) {
+  try {
+    return children;
+  } catch {
+    return null;
+  }
+}
 
 export default function PaymentSuccess() {
-  const [searchParams] = useSearchParams();
-  const [state, setState] = useState({ loading: true, ok: false, msg: "" });
+  const [params] = useSearchParams();
+  const [loading, setLoading] = useState(true);
+  const [sessionId, setSessionId] = useState("");
 
   useEffect(() => {
-    let alive = true;
+    const id = params.get("session_id") || "";
+    setSessionId(id);
 
-    const run = async () => {
-      const sessionId = searchParams.get("session_id");
-      if (!sessionId) {
-        if (alive) setState({ loading: false, ok: false, msg: "Missing session_id." });
-        return;
-      }
-
-      // Optional: call your backend to verify session and finalize order.
-      // If you don't have such endpoint yet, just mark ok=true and show success.
-      try {
-        // Example: GET /Stripe/checkout/confirm?sessionId=...
-        const res = await fetch(`${API_BASE}/Stripe/checkout/confirm?sessionId=${encodeURIComponent(sessionId)}`, {
-          headers: { Accept: "application/json" },
-          credentials: "include"
-        });
-
-        if (res.ok) {
-          if (alive) setState({ loading: false, ok: true, msg: "Payment confirmed. Thank you!" });
-        } else {
-          const text = await res.text();
-          if (alive) setState({ loading: false, ok: true, msg: "Payment completed. (Confirmation pending)" });
-          console.warn("Confirm endpoint returned:", res.status, text);
-        }
-      } catch (e) {
-        console.warn("Confirm call failed:", e);
-        if (alive) setState({ loading: false, ok: true, msg: "Payment completed. (Network confirm skipped)" });
-      }
-    };
-
-    run();
-    return () => { alive = false; };
-  }, [searchParams]);
+    // Never stay in loading
+    const t = setTimeout(() => setLoading(false), 400);
+    return () => clearTimeout(t);
+  }, [params]);
 
   return (
     <>
-      <Navbar />
-      <div className="container" style={{ minHeight: "50vh", display: "grid", placeItems: "center", padding: 24 }}>
-        {state.loading ? (
-          <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 48 }}>⏳</div>
-            <p>Finalizing your payment…</p>
-          </div>
-        ) : state.ok ? (
-          <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 48 }}>✅</div>
-            <h1>Payment Successful</h1>
-            {state.msg && <p>{state.msg}</p>}
-            <p><Link to="/">Back to Home</Link></p>
-          </div>
-        ) : (
-          <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 48 }}>⚠️</div>
-            <h1>We couldn’t verify your payment</h1>
-            <p>{state.msg || "Please contact support if funds were captured."}</p>
-            <p><Link to="/">Back to Home</Link></p>
+      <Safe><Navbar /></Safe>
+
+      <main className="pay-result-page" data-page="payment-success">
+        <section className="pay-card" role="status" aria-live="polite">
+          {loading ? (
+            <div className="pay-loading">
+              <div className="pay-spinner" />
+              <p>Finalizing your payment…</p>
+            </div>
+          ) : (
+            <>
+              <div className="pay-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+              </div>
+
+              <h1>Payment Successful</h1>
+              <p><strong>Welcome aboard</strong> — Your subscription is active and you’re officially part of the team.</p>
+              <p>Hit <strong>Continue</strong> to open the Owner Guide—your step-by-step playbook for setting up, launching, and getting value fast.</p>
+              <p>Have questions? Our Support team is one click away and ready to help.</p>
+              <p>Thank You, and enjoy <strong>Triwears</strong></p>
+
+              <div className="pay-actions">
+                <Link to="/owner-guide" className="btn btn-primary">Continue</Link>
+                <Link to="/my-profile" className="btn">Profile</Link>
+                <Link to="/" className="btn">Home</Link>
+              </div>
+            </>
+          )}
+        </section>
+
+        {!loading && (
+          <div className="confetti" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span>
           </div>
         )}
-      </div>
-      <Footer />
+      </main>
+
+      <Safe><Footer /></Safe>
     </>
   );
 }

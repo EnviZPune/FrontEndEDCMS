@@ -403,7 +403,7 @@ export default function BusinessInfoPanel({ business }) {
   const compactPreview = compactSchedule(schedule, 24);
 
   return (
-    <div className="business-info-panel">
+    <div className="business-info-panel" id="#business_info">
       <h3>{t("titles.edit", { defaultValue: "Edit Business Info" })}</h3>
 
       <label htmlFor="biz-name">

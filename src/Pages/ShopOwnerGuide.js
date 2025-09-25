@@ -1,131 +1,213 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
 import '../Styling/ownerguide.css';
 
+/** Robust role check: tries common storage keys and decodes JWT if available */
+function hasOwnerRole() {
+  // 1) Direct 'role' key
+  try {
+    const directRole = localStorage.getItem('role');
+    if (directRole && directRole.toLowerCase() === 'owner') return true;
+  } catch {}
+
+  // 2) Common user containers
+  const candidates = ['user', 'currentUser', 'profile', 'auth', 'session'];
+  for (const key of candidates) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+      const obj = JSON.parse(raw);
+      const single = obj?.role || obj?.Role || obj?.userRole;
+      if (typeof single === 'string' && single.toLowerCase() === 'owner') return true;
+
+      const list = obj?.roles || obj?.Roles || obj?.claims || obj?.permissions;
+      if (Array.isArray(list) && list.some(r => String(r).toLowerCase() === 'owner')) return true;
+    } catch {}
+  }
+
+  // 3) Token/JWT (commonly stored as 'token' | 'accessToken' | in an object)
+  try {
+    const rawToken = localStorage.getItem('token');
+    let jwt = rawToken;
+    if (jwt) {
+      try {
+        const maybeObj = JSON.parse(jwt);
+        jwt = maybeObj?.accessToken || maybeObj?.token || maybeObj; // handle both string and object
+      } catch {
+        // jwt is already a string
+      }
+    }
+    if (jwt && typeof jwt === 'string' && jwt.includes('.')) {
+      const base64 = jwt.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(atob(base64));
+      const roleClaim =
+        payload?.role ||
+        payload?.roles ||
+        payload?.['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+      if (typeof roleClaim === 'string' && roleClaim.toLowerCase() === 'owner') return true;
+      if (Array.isArray(roleClaim) && roleClaim.some(r => String(r).toLowerCase() === 'owner')) return true;
+    }
+  } catch {}
+
+  return false;
+}
+
 export default function ShopOwnerGuide() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [allowed, setAllowed] = useState(null); // null=checking, true=ok
+
+  // Guard: only Owners may proceed
+  useEffect(() => {
+    const ok = hasOwnerRole();
+    if (!ok) {
+      navigate('/unauthorized', {
+        replace: true,
+        state: { from: location.pathname + location.search },
+      });
+      return;
+    }
+    setAllowed(true);
+  }, [navigate, location.pathname, location.search]);
+
+  // While checking / redirecting, render nothing to avoid flash
+  if (allowed !== true) return null;
+
   return (
     <div className="owner-guide page-wrapper">
       <Navbar />
-      <main className="owner-guide-content">
-        <h1>Shop Owner Guide</h1>
 
-        <section>
-          <h2>1. Getting Started</h2>
-          <p>
-            To become a shop owner, subscribe to the $20/month plan on the <Link to="/become-owner">Become Owner</Link> page.
-            After a successful payment, you’ll be redirected to fill out the Owner Form with your shop details.
-          </p>
-        </section>
+      <div className="og-container">
+        {/* LEFT: Quick Links (like Settings) */}
+        <aside className="og-sidebar">
+          <h2 className="og-sidebar-title">Panels</h2>
+          <nav className="og-nav">
+            <a href="#business-info">Business Info</a>
+            <a href="#photos">Photos</a>
+            <a href="#categories">Categories</a>
+            <a href="#products">Products</a>
+            <a href="#sales">Sales</a>
+            <a href="#employees">Employees</a>
+            <a href="#pending">Pending Changes</a>
+            <a href="#reservations">Reservations</a>
+            <a href="#notifications">Notifications</a>
+            <a href="#my-shops">My Shops</a>
+            <a href="#delete">Delete Business</a>
+          </nav>
+          <div className="og-sidebar-footer">
+            <Link to="/settings" className="og-btn">Open Settings</Link>
+          </div>
+        </aside>
 
-        <section>
-          <h2>2. Accessing Your Dashboard</h2>
-          <p>
-            Once your shop is created, use the Navbar to navigate to <Link to="/settings">Settings</Link>.
-            This will open the Shop Owner Dashboard where you can manage every aspect of your business.
-          </p>
-        </section>
+        {/* RIGHT: Content */}
+        <main className="og-content">
+          {/* Mobile quick links (chips) */}
+          <nav className="og-mobile-nav">
+            <a href="#business-info">Business Info</a>
+            <a href="#photos">Photos</a>
+            <a href="#categories">Categories</a>
+            <a href="#products">Products</a>
+            <a href="#sales">Sales</a>
+            <a href="#employees">Employees</a>
+            <a href="#pending">Pending</a>
+            <a href="#reservations">Reservations</a>
+            <a href="#notifications">Notifications</a>
+            <a href="#my-shops">My Shops</a>
+            <a href="#delete">Delete</a>
+          </nav>
 
-        <section>
-          <h2>3. Dashboard Layout</h2>
-          <p>
-            The Settings page is split into two columns:
-          </p>
-          <ul>
-            <li><strong>Sidebar:</strong> Lists panels for Business Info, Products, Categories, Photos, Employees, Pending Changes, Reservations, Notifications, My Shops, and Delete Business.</li>
-            <li><strong>Content Area:</strong> Displays the selected panel’s interface for CRUD operations and data views.</li>
-          </ul>
-        </section>
+          <header className="og-hero card">
+            <h1>Shop Owner Guide</h1>
+            <p className="og-sub">
+              A concise reference to every panel in <Link to="/settings">Settings</Link>. After a successful purchase—congratulations—you can publish your shop and make it visible to everyone. From here on, keep your catalog accurate and up to date: every item you list should be available (or clearly marked otherwise). Inaccurate listings confuse customers, erode trust, and generate avoidable support requests. Use the <strong>Products</strong> and <strong>Categories</strong> panels to curate inventory, retire out-of-stock items, and keep pricing consistent. When in doubt, update in Settings first—your public shop reflects changes immediately. For anything unclear, our Support team is here to help at any time.
+            </p>
+          </header>
 
-        <section>
-          <h2>4. Business Info</h2>
-          <p>
-            In the <em>Business Info</em> panel, update your shop name, description, address, phone number, and opening hours.
-            Click <strong>Save</strong> to apply changes immediately.
-          </p>
-        </section>
+          <section id="business-info" className="card">
+            <h2>Business Info</h2>
+            <p>
+              Manage your public profile: name, description, address, phone, and opening hours.
+              Changes appear on your shop page after <strong>Save</strong>.
+            </p>
+          </section>
 
-        <section>
-          <h2>5. Product Management</h2>
-          <p>
-            The <em>Products</em> panel lets you add, edit, or delete clothing items.
-            You can upload up to 10 photos per product, preview them, and remove individual images before saving.
-          </p>
-        </section>
+          <section id="photos" className="card">
+            <h2>Photos</h2>
+            <p>
+              Upload or replace your cover image and logo. Images are stored in Cloud Storage and update your public page instantly.
+              Recommended: Cover ≥ <code>1600×900</code>, Logo ≥ <code>512×512</code> (PNG).
+            </p>
+          </section>
 
-        <section>
-          <h2>6. Categories</h2>
-          <p>
-            Under <em>Categories</em>, create and manage product categories (e.g., T-shirts, Boots).
-            You can either use Premade Categories made by us or you can add your own unique categpry.
-            It will be displayed as a category for everyone to see
-          </p>
-        </section>
+          <section id="categories" className="card">
+            <h2>Categories</h2>
+            <p>
+              Create or select categories (e.g., T-Shirts, Boots). Categories power browsing and filters and are used when adding products.
+            </p>
+          </section>
 
-        <section>
-          <h2>7. Photos</h2>
-          <p>
-            In the <em>Photos</em> panel, upload or update your shop’s cover image and logo.
-            Images are stored in Google Cloud Storage; once uploaded, they appear instantly on your public Shop page.
-          </p>
-        </section>
+          <section id="products" className="card">
+            <h2>Products</h2>
+            <p>
+              Add, edit, pin or remove items. Each product supports details, price, stock, categories, and up to 10 photos.
+              Hit “Sale” for every item you sell to keep quantity in sync. Save to publish immediately.
+            </p>
+          </section>
 
-        <section>
-          <h2>8. Employees</h2>
-          <p>
-            The <em>Employees</em> panel allows you to search users by email and promote them to employee role.
-            Employees can propose product additions or edits, which you’ll then review under Pending Changes.
-          </p>
-        </section>
+          <section id="sales" className="card card-accent">
+            <h2>Sales</h2>
+            <p>
+              Track revenue and orders, filter by date/status, view order details, issue refunds (full/partial),
+              and export CSV for accounting.
+            </p>
+          </section>
 
-        <section>
-          <h2>9. Pending Changes</h2>
-          <p>
-            Review all product changes proposed by employees in <em>Pending Changes</em>. Approve or reject each change.
-            Approved changes go live immediately; rejected ones remain editable by employees.
-          </p>
-        </section>
+          <section id="employees" className="card">
+            <h2>Employees</h2>
+            <p>
+              Add teammates by email. Employees can propose product changes; you retain final control via approvals in Pending Changes.
+            </p>
+          </section>
 
-        <section>
-          <h2>10. Reservations</h2>
-          <p>
-            View customer reservation requests in the <em>Reservations</em> panel.
-            Accept or decline reservations and manage availability directly from your dashboard.
-          </p>
-        </section>
+          <section id="pending" className="card">
+            <h2>Pending Changes</h2>
+            <p>
+              Review employee proposals before they go live. Open an item to compare and <strong>Approve</strong> or <strong>Reject</strong>.
+            </p>
+          </section>
 
-        <section>
-          <h2>11. Notifications</h2>
-          <p>
-            All system notifications (e.g., payment receipts, reservation updates) are logged under <em>Notifications</em>.
-            Use this panel to review your notification history and resend any needed alerts.
-          </p>
-        </section>
+          <section id="reservations" className="card">
+            <h2>Reservations</h2>
+            <p>
+              See customer requests, accept or decline, and manage availability. Use notes to keep context per request.
+            </p>
+          </section>
 
-        <section>
-          <h2>12. My Shops</h2>
-          <p>
-            If you own multiple shops, switch between them easily in <em>My Shops</em>.
-            Selecting a different shop reloads the dashboard panels with that shop’s data.
-          </p>
-        </section>
+          <section id="notifications" className="card">
+            <h2>Notifications</h2>
+            <p>
+              System messages (receipts, reservation updates, etc.). Use as an audit trail and to resend important alerts if needed.
+            </p>
+          </section>
 
-        <section>
-          <h2>13. Deleting Your Shop</h2>
-          <p>
-            To permanently remove a shop, go to the <em>Delete Business</em> panel.
-            This action is irreversible—make sure you have backups of any important data.
-          </p>
-        </section>
+          <section id="my-shops" className="card">
+            <h2>My Shops</h2>
+            <p>
+              Switch between multiple shops you own. The dashboard reloads with the selected shop’s data and panels.
+            </p>
+          </section>
 
-        <section>
-          <h2>14. Support</h2>
-          <p>
-            For technical support or feature requests, contact our team via the email edjcms2025@gmail.com.
-          </p>
-        </section>
-      </main>
+          <section id="delete" className="card">
+            <h2>Delete Business</h2>
+            <p>
+              Permanently remove a shop and its data. This action is irreversible—export anything important before continuing.
+            </p>
+          </section>
+        </main>
+      </div>
+
       <Footer />
     </div>
   );

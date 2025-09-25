@@ -66,8 +66,8 @@ export default function App() {
           <Route path="/category-filter" element={<CategoryFilter />} />
           <Route path="/categories" element={<AllCategories />} />
           <Route path="/become-owner" element={<BecomeOwner />} />
-          <Route path="/payment/success" element={<PaymentSuccess />} />
-          <Route path="/payment/cancel" element={<PaymentCancel />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-cancel" element={<PaymentCancel />} />
           <Route path="/owner-form" element={<OwnerForm />} />
           <Route path="/search" element={<SearchResultsPage />} />
           <Route path="/billing/repay" element={<RepayPage />} />

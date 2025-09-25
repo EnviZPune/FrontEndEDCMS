@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback } from "react";
+import { useEffect, useMemo, useCallback, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Navbar from "../Navbar";
@@ -18,10 +18,38 @@ const PANEL_DEFS = [
   { key: "DeleteBusiness", label: "Delete Business", icon: "🗑️" },
 ];
 
-const EMPLOYEE_ALLOWED = new Set(["Products", "Categories", "MyShops", "Reservations", "Sales"]);
-const ALLOWED_ROLES = new Set(["owner", "employee"]);
+/** Hash ↔ Panel mapping for deep-links like /settings#business-info */
+const HASH_TO_KEY = {
+  "business-info": "BusinessInfo",
+  "products": "Products",
+  "sales": "Sales",
+  "categories": "Categories",
+  "photos": "Photos",
+  "employees": "Employees",
+  "pending-changes": "PendingChanges",
+  "reservations": "Reservations",
+  "notifications": "Notifications",
+  "my-shops": "MyShops",
+  "delete-business": "DeleteBusiness",
+};
+const KEY_TO_HASH = Object.fromEntries(Object.entries(HASH_TO_KEY).map(([h, k]) => [k, h]));
+const keyToHash = (key) => KEY_TO_HASH[key] ? KEY_TO_HASH[key] : key.toLowerCase();
+const readHashKey = () => {
+  const h = (typeof window !== "undefined" ? window.location.hash : "").replace(/^#/, "").toLowerCase();
+  return HASH_TO_KEY[h] || null;
+};
 
-export default function SettingsLayout({
+/** ---- Owner-only gate (no hooks here; safe to return early) ---- */
+export default function SettingsLayout(props) {
+  const userRole = (props.userRole || "").toLowerCase();
+  const notOwner = props.userRole != null && userRole !== "owner";
+  if (notOwner) return <Navigate to="/unauthorized" replace />;
+
+  return <SettingsLayoutInner {...props} />;
+}
+
+/** ---- All hooks live here, so order is stable ---- */
+function SettingsLayoutInner({
   businesses,
   selectedBusiness,
   onSelectBusiness,
@@ -32,16 +60,109 @@ export default function SettingsLayout({
   children,
 }) {
   const { t } = useTranslation("settings");
-  const isOwner = userRole === "owner";
-  const unauthorized = userRole != null && !ALLOWED_ROLES.has(userRole);
+  const isOwner = (userRole || "").toLowerCase() === "owner";
 
-  // Compute visible panels based on role
-  const visiblePanels = useMemo(
-    () => PANEL_DEFS.filter((p) => isOwner || EMPLOYEE_ALLOWED.has(p.key)),
-    [isOwner]
+  // Mobile detection (unconditional hook call)
+  const [isMobile, setIsMobile] = useState(
+    () => (typeof window !== "undefined" ? window.innerWidth <= 768 : false)
   );
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
-  // Ensure selectedPanel is always one the user can see
+  // Drawer open/close
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Initial restore (URL hash > sessionStorage)
+  useEffect(() => {
+    const st = sessionStorage.getItem("settings:drawerOpen");
+    if (st != null) setDrawerOpen(st === "true");
+
+    const fromHash = readHashKey();
+    if (fromHash) {
+      onSelectPanel(fromHash);
+    } else {
+      const sp = sessionStorage.getItem("settings:lastPanel");
+      if (sp) onSelectPanel(sp);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persist drawer + last panel
+  useEffect(() => {
+    sessionStorage.setItem("settings:drawerOpen", String(drawerOpen));
+  }, [drawerOpen]);
+  useEffect(() => {
+    if (selectedPanel) sessionStorage.setItem("settings:lastPanel", selectedPanel);
+  }, [selectedPanel]);
+
+  // Sync selectedPanel → URL hash
+  useEffect(() => {
+    if (!selectedPanel || typeof window === "undefined") return;
+    const newHash = "#" + keyToHash(selectedPanel);
+    if (window.location.hash !== newHash) {
+      window.history.replaceState(null, "", newHash);
+    }
+  }, [selectedPanel]);
+
+  // Sync URL hash → selectedPanel (back/forward, manual edits)
+  useEffect(() => {
+    const onHash = () => {
+      const k = readHashKey();
+      if (k && k !== selectedPanel) onSelectPanel(k);
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [selectedPanel, onSelectPanel]);
+
+  // Lock body scroll when drawer is open (mobile only)
+  useEffect(() => {
+    if (!isMobile) return;
+    if (drawerOpen) document.body.classList.add("no-scroll");
+    else document.body.classList.remove("no-scroll");
+    return () => document.body.classList.remove("no-scroll");
+  }, [drawerOpen, isMobile]);
+
+  // Hide global support toggle on mobile while here
+  useEffect(() => {
+    if (isMobile) document.body.classList.add("hide-support-toggle");
+    else document.body.classList.remove("hide-support-toggle");
+    if (!isMobile) return;
+
+    const selectors = [
+      ".support-toggle", ".support-button", ".support", ".chat-support-toggle",
+      "#support-toggle", "[data-support-toggle]", '[aria-label="Support"]',
+      'button[aria-label="Support"]', 'button[title="Support"]', 'a[aria-label="Support"]',
+      ".crisp-client .crisp-wwrap .crisp-toggle", ".intercom-lightweight-app-launcher",
+    ];
+    const hideEl = (el) => {
+      try { if (!el) return; el.dataset._prevDisplay = el.style.display || ""; el.style.setProperty("display","none","important"); } catch {}
+    };
+    const tryHide = () => {
+      selectors.forEach((sel) => document.querySelectorAll(sel).forEach(hideEl));
+      document.querySelectorAll("button, a, div").forEach((el) => {
+        const cs = getComputedStyle(el);
+        if (cs.position === "fixed" && /support/i.test(el.textContent || "")) hideEl(el);
+      });
+    };
+    tryHide();
+    const mo = new MutationObserver(tryHide);
+    mo.observe(document.body, { childList: true, subtree: true });
+    return () => {
+      mo.disconnect();
+      document.querySelectorAll("[data-_prev-display]").forEach((el) => {
+        try { el.style.display = el.dataset._prevDisplay || ""; delete el.dataset._prevDisplay; } catch {}
+      });
+      document.body.classList.remove("hide-support-toggle");
+    };
+  }, [isMobile]);
+
+  // Visible panels (owner sees all)
+  const visiblePanels = useMemo(() => PANEL_DEFS, []);
+
+  // Ensure selected panel is valid
   useEffect(() => {
     if (!visiblePanels.length) return;
     if (!visiblePanels.some((p) => p.key === selectedPanel)) {
@@ -49,7 +170,7 @@ export default function SettingsLayout({
     }
   }, [visiblePanels, selectedPanel, onSelectPanel]);
 
-  // must be declared before any early return
+  // Business dropdown change
   const handleBusinessChange = useCallback(
     (e) => {
       const id = Number.parseInt(e.target.value, 10);
@@ -60,16 +181,111 @@ export default function SettingsLayout({
     [businesses, onSelectBusiness, selectedBusiness?.businessId]
   );
 
-  if (unauthorized) {
-    return <Navigate to="/unauthorized" replace />;
-  }
+  // ----- Swipe gestures -----
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const touchActive = useRef(false);
+  const startedAtEdge = useRef(false);
+  const startedInsideDrawer = useRef(false);
+
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const EDGE_ZONE = 24;
+    const THRESHOLD = 50;
+    const NAVBAR_H = 80;
+
+    const onTouchStart = (e) => {
+      if (e.touches.length !== 1) return;
+      const t = e.touches[0];
+      if (t.clientY < NAVBAR_H) return;
+
+      touchStartX.current = t.clientX;
+      touchStartY.current = t.clientY;
+      touchActive.current = true;
+
+      startedAtEdge.current = !drawerOpen && t.clientX <= EDGE_ZONE;
+      startedInsideDrawer.current = drawerOpen && t.clientX <= window.innerWidth * 0.85;
+    };
+
+    const onTouchMove = (e) => {
+      if (!touchActive.current) return;
+      const t = e.touches[0];
+      const dx = t.clientX - touchStartX.current;
+      const dy = t.clientY - touchStartY.current;
+
+      if (Math.abs(dy) > Math.abs(dx)) {
+        touchActive.current = false;
+        return;
+      }
+      if ((startedAtEdge.current && dx > 0) || (startedInsideDrawer.current && dx < 0)) {
+        e.preventDefault();
+      }
+    };
+
+    const onTouchEnd = (e) => {
+      if (!touchActive.current) return;
+      const changed = e.changedTouches?.[0];
+      if (!changed) { touchActive.current = false; return; }
+
+      const dx = changed.clientX - touchStartX.current;
+      if (!drawerOpen && startedAtEdge.current && dx > THRESHOLD) setDrawerOpen(true);
+      if (drawerOpen && startedInsideDrawer.current && dx < -THRESHOLD) setDrawerOpen(false);
+
+      touchActive.current = false;
+      startedAtEdge.current = false;
+      startedInsideDrawer.current = false;
+    };
+
+    document.addEventListener("touchstart", onTouchStart, { passive: true });
+    document.addEventListener("touchmove", onTouchMove, { passive: false });
+    document.addEventListener("touchend", onTouchEnd, { passive: true });
+    return () => {
+      document.removeEventListener("touchstart", onTouchStart);
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [isMobile, drawerOpen]);
+
+  // Close the drawer when switching to desktop
+  useEffect(() => {
+    if (!isMobile) setDrawerOpen(false);
+  }, [isMobile]);
 
   return (
     <div className="settings-component">
       <div className="settings-layout">
         <Navbar />
+
+        {isMobile && (
+          <button
+            className="settings-mobile-toggle"
+            aria-label={drawerOpen ? "Close menu" : "Open menu"}
+            aria-expanded={drawerOpen}
+            onClick={() => setDrawerOpen((v) => !v)}
+          >
+            <span className="settings-mobile-toggle__bar" />
+            <span className="settings-mobile-toggle__bar" />
+            <span className="settings-mobile-toggle__bar" />
+          </button>
+        )}
+
+        {isMobile && <div className="settings-edge-hint" aria-hidden="true" />}
+
+        {isMobile && (
+          <div
+            className={`settings-drawer-overlay ${drawerOpen ? "visible" : ""}`}
+            onClick={() => setDrawerOpen(false)}
+            aria-hidden={!drawerOpen}
+          />
+        )}
+
         <div className="settings-wrapper">
-          <aside className="settings-sidebar">
+          <aside
+            className="settings-sidebar"
+            data-open={isMobile ? String(drawerOpen) : "true"}
+            aria-hidden={isMobile ? !drawerOpen : false}
+          >
             <select
               value={selectedBusiness?.businessId || ""}
               onChange={handleBusinessChange}
@@ -90,15 +306,21 @@ export default function SettingsLayout({
                 <li
                   key={panel.key}
                   className={selectedPanel === panel.key ? "active" : ""}
-                  onClick={() => onSelectPanel(panel.key)}
+                  onClick={() => {
+                    onSelectPanel(panel.key);
+                    if (isMobile) setDrawerOpen(false);
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
                       onSelectPanel(panel.key);
+                      if (isMobile) setDrawerOpen(false);
                     }
                   }}
                   role="button"
                   tabIndex={0}
+                  title={panel.label}
+                  aria-current={selectedPanel === panel.key ? "page" : undefined}
                 >
                   <span className="panel-icon">{panel.icon}</span>
                   <span className="panel-label">
@@ -109,7 +331,10 @@ export default function SettingsLayout({
             </ul>
           </aside>
 
-          <section className="settings-content">
+          <section
+            className="settings-content"
+            {...(isMobile && drawerOpen ? { inert: "", "aria-hidden": true, "data-inert": "true" } : {})}
+          >
             {selectedBusiness ? (
               <div className="panel">
                 {isOwner && (selectedBusiness?.ownerName || ownerName) && (
