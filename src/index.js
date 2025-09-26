@@ -6,21 +6,26 @@ import App from './App';
 import { ThemeProvider } from './Components/ThemeContext';
 import { AudioProvider } from "./Components/AudioProvider.tsx";
 
-// NEW: global interceptor + toasts
-import { installFetchInterceptor } from './lib/installFetchInterceptor';
-import NetworkErrorToasts from "../src/Components/NetworkErrorToasts"
+// Error hooks kit (make sure these files exist as added earlier)
+import { ErrorProvider, ErrorBoundary } from './error-hooks-kit/hooks/useErrorBoundary';
+import { attachUnhandledErrorListeners } from './error-hooks-kit/hooks/useUnhandledErrorListeners';
+import GlobalErrorToaster from './error-hooks-kit/hooks/GlobalErrorToaster.jsx';
 
-// Install once at startup (safe-guarded inside the installer)
-installFetchInterceptor();
+// Attach once at startup so window.onerror / unhandledrejection are captured
+attachUnhandledErrorListeners();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ThemeProvider>
-      <AudioProvider>
-      <App />
-      </AudioProvider>
-      <NetworkErrorToasts />
-    </ThemeProvider>
+    <ErrorProvider>
+      <ErrorBoundary>
+        <GlobalErrorToaster />
+        <ThemeProvider>
+          <AudioProvider>
+            <App />
+          </AudioProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
+    </ErrorProvider>
   </React.StrictMode>
 );

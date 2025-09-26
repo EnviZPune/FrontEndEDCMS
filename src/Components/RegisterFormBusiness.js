@@ -59,11 +59,20 @@ function getToken() {
   if (!raw) return null
   try {
     const parsed = JSON.parse(raw)
-    return parsed.token || parsed
+    return parsed?.token || parsed
   } catch {
     return raw
   }
 }
+
+// ── Validation rules for key fields ─────────────────────────────
+const NAME_MIN = 2
+// Albania NIPT is 10 alphanumeric chars (e.g. J12345678A). Adjust if backend differs.
+const NIPT_REGEX = /^[A-Za-z0-9]{10}$/
+
+const validateName = (s = "") => s.trim().length >= NAME_MIN
+const validateNipt = (s = "") => NIPT_REGEX.test(s.trim())
+const validateCoords = (coords) => Array.isArray(coords) && coords.length === 2 && coords.every(Number.isFinite)
 
 // ---------- Compact hours formatter (<= 20 chars) ----------
 function fmtTimeShort(t) {
@@ -274,7 +283,7 @@ export default function RegisterFormBusiness() {
     }
     fetch(`${API_BASE}/payment/validate-token?token=${paymentToken}`)
       .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((d) => setTokenValid(d.valid))
+      .then((d) => setTokenValid(!!d.valid))
       .catch(() => setError(t("errors.invalid_token", { defaultValue: "Invalid or expired token" })))
       .finally(() => setTokenChecked(true))
   }, [paymentToken, t])
@@ -424,20 +433,6 @@ export default function RegisterFormBusiness() {
     return hasOpenDay && allValid
   }
 
-  const validateForm = () => {
-    const errors = {}
-    if (!business.name.trim()) errors.name = t("errors.name_required", { defaultValue: "Business name is required" })
-    if (!business.description.trim()) errors.description = t("errors.desc_required", { defaultValue: "Description is required" })
-    if (!business.businessPhoneNumber.trim()) errors.businessPhoneNumber = t("errors.phone_required", { defaultValue: "Phone number is required" })
-    if (!validateSchedule(schedule)) errors.openingHours = t("errors.hours_invalid", { defaultValue: "Please provide valid hours (open < close) and at least one open day" })
-    if (!business.businessEmail.trim()) errors.businessEmail = t("errors.email_required", { defaultValue: "Business email is required" })
-    if (!coords) errors.location = t("errors.location_required", { defaultValue: "Please select a location" })
-    if (business.openingHours && business.openingHours.length > 1000)
-      errors.openingHours = t("errors.hours_length", { defaultValue: "Opening hours text must be ≤ 1000 characters" })
-    setValidationErrors(errors)
-    return !Object.keys(errors).length
-  }
-
   const handleInputChange = (field, value) => {
     setBusiness((b) => ({ ...b, [field]: value }))
     setValidationErrors((prev) => ({ ...prev, [field]: null }))
@@ -452,6 +447,69 @@ export default function RegisterFormBusiness() {
     document.addEventListener("mousedown", onClickOutside)
     return () => document.removeEventListener("mousedown", onClickOutside)
   }, [])
+
+  // Focus helper to scroll/focus first invalid input
+  const focusFirstError = (errors) => {
+    const idMap = {
+      name: "name",
+      description: "description",
+      businessEmail: "businessEmail",
+      businessPhoneNumber: "phone",
+      location: "location",
+      nipt: "nipt",
+    }
+    const firstKey = Object.keys(errors)[0]
+    if (firstKey) {
+      setTimeout(() => {
+        const el = document.getElementById(idMap[firstKey])
+        if (el) el.focus()
+      }, 0)
+    }
+  }
+
+  const validateForm = () => {
+    const errors = {}
+
+    if (!validateName(business.name)) {
+      errors.name = t("errors.name_invalid", { defaultValue: `Business name must be at least ${NAME_MIN} characters.` })
+    }
+    if (!business.description.trim()) {
+      errors.description = t("errors.desc_required", { defaultValue: "Description is required" })
+    }
+    if (!business.businessEmail.trim()) {
+      errors.businessEmail = t("errors.email_required", { defaultValue: "Business email is required" })
+    }
+    if (!business.businessPhoneNumber.trim()) {
+      errors.businessPhoneNumber = t("errors.phone_required", { defaultValue: "Phone number is required" })
+    }
+
+    if (!validateSchedule(schedule)) {
+      errors.openingHours = t("errors.hours_invalid", {
+        defaultValue: "Please provide valid hours (open < close) and at least one open day",
+      })
+    }
+    if (business.openingHours && business.openingHours.length > 1000) {
+      errors.openingHours = t("errors.hours_length", {
+        defaultValue: "Opening hours text must be ≤ 1000 characters",
+      })
+    }
+
+    if (!validateCoords(coords)) {
+      errors.location = t("errors.location_required", { defaultValue: "Please select a location" })
+    }
+
+    if (!business.nipt.trim()) {
+      errors.nipt = t("errors.nipt_required", { defaultValue: "NIPT (Tax ID) is required" })
+    } else if (!validateNipt(business.nipt)) {
+      errors.nipt = t("errors.nipt_invalid", {
+        defaultValue: "NIPT must be 10 letters/numbers (e.g., J12345678A)",
+      })
+    }
+
+    setValidationErrors(errors)
+    if (Object.keys(errors).length > 0) focusFirstError(errors)
+    return Object.keys(errors).length === 0
+  }
 
   // --- NEW: pull slug safely from response or header and redirect ---
   const navigateToCreatedShop = async (res, result) => {
@@ -471,25 +529,21 @@ export default function RegisterFormBusiness() {
     }
 
     if (!redirectUrl && slug) redirectUrl = `/shop/${slug}`
+    if (!redirectUrl) throw new Error("Registration succeeded but no slug/redirect was returned.")
 
-    if (!redirectUrl) {
-      throw new Error("Registration succeeded but no slug/redirect was returned.")
-    }
-
-    // Replace token immediately if backend returned one
     if (result?.token) {
-      try {
-        localStorage.setItem("token", result.token) // getToken() can read string or JSON
-      } catch { /* ignore quota errors */ }
+      try { localStorage.setItem("token", result.token) } catch {}
     }
-
     navigate(redirectUrl, { replace: true })
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError(null); setSuccess(null)
-    if (!validateForm()) { setError(t("errors.fill_required", { defaultValue: "Please fill in all required fields" })); return }
+    if (!validateForm()) {
+      setError(t("errors.fill_required", { defaultValue: "Please fill in all required fields" }))
+      return
+    }
 
     setLoading(true)
     try {
@@ -498,7 +552,7 @@ export default function RegisterFormBusiness() {
         description: business.description,
         businessEmail: business.businessEmail,
         businessPhoneNumber: business.businessPhoneNumber,
-        nipt: business.nipt,
+        nipt: business.nipt.toUpperCase(),
         openingHours: business.openingHours,
         profilePictureUrl: profileUrl,
         coverPictureUrl: coverUrl,
@@ -519,7 +573,6 @@ export default function RegisterFormBusiness() {
 
       if (!res.ok) {
         const msgText = await res.text().catch(() => "")
-        // try to surface structured error if present
         try {
           const j = JSON.parse(msgText)
           throw new Error(j?.error || j?.message || msgText || "Registration failed")
@@ -531,7 +584,7 @@ export default function RegisterFormBusiness() {
       const result = await res.json().catch(() => ({}))
       setSuccess(t("success.registered", { defaultValue: "Business registered successfully!" }))
 
-      // reset form bits (non-blocking for redirect)
+      // reset (non-blocking for redirect)
       setBusiness((b) => ({ ...b, name: "", description: "", location: "", businessPhoneNumber: "", nipt: "", openingHours: "" }))
       setProfileUrl(""); setCoverUrl(""); setCoords(null)
       setSuggestions([]); setShowSuggestions(false)
@@ -592,9 +645,21 @@ export default function RegisterFormBusiness() {
             <input
               id="name" name="name" type="text"
               placeholder={t("fields.name.ph", { defaultValue: "Enter your business name" })}
-              value={business.name} onChange={(e) => handleInputChange("name", e.target.value)} required
+              value={business.name}
+              onChange={(e) => handleInputChange("name", e.target.value)}
+              onBlur={() => {
+                setValidationErrors((prev) => ({
+                  ...prev,
+                  name: validateName(business.name)
+                    ? null
+                    : t("errors.name_invalid", { defaultValue: `Business name must be at least ${NAME_MIN} characters.` }),
+                }))
+              }}
+              aria-invalid={!!validationErrors.name}
+              aria-describedby={validationErrors.name ? "error-name" : undefined}
+              required
             />
-            {validationErrors.name && <div className="error-message">⚠️ {validationErrors.name}</div>}
+            {validationErrors.name && <div id="error-name" className="error-message">⚠️ {validationErrors.name}</div>}
           </div>
 
           {/* Description */}
@@ -603,7 +668,9 @@ export default function RegisterFormBusiness() {
             <textarea
               id="description" name="description"
               placeholder={t("fields.description.ph", { defaultValue: "Describe your business and services" })}
-              value={business.description} onChange={(e) => handleInputChange("description", e.target.value)} required
+              value={business.description}
+              onChange={(e) => handleInputChange("description", e.target.value)}
+              required
             />
             {validationErrors.description && <div className="error-message">⚠️ {validationErrors.description}</div>}
           </div>
@@ -614,7 +681,9 @@ export default function RegisterFormBusiness() {
             <input
               id="businessEmail" name="businessEmail" type="text"
               placeholder={t("fields.email.ph", { defaultValue: "Enter your business email" })}
-              value={business.businessEmail} onChange={e => handleInputChange("businessEmail", e.target.value)} required
+              value={business.businessEmail}
+              onChange={e => handleInputChange("businessEmail", e.target.value)}
+              required
             />
             {validationErrors.businessEmail && <div className="error-message">⚠️ {validationErrors.businessEmail}</div>}
           </div>
@@ -626,19 +695,39 @@ export default function RegisterFormBusiness() {
               id="phone" name="businessPhoneNumber" type="tel"
               placeholder={t("fields.phone.ph", { defaultValue: "Enter your business phone number" })}
               value={business.businessPhoneNumber}
-              onChange={(e) => handleInputChange("businessPhoneNumber", e.target.value)} required
+              onChange={(e) => handleInputChange("businessPhoneNumber", e.target.value)}
+              required
             />
             {validationErrors.businessPhoneNumber && <div className="error-message">⚠️ {validationErrors.businessPhoneNumber}</div>}
           </div>
 
           {/* NIPT */}
-          <div className="form-group">
-            <label htmlFor="nipt">{t("fields.nipt.label", { defaultValue: "NIPT (Tax Number)" })}</label>
+          <div className={`form-group ${validationErrors.nipt ? "error" : ""}`}>
+            <label htmlFor="nipt">{t("fields.nipt.label", { defaultValue: "NIPT (Tax Number) *" })}</label>
             <input
               id="nipt" name="nipt" type="text"
               placeholder={t("fields.nipt.ph", { defaultValue: "Enter your tax identification number" })}
-              value={business.nipt} onChange={(e) => handleInputChange("nipt", e.target.value)}
+              value={business.nipt}
+              onChange={(e) => handleInputChange("nipt", e.target.value.toUpperCase())}
+              onBlur={() => {
+                setValidationErrors((prev) => ({
+                  ...prev,
+                  nipt: !business.nipt.trim()
+                    ? t("errors.nipt_required", { defaultValue: "NIPT (Tax ID) is required" })
+                    : validateNipt(business.nipt)
+                    ? null
+                    : t("errors.nipt_invalid", { defaultValue: "NIPT must be 10 letters/numbers (e.g., J12345678A)" }),
+                }))
+              }}
+              inputMode="text"
+              pattern="[A-Za-z0-9]{10}"
+              autoCapitalize="characters"
+              title={t("errors.nipt_title", { defaultValue: "10 alphanumeric characters (e.g., J12345678A)" })}
+              aria-invalid={!!validationErrors.nipt}
+              aria-describedby={validationErrors.nipt ? "error-nipt" : undefined}
+              required
             />
+            {validationErrors.nipt && <div id="error-nipt" className="error-message">⚠️ {validationErrors.nipt}</div>}
           </div>
 
           {/* Opening Hours */}
@@ -659,8 +748,23 @@ export default function RegisterFormBusiness() {
                 <input
                   id="location" type="text" className="location-input"
                   placeholder={t("fields.location.ph", { defaultValue: "Start typing to search for location..." })}
-                  value={business.location} onChange={handleLocationChange}
-                  onFocus={() => setShowSuggestions(suggestions.length > 0)} required
+                  value={business.location}
+                  onChange={handleLocationChange}
+                  onFocus={() => setShowSuggestions(suggestions.length > 0)}
+                  onBlur={() => {
+                    // give click-on-suggestion time to set coords
+                    setTimeout(() => {
+                      setValidationErrors((prev) => ({
+                        ...prev,
+                        location: validateCoords(coords)
+                          ? null
+                          : t("errors.location_required", { defaultValue: "Please select a location" }),
+                      }))
+                    }, 150)
+                  }}
+                  aria-invalid={!!validationErrors.location}
+                  aria-describedby={validationErrors.location ? "error-location" : undefined}
+                  required
                 />
                 {business.location && (
                   <button
@@ -684,7 +788,7 @@ export default function RegisterFormBusiness() {
                 </ul>
               )}
             </div>
-            {validationErrors.location && <div className="error-message">⚠️ {validationErrors.location}</div>}
+            {validationErrors.location && <div id="error-location" className="error-message">⚠️ {validationErrors.location}</div>}
           </div>
 
           {/* Map */}
@@ -760,7 +864,16 @@ export default function RegisterFormBusiness() {
           </div>
 
           {/* Submit */}
-          <button type="submit" className={`submit-button ${loading ? "loading" : ""}`} disabled={loading}>
+          <button
+            type="submit"
+            className={`submit-button ${loading ? "loading" : ""}`}
+            disabled={
+              loading ||
+              !!validationErrors.name ||
+              !!validationErrors.location ||
+              !!validationErrors.nipt
+            }
+          >
             {loading ? (
               <>
                 <div className="loading-spinner"></div>

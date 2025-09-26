@@ -11,9 +11,6 @@ import {
   Send,
   Loader2,
   AlertCircle,
-  Pencil,
-  Check,
-  X,
   Trash2
 } from "lucide-react"
 import "../../Styling/chat.css"
@@ -37,7 +34,6 @@ const pickDisplayName = (u) => {
   return u?.displayName || u?.fullName || (joined || null) || u?.name || u?.username || u?.email || ""
 }
 
-// Fallbacks from token
 function resolveFromToken() {
   try {
     const token = getToken()
@@ -65,7 +61,6 @@ function resolveFromToken() {
   } catch { return { id: null, name: null } }
 }
 
-// Make relative URLs absolute (and let data:/blob: through)
 const apiOrigin = API_BASE.replace(/\/api\/?$/, "")
 const fileUrl = (u) => {
   if (!u) return ""
@@ -112,8 +107,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
   ref
 ) {
   const [topic, setTopic] = useState("")
-  const [editingTopic, setEditingTopic] = useState(false)
-  const [topicDraft, setTopicDraft] = useState("")
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState("")
   const [sending, setSending] = useState(false)
@@ -124,7 +117,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
   const closedKeywords = ["closed", "resolved", "archived", "locked"]
   const canPost = !closedKeywords.includes((threadStatus || "").toLowerCase())
 
-  // Preloaded default avatar (as blob: URL to stop revalidation/304s)
   const [defaultAvatarUrl, setDefaultAvatarUrl] = useState(DEFAULT_AVATAR_PUBLIC)
   const [meAvatar, setMeAvatar] = useState(DEFAULT_AVATAR_PUBLIC)
   const [meName, setMeName] = useState("You")
@@ -157,14 +149,13 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
         const blob = await res.blob()
         objectUrl = URL.createObjectURL(blob)
         setDefaultAvatarUrl(objectUrl)
-        // if we were using the public path, swap to blob so it won't revalidate again
         setMeAvatar((prev) => (prev === DEFAULT_AVATAR_PUBLIC ? objectUrl : prev))
       } catch { /* ignore */ }
     })()
     return () => { if (objectUrl) URL.revokeObjectURL(objectUrl) }
   }, [])
 
-  // Load current user display + avatar (normalize URL!)
+  // Load current user display + avatar
   useEffect(() => {
     let alive = true
     ;(async () => {
@@ -212,7 +203,7 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
       if (cancelled) return
 
       const t = dto.topic || dto.title || `Thread #${threadId}`
-      setTopic(t); setTopicDraft(t)
+      setTopic(t)
       const initial = Array.isArray(dto.messages) ? dto.messages : []
       setMessages(initial)
       rememberAll(initial)
@@ -357,7 +348,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
     } finally { setUploading(false) }
   }
 
-  // Drag & drop (throttled)
   const dragRAF = useRef(null)
   const onDragOver = (e) => {
     if (!canPost) return
@@ -375,30 +365,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
     setIsDragging(false)
     const file = e.dataTransfer?.files?.[0]
     if (file) onPickImage(file)
-  }
-
-  const saveTopic = async () => {
-    const newTopic = topicDraft.trim()
-    if (!newTopic || newTopic === topic) { setEditingTopic(false); return }
-    try {
-      const res = await fetch(`${API_BASE}/Support/threads/${threadId}/topic`, {
-        method: "PUT",
-        headers: { ...authHeaders(), "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: newTopic })
-      })
-      if (!res.ok) {
-        const txt = await res.text().catch(() => "")
-        throw new Error(txt || `Failed (${res.status})`)
-      }
-      const dto = await res.json()
-      setTopic(dto.topic || newTopic)
-      setEditingTopic(false)
-      keepFocus()
-    } catch (e) {
-      console.error(e)
-      alert("Couldn't update the subject.")
-      keepFocus()
-    }
   }
 
   const deleteThread = async () => {
@@ -422,7 +388,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
       setConnected(false)
       setMessages([])
       setTopic("(deleted)")
-      setTopicDraft("(deleted)")
       if (typeof onDeleted === "function") onDeleted(threadId)
     } catch (e) {
       console.error(e)
@@ -462,59 +427,18 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
           <span className="hamburger-bar" />
         </button>
 
+        {/* Topic is now read-only */}
         <div className="chat-window-title" style={{ gap: 8 }}>
-          {editingTopic ? (
-            <div className="topic-edit">
-              <input
-                className="topic-input"
-                value={topicDraft}
-                onChange={(e) => setTopicDraft(e.target.value)}
-                maxLength={300}
-                autoFocus
-                disabled={deleting}
-              />
-              <button
-                className="topic-commit"
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={saveTopic}
-                title="Save"
-                disabled={deleting}
-              >
-                <Check className="w-4 h-4" />
-              </button>
-              <button
-                className="topic-cancel"
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => { setTopicDraft(topic); setEditingTopic(false) }}
-                title="Cancel"
-                disabled={deleting}
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <>
-              <strong>{topic || `Thread #${threadId}`}</strong>
-              <button
-                className="topic-edit-btn"
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => setEditingTopic(true)}
-                title="Rename subject"
-                disabled={deleting}
-              >
-                <Pencil className="w-4 h-4" />
-              </button>
-              <button
-                className="chat-delete-btn"
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={deleteThread}
-                title="Delete chat"
-                disabled={deleting}
-              >
-                {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-              </button>
-            </>
-          )}
+          <strong>{topic || `Thread #${threadId}`}</strong>
+          <button
+            className="chat-delete-btn"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={deleteThread}
+            title="Delete chat"
+            disabled={deleting}
+          >
+            {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+          </button>
         </div>
 
         <div className="chat-conn">
@@ -569,7 +493,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
                 <div className="chat-bubble">
                   <div className="chat-author">{authorNameFor(m)}</div>
 
-                  {/* Text body */}
                   {textOnly && (
                     <div className="chat-text">
                       {textOnly.split(/\n/g).map((line, i) => (
@@ -578,7 +501,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
                     </div>
                   )}
 
-                  {/* Attachments (images) */}
                   {Array.isArray(m.attachments) && m.attachments.length > 0 && (
                     <div className="chat-attachments-grid">
                       {m.attachments.map((a) =>
@@ -598,7 +520,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
                     </div>
                   )}
 
-                  {/* Inline image URLs */}
                   {(!m.attachments || m.attachments.length === 0) && imageUrls.length > 0 && (
                     <div className="chat-attachments-grid">
                       {Array.from(new Set(imageUrls)).map((u) => (
@@ -616,7 +537,6 @@ const SupportChatWindow = forwardRef(function SupportChatWindow(
                     </div>
                   )}
 
-                  {/* Other links */}
                   {linkUrls.length > 0 && (
                     <div className="chat-links">
                       {Array.from(new Set(linkUrls)).map((u) => (

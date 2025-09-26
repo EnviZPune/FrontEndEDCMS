@@ -113,7 +113,7 @@ const About = () => {
             <p className="about-subtitle">{t("hero.subtitle")}</p>
             <div className="about-logo-section">
               <img
-                src={`${process.env.PUBLIC_URL}/Assets/logo.png`}
+                src={`${process.env.PUBLIC_URL}/Assets/triwearsiconbigger.png`}
                 alt={t("hero.logo_alt")}
                 className="about-logo"
               />

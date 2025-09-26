@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 import "../Styling/regist.css";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-const API_BASE = "https://api.triwears.com/api";
+// ===== CONFIG =====
+const API_BASE =
+  (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_BASE_URL) ||
+  process.env.REACT_APP_API_BASE_URL ||
+  "https://api.triwears.com/api"; // adjust if different
 
 function RegisterFormUser() {
   const { t } = useTranslation("register");
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -21,12 +27,16 @@ function RegisterFormUser() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null);          // headline
+  const [errorList, setErrorList] = useState(null);  // bullet points
   const [success, setSuccess] = useState(null);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, text: "weak", checks: {} });
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+
+  // ---------- Username rules ----------
   const USERNAME_REGEX = /^[A-Za-z0-9._]{3,20}$/;
   const RESERVED_USERNAMES = new Set(["admin", "support", "help", "contact", "triwears", "root"]);
   const [usernameValid, setUsernameValid] = useState(false);
@@ -34,83 +44,15 @@ function RegisterFormUser() {
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [usernameMsg, setUsernameMsg] = useState("");
   const usernameState =
-  checkingUsername ? "is-checking" :
-  usernameAvailable === true ? "is-ok" :
-  usernameAvailable === false ? "is-err" : "";
+    checkingUsername ? "is-checking" :
+    usernameAvailable === true ? "is-ok" :
+    usernameAvailable === false ? "is-err" : "";
   const showHint = checkingUsername || !!usernameMsg;
 
-  useEffect(() => {
-    const u = (formData.username || "").trim();
+  // ---------- Validators ----------
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const PHONE_REGEX = /^\d{10}$/;
 
-    if (!u) {
-      setUsernameValid(false);
-      setUsernameAvailable(null);
-      setUsernameMsg("");
-      return;
-    }
-
-    if (!USERNAME_REGEX.test(u)) {
-      setUsernameValid(false);
-      setUsernameAvailable(null);
-      setUsernameMsg(
-        t("username.rules", {
-          defaultValue: "3–20 chars. Letters, numbers, dot or underscore.",
-        })
-      );
-      return;
-    }
-
-    if (RESERVED_USERNAMES.has(u.toLowerCase())) {
-      setUsernameValid(false);
-      setUsernameAvailable(false);
-      setUsernameMsg(t("username.reserved", { defaultValue: "This username is reserved." }));
-      return;
-    }
-
-    setUsernameValid(true);
-    setUsernameMsg("");
-
-    // Debounced availability check
-    let isCancelled = false;
-    const timer = setTimeout(async () => {
-      setCheckingUsername(true);
-      try {
-        const res = await fetch(`${API_BASE}/User/check-username?username=${encodeURIComponent(u)}`);
-        if (res.ok) {
-          const data = await res.json(); // expect { available: boolean } or similar
-          if (!isCancelled) {
-            const available = !!(data.available ?? data.isAvailable ?? data.Available);
-            setUsernameAvailable(available);
-            setUsernameMsg(
-              available
-                ? t("username.available", { defaultValue: "Username is available" })
-                : t("username.taken", { defaultValue: "Username is taken" })
-            );
-          }
-        } else {
-          if (!isCancelled) {
-            setUsernameAvailable(null);
-            setUsernameMsg("");
-          }
-        }
-      } catch {
-        if (!isCancelled) {
-          setUsernameAvailable(null);
-          setUsernameMsg("");
-        }
-      } finally {
-        if (!isCancelled) setCheckingUsername(false);
-      }
-    }, 400);
-
-    return () => {
-      isCancelled = true;
-      clearTimeout(timer);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData.username]);
-
-  // ── Password strength ────────────────────────────────────────────────
   const calculatePasswordStrength = (password) => {
     let score = 0;
     const checks = {
@@ -127,158 +69,255 @@ function RegisterFormUser() {
     return { score: 100, text: "strong", checks };
   };
 
+  function isDobValid(d) {
+    if (!d) return false;
+    const dob = new Date(d);
+    if (Number.isNaN(dob.getTime())) return false;
+    const today = new Date();
+    if (dob > today) return false;
+    const age = today.getFullYear() - dob.getFullYear() -
+      ((today.getMonth() < dob.getMonth() || (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) ? 1 : 0);
+    return age >= 13 && dob.getFullYear() >= 1900;
+  }
+
+  const trimmed = (s) => (s || "").trim();
+
+  // Derived validity flags (recompute each render)
+  const requiredFields = [
+    "firstName", "lastName", "dateOfBirth", "username",
+    "phoneNumber", "email", "createPassword", "confirmPassword",
+  ];
+  const requiredComplete = requiredFields.every((k) => !!trimmed(formData[k]));
+  const emailValid = EMAIL_REGEX.test(trimmed(formData.email));
+  const phoneValid = PHONE_REGEX.test(trimmed(formData.phoneNumber));
+  const dobValid = isDobValid(formData.dateOfBirth);
+  const usernameSyntaxOk =
+    USERNAME_REGEX.test(trimmed(formData.username)) &&
+    !RESERVED_USERNAMES.has(trimmed(formData.username).toLowerCase());
+  // Require availability check to have returned TRUE (not pending/unknown)
+  const usernameReady = usernameSyntaxOk && usernameAvailable === true && !checkingUsername;
+  const passStrengthOk = passwordStrength.score >= 50;
+  const passValid = passStrengthOk && passwordsMatch;
+
+  const formValid =
+    requiredComplete &&
+    emailValid &&
+    phoneValid &&
+    dobValid &&
+    usernameReady &&
+    passValid;
+
+  // ---------- Effects ----------
   useEffect(() => {
-    if (formData.createPassword) {
-      setPasswordStrength(calculatePasswordStrength(formData.createPassword));
-    } else {
-      setPasswordStrength({ score: 0, text: "weak", checks: {} });
-    }
+    if (formData.createPassword) setPasswordStrength(calculatePasswordStrength(formData.createPassword));
+    else setPasswordStrength({ score: 0, text: "weak", checks: {} });
   }, [formData.createPassword]);
 
   useEffect(() => {
-    if (formData.confirmPassword) {
-      setPasswordsMatch(formData.createPassword === formData.confirmPassword);
-    } else {
-      setPasswordsMatch(true);
-    }
+    if (formData.confirmPassword) setPasswordsMatch(formData.createPassword === formData.confirmPassword);
+    else setPasswordsMatch(true);
   }, [formData.createPassword, formData.confirmPassword]);
 
-  // ── Derived UI state for the username hint (must be outside handleSubmit) ──
-  const hintState =
-    checkingUsername
-      ? "is-checking"
-      : usernameMsg
-        ? usernameAvailable === false
-          ? "is-err"
-          : usernameAvailable === true
-            ? "is-ok"
-            : "is-neutral"
-        : "is-neutral";
+  // Debounced username availability
+  useEffect(() => {
+    const u = trimmed(formData.username);
 
-  // ── Handlers ─────────────────────────────────────────────────────────
+    if (!u) {
+      setUsernameValid(false);
+      setUsernameAvailable(null);
+      setUsernameMsg("");
+      return;
+    }
+    if (!USERNAME_REGEX.test(u)) {
+      setUsernameValid(false);
+      setUsernameAvailable(null);
+      setUsernameMsg(t("username.rules", { defaultValue: "3–20 chars. Letters, numbers, dot or underscore." }));
+      return;
+    }
+    if (RESERVED_USERNAMES.has(u.toLowerCase())) {
+      setUsernameValid(false);
+      setUsernameAvailable(false);
+      setUsernameMsg(t("username.reserved", { defaultValue: "This username is reserved." }));
+      return;
+    }
+
+    setUsernameValid(true);
+    setUsernameMsg("");
+
+    let isCancelled = false;
+    const timer = setTimeout(async () => {
+      setCheckingUsername(true);
+      try {
+        const url = `${API_BASE.replace(/\/+$/, "")}/User/check-username?username=${encodeURIComponent(u)}`;
+        const res = await fetch(url, { headers: { Accept: "application/json" }, credentials: "include" });
+        if (res.ok) {
+          let data = null;
+          try { data = await res.json(); } catch { data = null; }
+          if (!isCancelled) {
+            const available = !!(data?.available ?? data?.isAvailable ?? data?.Available);
+            setUsernameAvailable(available);
+            setUsernameMsg(
+              available
+                ? t("username.available", { defaultValue: "Username is available" })
+                : t("username.taken", { defaultValue: "Username is taken" })
+            );
+          }
+        } else if (!isCancelled) {
+          setUsernameAvailable(null);
+          setUsernameMsg("");
+        }
+      } catch {
+        if (!isCancelled) {
+          setUsernameAvailable(null);
+          setUsernameMsg("");
+        }
+      } finally {
+        if (!isCancelled) setCheckingUsername(false);
+      }
+    }, 400);
+
+    return () => { isCancelled = true; clearTimeout(timer); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData.username]);
+
+  // ---------- UI handlers ----------
   const handleInputChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-
   const togglePasswordVisibility = (field) => {
     if (field === "password") setShowPassword((v) => !v);
     else setShowConfirmPassword((v) => !v);
   };
 
+  // ---------- Server error parsing ----------
+  function toArray(val) { if (!val) return []; return Array.isArray(val) ? val.map(String) : [String(val)]; }
+  function normalizeServerErrors(status, dataOrText) {
+    let details = [];
+    let headline = null;
+    let data = dataOrText;
+
+    if (typeof dataOrText === "string") {
+      const s = dataOrText.trim();
+      if (s.startsWith("{") || s.startsWith("[")) { try { data = JSON.parse(s); } catch { data = s; } }
+    }
+
+    if (typeof data === "object" && data) {
+      const fieldMaps = data.errors || data.errorDetails || data.validationErrors || data.Violations || data.violations;
+      if (fieldMaps && !Array.isArray(fieldMaps)) {
+        for (const [field, msgs] of Object.entries(fieldMaps)) {
+          toArray(msgs).forEach((m) => details.push(`${field}: ${m}`));
+        }
+      }
+      if (Array.isArray(fieldMaps)) {
+        fieldMaps.forEach((vi) => {
+          const f = vi.field || vi.name || vi.PropertyName || "field";
+          const m = vi.message || vi.Message || vi.error || "is invalid";
+          details.push(`${f}: ${m}`);
+        });
+      }
+      details.push(...toArray(data.message));
+      details.push(...toArray(data.error));
+      details.push(...toArray(data.detail || data.Detail));
+      details = Array.from(new Set(details.map((s) => s.trim()).filter(Boolean)));
+    } else if (typeof data === "string" && data.trim()) {
+      details.push(data.trim());
+    }
+
+    if (status === 404) headline = "Register endpoint not found. Check API_BASE and route casing.";
+    else if (status === 409) headline = "Conflict: one or more fields already exist.";
+    else if (status === 422 || status === 400) headline = "Validation error. Please review the highlighted issues.";
+    else if (status === 413) headline = "Payload too large. Try a smaller image or shorter inputs.";
+    else if (status === 429) headline = "Too many attempts. Please wait a moment and try again.";
+    else if (status >= 500) headline = "Server error. Please try again shortly.";
+    if (!headline) headline = "Registration failed.";
+    if (details.length === 0) details = [`Status: ${status}`];
+    return { headline, details };
+  }
+
+  // ---------- Submit (NO native submit, NO reload) ----------
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e?.preventDefault?.();
+    e?.stopPropagation?.();
+    if (loading) return;
+
     setLoading(true);
     setError(null);
+    setErrorList(null);
     setSuccess(null);
 
-    const requiredFields = [
-      "firstName",
-      "lastName",
-      "dateOfBirth",
-      "username",
-      "phoneNumber",
-      "email",
-      "createPassword",
-      "confirmPassword",
-    ];
+    // Rebuild detailed client-side errors
+    const errs = [];
 
-    for (const field of requiredFields) {
-      if (!formData[field]) {
-        setError(
-          t("errors.missing_field", {
-            field,
-            defaultValue: "Please fill in all fields. Missing: {{field}}",
-          })
-        );
-        setLoading(false);
-        return;
-      }
-    }
+    // Required
+    requiredFields.forEach((f) => {
+      if (!trimmed(formData[f])) errs.push(`${f}: ${t("errors.required", { defaultValue: "This field is required." })}`);
+    });
 
-    // Username checks
-    if (!USERNAME_REGEX.test(formData.username || "")) {
-      setError(
-        t("username.rules", {
-          defaultValue: "3–20 chars. Letters, numbers, dot or underscore.",
-        })
+    if (!emailValid) errs.push(t("errors.email_invalid", { defaultValue: "Email format is invalid." }));
+    if (!phoneValid) errs.push(t("errors.phone_invalid", { defaultValue: "Phone must be exactly 10 digits." }));
+    if (!dobValid) errs.push(t("errors.dob_invalid", { defaultValue: "Enter a valid birth date (13+ years, not in the future)." }));
+
+    if (!usernameSyntaxOk) {
+      errs.push(
+        t("username.rules", { defaultValue: "Username must be 3–20 chars: letters, numbers, dot or underscore." })
       );
-      setLoading(false);
-      return;
-    }
-    if (RESERVED_USERNAMES.has((formData.username || "").toLowerCase())) {
-      setError(t("username.reserved", { defaultValue: "This username is reserved." }));
-      setLoading(false);
-      return;
-    }
-    if (usernameAvailable === false) {
-      setError(t("username.taken", { defaultValue: "Username is taken" }));
-      setLoading(false);
-      return;
+    } else if (checkingUsername || usernameAvailable !== true) {
+      errs.push(t("username.must_be_available", { defaultValue: "Please choose an available username." }));
     }
 
-    if (formData.createPassword !== formData.confirmPassword) {
-      setError(t("errors.passwords_mismatch", { defaultValue: "Passwords do not match." }));
-      setLoading(false);
-      return;
-    }
+    if (!passStrengthOk) errs.push(t("errors.password_too_weak", { defaultValue: "Password is too weak." }));
+    if (!passwordsMatch) errs.push(t("errors.passwords_mismatch", { defaultValue: "Passwords do not match." }));
 
-    if (passwordStrength.score < 50) {
-      setError(
-        t("errors.password_too_weak", {
-          defaultValue: "Password is too weak. Please choose a stronger password.",
-        })
-      );
+    if (errs.length > 0 || !formValid) {
+      setError(t("errors.fix_and_retry", { defaultValue: "Please fix the following and try again:" }));
+      setErrorList(errs);
       setLoading(false);
-      return;
+      return; // DO NOT create account
     }
 
     const roleMap = { 0: 0, 1: 1, 2: 2 };
-
     const requestBody = {
-      name: `${formData.firstName} ${formData.lastName}`,
-      username: formData.username,
-      email: formData.email,
+      name: `${trimmed(formData.firstName)} ${trimmed(formData.lastName)}`,
+      username: trimmed(formData.username),
+      email: trimmed(formData.email),
       password: formData.createPassword,
       role: roleMap[formData.role],
-      telephoneNumber: formData.phoneNumber,
-      profilePictureUrl: formData.profilePictureUrl,
+      telephoneNumber: trimmed(formData.phoneNumber),
+      profilePictureUrl: trimmed(formData.profilePictureUrl),
       dateOfBirth: formData.dateOfBirth,
     };
 
     try {
-      const response = await fetch(`${API_BASE}/Register`, {
+      const url = `${API_BASE.replace(/\/+$/, "")}/Register`;
+      const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(requestBody),
+        credentials: "include",
       });
 
-      if (!response.ok) {
-        let errorData;
-        try {
-          errorData = await response.json();
-        } catch {
-          errorData = {};
-        }
-        throw new Error(
-          errorData.message ||
-            t("errors.register_failed", { defaultValue: "An error occurred while registering." })
-        );
+      const text = await res.text();
+      let data = null;
+      try { data = text ? JSON.parse(text) : null; } catch { data = text || null; }
+
+      if (!res.ok) {
+        const normalized = normalizeServerErrors(res.status, data);
+        setError(normalized.headline);
+        setErrorList(normalized.details);
+        setLoading(false);
+        return;
       }
 
-      // Ask backend to send email confirmation
+      // Fire-and-forget: email confirmation
       try {
-        const confirmRes = await fetch(`${API_BASE}/Auth/send-confirmation`, {
+        const confirmUrl = `${API_BASE.replace(/\/+$/, "")}/Auth/send-confirmation`;
+        await fetch(confirmUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: formData.email, clientUrl: window.location.origin }),
+          credentials: "include",
         });
-        if (!confirmRes.ok) {
-          const errorText = await confirmRes.text();
-          console.warn("Email confirmation request failed:", errorText);
-        }
-      } catch (e) {
-        console.warn("Email confirmation call error:", e);
-      }
+      } catch {}
 
       setSuccess(
         t("success.registered", {
@@ -299,22 +338,40 @@ function RegisterFormUser() {
         role: "2",
       });
 
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 2000);
+      // SPA navigate
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
+      const offline =
+        err?.message?.toLowerCase?.().includes("failed to fetch") ||
+        err?.message?.toLowerCase?.().includes("network");
       setError(
-        err.message ||
-          t("errors.register_failed", { defaultValue: "An error occurred while registering." })
+        offline
+          ? t("errors.network", { defaultValue: "Network error. Please check your internet connection." })
+          : (err?.message || t("errors.unknown", { defaultValue: "An unexpected error occurred." }))
       );
+    } finally {
       setLoading(false);
+    }
+  };
+
+  // Prevent native submit via Enter; route to our handler
+  const onKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      handleSubmit(e);
     }
   };
 
   const strengthTextKey = `strength.${passwordStrength.text}`;
 
   return (
-    <div className="register-page">
+    <div
+      className="register-page"
+      onKeyDownCapture={(e) => {
+        if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); }
+      }}
+    >
       <div className="register-container">
         <div className="register-header">
           <a href="/" className="logo-link" aria-label={t("aria.go_home", { defaultValue: "Go to homepage" })}>
@@ -330,10 +387,17 @@ function RegisterFormUser() {
           </p>
         </div>
 
-        {error && (
+        {(error || (errorList && errorList.length)) && (
           <div className="status-message error" role="alert" aria-live="assertive">
             <span className="status-icon">⚠️</span>
-            <span className="status-text">{error}</span>
+            <div className="status-text">
+              {error}
+              {errorList && errorList.length > 0 && (
+                <ul className="error-list">
+                  {errorList.map((msg, i) => (<li key={i}>{msg}</li>))}
+                </ul>
+              )}
+            </div>
           </div>
         )}
 
@@ -344,75 +408,74 @@ function RegisterFormUser() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="register-form" noValidate>
+        {/* Keep <form> for semantics; button is type="button" to block native submit */}
+        <form
+          onSubmit={(e) => { e.preventDefault(); e.stopPropagation(); }}
+          onSubmitCapture={(e) => { e.preventDefault(); e.stopPropagation(); }}
+          className="register-form"
+          noValidate
+          action="#"
+        >
           <div className="form-row">
             <div className="form-group">
-              <label className="form-label" htmlFor="firstName">
-                {t("fields.first_name", { defaultValue: "First Name" })}
-              </label>
+              <label className="form-label" htmlFor="firstName">{t("fields.first_name", { defaultValue: "First Name" })}</label>
               <input
                 id="firstName"
                 type="text"
                 name="firstName"
-                className="form-input"
+                className={`form-input ${!trimmed(formData.firstName) ? "input-error" : ""}`}
                 placeholder={t("placeholders.first_name", { defaultValue: "Enter your first name" })}
                 required
                 value={formData.firstName}
                 onChange={handleInputChange}
                 disabled={loading}
                 autoComplete="given-name"
+                onKeyDown={onKeyDown}
               />
             </div>
             <div className="form-group">
-              <label className="form-label" htmlFor="lastName">
-                {t("fields.last_name", { defaultValue: "Last Name" })}
-              </label>
+              <label className="form-label" htmlFor="lastName">{t("fields.last_name", { defaultValue: "Last Name" })}</label>
               <input
                 id="lastName"
                 type="text"
                 name="lastName"
-                className="form-input"
+                className={`form-input ${!trimmed(formData.lastName) ? "input-error" : ""}`}
                 placeholder={t("placeholders.last_name", { defaultValue: "Enter your last name" })}
                 required
                 value={formData.lastName}
                 onChange={handleInputChange}
                 disabled={loading}
                 autoComplete="family-name"
+                onKeyDown={onKeyDown}
               />
             </div>
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label className="form-label" htmlFor="dateOfBirth">
-                {t("fields.dob", { defaultValue: "Date of Birth" })}
-              </label>
+              <label className="form-label" htmlFor="dateOfBirth">{t("fields.dob", { defaultValue: "Date of Birth" })}</label>
               <input
                 id="dateOfBirth"
                 type="date"
                 name="dateOfBirth"
-                className="form-input"
+                className={`form-input ${!dobValid ? "input-error" : ""}`}
                 required
                 value={formData.dateOfBirth}
                 onChange={handleInputChange}
                 disabled={loading}
                 autoComplete="bday"
+                onKeyDown={onKeyDown}
               />
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="username">
-                {t("fields.username", { defaultValue: "Username" })}
-              </label>
-
+              <label className="form-label" htmlFor="username">{t("fields.username", { defaultValue: "Username" })}</label>
               <div className={`input-with-status ${usernameState}`}>
                 <input
                   id="username"
                   type="text"
                   name="username"
-                  className={`form-input ${
-                    formData.username && (usernameAvailable === false || !usernameValid) ? "input-error" : ""
-                  }`}
+                  className={`form-input ${(!usernameSyntaxOk || usernameAvailable === false) ? "input-error" : ""}`}
                   placeholder={t("placeholders.username", { defaultValue: "Choose a username" })}
                   required
                   value={formData.username}
@@ -422,24 +485,11 @@ function RegisterFormUser() {
                   inputMode="email"
                   pattern="[A-Za-z0-9._]{3,20}"
                   aria-describedby={showHint ? "usernameHelp" : undefined}
+                  onKeyDown={onKeyDown}
                 />
-
                 {showHint && (
-                  <div
-                    id="usernameHelp"
-                    className={`input-hint ${usernameState}`}
-                    aria-live="polite"
-                  >
-                    <span
-                      className={`hint-icon ${
-                        checkingUsername
-                          ? "spinner"
-                          : usernameAvailable === true
-                            ? "icon-ok"
-                            : "icon-err"
-                      }`}
-                      aria-hidden="true"
-                    />
+                  <div id="usernameHelp" className={`input-hint ${usernameState}`} aria-live="polite">
+                    <span className={`hint-icon ${checkingUsername ? "spinner" : usernameAvailable === true ? "icon-ok" : "icon-err"}`} aria-hidden="true" />
                     <span className="hint-text">
                       {checkingUsername
                         ? t("username.checking", { defaultValue: "Checking availability..." })
@@ -452,62 +502,59 @@ function RegisterFormUser() {
           </div>
 
           <div className="form-row">
-              <div className="form-group">
-              <label className="form-label" htmlFor="phoneNumber">
-                {t("fields.phone", { defaultValue: "Phone Number" })}
-              </label>
+            <div className="form-group">
+              <label className="form-label" htmlFor="phoneNumber">{t("fields.phone", { defaultValue: "Phone Number" })}</label>
               <input
                 id="phoneNumber"
                 type="tel"
                 name="phoneNumber"
-                className="form-input"
+                className={`form-input ${!phoneValid ? "input-error" : ""}`}
                 placeholder={t("placeholders.phone", { defaultValue: "0691234567" })}
                 required
-                value={formData.phoneNumber}        // ← bind value
-                onChange={handleInputChange}        // ← update state
+                value={formData.phoneNumber}
+                onChange={handleInputChange}
                 disabled={loading}
                 autoComplete="tel"
                 inputMode="tel"
-                pattern="^\\d{10}$"                 // ← escape backslash in JSX
+                pattern="^\d{10}$"
                 title={t("fields.phone_help", { defaultValue: "Enter 10 digits (e.g., 0691234567)" })}
+                onKeyDown={onKeyDown}
               />
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="email">
-                {t("fields.email", { defaultValue: "Email Address" })}
-              </label>
+              <label className="form-label" htmlFor="email">{t("fields.email", { defaultValue: "Email Address" })}</label>
               <input
                 id="email"
                 type="email"
                 name="email"
-                className="form-input"
+                className={`form-input ${!emailValid ? "input-error" : ""}`}
                 placeholder={t("placeholders.email", { defaultValue: "your@email.com" })}
                 required
                 value={formData.email}
                 onChange={handleInputChange}
                 disabled={loading}
                 autoComplete="email"
+                onKeyDown={onKeyDown}
               />
             </div>
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="createPassword">
-              {t("fields.create_password", { defaultValue: "Create Password" })}
-            </label>
+            <label className="form-label" htmlFor="createPassword">{t("fields.create_password", { defaultValue: "Create Password" })}</label>
             <div className="password-input-container">
               <input
                 id="createPassword"
                 type={showPassword ? "text" : "password"}
                 name="createPassword"
-                className="form-input"
+                className={`form-input ${!passStrengthOk ? "input-error" : ""}`}
                 placeholder={t("placeholders.create_password", { defaultValue: "Create a strong password" })}
                 required
                 value={formData.createPassword}
                 onChange={handleInputChange}
                 disabled={loading}
                 autoComplete="new-password"
+                onKeyDown={onKeyDown}
               />
               <button
                 type="button"
@@ -530,49 +577,23 @@ function RegisterFormUser() {
                 </span>
               </div>
             )}
-
-            {formData.createPassword && passwordStrength.checks && (
-              <div className="password-requirements">
-                <div className={`requirement ${passwordStrength.checks.length ? "met" : ""}`}>
-                  <span className="requirement-icon">{passwordStrength.checks.length ? "✓" : "○"}</span>
-                  {t("requirements.at_least", { defaultValue: "At least 8 characters" })}
-                </div>
-                <div className={`requirement ${passwordStrength.checks.lowercase ? "met" : ""}`}>
-                  <span className="requirement-icon">{passwordStrength.checks.lowercase ? "✓" : "○"}</span>
-                  {t("requirements.lowercase", { defaultValue: "One lowercase letter" })}
-                </div>
-                <div className={`requirement ${passwordStrength.checks.uppercase ? "met" : ""}`}>
-                  <span className="requirement-icon">{passwordStrength.checks.uppercase ? "✓" : "○"}</span>
-                  {t("requirements.uppercase", { defaultValue: "One uppercase letter" })}
-                </div>
-                <div className={`requirement ${passwordStrength.checks.numbers ? "met" : ""}`}>
-                  <span className="requirement-icon">{passwordStrength.checks.numbers ? "✓" : "○"}</span>
-                  {t("requirements.number", { defaultValue: "One number" })}
-                </div>
-                <div className={`requirement ${passwordStrength.checks.special ? "met" : ""}`}>
-                  <span className="requirement-icon">{passwordStrength.checks.special ? "✓" : "○"}</span>
-                  {t("requirements.special", { defaultValue: "One special character" })}
-                </div>
-              </div>
-            )}
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="confirmPassword">
-              {t("fields.confirm_password", { defaultValue: "Confirm Password" })}
-            </label>
+            <label className="form-label" htmlFor="confirmPassword">{t("fields.confirm_password", { defaultValue: "Confirm Password" })}</label>
             <div className="password-input-container">
               <input
                 id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
-                className="form-input"
+                className={`form-input ${(!passwordsMatch || !trimmed(formData.confirmPassword)) ? "input-error" : ""}`}
                 placeholder={t("placeholders.confirm_password", { defaultValue: "Confirm your password" })}
                 required
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 disabled={loading}
                 autoComplete="new-password"
+                onKeyDown={onKeyDown}
               />
               <button
                 type="button"
@@ -591,7 +612,6 @@ function RegisterFormUser() {
                 {t("errors.passwords_mismatch", { defaultValue: "Passwords do not match" })}
               </div>
             )}
-
             {formData.confirmPassword && passwordsMatch && formData.createPassword && (
               <div className="password-match">
                 <span className="match-icon">✓</span>
@@ -600,10 +620,12 @@ function RegisterFormUser() {
             )}
           </div>
 
+          {/* IMPORTANT: disable unless fully valid */}
           <button
-            type="submit"
+            type="button"
             className="submit-button"
-            disabled={loading || !passwordsMatch || passwordStrength.score < 50 || !usernameValid || usernameAvailable === false}
+            disabled={loading || !formValid}
+            onClick={handleSubmit}
           >
             {loading ? (
               <>

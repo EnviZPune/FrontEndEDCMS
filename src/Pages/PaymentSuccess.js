@@ -47,6 +47,7 @@ export default function PaymentSuccess() {
 
               <h1>Payment Successful</h1>
               <p><strong>Welcome aboard</strong> — Your subscription is active and you’re officially part of the team.</p>
+              <p>Please <strong>check your Email</strong> to complete your <strong>Business Registration !</strong></p>
               <p>Hit <strong>Continue</strong> to open the Owner Guide—your step-by-step playbook for setting up, launching, and getting value fast.</p>
               <p>Have questions? Our Support team is one click away and ready to help.</p>
               <p>Thank You, and enjoy <strong>Triwears</strong></p>
