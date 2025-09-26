@@ -368,7 +368,6 @@ export default function ShopList() {
   const nearStart = (nearPage - 1) * PAGE_SIZE;
   const nearSlice = nearFiltered.slice(nearStart, nearStart + PAGE_SIZE);
 
-  // Reset near-page when location changes or results length changes
   useEffect(() => {
     setNearPage(1);
   }, [myPos, nearTotal]);
@@ -380,7 +379,6 @@ export default function ShopList() {
 
   const handleNearPageChange = (newPage) => {
     setNearPage(newPage);
-    // scroll to near-me section anchor
     const el = document.getElementById("near-me-section");
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -637,7 +635,6 @@ export default function ShopList() {
           )}
         </section>
 
-        {/* Browse All Shops */}
         <section className="browse-section" aria-label={t("browse_aria", { defaultValue: "Browse shops" })}>
           <div className="section-header">
             <h2 className="section-title">{t("browse_title", { defaultValue: "Browse Shops" })}</h2>
