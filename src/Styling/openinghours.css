@@ -1,219 +1,302 @@
-/* ================================
-   Opening Hours (full CSS)
-   ================================ */
+/* ===== CSS Custom Properties (Design Tokens) ===== */
+:root {
+  /* Container */
+  --oh-container-bg: #f9fafb;
+  --oh-container-border: #e5e7eb;
+  --oh-container-radius: 12px;
+  --oh-container-padding: 20px;
+  --oh-container-margin: 16px 0;
 
-/* ===== Opening Hours Container ===== */
-.opening-hours-container{
-  background:#f9fafb !important;
-  border:1px solid #e5e7eb !important;
-  border-radius:12px !important;
-  padding:20px !important;
-  margin:16px 0 !important;
+  /* Typography */
+  --oh-header-color: #6b7280;
+  --oh-footer-color: #6b7280;
+  --oh-day-color: #111827;
+  --oh-grid-head-color: #374151;
+
+  /* Buttons */
+  --oh-btn-bg: #f9fafb;
+  --oh-btn-border: #d1d5db;
+  --oh-btn-color: #374151;
+  --oh-btn-hover-bg: #f3f4f6;
+  --oh-btn-hover-border: #9ca3af;
+
+  /* Select/Input */
+  --oh-select-bg: #ffffff;
+  --oh-select-border: #d1d5db;
+  --oh-select-color: #111827;
+  --oh-select-focus-border: #9ca3af;
+  --oh-select-disabled-bg: #f9fafb;
+  --oh-select-disabled-color: #9ca3af;
+
+  /* Updated toggle switch dimensions for more height and silver colors */
+  --oh-toggle-width: 48px;
+  --oh-toggle-height: 28px;
+  --oh-toggle-border-width: 1px;
+  --oh-toggle-off-bg: #c0c0c0; /* Silver for closed/off state */
+  --oh-toggle-border-color: #a8a8a8;
+  --oh-toggle-on-bg: #708090; /* Dark silver for open/on state */
+  --oh-toggle-knob-bg: #ffffff;
+  --oh-toggle-focus-shadow: rgba(192, 192, 192, 0.35);
 }
 
-.opening-hours-header h3{
-  margin:0 0 16px 0 !important;
-  font-size:14px !important;
-  font-weight:600 !important;
-  color:#6b7280 !important;
-  letter-spacing:.05em !important;
-  text-transform:uppercase !important;
+/* ===== Dark Mode ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Container */
+    --oh-container-bg: #1f2937;
+    --oh-container-border: #374151;
+
+    /* Typography */
+    --oh-header-color: #9ca3af;
+    --oh-footer-color: #9ca3af;
+    --oh-day-color: #f9fafb;
+    --oh-grid-head-color: #d1d5db;
+
+    /* Buttons */
+    --oh-btn-bg: #374151;
+    --oh-btn-border: #4b5563;
+    --oh-btn-color: #f9fafb;
+    --oh-btn-hover-bg: #4b5563;
+    --oh-btn-hover-border: #6b7280;
+
+    /* Select/Input */
+    --oh-select-bg: #374151;
+    --oh-select-border: #4b5563;
+    --oh-select-color: #f9fafb;
+    --oh-select-focus-border: #6b7280;
+    --oh-select-disabled-bg: #1f2937;
+    --oh-select-disabled-color: #6b7280;
+
+    /* Updated dark mode toggle colors to darker silver tones */
+    --oh-toggle-off-bg: #696969; /* Dark gray silver for closed/off state */
+    --oh-toggle-border-color: #808080;
+    --oh-toggle-on-bg: #2f4f4f; /* Dark slate gray for open/on state */
+    --oh-toggle-knob-bg: #f3f4f6;
+    --oh-toggle-focus-shadow: rgba(105, 105, 105, 0.35);
+  }
 }
 
-.opening-hours-footer{
-  font-size:12px !important;
-  color:#6b7280 !important;
-  margin-top:12px !important;
+/* ===== Container Styles ===== */
+.opening-hours-container {
+  background: var(--oh-container-bg);
+  border: 1px solid var(--oh-container-border);
+  border-radius: var(--oh-container-radius);
+  padding: var(--oh-container-padding);
+  margin: var(--oh-container-margin);
 }
 
-/* ===== Opening Hours picker ===== */
-.hours-picker{ display:grid !important; gap:12px !important; }
-
-/* Toolbar */
-.hours-toolbar{ display:flex !important; gap:8px !important; }
-.hours-toolbar>button{
-  appearance:none !important;
-  border:1px solid #d1d5db !important;
-  background:#f9fafb !important;
-  color:#374151 !important;
-  padding:8px 12px !important;
-  border-radius:6px !important;
-  font-size:13px !important;
-  font-weight:400 !important;
-  cursor:pointer !important;
-  transition:background .15s ease, border-color .15s ease !important;
+.opening-hours-header h3 {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--oh-header-color);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
-.hours-toolbar>button:hover{ background:#f3f4f6 !important; border-color:#9ca3af !important; }
 
-/* Grid */
-.hours-grid{ display:grid !important; gap:8px !important; }
+.opening-hours-footer {
+  font-size: 12px;
+  color: var(--oh-footer-color);
+  margin-top: 12px;
+}
+
+/* ===== Hours Picker Layout ===== */
+.hours-picker {
+  display: grid;
+  gap: 12px;
+}
+
+/* ===== Toolbar ===== */
+.hours-toolbar {
+  display: flex;
+  gap: 8px;
+}
+
+.hours-toolbar > button {
+  appearance: none;
+  border: 1px solid var(--oh-btn-border);
+  background: var(--oh-btn-bg);
+  color: var(--oh-btn-color);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.hours-toolbar > button:hover {
+  background: var(--oh-btn-hover-bg);
+  border-color: var(--oh-btn-hover-border);
+}
+
+/* ===== Grid Layout ===== */
+.hours-grid {
+  display: grid;
+  gap: 8px;
+}
 
 .hours-grid-head,
-.hours-row{
-  display:grid !important;
-  grid-template-columns:1fr 1fr 1fr auto !important;
-  align-items:center !important;
-  gap:8px !important;
+.hours-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  align-items: center;
+  gap: 8px;
 }
 
-.hours-grid-head{
-  font-weight:500 !important;
-  color:#374151 !important;
-  font-size:14px !important;
+.hours-grid-head {
+  font-weight: 500;
+  color: var(--oh-grid-head-color);
+  font-size: 14px;
 }
 
-.hours-day{ color:#111827 !important; font-size:14px !important; }
+.hours-day {
+  color: var(--oh-day-color);
+  font-size: 14px;
+}
 
-.hours-cell.disabled{ opacity:.5 !important; pointer-events:none !important; }
+.hours-cell.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
 
-/* ===== Select (shadcn SelectTrigger) ===== */
+/* ===== Select/Time Inputs ===== */
 .time-trigger,
-.time-select{ /* .time-select kept as fallback */
-  width:100% !important;
-  height:36px !important;
-  border:1px solid #d1d5db !important;
-  border-radius:6px !important;
-  background:#fff !important;
-  padding:0 8px !important;
-  font-size:14px !important;
-  color:#111827 !important;
-  outline:none !important;
-  appearance:none !important;
-  background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
-  background-position:right 8px center !important;
-  background-repeat:no-repeat !important;
-  background-size:16px !important;
-  padding-right:32px !important;
+.time-select {
+  width: 100%;
+  height: 36px;
+  border: 1px solid var(--oh-select-border);
+  border-radius: 6px;
+  background: var(--oh-select-bg);
+  padding: 0 32px 0 8px;
+  font-size: 14px;
+  color: var(--oh-select-color);
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 8px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
+
 .time-trigger:focus,
-.time-select:focus{
-  border-color:#9ca3af !important;
-  box-shadow:0 0 0 1px rgba(156,163,175,.3) !important;
+.time-select:focus {
+  border-color: var(--oh-select-focus-border);
+  box-shadow: 0 0 0 1px var(--oh-toggle-focus-shadow);
 }
+
 .time-trigger[disabled],
-.time-select:disabled{
-  background-color:#f9fafb !important;
-  color:#9ca3af !important;
+.time-select:disabled {
+  background-color: var(--oh-select-disabled-bg);
+  color: var(--oh-select-disabled-color);
+  cursor: not-allowed;
 }
 
-/* ===== Toggle (match look from screenshot #2) =====
-   Works for shadcn/Radix: <button role="switch"><span/></button>
-   and for your custom .toggle-switch/.toggle-thumb fallback.
-*/
+/* ===== Toggle Switch ===== */
 .hours-row [role="switch"],
-.toggle-switch{
-  /* tokens */
-  --sw-w: 36px;           /* track width  */
-  --sw-h: 20px;           /* track height */
-  --sw-bd: 1px;           /* border width */
-  --sw-off: #e5e7eb;      /* track off bg (slate-200) */
-  --sw-bdc: #cbd5e1;      /* track border (slate-300) */
-  --sw-on:  #374151;      /* track on bg (slate-700) */
-
-  position:relative !important;
-  width:var(--sw-w) !important;
-  height:var(--sw-h) !important;
-  border-radius:calc(var(--sw-h)/2) !important;
-  background:var(--sw-off) !important;
-  border:var(--sw-bd) solid var(--sw-bdc) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.6),
-    inset 0 -1px 0 rgba(0,0,0,.02) !important;
-  cursor:pointer !important;
-  padding:0 !important;
-  outline:none !important;
-  transition:background .2s ease, border-color .2s ease !important;
-  -webkit-tap-highlight-color:transparent;
+.toggle-switch {
+  position: relative;
+  width: var(--oh-toggle-width);
+  height: var(--oh-toggle-height);
+  border-radius: calc(var(--oh-toggle-height) / 2);
+  background: var(--oh-toggle-off-bg);
+  border: var(--oh-toggle-border-width) solid var(--oh-toggle-border-color);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .hours-row [role="switch"]:focus-visible,
-.toggle-switch:focus{
-  box-shadow:0 0 0 2px rgba(156,163,175,.35) !important;
+.toggle-switch:focus {
+  box-shadow: 0 0 0 2px var(--oh-toggle-focus-shadow);
 }
 
 .hours-row [role="switch"][aria-disabled="true"],
 .hours-row [role="switch"][disabled],
-.toggle-switch[disabled]{
-  cursor:not-allowed !important;
-  opacity:.55 !important;
+.toggle-switch[disabled] {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
-/* ON state */
+/* Updated toggle checked states with new silver colors */
 .hours-row [role="switch"][data-state="checked"],
 .hours-row [role="switch"][aria-checked="true"],
-.toggle-switch.checked{
-  background:var(--sw-on) !important;
-  border-color:var(--sw-on) !important;
+.toggle-switch.checked {
+  background: var(--oh-toggle-on-bg);
+  border-color: var(--oh-toggle-on-bg);
 }
 
-/* Knob (shadcn/Radix) */
-.hours-row [role="switch"]>span{
-  position:absolute !important;
-  top:calc(var(--sw-bd) + 1px) !important;
-  left:calc(var(--sw-bd) + 1px) !important;
-  width:calc(var(--sw-h) - (var(--sw-bd)*2) - 2px) !important;
-  height:calc(var(--sw-h) - (var(--sw-bd)*2) - 2px) !important;
-  border-radius:9999px !important;
-  background:#fff !important;
-  border:1px solid rgba(0,0,0,.06) !important;
-  box-shadow:0 1px 1px rgba(0,0,0,.08) !important;
-  transform:translateX(0) !important;
-  transition:transform .2s ease !important;
-}
-.hours-row [role="switch"][data-state="checked"]>span,
-.hours-row [role="switch"][aria-checked="true"]>span{
-  transform:translateX(calc(var(--sw-w) - var(--sw-h))) !important;
+/* ===== Toggle Knob ===== */
+.hours-row [role="switch"] > span,
+.toggle-thumb {
+  position: absolute;
+  top: calc(var(--oh-toggle-border-width) + 1px);
+  left: calc(var(--oh-toggle-border-width) + 1px);
+  width: calc(var(--oh-toggle-height) - (var(--oh-toggle-border-width) * 2) - 2px);
+  height: calc(var(--oh-toggle-height) - (var(--oh-toggle-border-width) * 2) - 2px);
+  border-radius: 50%;
+  background: var(--oh-toggle-knob-bg);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  transform: translateX(0);
+  transition: transform 0.2s ease;
 }
 
-/* Fallback custom markup */
-.toggle-thumb{
-  position:absolute !important;
-  top:calc(var(--sw-bd) + 1px) !important;
-  left:calc(var(--sw-bd) + 1px) !important;
-  width:calc(var(--sw-h) - (var(--sw-bd)*2) - 2px) !important;
-  height:calc(var(--sw-h) - (var(--sw-bd)*2) - 2px) !important;
-  border-radius:9999px !important;
-  background:#fff !important;
-  border:1px solid rgba(0,0,0,.06) !important;
-  box-shadow:0 1px 1px rgba(0,0,0,.08) !important;
-  transition:transform .2s ease !important;
-}
-.toggle-switch.checked .toggle-thumb{
-  transform:translateX(calc(var(--sw-w) - var(--sw-h))) !important;
+.hours-row [role="switch"][data-state="checked"] > span,
+.hours-row [role="switch"][aria-checked="true"] > span,
+.toggle-switch.checked .toggle-thumb {
+  transform: translateX(calc(var(--oh-toggle-width) - var(--oh-toggle-height)));
 }
 
-/* ===== Responsive ===== */
-@media (max-width:640px){
-  /* Thinner, narrower toggle on mobile */
-  .hours-row [role="switch"], .toggle-switch{
-    --sw-w: 28px;
-    --sw-h: 16px;
+/* ===== Responsive Design ===== */
+@media (max-width: 640px) {
+  :root {
+    /* Increased mobile toggle size for better touch targets */
+    --oh-toggle-width: 40px;
+    --oh-toggle-height: 24px;
   }
 
   .hours-grid-head,
-  .hours-row{
-    grid-template-columns:1fr 1fr !important;
+  .hours-row {
+    grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "day closed"
       "open open"
-      "close close" !important;
-    row-gap:6px !important;
+      "close close";
+    row-gap: 6px;
   }
 
-  .hours-day{ grid-area:day !important; }
-  .hours-row .hours-cell:nth-child(2){ grid-area:open !important; }
-  .hours-row .hours-cell:nth-child(3){ grid-area:close !important; }
-  .hours-row .hours-cell:nth-child(4){
-    grid-area:closed !important;
-    justify-self:end !important;
-    align-self:center !important;
+  .hours-day {
+    grid-area: day;
+  }
+
+  .hours-row .hours-cell:nth-child(2) {
+    grid-area: open;
+  }
+
+  .hours-row .hours-cell:nth-child(3) {
+    grid-area: close;
+  }
+
+  .hours-row .hours-cell:nth-child(4) {
+    grid-area: closed;
+    justify-self: end;
+    align-self: center;
   }
 }
 
-/* Larger tap target on touch */
-@media (pointer:coarse){
+
+/* ===== Touch-Friendly Tap Targets ===== */
+@media (pointer: coarse) {
   .hours-row [role="switch"]::after,
-  .toggle-switch::after{
-    content:""; position:absolute; inset:-8px; border-radius:16px;
+  .toggle-switch::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 16px;
   }
 }

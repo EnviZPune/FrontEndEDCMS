@@ -1,258 +1,311 @@
-/* ========================================
-   SPECIAL BUSINESS INFO PANEL DESIGN
-======================================== */
 
 .business-info-panel {
+  /* panel - simple solid colors */
+  --panel-bg: #f9fafb;
+  --panel-text: #111827;
+  --panel-border: #e5e7eb;
+
+  /* inputs - matching opening hours picker */
+  --field-bg: #ffffff;
+  --field-border: #d1d5db;
+  --field-text: #111827;
+  --field-focus-border: #9ca3af;
+  --field-focus-ring: rgba(156, 163, 175, 0.35);
+
+  /* toolbar/select (opening hours) - unified with opening hours picker */
+  --btn-bg: #f9fafb;
+  --btn-bg-hover: #f3f4f6;
+  --btn-border: #d1d5db;
+  --btn-text: #374151;
+
+  --select-bg: #ffffff;
+  --select-border: #d1d5db;
+  --select-text: #111827;
+  --select-menu-bg: #ffffff;
+  --select-menu-border: #e5e7eb;
+
+  /* switch (opening/closed) - matching opening hours picker exactly */
+  --sw-w: 36px;
+  --sw-h: 20px;
+  --switch-off: #e5e7eb;
+  --switch-on: #6b7280;
+  --switch-knob: #ffffff;
+  --switch-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+
+/* ========================
+   02) BASE CONTAINER (SIMPLIFIED)
+======================== */
+.business-info-panel {
   max-width: 800px;
-  margin: 0 auto var(--space-8);
-  background: linear-gradient(135deg, var(--neutral-0) 0%, var(--neutral-25) 100%);
-  border-radius: var(--radius-3xl);
-  box-shadow: var(--shadow-2xl);
-  padding: var(--space-10);
+  margin: 0 auto 32px;
+  background: var(--panel-bg);
+  color: var(--panel-text);
+  border-radius: 12px;
+  border: 1px solid var(--panel-border);
+  padding: 32px;
   box-sizing: border-box;
-  color: var(--neutral-800);
   position: relative;
-  overflow: hidden;
-  animation: slideInScale var(--duration-500) var(--ease-out);
-  backdrop-filter: blur(10px);
 }
 
-/* Animated Background Pattern */
-.business-info-panel::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6px;
-  background: linear-gradient(
-    90deg,
-    var(--primary-500) 0%,
-    var(--secondary-500) 25%,
-    var(--success-500) 50%,
-    var(--warning-500) 75%,
-    var(--primary-500) 100%
-  );
-  background-size: 400% 100%;
-  animation: rainbowShimmer 3s ease-in-out infinite;
-}
+/* Removed rainbow bar, floating shapes, and fancy decorations */
 
-/* Floating Geometric Shapes */
-.business-info-panel::after {
-  position: absolute;
-  top: -50px;
-  right: -50px;
-  width: 200px;
-  height: 200px;
-  background: linear-gradient(45deg, var(--primary-100), var(--primary-200));
-  border-radius: 50%;
-  opacity: 0.1;
-  animation: float 6s ease-in-out infinite;
-  z-index: 0;
-}
-
-/* Special Heading with Icon and Animation */
+/* ========================
+   03) HEADINGS (SIMPLIFIED)
+======================== */
 .business-info-panel h3 {
-  font-family: var(--font-serif);
-  font-size: var(--text-3xl);
-  font-weight: 700;
-  margin-bottom: var(--space-8);
-  color: var(--neutral-900);
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: inherit;
   text-align: center;
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
-  padding-bottom: var(--space-4);
-  border-bottom: 3px solid transparent;
-  border-image: linear-gradient(90deg, var(--primary-500), var(--secondary-500)) 1;
 }
 
-.business-info-panel h3::before {
-  font-size: var(--text-4xl);
-  animation: bounce 2s ease-in-out infinite;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-}
+/* Removed emoji icons, animations, and fancy border effects */
 
-.business-info-panel h3::after {
-  font-size: var(--text-2xl);
-  animation: sparkle 1.5s ease-in-out infinite alternate;
-  position: absolute;
-  right: -40px;
-  top: -10px;
-}
-
-/* Form Container with Glass Effect */
+/* ========================
+   04) FORM SHELL + INPUTS
+======================== */
 .business-form-container {
   position: relative;
-  z-index: 1;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  border-radius: var(--radius-2xl);
-  padding: var(--space-8);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  background: var(--panel-bg);
+  border-radius: 8px;
+  padding: 0;
 }
 
-/* Enhanced Labels with Icons */
 .business-info-panel label {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-  font-weight: 700;
-  font-size: var(--text-lg);
-  color: var(--neutral-800);
-  position: relative;
-  transition: all var(--duration-200) var(--ease-out);
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  color: inherit;
 }
 
-.business-info-panel label[for*="name"]::before {
-  content: "🏷️";
-  font-size: var(--text-lg);
-}
+/* Removed emoji icons from labels */
 
-.business-info-panel label[for*="description"]::before {
-  content: "📝";
-  font-size: var(--text-lg);
-}
-
-.business-info-panel label[for*="address"]::before {
-  content: "📍";
-  font-size: var(--text-lg);
-}
-
-.business-info-panel label[for*="phone"]::before {
-  content: "📞";
-  font-size: var(--text-lg);
-}
-
-.business-info-panel label[for*="email"]::before {
-  content: "📧";
-  font-size: var(--text-lg);
-}
-
-.business-info-panel label[for*="website"]::before {
-  content: "🌐";
-  font-size: var(--text-lg);
-}
-
-/* Special Input Styling with Floating Labels */
 .input-group {
   position: relative;
-  margin-bottom: var(--space-6);
+  margin-bottom: 20px;
 }
+
+/* Removed fancy gradient effects and animations */
 
 .business-info-panel input,
 .business-info-panel textarea {
   width: 100%;
-  padding: var(--space-5) var(--space-4);
-  border: 2px solid var(--neutral-200);
-  border-radius: var(--radius-xl);
-  font-size: var(--text-base);
-  font-family: var(--font-sans);
-  background: var(--neutral-0);
-  color: var(--neutral-800);
-  transition: all var(--duration-300) var(--ease-out);
+  padding: 12px 16px;
+  border: 1px solid var(--field-border);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--field-bg);
+  color: var(--field-text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
   box-sizing: border-box;
-  position: relative;
-  z-index: 1;
+}
+
+.business-info-panel input:hover,
+.business-info-panel textarea:hover {
+  border-color: var(--field-focus-border);
 }
 
 .business-info-panel input:focus,
 .business-info-panel textarea:focus {
   outline: none;
-  border-color: var(--primary-500);
-  box-shadow: 0 0 0 4px var(--primary-100), 0 8px 25px rgba(59, 130, 246, 0.15);
-  transform: translateY(-2px) scale(1.02);
-  background: var(--neutral-0);
+  border-color: var(--field-focus-border);
+  box-shadow: 0 0 0 1px var(--field-focus-ring);
 }
 
-.business-info-panel input:hover,
-.business-info-panel textarea:hover {
-  border-color: var(--primary-300);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+/* Removed fancy transforms, scales, and complex shadows */
 
-/* Special Textarea Styling */
 .business-info-panel textarea {
-  min-height: 140px;
+  min-height: 100px;
   resize: vertical;
-  font-family: var(--font-sans);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
-/* Input Focus Glow Effect */
-.input-group::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: var(--radius-xl);
-  background: linear-gradient(45deg, var(--primary-500), var(--secondary-500));
-  opacity: 0;
-  z-index: 0;
-  transition: opacity var(--duration-300) var(--ease-out);
-  padding: 2px;
-  margin: -2px;
+/* ========================
+   05) OPENING HOURS (UNIFIED WITH OPENING HOURS PICKER)
+======================== */
+.business-info-panel .hours-picker {
+  display: grid;
+  gap: 12px;
 }
 
-.input-group:focus-within::after {
-  opacity: 0.3;
-  animation: pulse 2s ease-in-out infinite;
+.business-info-panel .hours-toolbar {
+  display: flex;
+  gap: 8px;
 }
 
-
-
-.business-info-panel button:hover::after {
-  left: 100%;
+.business-info-panel .hours-toolbar > button {
+  appearance: none;
+  border: 1px solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.business-info-panel button:active {
-  transform: translateY(-1px) scale(1.02);
+.business-info-panel .hours-toolbar > button:hover {
+  background: var(--btn-bg-hover);
 }
 
-/* Success State Animation */
-.business-info-panel button.success {
-  background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%);
-  animation: successPulse 0.6s ease-out;
+.business-info-panel .hours-grid {
+  display: grid;
+  gap: 8px;
 }
 
-.business-info-panel button.success::before {
-  content: "✅";
-  animation: checkmark 0.6s ease-out;
+.business-info-panel .hours-grid-head,
+.business-info-panel .hours-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  align-items: center;
+  gap: 8px;
 }
 
-/* Loading State */
-.business-info-panel button.loading {
+.business-info-panel .hours-grid-head {
+  font-weight: 500;
+  color: inherit;
+  font-size: 14px;
+}
+
+.business-info-panel .hours-day {
+  color: inherit;
+  font-size: 14px;
+}
+
+.business-info-panel .hours-cell.disabled {
+  opacity: 0.5;
   pointer-events: none;
-  opacity: 0.8;
 }
 
-.business-info-panel button.loading::before {
-  content: "⏳";
-  animation: spin 1s linear infinite;
+.business-info-panel .time-trigger {
+  width: 100%;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--select-border);
+  border-radius: 6px;
+  background: var(--select-bg);
+  padding: 0 12px;
+  font-size: 14px;
+  color: var(--select-text);
+  outline: none;
 }
 
+.business-info-panel .time-trigger[aria-expanded="true"] {
+  box-shadow: 0 0 0 1px var(--field-focus-ring);
+}
 
-/* Responsive Design with Special Breakpoints */
+.business-info-panel .time-content {
+  width: 100%;
+  border: 1px solid var(--select-menu-border);
+  border-radius: 6px;
+  background: var(--select-menu-bg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 4px;
+}
+
+.business-info-panel .time-content > div {
+  max-height: 200px;
+  overflow: auto;
+}
+
+.business-info-panel .time-content [role="option"] {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--select-text);
+  cursor: pointer;
+}
+
+.business-info-panel .time-content [role="option"]:hover {
+  background: #f9fafb;
+}
+
+/* switch - exactly matching opening hours picker */
+.business-info-panel .hours-row [role="switch"] {
+  width: var(--sw-w);
+  height: var(--sw-h);
+  border: 1px solid #cbd5e1;
+  border-radius: calc(var(--sw-h) / 2);
+  background: var(--switch-off);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.business-info-panel .hours-row [role="switch"][disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.business-info-panel .hours-row [role="switch"][aria-checked="true"] {
+  background: var(--switch-on);
+  border-color: var(--switch-on);
+}
+
+.business-info-panel .hours-row [role="switch"] > span {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: calc(var(--sw-h) - 4px);
+  height: calc(var(--sw-h) - 4px);
+  border-radius: 50%;
+  background: var(--switch-knob);
+  box-shadow: var(--switch-shadow);
+  transition: transform 0.2s ease;
+}
+
+.business-info-panel .hours-row [role="switch"][aria-checked="true"] > span {
+  transform: translateX(calc(var(--sw-w) - var(--sw-h)));
+}
+
+/* ========================
+   06) RESPONSIVE
+======================== */
+@media (max-width: 640px) {
+  .business-info-panel {
+    --sw-w: 28px;
+    --sw-h: 16px;
+    padding: 20px;
+  }
+
+  .business-info-panel .hours-grid-head,
+  .business-info-panel .hours-row {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "day closed"
+      "open open"
+      "close close";
+    row-gap: 6px;
+  }
+
+  .business-info-panel .hours-day {
+    grid-area: day;
+  }
+
+  .business-info-panel .hours-row .hours-cell:nth-child(2) {
+    grid-area: open;
+  }
+
+  .business-info-panel .hours-row .hours-cell:nth-child(3) {
+    grid-area: close;
+  }
+
+  .business-info-panel .hours-row .hours-cell:nth-child(4) {
+    grid-area: closed;
+    justify-self: end;
+  }
+}
+
 @media (min-width: 768px) {
   .business-info-panel {
     max-width: 900px;
-    padding: var(--space-12);
-  }
-
-  .business-info-panel h3 {
-    font-size: var(--text-4xl);
-  }
-
-  .business-form-container {
-    padding: var(--space-10);
+    padding: 40px;
   }
 }
 
@@ -261,11 +314,10 @@
     max-width: 1000px;
   }
 
-  /* Two-column layout for larger screens */
   .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-6);
+    gap: 20px;
   }
 
   .form-grid .full-width {
@@ -273,179 +325,73 @@
   }
 }
 
-/* Dark Mode with Special Effects */
+/* ========================
+   07) DARK MODE (SIMPLE COLORS)
+======================== */
 @media (prefers-color-scheme: dark) {
   .business-info-panel {
-    background: linear-gradient(135deg, var(--neutral-900) 0%, var(--neutral-800) 100%);
-    color: var(--neutral-100);
-    border-color: var(--neutral-700);
-  }
+    /* Simplified dark mode colors to match opening hours picker */
+    --panel-bg: #1f2937;
+    --panel-text: #f9fafb;
+    --panel-border: #374151;
 
-  .business-info-panel::after {
-    background: linear-gradient(45deg, var(--primary-800), var(--primary-700));
-    opacity: 0.05;
-  }
+    --field-bg: #374151;
+    --field-border: #4b5563;
+    --field-text: #f9fafb;
+    --field-focus-border: #6b7280;
+    --field-focus-ring: rgba(107, 114, 128, 0.35);
+      
+    --btn-bg: #374151;
+    --btn-bg-hover: #4b5563;
+    --btn-border: #4b5563;
+    --btn-text: #f9fafb;
 
-  .business-info-panel h3 {
-    color: var(--neutral-100);
+    --select-bg: #374151;
+    --select-border: #4b5563;
+    --select-text: #f9fafb;
+    --select-menu-bg: #374151;
+    --select-menu-border: #4b5563;
+
+    --switch-off: #4b5563;
+    --switch-on: #111827;
+    --switch-knob: #f3f4f6;
   }
 
   .business-form-container {
-    background: rgba(31, 41, 55, 0.8);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: var(--panel-bg);
   }
 
-  .business-info-panel label {
-    color: var(--neutral-200);
+  .business-info-panel .time-content [role="option"]:hover {
+    background: #4b5563;
   }
 
-  .business-info-panel input,
-  .business-info-panel textarea {
-    border-color: var(--neutral-600);
-    background: var(--neutral-800);
-    color: var(--neutral-100);
-  }
-
-  .business-info-panel input:focus,
-  .business-info-panel textarea:focus {
-    border-color: var(--primary-400);
-    box-shadow: 0 0 0 4px var(--primary-900), 0 8px 25px rgba(59, 130, 246, 0.2);
-    background: var(--neutral-700);
-  }
-
-  .business-info-panel input:hover,
-  .business-info-panel textarea:hover {
-    border-color: var(--primary-500);
-    background: var(--neutral-700);
-  }
-
-  .business-info-panel button {
-    background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 50%, var(--secondary-600) 100%);
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-
-  .business-info-panel button:hover {
-    background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 50%, var(--secondary-700) 100%);
-    box-shadow: 0 12px 35px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  }
+  .business-info-panel .hours-toolbar > button {
+  appearance: none;
+  border: 1px solid var(--btn-border);
+  background: #374151;
+  color: var(--btn-text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.business-info-panel .hours-toolbar > button:hover{
+  background-color: #37415142;
 }
 
-/* Special Animations */
-@keyframes slideInScale {
-  0% {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+.save-business-info{
+  background-color: #374151;
 }
 
-@keyframes rainbowShimmer {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
+.save-business-info:hover{
+  background-color: #797a7a73;
+}
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-20px) rotate(120deg);
-  }
-  66% {
-    transform: translateY(10px) rotate(240deg);
-  }
-}
-
-@keyframes bounce {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
-}
-
-@keyframes sparkle {
-  0% {
-    transform: scale(1) rotate(0deg);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1.2) rotate(180deg);
-    opacity: 1;
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-@keyframes saveIcon {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-}
-
-@keyframes successPulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes checkmark {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.3);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Accessibility Enhancements */
+/* ========================
+   08) ACCESSIBILITY & PRINT
+======================== */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -458,62 +404,38 @@
 
 @media (prefers-contrast: high) {
   .business-info-panel {
-    border-width: 3px;
-    border-color: var(--neutral-600);
+    border-width: 2px;
   }
 
   .business-info-panel input,
   .business-info-panel textarea {
-    border-width: 3px;
-  }
-
-  .business-info-panel button {
-    border: 2px solid var(--neutral-0);
+    border-width: 2px;
   }
 }
 
-/* Focus Management */
 .business-info-panel input:focus-visible,
 .business-info-panel textarea:focus-visible,
 .business-info-panel button:focus-visible {
-  outline: 3px solid var(--primary-500);
-  outline-offset: 3px;
+  outline: 2px solid var(--field-focus-border);
+  outline-offset: 2px;
 }
 
-/* Print Styles */
 @media print {
   .business-info-panel {
     box-shadow: none;
-    border: 2px solid var(--neutral-400);
-    background: white;
-  }
-
-  .business-info-panel::before,
-  .business-info-panel::after {
-    display: none;
+    border: 1px solid #ccc;
+    background: #fff;
   }
 
   .business-info-panel button {
     display: none;
   }
-
-  .business-info-panel input,
-  .business-info-panel textarea {
-    border: 1px solid var(--neutral-400);
-    background: transparent;
-  }
 }
 
-/* Touch Device Optimizations */
 @media (hover: none) and (pointer: coarse) {
   .business-info-panel input,
   .business-info-panel textarea,
   .business-info-panel button {
-    min-height: 48px;
-  }
-
-  .business-info-panel button {
-    font-size: var(--text-xl);
-    padding: var(--space-6) var(--space-10);
+    min-height: 44px;
   }
 }

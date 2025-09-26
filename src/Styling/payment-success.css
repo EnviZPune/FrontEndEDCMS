@@ -217,6 +217,151 @@
 [data-page="payment-success"] .confetti span:nth-child(11){--x: 84; --h: 320; --dur: 4.6s; --delay: .18s; --size: 6px; }
 [data-page="payment-success"] .confetti span:nth-child(12){--x: 92; --h: 260; --dur: 3.9s; --delay: .32s; --size: 8px; }
 
+/* ================================
+   Payment Cancel — SCOPED STYLES
+   Scope key: [data-page="payment-cancel"]
+================================ */
+
+/* Theme tokens */
+[data-page="payment-cancel"]{
+  --bg: hsl(210 20% 98%);
+  --surface: hsl(0 0% 100%);
+  --text: hsl(222 47% 11%);
+  --muted: hsl(215 16% 47%);
+  --line: hsl(214 32% 91%);
+
+  --danger-300: hsl(0 85% 75%);
+  --danger-500: hsl(0 72% 51%);
+  --danger-600: hsl(0 70% 41%);
+
+  --radius-lg: 18px;
+  --radius-md: 12px;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+  --shadow-md: 0 10px 34px rgba(2,6,23,.12);
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark){
+  [data-page="payment-cancel"]{
+    --bg: hsl(222 47% 4%);
+    --surface: hsl(222 45% 7%);
+    --text: hsl(210 40% 96%);
+    --muted: hsl(215 20% 75%);
+    --line: hsl(222 34% 17%);
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.25);
+    --shadow-md: 0 12px 36px rgba(0,0,0,.5);
+  }
+}
+
+/* Page shell */
+[data-page="payment-cancel"].pay-result-page{
+  min-height: 72vh;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(1200px 600px at 70% -10%, hsl(0 72% 51% / .08), transparent 60%),
+    radial-gradient(1000px 520px at 15% 110%, hsl(30 90% 50% / .08), transparent 60%),
+    var(--bg);
+}
+
+/* Card */
+[data-page="payment-cancel"] .pay-card{
+  width: 100%;
+  max-width: 680px;
+  margin-top: 120px;
+  border-radius: var(--radius-lg);
+  padding: 32px 30px 26px;
+  text-align: center;
+
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(180deg, hsl(0 85% 75% / .7), hsl(0 72% 51% / .35)) border-box;
+  border: 1px solid transparent;
+  backdrop-filter: saturate(120%) blur(6px);
+  -webkit-backdrop-filter: saturate(120%) blur(6px);
+
+  box-shadow: var(--shadow-md);
+  animation: pay-card-in .35s ease-out both;
+}
+
+/* Icon */
+[data-page="payment-cancel"] .pay-icon{
+  width: 96px; height: 96px; margin: 6px auto 16px; border-radius: 999px;
+  display: grid; place-items: center;
+  background: radial-gradient(70% 70% at 30% 30%, var(--danger-300), var(--danger-500));
+  box-shadow: inset 0 -10px 22px rgba(0,0,0,.18), var(--shadow-sm);
+}
+[data-page="payment-cancel"] .pay-icon svg{
+  width: 50px; height: 50px;
+  stroke: #fff; stroke-width: 4; fill: none;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* Text */
+[data-page="payment-cancel"] .pay-card h1{
+  margin: 4px 0 6px;
+  font-size: clamp(22px, 3.2vw, 30px);
+  line-height: 1.15;
+  letter-spacing: .2px;
+}
+[data-page="payment-cancel"] .pay-card p{
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.65;
+  margin: 8px 0 0;
+}
+
+/* Actions */
+[data-page="payment-cancel"] .pay-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 22px;
+}
+[data-page="payment-cancel"] .btn{
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  padding: 10px 16px;
+  font-size: 14.5px;
+  border-radius: 12px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+  transition: transform .06s ease, filter .2s ease, box-shadow .25s ease, border-color .2s ease;
+}
+[data-page="payment-cancel"] .btn:hover{ transform: translateY(-1px); }
+[data-page="payment-cancel"] .btn:active{ transform: translateY(0); }
+[data-page="payment-cancel"] .btn:focus-visible{
+  outline: 0;
+  box-shadow: 0 0 0 3px hsl(0 95% 50% / .28);
+}
+[data-page="payment-cancel"] .btn-primary{
+  border: 0;
+  color: #fff;
+  background: linear-gradient(180deg, var(--danger-300), var(--danger-600));
+  box-shadow: 0 10px 24px hsl(0 72% 51% / .28);
+}
+[data-page="payment-cancel"] .btn-primary:hover{ filter: brightness(1.04); }
+
+/* Responsive */
+@media (max-width: 680px){
+  [data-page="payment-cancel"] .pay-card{ padding: 26px 18px 20px; border-radius: 16px; }
+}
+
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce){
   [data-page="payment-success"] .pay-card{ animation: none; }

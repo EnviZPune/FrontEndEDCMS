@@ -228,3 +228,20 @@ button.sale:before,
   .sales-panel { padding: 20px; }
   .sales-right { font-size: 1.1rem; }
 }
+
+@media (prefers-color-scheme: dark){
+  button {
+  --btn-bg: #444649f3;
+  --btn-fg: var(--text);
+  --btn-bd: var(--border-strong);
+  appearance: none;
+  border: 1px solid var(--btn-bd);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .16s ease, background .16s ease, border-color .16s ease, opacity .16s ease;
+}
+}

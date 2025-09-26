@@ -7,6 +7,7 @@ import { useApiClient } from "../hooks/useApiClient"; // panels -> Settings -> h
 import "../../../Styling/Settings/settings.css";
 import "../../../Styling/Settings/businessinfopanel.css";
 
+
 // Leaflet marker icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -18,6 +19,7 @@ L.Icon.Default.mergeOptions({
 // ---- Schedule helpers (local) -----------------------------------
 const DAY_KEYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 const ABBR = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+
 
 const getDefaultSchedule = () => ({
   monday: { open: "09:00", close: "18:00", closed: false },
@@ -166,6 +168,8 @@ const parseIncomingOpeningHours = (incoming) => {
 export default function BusinessInfoPanel({ business }) {
   const { t } = useTranslation("businessinfo");
   const { get, put } = useApiClient();
+  const [saving, setSaving] = useState(false);
+
 
   const getRef = useRef(get);
   const putRef = useRef(put);
@@ -339,51 +343,55 @@ export default function BusinessInfoPanel({ business }) {
     setSuggestions([]);
   }, []);
 
-  const handleSave = useCallback(async () => {
-    if (!coordinates) {
-      alert(t("alerts.pick_location", { defaultValue: "Please pick a location (map or suggestion)." }));
-      return;
-    }
+const handleSave = useCallback(async () => {
+  if (!coordinates) {
+    alert(t("alerts.pick_location", { defaultValue: "Please pick a location (map or suggestion)." }));
+    return;
+  }
 
-    // validate schedule (HH:mm strings are zero-padded, safe lexicographic compare)
-    const days = Object.values(schedule);
-    const okTimes = days.every((d) => d.closed || (d.open && d.close && d.open < d.close));
-    if (!okTimes || !days.some((d) => !d.closed)) {
-      alert(
-        t("alerts.invalid_hours", {
-          defaultValue: "Invalid opening hours. Ensure at least one open day and Open < Close.",
-        })
-      );
-      return;
-    }
+  // validate schedule (HH:mm strings are zero-padded, safe lexicographic compare)
+  const days = Object.values(schedule);
+  const okTimes = days.every((d) => d.closed || (d.open && d.close && d.open < d.close));
+  if (!okTimes || !days.some((d) => !d.closed)) {
+    alert(
+      t("alerts.invalid_hours", {
+        defaultValue: "Invalid opening hours. Ensure at least one open day and Open < Close.",
+      })
+    );
+    return;
+  }
 
-    const payload = {
-      name: form.name?.trim() ?? detail.name,
-      description: form.description ?? detail.description,
-      nipt: form.nipt ?? detail.nipt,
-      businessEmailAddress: form.businessEmailAddress ?? detail.businessEmailAddress,
-      businessPhoneNumber: form.businessPhoneNumber ?? detail.businessPhoneNumber,
-      location: `${Number(coordinates[0]).toFixed(6)},${Number(coordinates[1]).toFixed(6)}`,
-      openingHours: JSON.stringify(schedule),
-      coverPictureUrl: detail.coverPictureUrl ?? "",
-      profilePictureUrl: detail.profilePictureUrl ?? "",
-    };
+  const payload = {
+    name: form.name?.trim() ?? detail.name,
+    description: form.description ?? detail.description,
+    nipt: form.nipt ?? detail.nipt,
+    businessEmailAddress: form.businessEmailAddress ?? detail.businessEmailAddress,
+    businessPhoneNumber: form.businessPhoneNumber ?? detail.businessPhoneNumber,
+    location: `${Number(coordinates[0]).toFixed(6)},${Number(coordinates[1]).toFixed(6)}`,
+    openingHours: JSON.stringify(schedule),
+    coverPictureUrl: detail.coverPictureUrl ?? "",
+    profilePictureUrl: detail.profilePictureUrl ?? "",
+  };
 
+  setSaving(true);
+  try {
+    await putRef.current(`/Business/${detail.businessId}`, payload);
+    alert(t("alerts.updated", { defaultValue: "Business info updated!" }));
+  } catch (err) {
+    console.log(err);
     try {
-      await putRef.current(`/Business/${detail.businessId}`, payload);
-      alert(t("alerts.updated", { defaultValue: "Business info updated!" }));
-    } catch (err) {
-      console.log(err)
-      try {
-        const text = await err?.response?.text?.();
-        console.error("Save failed (body):", text || err);
-        alert(text || t("alerts.save_failed", { defaultValue: "Failed to save business info." }));
-      } catch {
-        console.error("Save failed:", err);
-        alert(t("alerts.save_failed", { defaultValue: "Failed to save business info." }));
-      }
+      const text = await err?.response?.text?.();
+      console.error("Save failed (body):", text || err);
+      alert(text || t("alerts.save_failed", { defaultValue: "Failed to save business info." }));
+    } catch {
+      console.error("Save failed:", err);
+      alert(t("alerts.save_failed", { defaultValue: "Failed to save business info." }));
     }
-  }, [coordinates, detail?.businessId, detail, form, schedule, t]);
+  } finally {
+    setSaving(false);
+  }
+}, [coordinates, detail?.businessId, detail, form, schedule, t]);
+
 
   if (loading) {
     return (
@@ -517,9 +525,11 @@ export default function BusinessInfoPanel({ business }) {
       <div
         style={{ display: "flex", width: "100%", justifyContent: "center", alignItems: "center", marginTop: 20 }}
       >
-        <button type="button" onClick={handleSave} style={{ padding: 10 }}>
-          {t("actions.save", { defaultValue: "Save Changes" })}
-        </button>
+       <button type="button" onClick={handleSave} style={{ padding: 10 }} disabled={saving} className="save-business-info">
+        {saving
+          ? t("actions.saving", { defaultValue: "Saving…" })
+          : t("actions.save", { defaultValue: "Save Changes" })}
+      </button>
       </div>
     </div>
   );

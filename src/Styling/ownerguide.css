@@ -1,4 +1,10 @@
-:root{
+/* ================================
+   Shop Owner Guide — SCOPED STYLES
+   Wraps everything under .owner-guide
+   ================================ */
+
+/* ---------- Scoped Theme ---------- */
+.owner-guide {
   --bg: hsl(224 44% 9%);
   --surface: hsl(225 40% 11%);
   --surface-2: hsl(225 36% 13%);
@@ -14,12 +20,11 @@
 
   --shadow-sm: 0 1px 2px rgba(0,0,0,.35);
   --shadow-md: 0 16px 40px rgba(0,0,0,.45);
-
 }
 
-/* ---------- Light variant ---------- */
+/* ---------- Light variant (scoped) ---------- */
 @media (prefers-color-scheme: light){
-  :root{
+  .owner-guide{
     --bg: hsl(220 18% 97%);
     --surface: #fff;
     --surface-2: hsl(210 20% 97%);
@@ -33,7 +38,7 @@
 }
 
 /* ---------- Page shell ---------- */
-.page-wrapper{
+.owner-guide.page-wrapper{
   min-height: 100vh;
   background:
     radial-gradient(1100px 520px at 75% -10%, hsl(152 61% 45% / .10), transparent 60%),
@@ -44,7 +49,7 @@
 }
 
 /* ---------- Layout ---------- */
-.og-container{
+.owner-guide .og-container{
   width: min(1180px, 92vw);
   margin: 28px auto 40px;
   display: grid;
@@ -53,7 +58,7 @@
 }
 
 /* ---------- Sidebar ---------- */
-.og-sidebar{
+.owner-guide .og-sidebar{
   position: sticky;
   top: 100px;
   align-self: start;
@@ -67,18 +72,21 @@
   backdrop-filter: saturate(120%) blur(6px);
   -webkit-backdrop-filter: saturate(120%) blur(6px);
 }
-.og-sidebar-title{
+
+.owner-guide .og-sidebar-title{
   font-size: 14px;
   letter-spacing: .3px;
   color: var(--muted);
   margin: 2px 8px 10px;
   text-transform: uppercase;
 }
-.og-nav{
+
+.owner-guide .og-nav{
   display: grid;
   gap: 4px;
 }
-.og-nav a{
+
+.owner-guide .og-nav a{
   color: var(--text);
   text-decoration: none;
   border-radius: 10px;
@@ -86,16 +94,19 @@
   display: block;
   border: 1px solid transparent;
 }
-.og-nav a:hover{
+
+.owner-guide .og-nav a:hover{
   background: var(--surface-2);
   border-color: var(--line);
 }
-.og-sidebar-footer{
+
+.owner-guide .og-sidebar-footer{
   margin-top: 10px;
   padding: 10px 8px 2px;
   border-top: 1px dashed var(--line);
 }
-.og-btn{
+
+.owner-guide .og-btn{
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -107,10 +118,11 @@
   text-decoration: none;
   box-shadow: var(--shadow-sm);
 }
-.og-btn:hover{ filter: brightness(1.05); }
+
+.owner-guide .og-btn:hover{ filter: brightness(1.05); }
 
 /* ---------- Content ---------- */
-.og-content{
+.owner-guide .og-content{
   display: grid;
   gap: 18px;
   position: relative;
@@ -118,7 +130,7 @@
 }
 
 /* Card / section */
-.card{
+.owner-guide .card{
   background:
     linear-gradient(var(--surface), var(--surface)) padding-box,
     linear-gradient(180deg, hsl(200 95% 60% / .30), hsl(152 61% 45% / .20)) border-box;
@@ -128,11 +140,21 @@
   padding: 20px 22px 18px;
   backdrop-filter: saturate(120%) blur(6px);
   -webkit-backdrop-filter: saturate(120%) blur(6px);
-  animation: og-card-in .35s ease-out both;
+  animation: owner-guide-in .35s ease-out both;
 }
-.card h2{ margin: 0 0 6px; font-size: clamp(18px, 2.2vw, 22px); }
-.card p { margin: 6px 0 6px; line-height: 1.7; color: var(--text); }
-.card code{
+
+.owner-guide .card h2{
+  margin: 0 0 6px;
+  font-size: clamp(18px, 2.2vw, 22px);
+}
+
+.owner-guide .card p{
+  margin: 6px 0 6px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.owner-guide .card code{
   background: var(--surface-2);
   border: 1px solid var(--line);
   padding: 1px 6px;
@@ -140,42 +162,49 @@
   font-size: 12.5px;
 }
 
-.card-accent{
+.owner-guide .card-accent{
   background:
     linear-gradient(var(--surface), var(--surface)) padding-box,
     linear-gradient(180deg, hsl(152 61% 45% / .30), hsl(200 95% 60% / .20)) border-box;
 }
 
-@keyframes og-card-in{
+/* Scoped keyframes to avoid global name collisions */
+@keyframes owner-guide-in{
   from{ opacity:0; transform: translateY(8px) scale(.985); }
   to  { opacity:1; transform: translateY(0)  scale(1); }
 }
 
-/* Hero */
-.og-hero h1{ margin: 0 0 6px; font-size: clamp(22px, 3.4vw, 32px); }
-.og-sub{ color: var(--muted); }
+/* ---------- Hero ---------- */
+.owner-guide .og-hero h1{
+  margin: 0 0 6px;
+  font-size: clamp(22px, 3.4vw, 32px);
+}
+
+.owner-guide .og-sub{
+  color: var(--muted);
+}
 
 /* ---------- Mobile “chips” quick links ---------- */
-.og-mobile-nav{
+.owner-guide .og-mobile-nav{
   display: none;
 }
 
 @media (max-width: 980px){
-  .og-container{
+  .owner-guide .og-container{
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  .og-sidebar{
+  .owner-guide .og-sidebar{
     display: none;
   }
-  .og-mobile-nav{
+  .owner-guide .og-mobile-nav{
     display: flex;
     gap: 8px;
     flex-wrap: nowrap;
     overflow-x: auto;
     padding: 2px 2px 8px;
   }
-  .og-mobile-nav a{
+  .owner-guide .og-mobile-nav a{
     flex: 0 0 auto;
     text-decoration: none;
     color: var(--text);
@@ -185,11 +214,15 @@
     padding: 8px 12px;
     font-size: 13px;
   }
-  .og-mobile-nav a:hover{
+  .owner-guide .og-mobile-nav a:hover{
     background: var(--surface);
   }
 }
 
-/* Links */
-a{ color: var(--acc-1); }
-a:hover{ text-decoration: underline; }
+/* ---------- Links (scoped to guide content only) ---------- */
+.owner-guide .og-content a{
+  color: var(--acc-1);
+}
+.owner-guide .og-content a:hover{
+  text-decoration: underline;
+}
