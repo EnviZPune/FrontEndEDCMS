@@ -90,7 +90,6 @@ const AvatarImg = ({ src, name, size = 44, className = "" }) => {
       }
 
       try {
-        // If it’s our API host, fetch with Authorization and create an object URL
         const isApiHost = /^https?:\/\/(?:www\.)?api\.triwears\.com/i.test(raw);
         if (isApiHost) {
           const res = await fetch(raw, { headers: getHeaders() });
@@ -348,9 +347,17 @@ const Navbar = () => {
           </Link>
         )}
 
+        {/* NEW: create shop for regular users */}
         {showBecomeOwner && (
           <Link to="/become-owner" className="dropdown-item" role="menuitem" onClick={closeAll}>
             {t("create_your_shop", { defaultValue: "Create Your Shop" })}
+          </Link>
+        )}
+
+        {/* NEW: create another shop for owners */}
+        {isOwner && (
+          <Link to="/become-owner" className="dropdown-item" role="menuitem" onClick={closeAll}>
+            {t("create_another_shop", { defaultValue: "Create Another Shop" })}
           </Link>
         )}
 
@@ -517,8 +524,7 @@ const Navbar = () => {
             <div className="mobile-sheet open" role="menu" aria-label="Account">
               <div className="dd-header">
                 <div className="dd-avatar" aria-hidden="true">
-                  <AvatarImg src={avatarUrl} name={displayName} size={44} className="dd-avatar-img" />
-                </div>
+                <div className="dd-avatar-fallback">{String(displayName).charAt(0).toUpperCase()}</div>                 </div>
                 <div className="dd-meta">
                   <div className="dd-row">
                     <div className="dd-name">{displayName}</div>
