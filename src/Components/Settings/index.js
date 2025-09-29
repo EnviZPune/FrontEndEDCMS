@@ -116,7 +116,6 @@ export default function Settings() {
       <div className="settings-component">
         <div className="settings-layout">
           <div className="settings-content">
-            <div className="panel">
               <div className="error-state">
                 <h3>
                   <span>⚠️</span> {t("states.error_title")}
@@ -129,7 +128,6 @@ export default function Settings() {
             </div>
           </div>
         </div>
-      </div>
     );
   }
 

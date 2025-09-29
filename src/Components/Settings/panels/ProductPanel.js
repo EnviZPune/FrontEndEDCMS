@@ -28,16 +28,21 @@ export default function ProductPanel({ business }) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState(null)
   const [saleLoadingId, setSaleLoadingId] = useState(null)
+  const [pinLoadingId, setPinLoadingId] = useState(null)
+  const [pinnedIds, setPinnedIds] = useState(() => new Set())
+
+  // popover menu id (for tablet/desktop small widths)
+  const [openMenuId, setOpenMenuId] = useState(null)
+  // bottom-sheet product (for phones)
+  const [sheetProduct, setSheetProduct] = useState(null)
+
   const pageSize = 10
 
   // NEW: inline field errors / touched for important fields
   const [fieldErrors, setFieldErrors] = useState({ name: null, price: null, quantity: null, size: null })
   const [touched, setTouched] = useState({ name: false, price: false, quantity: false, size: false })
 
-  // Pin state
-  const [pinnedIds, setPinnedIds] = useState(() => new Set())
-  const [pinLoadingId, setPinLoadingId] = useState(null)
-
+  // form state
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -58,6 +63,9 @@ export default function ProductPanel({ business }) {
   const businessId = business?.businessId
   const bId = Number(businessId)
   const validBusinessId = Number.isInteger(bId) && bId > 0
+
+  // helper: phone breakpoint (≤640px) for bottom sheet
+  const isPhone = () => (typeof window !== "undefined") && window.matchMedia("(max-width: 640px)").matches
 
   // ─── Validators (Name, Price, Quantity, Size) ────────────────────────────
   const NAME_MIN = 2
@@ -81,7 +89,6 @@ export default function ProductPanel({ business }) {
     if (!s) return t("products.errors.price_required", { defaultValue: "Valid price is required" })
     const num = Number.parseFloat(s)
     if (Number.isNaN(num) || num <= 0) return t("products.errors.price_positive", { defaultValue: "Price must be a number greater than 0" })
-    // optional: max 2 decimals
     if (!/^\d+(\.\d{1,2})?$/.test(s)) return t("products.errors.price_decimals", { defaultValue: "Price can have at most 2 decimals" })
     return null
   }, [t])
@@ -226,7 +233,7 @@ export default function ProductPanel({ business }) {
     return filteredProducts.slice(start, start + pageSize)
   }, [filteredProducts, page, pageSize])
 
-  // ─── Upload helpers (unchanged) ─────────────────────────────────────────
+  // ─── Upload helpers ─────────────────────────────────────────────────────
   const uploadImageToGCS = useCallback(async (file) => {
     if (!file) return null
     const maxSize = 5 * 1024 * 1024
@@ -350,7 +357,7 @@ export default function ProductPanel({ business }) {
     }
   }, [del, bId])
 
-  // ─── Save with strict validation (blocks if any invalid) ────────────────
+  // ─── Save with strict validation ────────────────────────────────────────
   const saveProduct = useCallback(async () => {
     // mark all important fields touched
     setTouched({ name: true, price: true, quantity: true, size: true })
@@ -578,14 +585,44 @@ export default function ProductPanel({ business }) {
     !validateSize(form.size) &&
     validBusinessId
 
+  // ─── Menus: close on outside / Esc; prevent background scroll for sheet ─
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setOpenMenuId(null)
+        setSheetProduct(null)
+      }
+    }
+    document.addEventListener("keydown", onKey)
+    return () => document.removeEventListener("keydown", onKey)
+  }, [])
+
+  useEffect(() => {
+    // lock scroll when bottom sheet is open
+    const root = document.documentElement
+    if (sheetProduct) root.classList.add("no-scroll")
+    else root.classList.remove("no-scroll")
+    return () => root.classList.remove("no-scroll")
+  }, [sheetProduct])
+
+  // helpers to open menus depending on screen
+  const openActions = (product) => {
+    if (isPhone()) {
+      setSheetProduct(product)   // bottom sheet
+      setOpenMenuId(null)
+    } else {
+      setOpenMenuId((prev) => (prev === product.clothingItemId ? null : product.clothingItemId)) // popover
+      setSheetProduct(null)
+    }
+  }
+  const closeAllMenus = () => { setOpenMenuId(null); setSheetProduct(null) }
+
   // ─── Render ──────────────────────────────────────────────────────────────
   if (!business) {
     return (
-      <div className="panel">
-        <div className="no-business-selected">
-          <h3>{t("products.empty.no_business_title", { defaultValue: "No Business Selected" })}</h3>
-          <p>{t("products.empty.no_business_desc", { defaultValue: "Please select a business to manage products." })}</p>
-        </div>
+      <div className="no-business-selected">
+        <h3>{t("products.empty.no_business_title", { defaultValue: "No Business Selected" })}</h3>
+        <p>{t("products.empty.no_business_desc", { defaultValue: "Please select a business to manage products." })}</p>
       </div>
     )
   }
@@ -747,11 +784,11 @@ export default function ProductPanel({ business }) {
           />
         </div>
 
-        {/* Photos (unchanged) */}
+        {/* Photos */}
         <div className="form-group">
           <label>{t("products.fields.photos", { defaultValue: "Product Photos" })}</label>
           <label className="file-btn" aria-disabled={uploading || loading}>
-            {uploading ? t("products.upload.uploading", { defaultValue: "⏳ Uploading..." }) : t("products.upload.button", { defaultValue: "📁 Upload Photos" })}
+            {uploading ? t("products.upload.uploading", { defaultValue: "⏳ Uploading..." }) : t("products.upload.button", { defaultValue: "Upload Photos" })}
             <input
               ref={fileInputRef}
               type="file"
@@ -830,7 +867,7 @@ export default function ProductPanel({ business }) {
         </div>
       </div>
 
-      {/* Products List (unchanged) */}
+      {/* Products List */}
       <div className="panel product-list">
         <h3>
           <span className="panel-icon">📋</span>
@@ -859,43 +896,85 @@ export default function ProductPanel({ business }) {
               {paginatedProducts.length > 0 ? (
                 paginatedProducts.map((p) => {
                   const pinned = isPinned(p.clothingItemId)
+                  const pinLabel = pinned ? t("products.pin.unpin", { defaultValue: "Unpin" }) : t("products.pin.pin", { defaultValue: "Pin" })
+                  const quantityZero = (p.quantity ?? 0) <= 0
                   return (
                     <li key={p.clothingItemId}>
-                      <div className="product-name">
-                        {p.name}{p.brand && <span className="product-brand"> - {p.brand}</span>}
-                        {pinned && (
-                          <span title={t("products.pin.pinned_badge", { defaultValue: "Pinned" })} style={{ marginLeft: 8, fontSize: "0.95em", verticalAlign: "middle" }}>📌</span>
+                      <div className="row-main">
+                        <div className="product-name">
+                          {p.name}{p.brand && <span className="product-brand"> - {p.brand}</span>}
+                          {pinned && <span title={t("products.pin.pinned_badge", { defaultValue: "Pinned" })} style={{ marginLeft: 8, fontSize: "0.95em", verticalAlign: "middle" }}>📌</span>}
+                        </div>
+                        <div className="product-details">
+                          {p.model && <span>{t("products.badges.model", { defaultValue: "Model" })}: {p.model}</span>}
+                          <span className="price">{t("products.badges.price", { defaultValue: "Price" })}: LEK {p.price}</span>
+                          {p.sizes && <span>{t("products.badges.size", { defaultValue: "Size" })}: {p.sizes}</span>}
+                          <span className="quantity">{t("products.badges.qty", { defaultValue: "Qty" })}: {p.quantity}</span>
+                        </div>
+                      </div>
+
+                      <div className="row-actions">
+                        {/* Desktop buttons */}
+                        <div className="btns">
+                          <button onClick={() => startEdit(p)} disabled={loading} className="edit">{t("common.edit", { defaultValue: "Edit" })}</button>
+                          <button onClick={() => handleDelete(p.clothingItemId)} disabled={loading} className="delete">{t("common.delete", { defaultValue: "Delete" })}</button>
+                          <button
+                            onClick={() => togglePin(p)}
+                            disabled={loading || pinLoadingId === p.clothingItemId}
+                            className={`pin ${pinLoadingId === p.clothingItemId ? "loading" : ""}`}
+                            title={pinned ? t("products.pin.unpin_tooltip", { defaultValue: "Unpin this product" }) : t("products.pin.pin_tooltip", { defaultValue: "Pin this product" })}
+                          >
+                            {pinLabel}
+                          </button>
+                          <button
+                            onClick={() => handleSale(p)}
+                            className={`sale ${saleLoadingId === p.clothingItemId ? "loading" : ""}`}
+                            disabled={loading || saleLoadingId === p.clothingItemId || quantityZero}
+                            title={t("products.sale.tooltip", { defaultValue: "Record a sale (reduce stock by 1)" })}
+                          >
+                            {saleLoadingId === p.clothingItemId ? t("products.sale.selling", { defaultValue: "Selling…" }) : t("products.sale.button", { defaultValue: "Sale" })}
+                          </button>
+                        </div>
+
+                        {/* Small screens trigger */}
+                        <button
+                          type="button"
+                          className="more-trigger"
+                          aria-haspopup="menu"
+                          aria-expanded={openMenuId === p.clothingItemId}
+                          onClick={(e) => { e.stopPropagation(); openActions(p) }}
+                          title={t("products.actions.more", { defaultValue: "More options" })}
+                        >
+                          ...
+                        </button>
+
+                        {/* Popover (tablet/laptop small widths) */}
+                        {openMenuId === p.clothingItemId && (
+                          <div className="action-menu" role="menu" aria-label={t("products.actions.more_menu", { defaultValue: "Product actions" })}>
+                            <button role="menuitem" className="menu-item menu-edit" onClick={() => { closeAllMenus(); startEdit(p) }}>
+                              {t("common.edit", { defaultValue: "Edit" })}
+                            </button>
+                            <button role="menuitem" className="menu-item menu-delete" onClick={() => { closeAllMenus(); handleDelete(p.clothingItemId) }}>
+                              {t("common.delete", { defaultValue: "Delete" })}
+                            </button>
+                            <button
+                              role="menuitem"
+                              className="menu-item menu-pin"
+                              disabled={pinLoadingId === p.clothingItemId}
+                              onClick={() => { closeAllMenus(); togglePin(p) }}
+                            >
+                              {pinLabel}
+                            </button>
+                            <button
+                              role="menuitem"
+                              className="menu-item menu-sale"
+                              disabled={saleLoadingId === p.clothingItemId || quantityZero}
+                              onClick={() => { closeAllMenus(); handleSale(p) }}
+                            >
+                              {t("products.sale.button", { defaultValue: "Sale" })}
+                            </button>
+                          </div>
                         )}
-                      </div>
-                      <div className="product-details">
-                        {p.model && <span>{t("products.badges.model", { defaultValue: "Model" })}: {p.model}</span>}
-                        <span className="price">{t("products.badges.price", { defaultValue: "Price" })}: LEK {p.price}</span>
-                        {p.sizes && <span>{t("products.badges.size", { defaultValue: "Size" })}: {p.sizes}</span>}
-                        <span className="quantity">{t("products.badges.qty", { defaultValue: "Qty" })}: {p.quantity}</span>
-                      </div>
-                      <div className="btns">
-                        <button onClick={() => startEdit(p)} disabled={loading} className="edit"> {t("common.edit", { defaultValue: "Edit" })}</button>
-                        <button onClick={() => handleDelete(p.clothingItemId)} disabled={loading} className="delete"> {t("common.delete", { defaultValue: "Delete" })}</button>
-
-                        <button
-                          onClick={() => togglePin(p)}
-                          disabled={loading || pinLoadingId === p.clothingItemId}
-                          className={`pin ${pinLoadingId === p.clothingItemId ? "loading" : ""}`}
-                          title={pinned ? t("products.pin.unpin_tooltip", { defaultValue: "Unpin this product" }) : t("products.pin.pin_tooltip", { defaultValue: "Pin this product" })}
-                          style={{ backgroundColor: pinned ? "#f59e0b" : "#0ea5e9", color: "#fff", border: "none", borderRadius: "8px", padding: "8px 12px", fontWeight: 600 }}
-                        >
-                          {pinLoadingId === p.clothingItemId ? t("products.pin.toggling", { defaultValue: "Updating…" }) : pinned ? t("products.pin.unpin", { defaultValue: "Unpin" }) : t("products.pin.pin", { defaultValue: "Pin" })}
-                        </button>
-
-                        <button
-                          onClick={() => handleSale(p)}
-                          className={`sale ${saleLoadingId === p.clothingItemId ? "loading" : ""}`}
-                          disabled={loading || saleLoadingId === p.clothingItemId || (p.quantity ?? 0) <= 0}
-                          title={t("products.sale.tooltip", { defaultValue: "Record a sale (reduce stock by 1)" })}
-                          style={{ backgroundColor: "#16a34a", color: "#fff", border: "none", borderRadius: "8px", padding: "8px 12px", fontWeight: 600 }}
-                        >
-                          {saleLoadingId === p.clothingItemId ? t("products.sale.selling", { defaultValue: "Selling…" }) : t("products.sale.button", { defaultValue: "Sale" })}
-                        </button>
                       </div>
                     </li>
                   )
@@ -919,6 +998,69 @@ export default function ProductPanel({ business }) {
           )}
         </div>
       </div>
+
+      {/* Bottom sheet (phones) */}
+      {sheetProduct && (
+        <div className="bsheet is-open" aria-hidden={false}>
+          <div
+            className="bsheet-backdrop"
+            onClick={() => setSheetProduct(null)}
+          />
+          <div className="bsheet-panel" role="dialog" aria-modal="true">
+            <div className="bsheet-handle" />
+
+            <div className="bsheet-header">
+              <h4 className="bsheet-title">{sheetProduct.name}</h4>
+              {sheetProduct.brand && (
+                <div className="bsheet-sub">{sheetProduct.brand}</div>
+              )}
+            </div>
+
+            <div className="bsheet-actions">
+              <button
+                className="sheet-btn primary"
+                onClick={() => { setSheetProduct(null); startEdit(sheetProduct); }}
+              >
+                {t("common.edit", { defaultValue: "Edit" })}
+              </button>
+
+              <button
+                className="sheet-btn danger"
+                onClick={() => { setSheetProduct(null); handleDelete(sheetProduct.clothingItemId); }}
+              >
+                {t("common.delete", { defaultValue: "Delete" })}
+              </button>
+
+              <button
+                className="sheet-btn info"
+                disabled={pinLoadingId === sheetProduct.clothingItemId}
+                onClick={() => { setSheetProduct(null); togglePin(sheetProduct); }}
+              >
+                {isPinned(sheetProduct.clothingItemId)
+                  ? t("products.pin.unpin", { defaultValue: "Unpin" })
+                  : t("products.pin.pin",   { defaultValue: "Pin" })}
+              </button>
+
+              <button
+                className="sheet-btn success"
+                disabled={
+                  saleLoadingId === sheetProduct.clothingItemId ||
+                  (sheetProduct.quantity ?? 0) <= 0
+                }
+                onClick={() => { setSheetProduct(null); handleSale(sheetProduct); }}
+              >
+                {t("products.sale.button", { defaultValue: "Sale" })}
+              </button>
+            </div>
+
+            <div className="bsheet-footer">
+              <button className="sheet-close" onClick={() => setSheetProduct(null)}>
+                {t("common.close", { defaultValue: "Close" })}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
