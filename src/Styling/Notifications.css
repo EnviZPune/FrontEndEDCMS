@@ -591,9 +591,9 @@
 @media (max-width: 480px) {
   .notifications-panel {
     width: 320px;
-    max-height: 400px;
-    right: 20px;
-    top: 40px;
+    max-height: 420px;
+    top: 30px;
+    left: -230px;
   }
 
   .notification-item {
