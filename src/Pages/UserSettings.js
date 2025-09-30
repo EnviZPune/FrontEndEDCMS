@@ -132,6 +132,9 @@ export default function UserSettings() {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
+  /* NEW: image upload in-flight state */
+  const [uploadingImage, setUploadingImage] = useState(false);
+
   const token = getToken();
   const headers = {
     "Content-Type": "application/json",
@@ -150,7 +153,6 @@ export default function UserSettings() {
   useEffect(() => {
     const u = (profile.username || "").trim();
 
-    // If unchanged, valid/available; no hint
     if (initialUsername && u.toLowerCase() === initialUsername.toLowerCase()) {
       setUsernameValid(true);
       setUsernameAvailable(true);
@@ -158,7 +160,6 @@ export default function UserSettings() {
       return;
     }
 
-    // If empty and we have no initial username (rare), allow blank (no blocking)
     if (!u && !initialUsername) {
       setUsernameValid(true);
       setUsernameAvailable(true);
@@ -166,7 +167,6 @@ export default function UserSettings() {
       return;
     }
 
-    // If empty but we *do* have an initial username, copy it in (safety net)
     if (!u && initialUsername) {
       setProfile((p) => ({ ...p, username: initialUsername }));
       setUsernameValid(true);
@@ -175,7 +175,6 @@ export default function UserSettings() {
       return;
     }
 
-    // Changed: validate format & reserved
     if (!USERNAME_REGEX.test(u)) {
       setUsernameValid(false);
       setUsernameAvailable(false);
@@ -194,7 +193,6 @@ export default function UserSettings() {
     setUsernameValid(true);
     setUsernameMsg("");
 
-    // Debounced availability check (only when changed)
     let isCancelled = false;
     const timer = setTimeout(async () => {
       setCheckingUsername(true);
@@ -251,7 +249,6 @@ export default function UserSettings() {
   useEffect(() => {
     (async () => {
       try {
-        // 1) who am i (to get the id)
         const meRes = await fetch(`${API_BASE}/api/User/me`, { headers });
         if (meRes.status === 401) {
           navigate("/login");
@@ -262,17 +259,15 @@ export default function UserSettings() {
 
         const userId = me.userId ?? me.id ?? me.UserId ?? null;
 
-        // 2) get the authoritative DB row
         let db = null;
         if (userId != null) {
           const dbRes = await fetch(
-            `${API_BASE}/api/User/${userId}?_=${Date.now()}`, // cache-buster
+            `${API_BASE}/api/User/${userId}?_=${Date.now()}`,
             { headers }
           );
           if (dbRes.ok) db = await dbRes.json();
         }
 
-        // 3) resolve DOB (from DB first, then /me)
         const dobRaw = db?.dateOfBirth ?? db?.birthday ?? me?.dateOfBirth ?? me?.birthday ?? "";
         let dob = "";
         if (dobRaw) {
@@ -282,11 +277,9 @@ export default function UserSettings() {
           } catch {}
         }
 
-        // 4) resolve USERNAME — DB FIRST
         const usernameFromDb =
           db?.username ?? db?.userName ?? db?.Username ?? db?.user?.username ?? "";
 
-        // fallback chain if DB was empty
         let usernameResolved = usernameFromDb;
         if (!usernameResolved) {
           const usernameFromApi =
@@ -294,7 +287,6 @@ export default function UserSettings() {
           if (usernameFromApi) {
             usernameResolved = usernameFromApi;
           } else {
-            // JWT fallback
             let usernameFromJwt = "";
             if (token) {
               const payload = decodeJwt(token);
@@ -308,7 +300,6 @@ export default function UserSettings() {
             if (usernameFromJwt) {
               usernameResolved = usernameFromJwt;
             } else {
-              // email local-part fallback
               const emailLocalPart =
                 (me?.email && typeof me.email === "string" && me.email.includes("@"))
                   ? me.email.split("@")[0]
@@ -342,9 +333,22 @@ export default function UserSettings() {
   const handleImageChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const url = await uploadImageToGCS(file);
-    if (url) setProfile((p) => ({ ...p, profilePictureUrl: url }));
-    else setError(t("errors.image_upload", { defaultValue: "Image upload failed." }));
+    setUploadingImage(true);                  // <<< start uploading
+    setError("");
+    try {
+      const url = await uploadImageToGCS(file);
+      if (url) {
+        setProfile((p) => ({ ...p, profilePictureUrl: url }));
+      } else {
+        setError(t("errors.image_upload", { defaultValue: "Image upload failed." }));
+      }
+    } catch {
+      setError(t("errors.image_upload", { defaultValue: "Image upload failed." }));
+    } finally {
+      setUploadingImage(false);               // <<< done uploading
+      // reset the file input so selecting the same file again re-triggers onChange
+      try { e.target.value = ""; } catch {}
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -358,7 +362,6 @@ export default function UserSettings() {
       !!profile.username &&
       profile.username.toLowerCase() === initialUsername.toLowerCase();
 
-    // Only validate username if the user actually changed it
     if (!currentEqualsInitial && profile.username?.trim()) {
       const u = profile.username.trim();
       if (!USERNAME_REGEX.test(u)) {
@@ -399,7 +402,6 @@ export default function UserSettings() {
       ...(newPassword ? { password: newPassword } : {}),
     };
 
-    // Only send username if the user actually changed it
     if (profile.username?.trim() && !currentEqualsInitial) {
       payload.username = profile.username.trim();
     }
@@ -525,7 +527,7 @@ export default function UserSettings() {
               </h3>
 
               {/* Picture */}
-              <div className="form-group">
+              <div className="form-group" aria-busy={uploadingImage ? "true" : "false"}>
                 <label className="form-label">{t("fields.profile_picture", { defaultValue: "Profile Picture" })}</label>
                 <div className="image-upload-container">
                   <div className="current-image">
@@ -541,10 +543,40 @@ export default function UserSettings() {
                       </div>
                     )}
                   </div>
-                  <input type="file" accept="image/*" onChange={handleImageChange} className="file-input" id="profile-image" />
-                  <label htmlFor="profile-image" className="file-input-label">
-                    {t("actions.choose_image", { defaultValue: "Choose Image" })}
+
+                  {/* File input disabled while uploading */}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="file-input"
+                    id="profile-image"
+                    disabled={uploadingImage}
+                  />
+
+                  {/* Label shows "Uploading ..." while in-flight */}
+                  <label
+                    htmlFor="profile-image"
+                    className={`file-input-label${uploadingImage ? " is-uploading" : ""}`}
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {uploadingImage ? t("actions.uploading", { defaultValue: "Uploading ..." }) : t("actions.choose_image", { defaultValue: "Choose Image" })}
                   </label>
+
+                  {/* Optional tiny spinner next to the label */}
+                  {uploadingImage && (
+                    <div className="uploading-status" role="status" aria-live="polite" style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8 }}>
+                      <img
+                        src={prefersDark ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
+                        alt=""
+                        width={22}
+                        height={22}
+                        style={{ objectFit: "contain" }}
+                      />
+                      <span>{t("actions.uploading", { defaultValue: "Uploading ..." })}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -748,8 +780,8 @@ export default function UserSettings() {
                 className={`submit-button ${loading ? "loading" : ""}`}
                 disabled={
                   loading ||
+                  uploadingImage || /* prevent save during image upload */
                   (newPassword && passwordStrength.score < 3) ||
-                  // Only block if user actually changed username and it's invalid/taken
                   ((!initialUsername || profile.username.toLowerCase() !== initialUsername.toLowerCase()) &&
                     (!usernameValid || usernameAvailable === false))
                 }

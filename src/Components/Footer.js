@@ -11,7 +11,7 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-logo-section">
           <img
-            src={`Assets/triwears-icon-white.png`}
+            src={`/Assets/triwears-icon-white.png`}
             alt={t("footer.logo_alt", { defaultValue: "Triwears Logo" })}
             className="footer-logo"
           />

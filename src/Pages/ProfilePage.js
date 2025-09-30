@@ -352,48 +352,6 @@ function ActivityStatsCard({ profile, token }) {
         </div>
       </div>
       <div className="card-content">
-        <div className="stats-grid">
-          {["shops", "hours", "days", "age"]
-            .filter((key) => key !== "age" || age !== null)
-            .map((key) => (
-              <div key={key} className="stat-item">
-                <div className="stat-circle">
-                  <div className="stat-value">{animatedStats[key]}</div>
-                  <svg viewBox="0 0 36 36" className="circular-chart" aria-hidden="true">
-                    <path
-                      className="circle-bg"
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                    />
-                    <path
-                      className={`circle ${key}`}
-                      strokeDasharray={`${
-                        Math.min(
-                          key === "shops"
-                            ? animatedStats.shops * 25
-                            : key === "hours"
-                            ? animatedStats.hours / 2
-                            : key === "days"
-                            ? animatedStats.days / 5
-                            : animatedStats.age,
-                          100
-                        )
-                      }, 100`}
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                    />
-                  </svg>
-                </div>
-                <div className="stat-label">
-                  {key === "shops"
-                    ? t("activity.stats.shops", { defaultValue: "Shops" })
-                    : key === "hours"
-                    ? t("activity.stats.hours", { defaultValue: "Hours" })
-                    : key === "days"
-                    ? t("activity.stats.days", { defaultValue: "Days" })
-                    : t("activity.stats.years_old", { defaultValue: "Years Old" })}
-                </div>
-              </div>
-            ))}
-        </div>
         <div className="completion-guidance">
           <div className="completion-summary">
             <div className="completion-bar-wrapper">
@@ -499,9 +457,6 @@ function ShopsCard({ businesses = [] }) {
         <h3 className="card-title">
           {t("shops.title", { defaultValue: "My Shops" })} ({businesses.length})
         </h3>
-        <Link to="/become-owner" className="add-shop-btn">
-          <span>+</span> {t("shops.add_shop", { defaultValue: "Add Shop" })}
-        </Link>
       </div>
       <div className="card-content">
         {businesses.length > 0 ? (

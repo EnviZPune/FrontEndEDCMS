@@ -8,8 +8,8 @@ import { useTranslation } from "react-i18next";
 import "../Styling/navbar.css";
 import { useAudio } from "./AudioProvider.tsx";
 
-const LOGO_LIGHT = `Assets/triwears-icon-black.png`;
-const LOGO_DARK  = `Assets/triwears-icon-white.png`;
+const LOGO_LIGHT = `/Assets/triwears-icon-black.png`;
+const LOGO_DARK  = `/Assets/triwears-icon-white.png`;
 
 // NOTE: keep base without /api, we append /api in endpoints below
 const API_BASE = "https://api.triwears.com";

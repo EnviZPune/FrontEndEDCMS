@@ -16,6 +16,13 @@
   --space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;
   --transition-fast:150ms cubic-bezier(.4,0,.2,1);--transition-normal:300ms cubic-bezier(.4,0,.2,1);
   --z-sticky:1100;--z-dropdown:2000;--z-backdrop:1995;
+
+  /* Sheet animation variables */
+  --sheet-in: 380ms;
+  --sheet-out: 240ms;
+  --sheet-ease-out: cubic-bezier(.22,1,.36,1);
+  --sheet-ease-in:  cubic-bezier(.32,0,.67,0);
+  --sheet-backdrop: rgba(2, 6, 23, 0.28); /* lighter overlay so sheet stays bright */
 }
 
 /* ---------- container ---------- */
@@ -33,33 +40,46 @@
 /* ---------- logo ---------- */
 :root{--logo-size:32px}
 .logo-container{display:inline-flex;align-items:center;white-space:nowrap;line-height:1}
-.logo-container img{width: var(--logo-size);
+.logo-container img{
+  width: var(--logo-size);
   height: var(--logo-size);
   object-fit: contain;
   display: block;
   border-radius: 8px;
   margin-right: 8px;
-  margin-top: 10px;}
-.logo-container h3{font-size:1.125rem;font-weight:700;background:linear-gradient(135deg,var(--primary-600),var(--primary-500));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:0; position: relative; right: 30px; bottom: 1px;}
+  margin-top: 10px;
+}
+.logo-container h3{
+  font-size:1.125rem;font-weight:700;background:linear-gradient(135deg,var(--primary-600),var(--primary-500));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:0;
+  position: relative; right: 30px; bottom: 1px;
+}
 
 /* ---------- nav links (desktop) ---------- */
 .nav-links{display:flex;align-items:center;gap:var(--space-8);list-style:none;margin:0;padding:0}
 .nav-links li{position:relative;list-style:none}
-.nav-links a{color:var(--navbar-text);text-decoration:none;font-weight:500;font-size:.9375rem;padding:.5rem var(--space-4);
-  border-radius:12px;transition:all var(--transition-fast);display:inline-flex;align-items:center;gap:.5rem;line-height:1}
+.nav-links a{
+  color:var(--navbar-text);text-decoration:none;font-weight:500;font-size:.9375rem;padding:.5rem var(--space-4);
+  border-radius:12px;transition:all var(--transition-fast);display:inline-flex;align-items:center;gap:.5rem;line-height:1
+}
 .nav-links a:hover{color:var(--navbar-text-hover);transform:translateY(-1px);background:var(--neutral-200)}
 
 /* ---------- auth (desktop) ---------- */
 .auth-buttons{display:flex;align-items:center;gap:.75rem}
-.auth-buttons button{padding:.5rem var(--space-5);border-radius:12px;font-weight:500;font-size:.9375rem;cursor:pointer;transition:all var(--transition-fast);border:none;display:inline-flex;align-items:center;gap:.5rem;line-height:1}
+.auth-buttons button{
+  padding:.5rem var(--space-5);border-radius:12px;font-weight:500;font-size:.9375rem;cursor:pointer;transition:all var(--transition-fast);
+  border:none;display:inline-flex;align-items:center;gap:.5rem;line-height:1
+}
 .login-button{background:transparent;color:var(--navbar-text);border:1px solid var(--neutral-300)}
-.login-button:hover{background:var(--neutral-50);border-color:var(--primary-300);color:var(--primary-600);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.login-button:hover{background:var(--neutral-50);color:var(--primary-600);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
 .register-button{background:linear-gradient(135deg,var(--primary-600),var(--primary-500));color:#fff;border:1px solid var(--primary-600)}
 .register-button:hover{filter:brightness(.98);transform:translateY(-2px);box-shadow:0 10px 25px -5px rgba(59,130,246,.15),0 8px 10px -6px rgba(59,130,246,.1)}
 
 /* ---------- user button (desktop) ---------- */
-.user-menu-button{display:inline-flex;align-items:center;gap:.5rem;background:var(--neutral-100);border:1px solid var(--neutral-200);border-radius:12px;padding:.5rem var(--space-4);cursor:pointer;color:var(--navbar-text);transition:all var(--transition-fast);line-height:1}
+.user-menu-button{
+  display:inline-flex;align-items:center;gap:.5rem;background:var(--neutral-100);border:1px solid var(--neutral-200);
+  border-radius:12px;padding:.5rem var(--space-4);cursor:pointer;color:var(--navbar-text);transition:all var(--transition-fast);line-height:1
+}
 .user-menu-button:hover{background:var(--neutral-200);border-color:var(--primary-300);transform:translateY(-1px)}
 .user-icon{font-size:1.05rem;color:var(--primary-600)}
 .user-avatar-img{width:22px;height:22px;border-radius:50%;object-fit:cover;display:block}
@@ -100,7 +120,6 @@
 .dd-avatar-img   { width:100%; height:100%; border-radius:50%; object-fit:cover; display:block; }
 .dd-avatar       { width:44px; height:44px; overflow:hidden; border-radius:50%; }
 
-
 /* ---------- mobile hamburger ---------- */
 .hamburger{display:none;flex-direction:column;gap:4px;background:transparent;border:none;cursor:pointer;padding:.5rem;border-radius:8px;transition:all var(--transition-fast)}
 .hamburger span{width:24px;height:3px;background:var(--navbar-text);border-radius:9999px;transition:all var(--transition-normal);transform-origin:center}
@@ -122,21 +141,138 @@
   .nav-links>li .lang-toggle-button{display:none !important}
 }
 
-/* ---------- MOBILE SHEET ---------- */
+/* ---------- MOBILE SHEET (updated) ---------- */
 .sheet-backdrop{
-  position:fixed;inset:0;background:rgba(0,0,0,.25);backdrop-filter:saturate(140%) blur(1px);
-  z-index:var(--z-backdrop);opacity:1
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.25);
+  backdrop-filter:saturate(140%) blur(1px);
+  z-index:var(--z-backdrop);
+  opacity:1;
 }
-.mobile-sheet{
-  position:fixed;left:12px;right:12px;top:calc(90px + 6px);max-height:min(72vh,560px);
-  background:#fff;border:1px solid var(--neutral-200);border-radius:16px;box-shadow:var(--shadow-xl);
-  padding:var(--space-4);z-index:var(--z-dropdown);overflow:auto;opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);
-  transition:transform var(--transition-normal),opacity var(--transition-normal),visibility 0s linear .2s;
-  text-decoration: none;
-  
-}
-.mobile-sheet.open{opacity:1;visibility:visible;transform:translateY(0) scale(1); text-decoration: none;}
 
+/* The sheet container */
+.mobile-sheet{
+  position:fixed;
+  left:12px; right:12px; top:calc(90px + 6px);
+  max-height:min(72vh,560px);
+  background:#fff;
+  border:1px solid var(--neutral-200);
+  border-radius:16px;
+  box-shadow:var(--shadow-xl);
+  padding:var(--space-4);
+  z-index:var(--z-dropdown);
+  overflow:auto;
+
+  /* closed base */
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(14px) scale(.985);
+  pointer-events:none;
+  text-decoration:none;
+  will-change:transform, opacity;
+  animation:sheetOut var(--sheet-out) var(--sheet-ease-in) forwards;
+}
+
+/* Backdrop BEHIND the panel so colors stay bright */
+.mobile-sheet::before{
+  content:"";
+  position:fixed; inset:0;
+  z-index:0;                                 /* behind sheet content */
+  background:var(--sheet-backdrop);
+  backdrop-filter:blur(2px) saturate(1.12);
+  opacity:0;
+  transition:opacity var(--sheet-in) var(--sheet-ease-out);
+  pointer-events:none;
+}
+
+/* Ensure real content sits above the backdrop */
+.mobile-sheet > *{
+  position:relative;
+  z-index:1;
+  opacity:1; /* guard against inherited opacity */
+}
+
+/* Open state (animated in) */
+.mobile-sheet.open{
+  pointer-events:auto;
+  animation:sheetIn var(--sheet-in) var(--sheet-ease-out) forwards;
+  background-color: #fff;
+}
+.mobile-sheet.open::before{ opacity:1; }
+
+/* Keyframes (clean, no desaturation) */
+@keyframes sheetIn{
+  0%   { opacity:0; transform:translateY(24px) scale(.975); }
+  60%  { transform:translateY(-2px) scale(1.01); } /* tiny, snappy overshoot */
+  100% { opacity:1; transform:translateY(0) scale(1); visibility:visible; }
+}
+@keyframes sheetOut{
+  0%   { opacity:1; transform:translateY(0) scale(1); visibility:visible; }
+  100% { opacity:0; transform:translateY(12px) scale(.985); visibility:hidden; }
+}
+
+/* Mobile tweaks */
+@media (max-width: 480px) {
+  .mobile-sheet { left:10px; right:10px; text-decoration:none; }
+  .dd-tools { grid-template-columns: 1fr 1fr; gap: .6rem; }
+  .dd-name { font-size: 1rem; }
+}
+@media (max-width: 400px) {
+  .mobile-sheet { padding:.75rem; text-decoration:none; }
+  .dd-header { padding:.6rem .7rem; }
+  .dd-email { font-size:.85rem; }
+}
+@media (max-width: 375px) {
+  .user-avatar-img { width:20px; height:20px; }
+  .dd-avatar { width:40px; height:40px; }
+  .dd-name { font-size:.95rem; }
+}
+@media (max-width: 320px) {
+  .mobile-sheet { left:6px; right:6px; text-decoration:none; }
+  .dd-lang, .dd-list, .dd-logout { padding-left:.6rem; padding-right:.6rem; }
+  .lang-toggle-button { padding:.4rem .6rem; }
+}
+@media (max-height: 640px) {
+  .mobile-sheet { max-height:calc(100vh - 120px); text-decoration:none; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .mobile-sheet, .mobile-sheet.open{
+    animation:none !important;
+    transition:none !important;
+    opacity:1;
+    transform:none;
+    visibility:visible;
+  }
+  .mobile-sheet::before{ transition:none !important; }
+}
+
+/* No underlines for links inside the mobile sheet & dropdown */
+.mobile-sheet a,
+.mobile-sheet .dropdown-item,
+.mobile-sheet .dd-tool,
+.dropdown-menu a,
+.dd-list .dropdown-item {
+  text-decoration: none !important;
+}
+.mobile-sheet a:hover,
+.mobile-sheet a:focus,
+.mobile-sheet a:active,
+.dropdown-menu a:hover,
+.dropdown-menu a:focus,
+.dropdown-menu a:active {
+  text-decoration: none !important;
+}
+.mobile-sheet a::after,
+.mobile-sheet .dropdown-item::after,
+.mobile-sheet .dd-tool::after,
+.dropdown-menu a::after,
+.dd-list .dropdown-item::after {
+  content: none !important;
+}
+
+/* ---------- Quick actions row ---------- */
 .dd-tools{
   width: 100%;
   display:flex; 
@@ -154,70 +290,11 @@
 /* ---------- desktop: hide tiles grid ---------- */
 @media (min-width:769px){ .dd-quick{display:none !important} }
 
-@media (max-width: 480px) {
-  .mobile-sheet { left: 10px; right: 10px; text-decoration: none; }
-  .dd-tools { grid-template-columns: 1fr 1fr; gap: .6rem; }
-  .dd-name { font-size: 1rem; }
-}
-
-/* Remove underlines for links inside the mobile sheet & dropdown */
-.mobile-sheet a,
-.mobile-sheet .dropdown-item,
-.mobile-sheet .dd-tool,
-.dropdown-menu a,
-.dd-list .dropdown-item {
-  text-decoration: none !important;
-}
-
-/* Keep it off on interaction too */
-.mobile-sheet a:hover,
-.mobile-sheet a:focus,
-.mobile-sheet a:active,
-.dropdown-menu a:hover,
-.dropdown-menu a:focus,
-.dropdown-menu a:active {
-  text-decoration: none !important;
-}
-
-/* If any custom underline is drawn with ::after somewhere, disable it here */
-.mobile-sheet a::after,
-.mobile-sheet .dropdown-item::after,
-.mobile-sheet .dd-tool::after,
-.dropdown-menu a::after,
-.dd-list .dropdown-item::after {
-  content: none !important;
-}
-
-
 @media (max-width: 430px) {
   .logo-container h3 { margin-left: 2px; }
   .hamburger { margin-right: -150px; }
   .dd-tools { grid-template-columns: 1fr; } /* stack Map & Notifications */
 }
-
-@media (max-width: 400px) {
-  .mobile-sheet { padding: .75rem; text-decoration: none; }
-  .dd-header { padding: .6rem .7rem; }
-  .dd-email { font-size: .85rem; }
-}
-
-@media (max-width: 375px) {
-  .user-avatar-img { width: 20px; height: 20px; }
-  .dd-avatar { width: 40px; height: 40px; }
-  .dd-name { font-size: .95rem; }
-}
-
-@media (max-width: 320px) {
-  .mobile-sheet { left: 6px; right: 6px; text-decoration: none;}
-  .dd-lang, .dd-list, .dd-logout { padding-left: .6rem; padding-right: .6rem; }
-  .lang-toggle-button { padding: .4rem .6rem; }
-}
-
-@media (max-height: 640px) {
-  .mobile-sheet { max-height: calc(100vh - 120px); text-decoration: none;}
-}
-
-
 
 /* ---------- dark mode ---------- */
 @media (prefers-color-scheme:dark){
@@ -243,7 +320,11 @@
 
 /* ---------- a11y/utility ---------- */
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important
+  }
 }
 html{scroll-behavior:smooth}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

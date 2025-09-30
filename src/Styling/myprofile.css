@@ -254,7 +254,9 @@
 .completion-summary {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem; /* space between each bar wrapper */
+  gap: 1rem;
+  position: relative;
+  bottom: 30px;
 }
 
 .completion-bar-wrapper {
@@ -1423,6 +1425,182 @@
 
   .enhanced-card.activity-card .stat-value {
     font-size: 1.1rem;
+  }
+}
+
+/* ===============================
+   My Shops — Mobile layout only
+   =============================== */
+@media (max-width: 640px) {
+  /* List spacing */
+  .enhanced-profile-container .shop-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  /* Card: grid layout (avatar | info | action) */
+  .enhanced-profile-container .shop-item {
+    /* override any previous flex rules */
+    display: grid !important;
+    flex-direction: initial !important;
+    align-items: center !important;
+
+    grid-template-columns: 56px 1fr 40px;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "avatar info action"
+      "avatar info action";
+    gap: 6px 12px;
+
+    padding: 12px;
+    border-radius: 14px;
+    text-decoration: none;
+  }
+
+  /* Keep bookings visually consistent if they reuse the same class */
+  .enhanced-profile-container .booking-item {
+    display: grid !important;
+    grid-template-columns: 56px 1fr 40px;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "avatar info action"
+      "avatar info action";
+    gap: 6px 12px;
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  /* Avatar + online dot */
+  .enhanced-profile-container .shop-avatar {
+    grid-area: avatar;
+    position: relative;
+    width: 56px;
+    height: 56px;
+    flex: 0 0 auto;
+  }
+  .enhanced-profile-container .shop-avatar .shop-logo {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    display: block;
+  }
+  .enhanced-profile-container .status-indicator {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    border: 2px solid var(--card-bg, #0b1020);
+  }
+  .enhanced-profile-container .status-indicator.online { background: #10b981; }
+  .enhanced-profile-container .status-indicator.offline { background: #ef4444; }
+
+  /* Middle column: name on top, meta under it */
+  .enhanced-profile-container .shop-info {
+    grid-area: info;
+    display: grid;
+    grid-auto-rows: min-content;
+    gap: 4px;
+    min-width: 0; /* enables ellipsis */
+  }
+
+  .enhanced-profile-container .shop-name {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 1px;
+    position: relative;
+    top: 0.001rem;
+  }
+
+  .enhanced-profile-container .shop-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    line-height: 1.2;
+    color: #94a3b8; /* slate-400 */
+  }
+
+  .enhanced-profile-container .shop-meta .status-badge {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .enhanced-profile-container .status-badge.open {
+    color: #10b981;
+    background: rgba(16,185,129,0.12);
+    border-color: rgba(16,185,129,0.3);
+  }
+  .enhanced-profile-container .status-badge.closed {
+    color: #ef4444;
+    background: rgba(239,68,68,0.12);
+    border-color: rgba(239,68,68,0.3);
+  }
+
+  .enhanced-profile-container .shop-meta .hours {
+    flex: 1 1 auto;
+    min-width: 50%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.9;
+  }
+
+  /* Right column: edit button centered vertically */
+  .enhanced-profile-container .shop-actions {
+    grid-area: action;
+    align-self: center;
+    justify-self: end;
+  }
+  .enhanced-profile-container .shop-actions .action-btn {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 15px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: transparent;
+    cursor: pointer;
+  }
+  .enhanced-profile-container .shop-actions .action-btn:active {
+    transform: scale(0.98);
+  }
+
+  /* Mobile: truncate long hours text with … */
+@media (max-width: 640px) {
+  .enhanced-profile-container .shop-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;        
+  }
+
+  .enhanced-profile-container .shop-meta .hours {
+    flex: 1 1 auto;       
+    min-width: 0;            
+    max-width: 110%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .enhanced-profile-container .shop-meta .status-badge {
+    flex: 0 0 auto;       
+  }
+}
+
+  .enhanced-profile-container .shop-item,
+  .enhanced-profile-container .booking-item {
+    align-items: center !important;
   }
 }
 
