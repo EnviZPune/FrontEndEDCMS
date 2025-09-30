@@ -293,7 +293,6 @@
 }
 
 .invitation-item {
-  border-left: 4px solid #4ecdc4;
   background: linear-gradient(135deg, rgba(78, 205, 196, 0.05) 0%, rgba(68, 160, 141, 0.05) 100%);
 }
 

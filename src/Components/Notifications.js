@@ -407,11 +407,6 @@ export default function Notifications() {
         <div className="panel-content">
           {invites.length > 0 && (
             <div className="section invitations-section">
-              <div className="section-header">
-                <span className="section-icon">📧</span>
-                <span className="section-title">{t("sections.invitations")}</span>
-                <span className="section-count">{invites.length}</span>
-              </div>
               <div className="section-items">
                 {invites.map((inv) => (
                   <div key={inv.businessId} className="notification-item invitation-item">

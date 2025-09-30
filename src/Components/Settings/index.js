@@ -18,8 +18,38 @@ import { useAuth } from "./hooks/useAuth";
 
 const ALLOWED_ROLES = new Set(["owner", "employee"]);
 
-const LOADING_GIF_LIGHT = "Assets/triwears-black-loading.gif"; // black logo for light mode
-const LOADING_GIF_DARK = "Assets/triwears-white-loading.gif";  // white logo for dark mode
+const LOADING_GIF_LIGHT = "Assets/triwears-black-loading.gif"; 
+const LOADING_GIF_DARK = "Assets/triwears-white-loading.gif"; 
+
+function collectEmployeeBusinessIds(userInfo) {
+  const ids = new Set();
+
+  // common single-value fields
+  if (userInfo?.employeeOfBusinessId != null) ids.add(Number(userInfo.employeeOfBusinessId));
+  if (userInfo?.businessId != null && (userInfo?.role === "employee" || userInfo?.role === "Employee"))
+    ids.add(Number(userInfo.businessId));
+
+  // arrays of ids
+  (userInfo?.employeeBusinessIds || userInfo?.businessIds || []).forEach((id) => {
+    if (id != null) ids.add(Number(id));
+  });
+
+  // arrays of objects
+  (userInfo?.employeeBusinesses || userInfo?.businesses || []).forEach((b) => {
+    const bid = b?.businessId ?? b?.id;
+    if (bid != null) ids.add(Number(bid));
+  });
+
+  // role assignments like [{ businessId, role }]
+  (userInfo?.roleAssignments || []).forEach((ra) => {
+    if (!ra) return;
+    const r = String(ra.role || "").toLowerCase();
+    const bid = ra.businessId ?? ra.id;
+    if (r === "employee" && bid != null) ids.add(Number(bid));
+  });
+
+  return ids;
+}
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -50,41 +80,50 @@ export default function Settings() {
 
   const { businesses: rawBusinesses = [], loading, error } = useBusinesses();
   const { role, userInfo } = useAuth();
+  const roleLc = (role || "").toLowerCase();
 
-  const businesses = useMemo(
-    () => (Array.isArray(rawBusinesses) ? rawBusinesses : []),
-    [rawBusinesses]
-  );
+  // Restrict visible businesses for employees
+  const businesses = useMemo(() => {
+    const list = Array.isArray(rawBusinesses) ? rawBusinesses : [];
+    if (roleLc !== "employee") return list;
+
+    const allowedIds = collectEmployeeBusinessIds(userInfo);
+    // If we discovered explicit allowed IDs, filter; otherwise assume API already scoped
+    if (allowedIds.size > 0) {
+      return list.filter((b) => {
+        const id = b?.businessId ?? b?.id;
+        return id != null && allowedIds.has(Number(id));
+      });
+    }
+    return list;
+  }, [rawBusinesses, roleLc, userInfo]);
 
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [selectedPanel, setSelectedPanel] = useState("BusinessInfo");
 
   // Redirect if the role is not allowed
   useEffect(() => {
-    if (role != null && !ALLOWED_ROLES.has(role)) {
+    if (role != null && !ALLOWED_ROLES.has(roleLc)) {
       navigate("/unauthorized", { replace: true });
     }
-  }, [role, navigate]);
+  }, [role, roleLc, navigate]);
 
-  // Auto-select first business when data loads
+  // Auto-select first business when data loads (owner and employee)
   useEffect(() => {
     if (!loading && businesses.length > 0 && !selectedBusiness) {
       setSelectedBusiness(businesses[0]);
     }
   }, [loading, businesses, selectedBusiness]);
 
-  // If the currently selected business disappears from the list (deleted/changed),
-  // pick the first available one.
+  // If current selected business disappears (deleted / permissions changed), pick first
   useEffect(() => {
     if (!selectedBusiness) return;
-    const stillExists = businesses.some(
-      (b) =>
-        b?.businessId === selectedBusiness?.businessId ||
-        b?.id === selectedBusiness?.id
-    );
-    if (!stillExists) {
-      setSelectedBusiness(businesses[0] ?? null);
-    }
+    const sbId = selectedBusiness?.businessId ?? selectedBusiness?.id;
+    const stillExists = businesses.some((b) => {
+      const id = b?.businessId ?? b?.id;
+      return id === sbId;
+    });
+    if (!stillExists) setSelectedBusiness(businesses[0] ?? null);
   }, [businesses, selectedBusiness]);
 
   const handleSelectBusiness = useCallback((biz) => {
@@ -116,22 +155,22 @@ export default function Settings() {
       <div className="settings-component">
         <div className="settings-layout">
           <div className="settings-content">
-              <div className="error-state">
-                <h3>
-                  <span>⚠️</span> {t("states.error_title")}
-                </h3>
-                <p>{t("states.error_body")}</p>
-                <button onClick={() => window.location.reload()}>
-                  {t("actions.refresh")}
-                </button>
-              </div>
+            <div className="error-state">
+              <h3>
+                <span>⚠️</span> {t("states.error_title")}
+              </h3>
+              <p>{t("states.error_body")}</p>
+              <button onClick={() => window.location.reload()}>
+                {t("actions.refresh")}
+              </button>
             </div>
           </div>
         </div>
+      </div>
     );
   }
 
-  // Empty state: no businesses for this user
+  // Empty state: no businesses for this user (after employee scoping)
   if (!loading && businesses.length === 0) {
     return (
       <div className="settings-component">

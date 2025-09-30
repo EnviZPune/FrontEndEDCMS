@@ -21,6 +21,76 @@ export default function PendingChangesPanel({ business }) {
   // Per-change action loading state: { [id]: "approve" | "reject" }
   const [actionBusy, setActionBusy] = useState({});
 
+  // ---- helpers ----
+  const normalizeDetails = (changeDetails) => {
+    // returns a normalized object with lowercased-first-letter keys,
+    // unwrapped from itemDto if present
+    let parsed = {};
+    try {
+      parsed = JSON.parse(changeDetails || '{}');
+    } catch {
+      parsed = {};
+    }
+
+    const lowerFirst = (obj) => {
+      const out = {};
+      Object.entries(obj || {}).forEach(([k, v]) => {
+        const key = k ? k.charAt(0).toLowerCase() + k.slice(1) : k;
+        out[key] = v;
+      });
+      return out;
+    };
+
+    const norm = lowerFirst(parsed);
+    const core = norm.itemDto ? lowerFirst(norm.itemDto) : norm;
+    return core;
+  };
+
+  const getOriginalProductById = (id) =>
+    products.find((p) => p.clothingItemId === id) ||
+    products.find((p) => p.id === id) || // fallback if API uses `id`
+    null;
+
+  // Given a change, derive a display-friendly product name
+  const getProductNameDisplay = (change) => {
+    const op = String(change.operationType || '').toLowerCase();
+    const details = normalizeDetails(change.changeDetails);
+    const hasClothingId = change.clothingItemId != null;
+    const original = hasClothingId ? getOriginalProductById(change.clothingItemId) : null;
+
+    const currentName = original?.name;
+    const requestedName = details?.name;
+
+    // prefer a clear "old → new" when renaming in Update
+    if (op.includes('update')) {
+      if (requestedName && currentName && String(requestedName) !== String(currentName)) {
+        return `${currentName} → ${requestedName}`;
+      }
+      return currentName || requestedName || (hasClothingId ? `#${change.clothingItemId}` : '');
+    }
+
+    if (op.includes('delete')) {
+      // deletion refers to an existing item
+      return currentName || (hasClothingId ? `#${change.clothingItemId}` : '');
+    }
+
+    if (op.includes('create')) {
+      // creation might not exist yet in DB, rely on payload
+      return requestedName || (hasClothingId ? `#${change.clothingItemId}` : t('pending.unknown_product', { defaultValue: 'Unknown product' }));
+    }
+
+    // other ops (e.g., UpdatePhotos) – only show if we can figure it out
+    if (currentName || requestedName) return currentName || requestedName;
+    if (hasClothingId) return `#${change.clothingItemId}`;
+    return '';
+  };
+
+  const isProductOperation = (change) => {
+    const op = String(change.operationType || '').toLowerCase();
+    // Treat these as product-centric; exclude pure business photo ops
+    return op.includes('create') || op.includes('update') || op.includes('delete');
+  };
+
   // 1) Fetch employees & products once per business
   useEffect(() => {
     if (!business?.businessId || !token) return;
@@ -117,16 +187,8 @@ export default function PendingChangesPanel({ business }) {
 
   // diff-rendering helper
   const renderDiffs = (changeDetails, clothingItemId) => {
-    let parsed = {};
-    try { parsed = JSON.parse(changeDetails); }
-    catch { return <p>{t('pending.invalid_details', { defaultValue: 'Invalid details' })}</p>; }
-
-    const norm = {};
-    Object.entries(parsed).forEach(([k, v]) => {
-      norm[k.charAt(0).toLowerCase() + k.slice(1)] = v;
-    });
-    const data = norm.itemDto || norm;
-    const original = products.find((p) => p.clothingItemId === clothingItemId) || {};
+    const data = normalizeDetails(changeDetails);
+    const original = getOriginalProductById(clothingItemId) || {};
 
     const fields = [
       { key: 'name', label: t('pending.fields.name', { defaultValue: 'Name' }) },
@@ -176,24 +238,33 @@ export default function PendingChangesPanel({ business }) {
       <h3>{t('pending.title', { defaultValue: 'Pending Changes' })}</h3>
       <ul className="pending-list">
         {pendingChanges.map((change) => {
-          let parsed = {};
-          try { parsed = JSON.parse(change.changeDetails); } catch {}
-          const photos = parsed.itemDto || parsed;
+          // Parse once for this change
+          const details = normalizeDetails(change.changeDetails);
+
+          // Photos payload (for UpdatePhotos UI)
+          const photosPayload = details;
+
           const employee = employees.find((e) => e.userId === change.employeeId);
+          const opLabel = t(`pending.operations.${change.operationType}`, {
+            defaultValue: change.operationType,
+          });
 
           const busyState = actionBusy[change.proposedChangeId];
           const isApproving = busyState === 'approve';
           const isRejecting = busyState === 'reject';
           const buttonsDisabled = isApproving || isRejecting;
 
-          const opLabel = t(`pending.operations.${change.operationType}`, {
-            defaultValue: change.operationType,
-          });
+          // Product name line for Create/Update/Delete (and any product-centric op)
+          const showProductLine = isProductOperation(change);
+          const productNameDisplay = showProductLine ? getProductNameDisplay(change) : '';
 
           return (
             <li key={change.proposedChangeId} className="pending-item">
               <div className="pending-item-header">
                 <strong>{opLabel}</strong>
+                {showProductLine && productNameDisplay && (
+                  <span className="pending-item-title"> — {productNameDisplay}</span>
+                )}
               </div>
 
               <div className="pending-item-meta">
@@ -202,6 +273,11 @@ export default function PendingChangesPanel({ business }) {
                   {employee?.name || change.employeeId}
                 </small>
                 <br />
+                {showProductLine && (
+                  <>
+                    <br />
+                  </>
+                )}
                 <small>
                   <strong>
                     {t('pending.meta.requested_at', { defaultValue: 'Date and Time of the request' })}:
@@ -211,23 +287,23 @@ export default function PendingChangesPanel({ business }) {
               </div>
 
               <div className="change-details-container">
-                {change.operationType === 'UpdatePhotos' ? (
+                {String(change.operationType || '').toLowerCase() === 'updatephotos' ? (
                   <div className="photo-update-grid">
-                    {photos.profilePhotoUrl && (
+                    {photosPayload.profilePhotoUrl && (
                       <div className="photo-item">
                         <span>{t('pending.photos.profile', { defaultValue: 'Profile:' })}</span>
                         <img
-                          src={photos.profilePhotoUrl}
+                          src={photosPayload.profilePhotoUrl}
                           className="photo-preview"
                           alt={t('pending.photos.profile_alt', { defaultValue: 'Profile preview' })}
                         />
                       </div>
                     )}
-                    {photos.coverPhotoUrl && (
+                    {photosPayload.coverPhotoUrl && (
                       <div className="photo-item">
                         <span>{t('pending.photos.cover', { defaultValue: 'Cover:' })}</span>
                         <img
-                          src={photos.coverPhotoUrl}
+                          src={photosPayload.coverPhotoUrl}
                           className="photo-preview"
                           alt={t('pending.photos.cover_alt', { defaultValue: 'Cover preview' })}
                         />

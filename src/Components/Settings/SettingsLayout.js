@@ -18,6 +18,18 @@ const PANEL_DEFS = [
   { key: "DeleteBusiness", label: "Delete Business", icon: "🗑️" },
 ];
 
+/** Panels employees are allowed to see (hide sensitive/owner-only ones) */
+const EMPLOYEE_ALLOWED_PANELS = new Set([
+  "BusinessInfo",
+  "Products",
+  "Categories",
+  "Photos",
+  "PendingChanges",
+  "Reservations",
+  "Notifications",
+  "MyShops",
+]);
+
 /** Hash ↔ Panel mapping for deep-links like /settings#business-info */
 const HASH_TO_KEY = {
   "business-info": "BusinessInfo",
@@ -33,18 +45,17 @@ const HASH_TO_KEY = {
   "delete-business": "DeleteBusiness",
 };
 const KEY_TO_HASH = Object.fromEntries(Object.entries(HASH_TO_KEY).map(([h, k]) => [k, h]));
-const keyToHash = (key) => KEY_TO_HASH[key] ? KEY_TO_HASH[key] : key.toLowerCase();
+const keyToHash = (key) => (KEY_TO_HASH[key] ? KEY_TO_HASH[key] : key.toLowerCase());
 const readHashKey = () => {
   const h = (typeof window !== "undefined" ? window.location.hash : "").replace(/^#/, "").toLowerCase();
   return HASH_TO_KEY[h] || null;
 };
 
-/** ---- Owner-only gate (no hooks here; safe to return early) ---- */
+/** ---- Role gate (owner or employee) ---- */
 export default function SettingsLayout(props) {
   const userRole = (props.userRole || "").toLowerCase();
-  const notOwner = props.userRole != null && userRole !== "owner";
-  if (notOwner) return <Navigate to="/unauthorized" replace />;
-
+  const allowed = props.userRole == null || ["owner", "employee"].includes(userRole);
+  if (!allowed) return <Navigate to="/unauthorized" replace />;
   return <SettingsLayoutInner {...props} />;
 }
 
@@ -60,7 +71,9 @@ function SettingsLayoutInner({
   children,
 }) {
   const { t } = useTranslation("settings");
-  const isOwner = (userRole || "").toLowerCase() === "owner";
+  const roleLc = (userRole || "").toLowerCase();
+  const isOwner = roleLc === "owner";
+  const isEmployee = roleLc === "employee";
 
   // Mobile detection (unconditional hook call)
   const [isMobile, setIsMobile] = useState(
@@ -159,8 +172,12 @@ function SettingsLayoutInner({
     };
   }, [isMobile]);
 
-  // Visible panels (owner sees all)
-  const visiblePanels = useMemo(() => PANEL_DEFS, []);
+  // ----- Panels by role -----
+  const visiblePanels = useMemo(() => {
+    if (isOwner) return PANEL_DEFS;
+    if (isEmployee) return PANEL_DEFS.filter(p => EMPLOYEE_ALLOWED_PANELS.has(p.key));
+    return [];
+  }, [isOwner, isEmployee]);
 
   // Ensure selected panel is valid
   useEffect(() => {
@@ -174,83 +191,19 @@ function SettingsLayoutInner({
   const handleBusinessChange = useCallback(
     (e) => {
       const id = Number.parseInt(e.target.value, 10);
-      if (selectedBusiness?.businessId === id) return;
-      const biz = businesses.find((b) => b.businessId === id) || null;
+      if ((selectedBusiness?.businessId ?? selectedBusiness?.id) === id) return;
+      const biz = businesses.find((b) => (b.businessId ?? b.id) === id) || null;
       onSelectBusiness(biz);
     },
-    [businesses, onSelectBusiness, selectedBusiness?.businessId]
+    [businesses, onSelectBusiness, selectedBusiness?.businessId, selectedBusiness?.id]
   );
-
-  // ----- Swipe gestures -----
-  const touchStartX = useRef(0);
-  const touchStartY = useRef(0);
-  const touchActive = useRef(false);
-  const startedAtEdge = useRef(false);
-  const startedInsideDrawer = useRef(false);
-
-  useEffect(() => {
-    if (!isMobile) return;
-
-    const EDGE_ZONE = 24;
-    const THRESHOLD = 50;
-    const NAVBAR_H = 80;
-
-    const onTouchStart = (e) => {
-      if (e.touches.length !== 1) return;
-      const t = e.touches[0];
-      if (t.clientY < NAVBAR_H) return;
-
-      touchStartX.current = t.clientX;
-      touchStartY.current = t.clientY;
-      touchActive.current = true;
-
-      startedAtEdge.current = !drawerOpen && t.clientX <= EDGE_ZONE;
-      startedInsideDrawer.current = drawerOpen && t.clientX <= window.innerWidth * 0.85;
-    };
-
-    const onTouchMove = (e) => {
-      if (!touchActive.current) return;
-      const t = e.touches[0];
-      const dx = t.clientX - touchStartX.current;
-      const dy = t.clientY - touchStartY.current;
-
-      if (Math.abs(dy) > Math.abs(dx)) {
-        touchActive.current = false;
-        return;
-      }
-      if ((startedAtEdge.current && dx > 0) || (startedInsideDrawer.current && dx < 0)) {
-        e.preventDefault();
-      }
-    };
-
-    const onTouchEnd = (e) => {
-      if (!touchActive.current) return;
-      const changed = e.changedTouches?.[0];
-      if (!changed) { touchActive.current = false; return; }
-
-      const dx = changed.clientX - touchStartX.current;
-      if (!drawerOpen && startedAtEdge.current && dx > THRESHOLD) setDrawerOpen(true);
-      if (drawerOpen && startedInsideDrawer.current && dx < -THRESHOLD) setDrawerOpen(false);
-
-      touchActive.current = false;
-      startedAtEdge.current = false;
-      startedInsideDrawer.current = false;
-    };
-
-    document.addEventListener("touchstart", onTouchStart, { passive: true });
-    document.addEventListener("touchmove", onTouchMove, { passive: false });
-    document.addEventListener("touchend", onTouchEnd, { passive: true });
-    return () => {
-      document.removeEventListener("touchstart", onTouchStart);
-      document.removeEventListener("touchmove", onTouchMove);
-      document.removeEventListener("touchend", onTouchEnd);
-    };
-  }, [isMobile, drawerOpen]);
 
   // Close the drawer when switching to desktop
   useEffect(() => {
     if (!isMobile) setDrawerOpen(false);
   }, [isMobile]);
+
+  const disableBusinessSelect = isEmployee && businesses.length <= 1;
 
   return (
     <div className="settings-component">
@@ -287,18 +240,27 @@ function SettingsLayoutInner({
             aria-hidden={isMobile ? !drawerOpen : false}
           >
             <select
-              value={selectedBusiness?.businessId || ""}
+              value={selectedBusiness?.businessId ?? selectedBusiness?.id ?? ""}
               onChange={handleBusinessChange}
               aria-label={t("aria.business_select", { defaultValue: "Select a business to manage" })}
+              disabled={disableBusinessSelect}
+              title={
+                disableBusinessSelect
+                  ? t("aria.business_locked", { defaultValue: "Your access is limited to this shop." })
+                  : undefined
+              }
             >
               <option value="" disabled>
                 {t("choose_business", { defaultValue: "-- Choose Business --" })}
               </option>
-              {businesses.map((b) => (
-                <option key={b.businessId} value={b.businessId}>
-                  {b.name}
-                </option>
-              ))}
+              {businesses.map((b) => {
+                const id = b?.businessId ?? b?.id;
+                return (
+                  <option key={id} value={id}>
+                    {b.name}
+                  </option>
+                );
+              })}
             </select>
 
             <ul>
