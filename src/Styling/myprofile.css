@@ -450,6 +450,7 @@
   padding: 1.5rem;
 }
 
+
 /* ---------- IMPROVED Activity Overview Card ---------- */
 .enhanced-card.activity-card {
   background: #ffffff;
@@ -1358,6 +1359,88 @@
   }
 }
 
+/* ===============================
+   My Shops — Desktop = Mobile layout
+   =============================== */
+@media (min-width: 1024px) {
+  /* Use grid cards like on mobile */
+  .enhanced-profile-container .shops-card .shops-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .enhanced-profile-container .shops-card .shop-item {
+    display: grid !important;
+    grid-template-columns: 64px 1fr 44px;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "avatar info action"
+      "avatar info action";
+    align-items: center !important;
+    gap: 8px 14px;
+  }
+
+  /* Left: logo */
+  .enhanced-profile-container .shops-card .shop-avatar {
+    grid-area: avatar;
+    width: 64px;
+    height: 64px;
+  }
+
+  /* Middle: name on top, meta below */
+  .enhanced-profile-container .shops-card .shop-info {
+    grid-area: info;
+    display: grid;
+    grid-auto-rows: min-content;
+    gap: 6px;
+    min-width: 0; /* enable ellipsis */
+  }
+
+  .enhanced-profile-container .shops-card .shop-name {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .enhanced-profile-container .shops-card .shop-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    line-height: 1.2;
+    min-width: 0;
+  }
+
+  .enhanced-profile-container .shops-card .shop-meta .hours {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Right: edit button pinned to the far right, always visible */
+  .enhanced-profile-container .shops-card .shop-actions {
+    grid-area: action;
+    justify-self: end;
+    align-self: center;
+    opacity: 1 !important; /* override hover-only visibility */
+  }
+
+  .enhanced-profile-container .shops-card .shop-actions .action-btn {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+  }
+}
+
+
 /* Responsive Design - Profile specific */
 @media (max-width: 1024px) {
   .enhanced-profile-container .dashboard-grid {
@@ -1378,6 +1461,7 @@
   .enhanced-card.activity-card .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  
 }
 
 @media (max-width: 768px) {
