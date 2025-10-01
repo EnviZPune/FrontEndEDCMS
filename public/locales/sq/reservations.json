@@ -4,8 +4,8 @@
     "loading": "Po ngarkohen rezervimet…",
     "error": "Gabim gjatë ngarkimit të rezervimeve.",
     "sections": {
-      "confirmed": "Rezervime të miratuara",
-      "pending": "Rezervime në pritje"
+      "confirmed": "✅ Rezervime të miratuara",
+      "pending": "⏳ Rezervime në pritje"
     },
     "empty": {
       "approved": "Nuk ka rezervime të miratuara.",

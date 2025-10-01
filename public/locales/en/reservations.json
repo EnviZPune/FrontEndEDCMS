@@ -4,8 +4,8 @@
     "loading": "Loading reservations…",
     "error": "Error loading reservations.",
     "sections": {
-      "confirmed": "Confirmed Reservations",
-      "pending": "Pending Reservations"
+      "confirmed": "✅ Confirmed Reservations",
+      "pending": "⏳ Pending Reservations"
     },
     "empty": {
       "approved": "No approved reservations.",

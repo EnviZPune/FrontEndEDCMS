@@ -18,6 +18,37 @@ export default function ProductPanel({ business }) {
   const getRef = useRef(get)
   useEffect(() => { getRef.current = get }, [get])
 
+  // ─── Helpers for robust array handling ───────────────────────────────────
+  const csv = (s) =>
+    (s || "")
+      .split(",")
+      .map(x => x.trim())
+      .filter(Boolean)
+
+  const parseMaybeJsonArray = (val) => {
+    if (val == null) return []
+    if (Array.isArray(val)) return val.map(String)
+
+    const s = String(val).trim()
+    if (!s) return []
+
+    // JSON array string?
+    if ((s.startsWith("[") && s.endsWith("]")) || (s.startsWith("\"[") && s.endsWith("]\""))) {
+      try {
+        const parsed = JSON.parse(s)
+        if (Array.isArray(parsed)) return parsed.map(String)
+      } catch {}
+    }
+
+    // CSV string?
+    if (s.includes(",")) return csv(s).map(String)
+
+    // Single token → wrap
+    return [s]
+  }
+
+  const joinForDisplay = (val) => parseMaybeJsonArray(val).join(", ")
+
   // ─── State ───────────────────────────────────────────────────────────────
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
@@ -52,8 +83,8 @@ export default function ProductPanel({ business }) {
     brand: "",
     model: "",
     photos: [],
-    colors: "",
-    size: "",
+    colors: "",    // CSV in UI; array for API
+    size: "",      // CSV in UI; array for API
     material: "",
   })
 
@@ -102,19 +133,16 @@ export default function ProductPanel({ business }) {
     return null
   }, [t])
 
-  // Accept comma-separated tokens. Each token may be:
-  //  - Alpha size: XXS, XS, S, M, L, XL, XXL, XXXL
-  //  - "One-Size"/"OS"
-  //  - Numeric size: 1..200 (optional .5)
-  //  - Waist/Inseam: "32/30", "32-30", "32W/30L", "32W", "30L"
+  // Accept comma-separated tokens: alpha sizes, One-Size, numeric, waist/inseam, etc.
   const ALPHA = /^(XXXS|XXS|XS|S|M|L|XL|XXL|XXXL)$/i
   const ONESIZE = /^(ONE-?SIZE|OS)$/i
   const NUMERIC = /^(?:\d{1,3})(?:\.\d)?$/ // e.g., 36, 9.5
   const WAIST_INSEAM = /^(?:\d{2,3})(?:[Ww])?(?:[ /-]?(?:\d{2,3})(?:[Ll])?)?$/ // 32/30, 32-30, 32W/30L, 32W, 30L
+
   const validateSize = useCallback((v) => {
     const s = (v || "").trim()
     if (!s) return t("products.errors.size_required", { defaultValue: "Size is required" })
-    const tokens = s.split(",").map(x => x.trim()).filter(Boolean)
+    const tokens = csv(s)
     if (tokens.length === 0) return t("products.errors.size_required", { defaultValue: "Size is required" })
 
     const bad = tokens.filter(tok => {
@@ -264,7 +292,7 @@ export default function ProductPanel({ business }) {
     try {
       const list = Array.from(files)
       const filesToUpload = list.slice(0, Math.max(0, 10 - form.photos.length))
-      const uploadedUrls = await Promise.all(list.slice(0, filesToUpload.length).map(uploadImageToGCS))
+      const uploadedUrls = await Promise.all(filesToUpload.map(uploadImageToGCS))
       const validUrls = uploadedUrls.filter(Boolean)
       if (validUrls.length > 0) {
         setForm((prev) => ({ ...prev, photos: [...prev.photos, ...validUrls] }))
@@ -305,22 +333,27 @@ export default function ProductPanel({ business }) {
       form.photos.length > 0
         ? [form.photos[mainPhotoIndex], ...form.photos.filter((_, idx) => idx !== mainPhotoIndex)]
         : []
+
+    // Convert CSV input → array of strings for API
+    const sizesArray = csv(form.size).map(String)
+    const colorsArray = csv(form.colors).map(String)
+
     return {
       businessId: validBusinessId ? bId : null,
       businessIds: validBusinessId ? [bId] : [],
       clothingItemId: editingId ?? undefined,
 
-      name: form.name.trim(),
-      description: form.description.trim(),
+      name: (form.name || "").trim(),
+      description: (form.description || "").trim(),
       price: Number.parseFloat(form.price) || 0,
       quantity: Number.parseInt(form.quantity, 10) || 0,
       clothingCategoryId: form.categoryId ? +form.categoryId : null,
-      brand: form.brand.trim(),
-      model: form.model.trim(),
+      brand: (form.brand || "").trim(),
+      model: (form.model || "").trim(),
       pictureUrls: orderedPhotos,
-      colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
-      sizes: (form.size || "").trim(),   // stored as string (validated)
-      material: form.material.trim(),
+      colors: colorsArray,   // ✅ array
+      sizes: sizesArray,     // ✅ array
+      material: (form.material || "").trim(),
     }
   }, [form, mainPhotoIndex, validBusinessId, bId, editingId])
 
@@ -369,7 +402,6 @@ export default function ProductPanel({ business }) {
 
     setFieldErrors({ name: nameErr, price: priceErr, quantity: qtyErr, size: sizeErr })
 
-    // also block if no business selected
     const bizErr = !validBusinessId ? t("products.errors.select_business_first", { defaultValue: "Select a business first." }) : null
 
     if (nameErr || priceErr || qtyErr || sizeErr || bizErr) {
@@ -386,7 +418,7 @@ export default function ProductPanel({ business }) {
       const dto = buildDto()
       await assertBusinessExists()
 
-      if (role === "employee") {
+      if ((role || "").toLowerCase() === "employee") {
         const itemDtoProposal = {
           BusinessId: dto.businessId,
           BusinessIds: dto.businessIds,
@@ -399,8 +431,8 @@ export default function ProductPanel({ business }) {
           Brand: dto.brand,
           Model: dto.model,
           PictureUrls: dto.pictureUrls,
-          Colors: dto.colors,
-          Sizes: dto.sizes,
+          Colors: dto.colors,   // ✅ array
+          Sizes: dto.sizes,     // ✅ array
           Material: dto.material,
         }
 
@@ -448,7 +480,7 @@ export default function ProductPanel({ business }) {
   const handleDelete = useCallback(async (id) => {
     if (!validBusinessId) return
     const confirmMessage =
-      role === "employee"
+      (role || "").toLowerCase() === "employee"
         ? t("products.confirms.delete_request", { defaultValue: "Submit delete request for approval?" })
         : t("products.confirms.delete_permanent", { defaultValue: "Permanently delete this product?" })
 
@@ -456,7 +488,7 @@ export default function ProductPanel({ business }) {
 
     setLoading(true); setError(null)
     try {
-      if (role === "employee") {
+      if ((role || "").toLowerCase() === "employee") {
         await post("/ProposedChanges/submit", {
           BusinessId: bId,
           Type: "Delete",
@@ -494,6 +526,9 @@ export default function ProductPanel({ business }) {
             })()
           : []
 
+    const sizesArr = parseMaybeJsonArray(product.sizes)
+    const colorsArr = parseMaybeJsonArray(product.colors)
+
     setEditingId(product.clothingItemId)
     setForm({
       name: product.name || "",
@@ -504,12 +539,11 @@ export default function ProductPanel({ business }) {
       brand: product.brand || "",
       model: product.model || "",
       photos: pics,
-      colors: Array.isArray(product.colors) ? product.colors.join(", ") : product.colors || "",
-      size: Array.isArray(product.sizes) ? product.sizes.join(", ") : (product.sizes != null ? String(product.sizes) : ""),
+      colors: colorsArr.join(", "),
+      size: sizesArr.join(", "),
       material: product.material || "",
     })
     setMainPhotoIndex(0); setError(null)
-    // Reset field errors/touched when entering edit
     setTouched({ name: false, price: false, quantity: false, size: false })
     setFieldErrors({ name: null, price: null, quantity: null, size: null })
   }, [])
@@ -585,7 +619,7 @@ export default function ProductPanel({ business }) {
     !validateSize(form.size) &&
     validBusinessId
 
-  // ─── Menus: close on outside / Esc; prevent background scroll for sheet ─
+  // ─── Menus & sheet behavior ─────────────────────────────────────────────
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") {
@@ -598,20 +632,18 @@ export default function ProductPanel({ business }) {
   }, [])
 
   useEffect(() => {
-    // lock scroll when bottom sheet is open
     const root = document.documentElement
     if (sheetProduct) root.classList.add("no-scroll")
     else root.classList.remove("no-scroll")
     return () => root.classList.remove("no-scroll")
   }, [sheetProduct])
 
-  // helpers to open menus depending on screen
   const openActions = (product) => {
     if (isPhone()) {
-      setSheetProduct(product)   // bottom sheet
+      setSheetProduct(product)
       setOpenMenuId(null)
     } else {
-      setOpenMenuId((prev) => (prev === product.clothingItemId ? null : product.clothingItemId)) // popover
+      setOpenMenuId((prev) => (prev === product.clothingItemId ? null : product.clothingItemId))
       setSheetProduct(null)
     }
   }
@@ -772,6 +804,21 @@ export default function ProductPanel({ business }) {
           </div>
         </div>
 
+        <div className="form-group">
+          <div className="grid two-cols">
+            <div className="form-group">
+              <label htmlFor="product-colors">{t("products.fields.colors", { defaultValue: "Colors" })}</label>
+              <input
+                id="product-colors"
+                placeholder={t("products.placeholders.colors", { defaultValue: "Red, Blue, Green (comma separated)" })}
+                value={form.colors}
+                onChange={(e) => setForm((f) => ({ ...f, colors: e.target.value }))}
+                disabled={loading}
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Description */}
         <div className="form-group">
           <label htmlFor="product-description">{t("products.fields.description", { defaultValue: "Description" })}</label>
@@ -898,6 +945,10 @@ export default function ProductPanel({ business }) {
                   const pinned = isPinned(p.clothingItemId)
                   const pinLabel = pinned ? t("products.pin.unpin", { defaultValue: "Unpin" }) : t("products.pin.pin", { defaultValue: "Pin" })
                   const quantityZero = (p.quantity ?? 0) <= 0
+
+                  const displaySizes = joinForDisplay(p.sizes)
+                  const displayColors = joinForDisplay(p.colors)
+
                   return (
                     <li key={p.clothingItemId}>
                       <div className="row-main">
@@ -908,8 +959,9 @@ export default function ProductPanel({ business }) {
                         <div className="product-details">
                           {p.model && <span>{t("products.badges.model", { defaultValue: "Model" })}: {p.model}</span>}
                           <span className="price">{t("products.badges.price", { defaultValue: "Price" })}: LEK {p.price}</span>
-                          {p.sizes && <span>{t("products.badges.size", { defaultValue: "Size" })}: {p.sizes}</span>}
+                          {displaySizes && <span>{t("products.badges.size", { defaultValue: "Size" })}: {displaySizes}</span>}
                           <span className="quantity">{t("products.badges.qty", { defaultValue: "Qty" })}: {p.quantity}</span>
+                          {displayColors && <span className="colors">{t("products.badges.color", { defaultValue: "Color" })}: {displayColors}</span>}
                         </div>
                       </div>
 

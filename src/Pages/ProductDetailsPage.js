@@ -12,6 +12,18 @@ const API_BASE = "https://api.triwears.com/api";
 const LOADING_GIF_LIGHT = "/Assets/triwears-black-loading.gif"; // black on white
 const LOADING_GIF_DARK  = "/Assets/triwears-white-loading.gif"; // white on dark
 
+// ------ Status helpers (normalize string/number) ------
+const StatusMap = { Pending: 0, Confirmed: 1, Cancelled: 2, Completed: 3 };
+const toStatusNumber = (val) => {
+  if (typeof val === "number") return val;
+  if (typeof val === "string") {
+    if (val in StatusMap) return StatusMap[val];
+    const n = Number(val);
+    return Number.isFinite(n) ? n : StatusMap.Pending;
+  }
+  return StatusMap.Pending;
+};
+
 const getToken = () => {
   const raw = localStorage.getItem("token") || localStorage.getItem("authToken");
   if (!raw || raw.trim() === "") return null;
@@ -40,6 +52,29 @@ const slugify = (str) =>
     .replace(/[^a-z0-9-]/g, "")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
+
+const splitTokens = (val) => {
+  if (!val) return [];
+  if (Array.isArray(val)) {
+    return val.map(String).map(s => s.trim()).filter(Boolean);
+  }
+  if (typeof val === "string") {
+    // Try JSON array first
+    const s = val.trim();
+    if (s.startsWith("[") && s.endsWith("]")) {
+      try {
+        const arr = JSON.parse(s);
+        return Array.isArray(arr) ? arr.map(String).map(x => x.trim()).filter(Boolean) : [];
+      } catch {}
+    }
+    // fallback: comma-separated
+    return s.split(",").map(x => x.trim()).filter(Boolean);
+  }
+  return [];
+};
+
+// Format sizes for display (S, M, L) rather than concatenated
+const formatSizesForDisplay = (val) => splitTokens(val).join(", ");
 
 const ProductDetailsPage = () => {
   const { t, ready } = useTranslation("productdetail", { useSuspense: false });
@@ -82,6 +117,11 @@ const ProductDetailsPage = () => {
     };
   }, []);
 
+  // -------- Variant (size/color) modal state --------
+  const [variantOpen, setVariantOpen] = useState(false);
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [variantError, setVariantError] = useState("");
 
   // -------- Load "my bookings" count (client-side filter) --------
   const loadMyBookingCount = useCallback(async (clothingItemId) => {
@@ -99,8 +139,14 @@ const ProductDetailsPage = () => {
       if (!res.ok) throw new Error(`Bookings fetch failed: ${res.status}`);
       const list = await res.json();
 
+      // Count only this product's reservations that are Pending or Confirmed
       const count = Array.isArray(list)
-        ? list.filter((b) => String(b?.clothingItemId) === String(clothingItemId)).length
+        ? list.filter((b) => {
+            const sameItem = String(b?.clothingItemId) === String(clothingItemId);
+            const rawStatus = (b?.status ?? b?.Status);
+            const statusNum = toStatusNumber(rawStatus);
+            return sameItem && (statusNum === StatusMap.Pending || statusNum === StatusMap.Confirmed);
+          }).length
         : 0;
 
       setMyBookingCount(count);
@@ -296,28 +342,39 @@ const ProductDetailsPage = () => {
     };
   }, [viewerOpen, dragging]);
 
-  const handleReserve = async () => {
-  if (!product) return;
+  // Derived variant options
+  const sizeOptions = useMemo(() => splitTokens(product?.sizes), [product]);
+  const colorOptions = useMemo(() => splitTokens(product?.colors), [product]);
 
-  // NEW: block when out of stock
-  if (!isNaN(Number(product.quantity)) && Number(product.quantity) <= 0) {
-    alert(t("booking.out_of_stock_msg", { defaultValue: "Out Of Stock, Please Come Back Later" }));
-    return;
-  }
+  // Reserve with current selections
+  const submitReservation = useCallback(async (sizeOpt, colorOpt) => {
+    if (!product) return;
 
-  const token = getToken();
-  if (!token) {
-    alert(t("booking.login_required", { defaultValue: "Please log in to make a reservation." }));
-    return;
-  }
+    // Out of stock guard
+    if (!isNaN(Number(product.quantity)) && Number(product.quantity) <= 0) {
+      alert(t("booking.out_of_stock_msg", { defaultValue: "Out Of Stock, Please Come Back Later" }));
+      return;
+    }
 
-  setBooking(true);
-  try {
-    const res = await fetch(`${API_BASE}/Reservation`, {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify({ clothingItemId: product.clothingItemId }),
-    });
+    const token = getToken();
+    if (!token) {
+      alert(t("booking.login_required", { defaultValue: "Please log in to make a reservation." }));
+      return;
+    }
+
+    setBooking(true);
+    try {
+      const body = {
+        clothingItemId: product.clothingItemId,
+      };
+      if (sizeOpt) body.selectedSize = sizeOpt;
+      if (colorOpt) body.selectedColor = colorOpt;
+
+      const res = await fetch(`${API_BASE}/Reservation`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(body),
+      });
 
       if (res.status === 401) {
         navigate("/login");
@@ -327,7 +384,7 @@ const ProductDetailsPage = () => {
       if (res.ok) {
         alert(t("booking.success", { defaultValue: "Product booked successfully!" }));
 
-        // Optimistic local increment for snappy UI
+        // Optimistic local increment
         setMyBookingCount((prev) => {
           const next = (prev || 0) + 1;
           try {
@@ -336,7 +393,7 @@ const ProductDetailsPage = () => {
           return next;
         });
 
-        // Authoritative refresh from server, then notify other tabs/pages
+        // Refresh from server + notify other tabs
         await loadMyBookingCount(product.clothingItemId);
         try {
           localStorage.setItem("reservationUpdated", Date.now().toString());
@@ -349,8 +406,47 @@ const ProductDetailsPage = () => {
       alert(t("errors.booking_failed", { defaultValue: "An error occurred while booking." }));
     } finally {
       setBooking(false);
+      setVariantOpen(false);
     }
-  };
+  }, [product, t, navigate, loadMyBookingCount]);
+
+  // Button click → open variant modal (if needed) or submit immediately
+  const handleBookClick = useCallback(() => {
+    if (!product) return;
+
+    const sizes = sizeOptions;
+    const colors = colorOptions;
+
+    // If there is more than one choice for size or color, ask user
+    const requiresSize = sizes.length > 1;
+    const requiresColor = colors.length > 1;
+
+    if (requiresSize || requiresColor) {
+      // Pre-select the first available option(s) for convenience
+      setSelectedSize(sizes[0] || "");
+      setSelectedColor(colors[0] || "");
+      setVariantError("");
+      setVariantOpen(true);
+      return;
+    }
+
+    // Otherwise, pass through the single/empty values directly
+    submitReservation(sizes[0] || "", colors[0] || "");
+  }, [product, sizeOptions, colorOptions, submitReservation]);
+
+  const confirmVariant = useCallback(() => {
+    // simple validation when a field has >1 option but nothing selected
+    if (sizeOptions.length > 1 && !selectedSize) {
+      setVariantError(t("booking.size_required", { defaultValue: "Please choose a size." }));
+      return;
+    }
+    if (colorOptions.length > 1 && !selectedColor) {
+      setVariantError(t("booking.color_required", { defaultValue: "Please choose a color." }));
+      return;
+    }
+    setVariantError("");
+    submitReservation(selectedSize || "", selectedColor || "");
+  }, [selectedSize, selectedColor, sizeOptions.length, colorOptions.length, submitReservation, t]);
 
   // Back to the product's shop
   const backToShop = async () => {
@@ -386,22 +482,22 @@ const ProductDetailsPage = () => {
   if (!ready) {
     return (
       <>
-          <div
-            className="loading-container"
-            aria-live="polite"
-            aria-busy="true"
-            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "40px 0" }}
-          >
-            <img
-              className="loading-gif"
-              src={isDarkMode ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
-              alt="Loading"
-              width={140}
-              height={140}
-              style={{ objectFit: "contain" }}
-            />
-            <p className="loading-text">Loading ...</p>
-          </div>
+        <div
+          className="loading-container"
+          aria-live="polite"
+          aria-busy="true"
+          style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "40px 0" }}
+        >
+          <img
+            className="loading-gif"
+            src={isDarkMode ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
+            alt="Loading"
+            width={140}
+            height={140}
+            style={{ objectFit: "contain" }}
+          />
+          <p className="loading-text">Loading ...</p>
+        </div>
       </>
     );
   }
@@ -475,8 +571,11 @@ const ProductDetailsPage = () => {
     ? t("price_fmt", { value: priceNumber.toFixed(2), defaultValue: `${priceNumber.toFixed(2)} LEK` })
     : t("price_fmt", { value: product.price, defaultValue: `${product.price} LEK` });
 
-    const qtyNumber = Number(product.quantity);
-    const isOutOfStock = !isNaN(qtyNumber) && qtyNumber <= 0;
+  const qtyNumber = Number(product.quantity);
+  const isOutOfStock = !isNaN(qtyNumber) && qtyNumber <= 0;
+
+  // Formatted sizes for display card
+  const sizesDisplay = formatSizesForDisplay(product.sizes);
 
   return (
     <>
@@ -576,15 +675,15 @@ const ProductDetailsPage = () => {
                 </p>
               </div>
               <div className="info-card">
-                  <p>
-                    <strong>{t("fields.quantity", { defaultValue: "Quantity" })}:</strong> {product.quantity}
-                    {isOutOfStock && (
-                      <span style={{ marginLeft: 8, color: "#b91c1c", fontWeight: 600 }}>
-                        {t("stock.out_now", { defaultValue: "Currently Out Of Stock" })}
-                      </span>
-                    )}
-                  </p>
-                </div>
+                <p>
+                  <strong>{t("fields.quantity", { defaultValue: "Quantity" })}:</strong> {product.quantity}
+                  {isOutOfStock && (
+                    <span style={{ marginLeft: 8, color: "#b91c1c", fontWeight: 600 }}>
+                      {t("stock.out_now", { defaultValue: "Currently Out Of Stock" })}
+                    </span>
+                  )}
+                </p>
+              </div>
               <div className="info-card">
                 <p>
                   <strong>{t("fields.material", { defaultValue: "Material" })}:</strong> {product.material}
@@ -593,30 +692,31 @@ const ProductDetailsPage = () => {
               <div className="info-card">
                 <p>
                   <strong>{t("fields.colors", { defaultValue: "Colors" })}:</strong>{" "}
-                  {Array.isArray(product.colors) ? product.colors.join(", ") : product.colors}
+                  {Array.isArray(product.colors) ? product.colors.join(", ") : (splitTokens(product.colors).join(", ") || product.colors)}
                 </p>
               </div>
               <div className="info-card">
                 <p>
-                  <strong>{t("fields.size", { defaultValue: "Size" })}:</strong> {product.sizes}
+                  <strong>{t("fields.size", { defaultValue: "Size" })}:</strong> {sizesDisplay}
                 </p>
               </div>
             </div>
 
             {/* Booking controls */}
-           <button
-  onClick={handleReserve}
-  disabled={booking || isOutOfStock}
-  className="rezerve-button"
->
-  {booking
-    ? t("booking.reserving", { defaultValue: "Booking this product..." })
-    : isOutOfStock
-    ? t("stock.out_now", { defaultValue: "Currently Out Of Stock" })
-    : myBookingCount > 0
-    ? t("booking.reserve_another", { defaultValue: "Book Another" })
-    : t("booking.reserve", { defaultValue: "Book Product" })}
-</button>
+            <button
+              onClick={handleBookClick}
+              disabled={booking || isOutOfStock}
+              className="rezerve-button"
+            >
+              {booking
+                ? t("booking.reserving", { defaultValue: "Booking this product..." })
+                : isOutOfStock
+                ? t("stock.out_now", { defaultValue: "Currently Out Of Stock" })
+                : myBookingCount > 0
+                ? t("booking.reserve_another", { defaultValue: "Book Another" })
+                : t("booking.reserve", { defaultValue: "Book Product" })}
+            </button>
+
             {myBookingCount > 0 && (
               <div className="info-card" style={{ marginTop: 8 }}>
                 <p>
@@ -628,6 +728,122 @@ const ProductDetailsPage = () => {
           </div>
         </div>
       </div>
+
+      {/* ---------- VARIANT PICKER MODAL (Size/Color) ---------- */}
+      {variantOpen && (
+        <div
+          className="variant-overlay"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => !booking && setVariantOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.45)",
+            display: "grid",
+            placeItems: "center",
+            zIndex: 1000
+          }}
+        >
+          <div
+            className="variant-panel"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#fff",
+              color: "#111",
+              width: "min(92vw, 440px)",
+              borderRadius: 12,
+              padding: 20,
+              boxShadow: "0 10px 40px rgba(0,0,0,0.25)",
+              position: "relative"
+            }}
+          >
+            <button
+              aria-label={t("lightbox.close", { defaultValue: "Close" })}
+              onClick={() => !booking && setVariantOpen(false)}
+              style={{
+                position: "absolute",
+                top: 6, right: 10,
+                border: "none", background: "transparent",
+                fontSize: 22, cursor: "pointer", color: "#666"
+              }}
+            >
+              ×
+            </button>
+
+            <h3 style={{ margin: "0 0 12px 0" }}>
+              {t("booking.choose_variant", { defaultValue: "Choose options" })}
+            </h3>
+
+            {sizeOptions.length > 1 && (
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>
+                  {t("fields.size", { defaultValue: "Size" })}
+                </label>
+                <select
+                  value={selectedSize}
+                  onChange={(e) => setSelectedSize(e.target.value)}
+                  disabled={booking}
+                  style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid #ddd" }}
+                >
+                  {sizeOptions.map((sz) => (
+                    <option key={sz} value={sz}>{sz}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {colorOptions.length > 1 && (
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: "block", marginBottom: 6, fontWeight: 600 }}>
+                  {t("fields.colors", { defaultValue: "Colors" })}
+                </label>
+                <select
+                  value={selectedColor}
+                  onChange={(e) => setSelectedColor(e.target.value)}
+                  disabled={booking}
+                  style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid #ddd" }}
+                >
+                  {colorOptions.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {variantError && (
+              <div style={{ color: "#b91c1c", marginBottom: 8, fontWeight: 600 }}>
+                {variantError}
+              </div>
+            )}
+
+            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+              <button
+                onClick={() => setVariantOpen(false)}
+                disabled={booking}
+                style={{
+                  background: "#f3f4f6", color: "#111", border: "1px solid #e5e7eb",
+                  padding: "8px 14px", borderRadius: 8, cursor: "pointer"
+                }}
+              >
+                {t("common.cancel", { defaultValue: "Cancel" })}
+              </button>
+              <button
+                onClick={confirmVariant}
+                disabled={booking}
+                style={{
+                  background: "#111827", color: "#fff", border: "none",
+                  padding: "8px 14px", borderRadius: 8, cursor: "pointer"
+                }}
+              >
+                {booking
+                  ? t("booking.reserving", { defaultValue: "Booking..." })
+                  : t("booking.confirm", { defaultValue: "Confirm" })}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ---------- LIGHTBOX VIEWER ---------- */}
       {viewerOpen && (

@@ -1,3 +1,4 @@
+// src/Components/Settings/panels/ReservationsPanel.jsx
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useApiClient } from '../hooks/useApiClient';
@@ -17,6 +18,10 @@ const toStatusNumber = (val) => {
   return StatusMap.Pending;
 };
 const isStatus = (reservation, name) => toStatusNumber(reservation?.status) === StatusMap[name];
+
+// Robust getters (camelCase or PascalCase, just in case)
+const getSize  = (r) => r?.selectedSize  ?? r?.SelectedSize  ?? null;
+const getColor = (r) => r?.selectedColor ?? r?.SelectedColor ?? null;
 
 export default function ReservationsPanel({ business }) {
   const { t } = useTranslation('reservations');
@@ -136,6 +141,8 @@ export default function ReservationsPanel({ business }) {
                 <th>{t('reservations.table.id', { defaultValue: 'ID' })}</th>
                 <th>{t('reservations.table.product', { defaultValue: 'Product' })}</th>
                 <th>{t('reservations.table.customer', { defaultValue: 'Customer' })}</th>
+                <th>{t('reservations.table.size', { defaultValue: 'Size' })}</th>
+                <th>{t('reservations.table.color', { defaultValue: 'Color' })}</th>
                 <th>{t('reservations.table.created_at', { defaultValue: 'Created At' })}</th>
                 <th>{t('reservations.table.actions', { defaultValue: 'Actions' })}</th>
               </tr>
@@ -143,11 +150,15 @@ export default function ReservationsPanel({ business }) {
             <tbody>
               {confirmed.map(r => {
                 const busy = actionState.id === r.reservationId;
+                const size  = getSize(r)  || '—';
+                const color = getColor(r) || '—';
                 return (
                   <tr key={r.reservationId}>
                     <td>{r.reservationId}</td>
                     <td>{r.productName}</td>
                     <td>{r.customerName}</td>
+                    <td>{size}</td>
+                    <td>{color}</td>
                     <td>{new Date(r.createdAt).toLocaleString()}</td>
                     <td>
                       <button onClick={() => handleComplete(r.reservationId)} disabled={busy}>
@@ -183,6 +194,8 @@ export default function ReservationsPanel({ business }) {
                 <th>{t('reservations.table.id', { defaultValue: 'ID' })}</th>
                 <th>{t('reservations.table.product', { defaultValue: 'Product' })}</th>
                 <th>{t('reservations.table.customer', { defaultValue: 'Customer' })}</th>
+                <th>{t('reservations.table.size', { defaultValue: 'Size' })}</th>
+                <th>{t('reservations.table.color', { defaultValue: 'Color' })}</th>
                 <th>{t('reservations.table.created_at', { defaultValue: 'Created At' })}</th>
                 <th>{t('reservations.table.actions', { defaultValue: 'Actions' })}</th>
               </tr>
@@ -190,11 +203,15 @@ export default function ReservationsPanel({ business }) {
             <tbody>
               {pending.map(r => {
                 const busy = actionState.id === r.reservationId;
+                const size  = getSize(r)  || '—';
+                const color = getColor(r) || '—';
                 return (
                   <tr key={r.reservationId}>
                     <td>{r.reservationId}</td>
                     <td>{r.productName}</td>
                     <td>{r.customerName}</td>
+                    <td>{size}</td>
+                    <td>{color}</td>
                     <td>{new Date(r.createdAt).toLocaleString()}</td>
                     <td>
                       <button

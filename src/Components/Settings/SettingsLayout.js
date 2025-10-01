@@ -20,13 +20,10 @@ const PANEL_DEFS = [
 
 /** Panels employees are allowed to see (hide sensitive/owner-only ones) */
 const EMPLOYEE_ALLOWED_PANELS = new Set([
-  "BusinessInfo",
   "Products",
   "Categories",
   "Photos",
-  "PendingChanges",
   "Reservations",
-  "Notifications",
   "MyShops",
 ]);
 
