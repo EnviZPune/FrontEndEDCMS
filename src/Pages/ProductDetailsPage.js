@@ -11,6 +11,8 @@ const API_BASE = "https://api.triwears.com/api";
 // Theme-aware loading GIFs
 const LOADING_GIF_LIGHT = "/Assets/triwears-black-loading.gif"; // black on white
 const LOADING_GIF_DARK  = "/Assets/triwears-white-loading.gif"; // white on dark
+const DEFAULT_PRODUCT_LIGHT = "/Assets/default-product-light.png";
+const DEFAULT_PRODUCT_DARK  = "/Assets/default-product-dark.png";
 
 // ------ Status helpers (normalize string/number) ------
 const StatusMap = { Pending: 0, Confirmed: 1, Cancelled: 2, Completed: 3 };
@@ -256,7 +258,8 @@ const ProductDetailsPage = () => {
     else if (currentIndex >= parsedImages.length) setCurrentIndex(0);
   }, [parsedImages, currentIndex]);
 
-  const currentMainImage = parsedImages.length > 0 ? parsedImages[currentIndex] : null;
+const fallbackProductImg = isDarkMode ? DEFAULT_PRODUCT_DARK : DEFAULT_PRODUCT_LIGHT;
+const currentMainImage = parsedImages.length > 0 ? parsedImages[currentIndex] : fallbackProductImg;
 
   const handleThumbnailClick = (_url, idx) => setCurrentIndex(idx);
 
@@ -620,6 +623,7 @@ const ProductDetailsPage = () => {
                   className="main-image"
                   style={{ display: "block", width: "100%", cursor: "zoom-in" }}
                   onClick={openViewer}
+                  onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = fallbackProductImg; }}
                 />
 
                 <button
@@ -648,6 +652,7 @@ const ProductDetailsPage = () => {
                   alt={t("carousel.thumb_alt", { index: idx + 1, defaultValue: `Thumbnail ${idx + 1}` })}
                   onClick={() => handleThumbnailClick(url, idx)}
                   className={`thumbnail ${currentIndex === idx ? "active" : ""}`}
+                  onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = fallbackProductImg; }}Li
                 />
               ))}
             </div>
@@ -893,6 +898,7 @@ const ProductDetailsPage = () => {
                   transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px)) scale(${zoom})`,
                 }}
                 draggable={false}
+                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = fallbackProductImg; }}
               />
             </div>
 

@@ -15,7 +15,8 @@ const DEFAULT_LOGO_LIGHT = "/Assets/default-shop-logo-light.png";
 const DEFAULT_LOGO_DARK = "/Assets/default-shop-logo-dark.png";
 const DEFAULT_COVER_LIGHT = "/Assets/default-shop-cover-light.png";
 const DEFAULT_COVER_DARK = "/Assets/default-shop-cover-dark.png";
-const DEFAULT_PRODUCT = "/Assets/default-product.jpg";
+const DEFAULT_PRODUCT_LIGHT = "/Assets/default-product-light.png";
+const DEFAULT_PRODUCT_DARK  = "/Assets/default-product-dark.png";
 /* ======================================================================= */
 
 /* Loading Spinners */
@@ -612,11 +613,10 @@ if (loading) {
                 <>
                   <ul className="sd-product-list">
                     {pageItems.map((p) => {
-                      const img =
-                        Array.isArray(p.pictureUrls) && p.pictureUrls.length > 0 && typeof p.pictureUrls[0] === "string"
-                          ? p.pictureUrls[0]
-                          : DEFAULT_PRODUCT;
-
+                     const firstPic =
+                    Array.isArray(p.pictureUrls) &&
+                    p.pictureUrls.find((u) => typeof u === "string" && u.trim().length > 0);
+                  const fallbackSrc = isDarkMode ? DEFAULT_PRODUCT_DARK : DEFAULT_PRODUCT_LIGHT;
                       const name =
                         (p.name && p.brand && `${p.name} - ${p.brand}`) ||
                         p.name ||
@@ -667,8 +667,17 @@ if (loading) {
                           )}
                           
                           <Link to={`/product/${p.clothingItemId}`} className="sd-product-link">
-                            <img className="sd-product-image" src={img} alt={t("product.alt", { shop: shop.name })} />
-                            <div className="sd-product-inline">
+                                  <img
+                                    key={fallbackSrc}  // ensures theme switch swaps the placeholder
+                                    className="sd-product-image"
+                                    src={firstPic || fallbackSrc}
+                                    alt={t("product.alt", { shop: shop.name })}
+                                    onError={(e) => {
+                                      e.currentTarget.onerror = null;
+                                      e.currentTarget.src = fallbackSrc;
+                                    }}
+                                  />            
+                              <div className="sd-product-inline">
                               <span className="product-name">{name}</span>
                               <span className="product-price">{price}</span>
                               {desc && <span className="product-desc">{desc}</span>}

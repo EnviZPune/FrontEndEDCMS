@@ -8,6 +8,8 @@ import "../Styling/searchbar.css";
 const API_BASE = "https://api.triwears.com/api";
 const DEFAULT_LOGO_LIGHT = "/Assets/default-shop-logo-light.png";
 const DEFAULT_LOGO_DARK = "/Assets/default-shop-logo-dark.png";
+const DEFAULT_PRODUCT_LIGHT = "/Assets/default-product-light.png";
+const DEFAULT_PRODUCT_DARK  = "/Assets/default-product-dark.png";
 
 function getToken() {
   const raw = localStorage.getItem("token");
@@ -418,8 +420,7 @@ export default function SearchBar() {
                   price: i.price,
                   category: i.category,
                   description: i.description,
-                  imageUrl: i.pictureUrls?.[0] || "/default-product.jpg",
-                  sizeLabel,
+                  imageUrl: (Array.isArray(i.pictureUrls) && i.pictureUrls.find(u => typeof u === "string" && u.trim())) || "",                  sizeLabel,
                   sizeTokens,
                   __aliasTokens: aliasTokens,
                   __aliasText: aliasText,
@@ -557,7 +558,8 @@ export default function SearchBar() {
         itemMatches = fuseItems.search(expandedQuery || q).map((r) => r.item);
       }
 
-      const fallbackLogo = isDarkMode ? DEFAULT_LOGO_DARK : DEFAULT_LOGO_LIGHT;
+          const fallbackLogo    = isDarkMode ? DEFAULT_LOGO_DARK  : DEFAULT_LOGO_LIGHT;
+          const fallbackProduct = isDarkMode ? DEFAULT_PRODUCT_DARK : DEFAULT_PRODUCT_LIGHT;
 
       const shopsGroup = shopMatches.map((s) => ({
         type: "shop",
@@ -568,13 +570,13 @@ export default function SearchBar() {
       }));
 
       const itemsGroup = itemMatches.map((it) => ({
-        type: "item",
-        id: it.id,
-        name: it.name,
-        shopName: it.shopName || it.shopSlug,
-        imageUrl: it.imageUrl,
-        sizeLabel: it.sizeLabel || "",
-      }));
+      type: "item",
+      id: it.id,
+      name: it.name,
+      shopName: it.shopName || it.shopSlug,
+      imageUrl: it.imageUrl && it.imageUrl.trim() ? it.imageUrl : fallbackProduct,
+      sizeLabel: it.sizeLabel || "",
+    }));
 
       const categoriesGroup = categoryMatches.map((c) => ({ type: "category", name: c.name }));
 
@@ -715,8 +717,16 @@ export default function SearchBar() {
                       onClick={(e) => handleClick(item, e)}
                     >
                       {item.imageUrl && (
-                        <img src={item.imageUrl} alt={item.name} className="result-image" />
-                      )}
+                          <img
+                            src={item.imageUrl}
+                            alt={item.name}
+                            className="result-image"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = isDarkMode ? DEFAULT_PRODUCT_DARK : DEFAULT_PRODUCT_LIGHT;
+                            }}
+                          />
+                        )}
                       <span>
                         {highlight(item.name)}
                         {item.type === "item" && (

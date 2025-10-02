@@ -1,104 +1,300 @@
+/* =========================
+   THEME TOKENS
+   ========================= */
 :root {
-  --color-bg: #171718;
-  --color-card: #252527;
-  --color-primary: #5c6ac4;
-  --color-primary-light: #8c97e8;
-  --color-text: #ffffff;
-  --color-heading: #1f2a63;
-  --color-link: #9ea8e9;
-  --color-link-hover: #5d68be;
-  --radius: 12px;
-  --spacing: 16px;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  /* Brand */
+  --brand-600: #5c6ac4;
+  --brand-500: #7583df;
+  --brand-400: #8c97e8;
+
+  /* Light */
+  --bg: #f7f8fb;
+  --surface: #ffffff;
+  --elev-1: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --heading: #0b122b;
+  --link: #3b82f6;
+  --link-hover: #2563eb;
+  --border: #e5e7eb;
+
+  --radius-lg: 16px;
+  --radius-sm: 12px;
+  --shadow-sm: 0 8px 24px rgba(2, 6, 23, .06);
+  --shadow-md: 0 18px 44px rgba(2, 6, 23, .10);
+  --blur: saturate(160%) blur(10px);
 }
 
-.policy-container {
-  background: var(--color-card);
-  color: var(--color-text);
-  max-width: 900px;
-  margin: calc(2 * var(--spacing)) auto;
-  padding: var(--spacing);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.7;
-  margin-top: 98px;
+/* ===== DARK MODE TOKENS & OVERRIDES ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220;
+    --surface: #0f172a;
+    --elev-1: #0f172a;
+    --text: #e5e7eb;
+    --muted: #a3a7b3;
+    --heading: #f8fafc;
+    --link: #a5bfff;
+    --link-hover: #c7d6ff;
+    --border: #1f2a44;
+  }
+
+  .policy-content,
+  .policy-hero,
+  .toc-card {
+    background: var(--surface) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 22px 60px rgba(0,0,0,.55);
+  }
+
+  .policy-section h2 { color: var(--heading) !important; }
+  .policy-section p,
+  .policy-list li { color: var(--text) !important; }
+
+  .policy-content a { color: var(--link) !important; }
+  .policy-content a:hover { color: var(--link-hover) !important; }
+
+  .toc-list a {
+    color: var(--text) !important;
+    border-color: transparent !important;
+    background: transparent !important;
+  }
+  .toc-list a:hover {
+    background: rgba(255,255,255,.05) !important;
+    border-color: var(--border) !important;
+  }
+
+  .policy-page {
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(124,132,255,.14) 0%, transparent 60%),
+      radial-gradient(1000px 600px at 120% 0%, rgba(85,100,220,.12) 0%, transparent 60%),
+      var(--bg);
+  }
 }
 
-.policy-container h1 {
-  font-size: 2.5rem;
-  color: var(--color-heading);
-  text-align: center;
-  margin-bottom: calc(2 * var(--spacing));
+/* Accessible focus for both themes */
+.toc-list a:focus-visible,
+.policy-content a:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* =========================
+   GLOBAL
+   ========================= */
+html { scroll-behavior: smooth; }
+
+.policy-page {
+  min-height: 100dvh;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, color-mix(in oklab, var(--brand-400) 16%, transparent) 0%, transparent 60%),
+    radial-gradient(1000px 600px at 120% 0%, color-mix(in oklab, var(--brand-600) 14%, transparent) 0%, transparent 60%),
+    var(--bg);
+}
+
+/* =========================
+   LAYOUT
+   ========================= */
+.policy-shell {
+  max-width: 1200px;
+  margin: 96px auto 56px;
+  padding: clamp(16px, 2.2vw, 28px);
+}
+
+@media (min-width: 1024px) {
+  .policy-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+  }
+}
+
+/* =========================
+   HERO
+   ========================= */
+.policy-hero {
   position: relative;
+  isolation: isolate;           /* keep ::after behind text */
+  z-index: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  padding: clamp(18px, 3vw, 28px);
+  backdrop-filter: var(--blur);
+  background: color-mix(in oklab, var(--surface) 78%, transparent);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 18px;
 }
-
-.policy-container h1::after {
-  content: '';
-  display: block;
-  width: 80px;
-  height: 4px;
-  background: var(--color-primary);
-  margin: var(--spacing) auto 0;
-  border-radius: 2px;
-}
-
-.policy-container h2 {
-  font-size: 1.5rem;
-  color: var(--color-primary);
-  margin-top: calc(2 * var(--spacing));
-  margin-bottom: var(--spacing);
-}
-
-.policy-container p {
-  margin: var(--spacing) 0;
-  color: var(--color-text);
-}
-
-.policy-container ul {
-  list-style: none;
-  padding-left: 0;
-  margin: var(--spacing) 0;
-}
-
-.policy-container ul li {
-  position: relative;
-  padding-left: calc(2 * var(--spacing));
-  margin-bottom: var(--spacing);
-}
-
-.policy-container ul li::before {
-  content: '✔';
+.policy-hero::after {
+  content: "";
   position: absolute;
-  left: 0;
-  top: 0.2em;
-  color: var(--color-primary);
+  inset: -30%;
+  z-index: -1;                  /* <- below content */
+  background:
+    radial-gradient(280px 180px at 30% 0%, color-mix(in oklab, var(--brand-500) 22%, transparent) 0%, transparent 65%),
+    radial-gradient(220px 160px at 80% 120%, color-mix(in oklab, var(--brand-600) 20%, transparent) 0%, transparent 65%);
+  opacity: .38;
+  pointer-events: none;
 }
 
-.policy-container a {
-  color: var(--color-link);
+.policy-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .85rem;
+  color: var(--muted);
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+}
+
+.policy-title {
+  margin: 10px 0 6px;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  font-weight: 800;
+  color: var(--heading);
+  letter-spacing: -0.02em;
+}
+.policy-sub { margin: 0; color: var(--muted); font-size: .98rem; }
+
+.hero-divider {
+  height: 4px;
+  width: 96px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--brand-600), var(--brand-400));
+  margin-top: 14px;
+}
+
+/* =========================
+   CONTENT
+   ========================= */
+.policy-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.policy-section {
+  padding: clamp(16px, 2.2vw, 24px);
+  border-top: 1px solid var(--border);
+  position: relative;
+}
+.policy-section:first-child { border-top: 0; }
+
+.policy-section h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  color: var(--heading);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.policy-section h2 .sec-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--brand-600) 18%, transparent);
+  color: var(--heading);
+  font-size: 16px;
+}
+.policy-section p { margin: 8px 0; color: var(--text); }
+
+/* Lists */
+.policy-list {
+  list-style: none;
+  padding: 0; margin: 8px 0 0;
+  display: grid; gap: 8px;
+}
+.policy-list li {
+  position: relative;
+  padding-left: 28px;
+}
+.policy-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0; top: 0;
+  color: var(--brand-600);
+  font-weight: 800;
+}
+
+/* Inline links */
+.policy-content a {
+  color: var(--link);
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
+  font-weight: 600;
+}
+.policy-content a:hover { color: var(--link-hover); text-decoration: underline; }
+
+/* Meta */
+.policy-meta {
+  text-align: center;
+  color: var(--muted);
+  padding: 14px 18px 18px;
 }
 
-.policy-container a:hover {
-  color: var(--color-link-hover);
-  text-decoration: underline;
+/* =========================
+   RAIL (ToC)
+   ========================= */
+.policy-rail { position: relative; margin-top: 18px; }
+@media (min-width: 1024px) {
+  .policy-rail { position: sticky; top: 88px; height: fit-content; }
 }
 
-.policy-container strong {
-  color: var(--color-text);
+.toc-card {
+  background: var(--elev-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  padding: 14px;
+}
+.toc-title {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: .92rem;
+}
+.toc-list {
+  list-style: none; padding: 0; margin: 0; display: grid; gap: 8px;
+}
+.toc-list a {
+  display: block;
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+.toc-list a:hover {
+  border-color: var(--border);
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
 }
 
-@media (max-width: 600px) {
-  .policy-container {
-    padding: var(--spacing);
-  }
-  .policy-container h1 {
-    font-size: 2rem;
-  }
-  .policy-container h2 {
-    font-size: 1.3rem;
-  }
+/* =========================
+   FAB (Back to top)
+   ========================= */
+.back-to-top {
+  position: fixed;
+  right: 16px;
+  bottom: 18px;
+  z-index: 30;
+  border: 1px solid var(--border);
+  background: var(--elev-1);
+  color: var(--text);
+  width: 42px; height: 42px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-md);
+  display: grid; place-items: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+.back-to-top:hover { transform: translateY(-2px); }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }

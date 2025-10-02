@@ -31,14 +31,8 @@ const isLon = (n) => Number.isFinite(n) && Math.abs(n) <= 180;
 const validLatLon = ([lat, lon]) =>
   isLat(lat) && isLon(lon) && !(lat === 0 && lon === 0);
 
-/** Try many common shapes:
- * - explicit numeric fields (latitude/longitude, lat/lng, etc.)
- * - nested objects: { location: { lat, lng } }, { geo: { lat, lng } }, …
- * - arrays: coordinates: [lat, lon]
- * - strings: "lat,lon" / "lat; lon" / "lat lon"
- */
+/** Try many common shapes… */
 function parseCoordsFromBusiness(b) {
-  // explicit numeric fields on root
   const la =
     coerceNum(b?.latitude) ??
     coerceNum(b?.Lat) ??
@@ -50,7 +44,6 @@ function parseCoordsFromBusiness(b) {
     coerceNum(b?.Longitude);
   if (isLat(la) && isLon(lo)) return [la, lo];
 
-  // nested objects
   const bases = [
     b?.location,
     b?.Location,
@@ -80,7 +73,6 @@ function parseCoordsFromBusiness(b) {
     }
   }
 
-  // array-like
   const arrayish =
     (Array.isArray(b?.coordinates) && b.coordinates) ||
     (Array.isArray(b?.coords) && b.coords) ||
@@ -93,7 +85,6 @@ function parseCoordsFromBusiness(b) {
     if (Number.isFinite(a) && Number.isFinite(c)) return [a, c];
   }
 
-  // strings (including Business.Location)
   const candidates = [
     b?.mapCoordinates,
     b?.coordinates,
@@ -115,7 +106,7 @@ function parseCoordsFromBusiness(b) {
 
 function haversineKm([lat1, lon1], [lat2, lon2]) {
   const toRad = (d) => (d * Math.PI) / 180;
-  const R = 6371; // km
+  const R = 6371;
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
   const a =
@@ -125,14 +116,12 @@ function haversineKm([lat1, lon1], [lat2, lon2]) {
   return R * c;
 }
 
-// Given a raw pair [a,b] that might be [lat,lon] or [lon,lat],
-// choose the most plausible one, preferring the closest to `hintPos`.
-function normalizeLatLon(rawPair, hintPos /* [lat,lon] or null */) {
+function normalizeLatLon(rawPair, hintPos) {
   if (!Array.isArray(rawPair) || rawPair.length !== 2) return null;
   const [a, b] = rawPair;
 
-  const cand1 = isLat(a) && isLon(b) ? [a, b] : null; // assume [lat,lon]
-  const cand2 = isLat(b) && isLon(a) ? [b, a] : null; // assume [lon,lat] swapped
+  const cand1 = isLat(a) && isLon(b) ? [a, b] : null;
+  const cand2 = isLat(b) && isLon(a) ? [b, a] : null;
 
   if (cand1 && !cand2) return validLatLon(cand1) ? cand1 : null;
   if (!cand1 && cand2) return validLatLon(cand2) ? cand2 : null;
@@ -183,36 +172,27 @@ export default function ShopList() {
   const spotlightRef = useRef(null);
 
   // Near-me state
-  const [nearRaw, setNearRaw] = useState([]); // all shops (coords parsed, order unknown)
+  const [nearRaw, setNearRaw] = useState([]);
   const [nearLoading, setNearLoading] = useState(true);
   const [nearError, setNearError] = useState("");
   const [nearPage, setNearPage] = useState(1);
-  const [myPos, setMyPos] = useState(null); // [lat, lon]
+  const [myPos, setMyPos] = useState(null);
   const [posMsg, setPosMsg] = useState("");
 
-  /* ────────────────────────────────────────────────────────────────
-   * Spotlight (New shops) — last 7 days, capped to 8
-   * ──────────────────────────────────────────────────────────────── */
+  /* Spotlight (New shops) — last 7 days, capped to 8 */
   useEffect(() => {
     let cancelled = false;
     (async () => {
       setSpotlightLoading(true);
       try {
-        // This endpoint exists in your controller: GET /api/Business/latest?days=7
         const res = await fetch(`${API_BASE}/Business/latest?days=7`);
         if (!res.ok) throw new Error((await res.text()) || res.statusText);
         let data = await res.json();
         if (!Array.isArray(data)) data = Array.isArray(data?.items) ? data.items : [];
-
-        // Sort newest first, cap to 8 (defensive if backend isn’t capping)
         const mapped = data
           .sort((a, b) => getCreatedTs(b) - getCreatedTs(a))
           .slice(0, SPOTLIGHT_SIZE)
-          .map((shop) => ({
-            ...shop,
-            slug: shop.slug || toSlug(shop.name),
-          }));
-
+          .map((shop) => ({ ...shop, slug: shop.slug || toSlug(shop.name) }));
         if (!cancelled) setSpotlightShops(mapped);
       } catch (err) {
         if (!cancelled) console.error("Error loading new shops:", err);
@@ -220,50 +200,36 @@ export default function ShopList() {
         if (!cancelled) setSpotlightLoading(false);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
-  /* ────────────────────────────────────────────────────────────────
-   * Browse (paginated) shops
-   * ──────────────────────────────────────────────────────────────── */
+  /* Browse (paginated) shops */
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      setLoading(true);
-      setError("");
+      setLoading(true); setError("");
       try {
         const res = await fetch(`${API_BASE}/Business/paginated?pageNumber=${page}&pageSize=${PAGE_SIZE}`);
         if (!res.ok) throw new Error((await res.text()) || res.statusText);
         const { items, totalCount: count } = await res.json();
         const mapped = (Array.isArray(items) ? items : []).map((shop) => ({
-          ...shop,
-          slug: shop.slug || toSlug(shop.name),
+          ...shop, slug: shop.slug || toSlug(shop.name),
         }));
-        if (!cancelled) {
-          setShops(mapped);
-          setTotalCount(Number.isFinite(count) ? count : 0);
-        }
+        if (!cancelled) { setShops(mapped); setTotalCount(Number.isFinite(count) ? count : 0); }
       } catch (err) {
         if (!cancelled) setError(err.message || "Failed to load shops");
       } finally {
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [page]);
 
-  /* ────────────────────────────────────────────────────────────────
-   * Categories — fetch once
-   * ──────────────────────────────────────────────────────────────── */
+  /* Categories — fetch once */
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      setLoadingCats(true);
-      setErrorCats("");
+      setLoadingCats(true); setErrorCats("");
       try {
         const res = await fetch(`${API_BASE}/ClothingCategory/all`);
         if (!res.ok) throw new Error((await res.text()) || res.statusText);
@@ -275,19 +241,14 @@ export default function ShopList() {
         if (!cancelled) setLoadingCats(false);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
-  /* ────────────────────────────────────────────────────────────────
-   * Near Me — fetch ALL shops once (unpaginated) and parse coordinates
-   * ──────────────────────────────────────────────────────────────── */
+  /* Near Me — fetch ALL shops once (unpaginated) and parse coordinates */
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      setNearLoading(true);
-      setNearError("");
+      setNearLoading(true); setNearError("");
       try {
         const res = await fetch(`${API_BASE}/Business/geo`);
         if (!res.ok) throw new Error((await res.text()) || res.statusText);
@@ -299,7 +260,7 @@ export default function ShopList() {
           profilePictureUrl: shop.profilePictureUrl,
           address: shop.location || shop.address,
           phone: shop.businessPhoneNumber,
-          coords: parseCoordsFromBusiness(shop), // raw pair [lat,lon] or [lon,lat] or null
+          coords: parseCoordsFromBusiness(shop),
         }));
         if (!cancelled) setNearRaw(withCoords);
       } catch (err) {
@@ -308,29 +269,18 @@ export default function ShopList() {
         if (!cancelled) setNearLoading(false);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
-  /* ────────────────────────────────────────────────────────────────
-   * Request location on mount (user will get a prompt); allow manual retry
-   * ──────────────────────────────────────────────────────────────── */
-  useEffect(() => {
-    requestLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  /* Request location on mount */
+  useEffect(() => { requestLocation(); /* eslint-disable-next-line */ }, []);
   function requestLocation() {
     if (!navigator.geolocation) {
       setPosMsg(t("geoloc_unsupported", { defaultValue: "Your browser doesn't support location." }));
       return;
     }
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setMyPos([pos.coords.latitude, pos.coords.longitude]);
-        setPosMsg("");
-      },
+      (pos) => { setMyPos([pos.coords.latitude, pos.coords.longitude]); setPosMsg(""); },
       (err) => {
         const msg =
           err?.code === 1
@@ -338,17 +288,11 @@ export default function ShopList() {
             : t("geoloc_failed", { defaultValue: "Couldn't get your location. Try again." });
         setPosMsg(msg);
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 15000,      // generous timeout for GPS
-        maximumAge: 60_000,  // reuse recent fix to speed things up
-      }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60_000 }
     );
   }
 
-  /* ────────────────────────────────────────────────────────────────
-   * Compute nearby with normalization and distance
-   * ──────────────────────────────────────────────────────────────── */
+  /* Compute nearby */
   const nearFiltered = useMemo(() => {
     if (!myPos) return [];
     return nearRaw
@@ -356,7 +300,7 @@ export default function ShopList() {
         const normalized = normalizeLatLon(s.coords, myPos);
         if (!normalized || !validLatLon(normalized)) return null;
         const distanceKm = haversineKm(myPos, normalized);
-        if (!Number.isFinite(distanceKm) || distanceKm > 20000) return null; // guard against bogus coords
+        if (!Number.isFinite(distanceKm) || distanceKm > 20000) return null;
         return { ...s, coords: normalized, distanceKm };
       })
       .filter(Boolean)
@@ -368,21 +312,17 @@ export default function ShopList() {
   const nearStart = (nearPage - 1) * PAGE_SIZE;
   const nearSlice = nearFiltered.slice(nearStart, nearStart + PAGE_SIZE);
 
-  useEffect(() => {
-    setNearPage(1);
-  }, [myPos, nearTotal]);
+  useEffect(() => { setNearPage(1); }, [myPos, nearTotal]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
   const handleNearPageChange = (newPage) => {
     setNearPage(newPage);
     const el = document.getElementById("near-me-section");
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-
   const onCategoryClick = (categoryName) => {
     navigate(`/category-filter?category=${encodeURIComponent(categoryName)}`);
   };
@@ -391,7 +331,6 @@ export default function ShopList() {
   useEffect(() => {
     const carousel = spotlightRef.current;
     if (!carousel || spotlightShops.length === 0) return;
-
     let scrollInterval;
     let isUserScrolling = false;
     let userScrollTimeout;
@@ -413,9 +352,7 @@ export default function ShopList() {
     const handleUserScroll = () => {
       isUserScrolling = true;
       clearTimeout(userScrollTimeout);
-      userScrollTimeout = setTimeout(() => {
-        isUserScrolling = false;
-      }, 3000);
+      userScrollTimeout = setTimeout(() => { isUserScrolling = false; }, 3000);
     };
 
     carousel.addEventListener("scroll", handleUserScroll);
@@ -427,6 +364,9 @@ export default function ShopList() {
       carousel?.removeEventListener("scroll", handleUserScroll);
     };
   }, [spotlightShops]);
+
+  /* NEW: only show the Featured section if loading OR we have items */
+  const showFeaturedSection = spotlightLoading || spotlightShops.length > 0;
 
   return (
     <>
@@ -482,76 +422,74 @@ export default function ShopList() {
       </section>
 
       <main className="main-container">
-        <section className="featured-section" aria-label={t("featured_aria", { defaultValue: "New shops" })}>
-          <div className="section-header">
-            <h2 className="section-title">
-              <span className="title-gradient">{t("featured_title", { defaultValue: "New Shops" })}</span>
-            </h2>
-            <p className="section-subtitle">
-              {t("featured_subtitle", {
-                defaultValue: "Discover the latest shops and newest brands in our marketplace",
-              })}
-            </p>
-          </div>
+        {showFeaturedSection && (
+          <section className="featured-section" aria-label={t("featured_aria", { defaultValue: "New shops" })}>
+            <div className="section-header">
+              <h2 className="section-title">
+                <span className="title-gradient">{t("featured_title", { defaultValue: "New Shops" })}</span>
+              </h2>
+              <p className="section-subtitle">
+                {t("featured_subtitle", {
+                  defaultValue: "Discover the latest shops and newest brands in our marketplace",
+                })}
+              </p>
+            </div>
 
-          <div className="featured-carousel" ref={spotlightRef}>
-            {spotlightLoading ? (
-              <div className="loading-carousel">
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="brand-card-skeleton">
-                    <div className="skeleton-image">
-                      <div className="skeleton-shimmer"></div>
-                    </div>
-                    <div className="skeleton-content">
-                      <div className="skeleton-line"></div>
-                      <div className="skeleton-line short"></div>
-                      <div className="skeleton-tags">
-                        <div className="skeleton-tag"></div>
-                        <div className="skeleton-tag"></div>
+            <div className="featured-carousel" ref={spotlightRef}>
+              {spotlightLoading ? (
+                <div className="loading-carousel">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="brand-card-skeleton">
+                      <div className="skeleton-image">
+                        <div className="skeleton-shimmer"></div>
+                      </div>
+                      <div className="skeleton-content">
+                        <div className="skeleton-line"></div>
+                        <div className="skeleton-line short"></div>
+                        <div className="skeleton-tags">
+                          <div className="skeleton-tag"></div>
+                          <div className="skeleton-tag"></div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : spotlightShops.length > 0 ? (
-              spotlightShops.map((shop) => (
-                <Link key={shop.businessId ?? shop.id ?? shop.slug ?? shop.name} to={`/shop/${shop.slug}`} className="brand-card featured">
-                  <div className="brand-card-image">
-                    {shop.profilePictureUrl ? (
-                      <img src={shop.profilePictureUrl || "/placeholder.svg"} alt={shop.name} />
-                    ) : (
-                      <div className="brand-placeholder" aria-label={t("brand_placeholder_aria", { defaultValue: "Shop placeholder" })}>
-                        <div className="placeholder-glow"></div>
-                        <div className="placeholder-icon">🏪</div>
-                        <div className="placeholder-text">{(shop.name || "?").charAt(0)}</div>
+                  ))}
+                </div>
+              ) : (
+                spotlightShops.map((shop) => (
+                  <Link
+                    key={shop.businessId ?? shop.id ?? shop.slug ?? shop.name}
+                    to={`/shop/${shop.slug}`}
+                    className="brand-card featured"
+                  >
+                    <div className="brand-card-image">
+                      {shop.profilePictureUrl ? (
+                        <img src={shop.profilePictureUrl || "/placeholder.svg"} alt={shop.name} />
+                      ) : (
+                        <div className="brand-placeholder" aria-label={t("brand_placeholder_aria", { defaultValue: "Shop placeholder" })}>
+                          <div className="placeholder-glow"></div>
+                          <div className="placeholder-icon">🏪</div>
+                          <div className="placeholder-text">{(shop.name || "?").charAt(0)}</div>
+                        </div>
+                      )}
+                      <div className="brand-overlay">
+                        <div className="overlay-content">
+                          <span className="view-brand">{t("view_shop", { defaultValue: "View Shop" })}</span>
+                          <svg className="overlay-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </div>
                       </div>
-                    )}
-                    <div className="brand-overlay">
-                      <div className="overlay-content">
-                        <span className="view-brand">{t("view_shop", { defaultValue: "View Shop" })}</span>
-                        <svg className="overlay-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </div>
+                      <div className="brand-badge">{t("badge_new", { defaultValue: "New" })}</div>
                     </div>
-                    <div className="brand-badge">{t("badge_new", { defaultValue: "New" })}</div>
-                  </div>
-                  <div className="brand-info">
-                    <h3 className="brand-name">{shop.name}</h3>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <div className="empty-state">
-                <svg className="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-                <h3>{t("empty_new_title", { defaultValue: "No New Shops" })}</h3>
-                <p>{t("empty_new_desc", { defaultValue: "Check back later for new shops and latest brands." })}</p>
-              </div>
-            )}
-          </div>
-        </section>
+                    <div className="brand-info">
+                      <h3 className="brand-name">{shop.name}</h3>
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
+          </section>
+        )}
 
         {/* ───────────────────────── Shops near me ───────────────────────── */}
         <section id="near-me-section" className="nearby-section" aria-label={t("nearby_aria", { defaultValue: "Shops near me" })}>
@@ -630,7 +568,7 @@ export default function ShopList() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
               <h3>{t("empty_near_title", { defaultValue: "No shops within 3 km" })}</h3>
-             <p>{t("empty_near_desc", { defaultValue: "Try increasing the radius or enable location access." })}</p>
+              <p>{t("empty_near_desc", { defaultValue: "Try increasing the radius or enable location access." })}</p>
             </div>
           )}
         </section>
