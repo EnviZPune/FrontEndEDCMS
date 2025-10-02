@@ -294,6 +294,84 @@
   font-weight: 500;
 }
 
+/* Dark mode for Reject Reservation modal */
+@media (prefers-color-scheme: dark) {
+  :root { color-scheme: dark; }
+
+  /* Backdrop */
+  .modal-backdrop {
+    background: rgba(2, 6, 23, 0.65) !important; /* deeper, less grey */
+  }
+
+  /* Dialog shell */
+  .modal {
+    background: #0b1220 !important;              /* slate-950-ish */
+    color: #e5e7eb;                               /* text-gray-200 */
+    border: 1px solid #263142;                    /* slate-800 border */
+    box-shadow: 0 20px 50px rgba(0,0,0,.65) !important;
+  }
+  .modal h4 { color: #f3f4f6; }                   /* heading pop */
+  .modal p  { color: #9ca3af !important; }        /* muted subtitle */
+
+  /* Read-only summary (first grid inside the form) */
+  .modal form > div > div:first-child {
+    background: #0f172a !important;               /* slate-900 */
+    border-color: #263142 !important;
+    color: #e5e7eb !important;
+  }
+  .modal strong { color: #e5e7eb; }
+
+  /* Textarea */
+  .textarea {
+    background: #0b1220 !important;
+    color: #e5e7eb !important;
+    border: 1px solid #263142 !important;
+  }
+  .textarea::placeholder { color: #9ca3af; }
+  .textarea:focus {
+    outline: none;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,.35);
+  }
+
+  /* Buttons */
+  .btn-secondary {
+    background: #1f2937 !important;               /* gray-800 */
+    color: #e5e7eb !important;
+    border: 1px solid #374151 !important;
+  }
+  .btn-secondary:hover { background: #374151 !important; }
+  .btn-secondary:disabled { opacity: .6; }
+
+  .btn-danger {
+    background: #b91c1c !important;               /* red-700 */
+    color: #fff !important;
+    border: 1px solid #7f1d1d !important;
+  }
+  .btn-danger:hover { background: #dc2626 !important; }  /* red-600 */
+  .btn-danger:disabled { opacity: .7; }
+
+  /* Footer actions divider */
+  .modal-actions {
+    border-top: 1px solid #1f2937;
+    padding-top: 12px;
+    background: transparent;
+  }
+
+  /* Focus rings for a11y */
+  .btn-secondary:focus,
+  .btn-danger:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59,130,246,.35);
+  }
+
+  /* Optional: nicer scrollbar inside modal body (WebKit) */
+  .modal::-webkit-scrollbar { width: 10px; }
+  .modal::-webkit-scrollbar-thumb { background:#374151; border-radius:8px; }
+  .modal::-webkit-scrollbar-track { background:#0b1220; }
+}
+
+
 /* ----------------------------------------
    ANIMATIONS
 ---------------------------------------- */

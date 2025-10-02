@@ -774,6 +774,88 @@
   }
 }
 
+/* Dark mode for Variant chooser */
+@media (prefers-color-scheme: dark) {
+  :root { color-scheme: dark; }
+
+  /* Backdrop */
+  .variant-overlay {
+    background: rgba(2, 6, 23, 0.65) !important; /* deeper, less grey */
+  }
+
+  /* Panel shell */
+  .variant-panel {
+    background: #0b1220 !important;     /* near slate-950 */
+    color: #e5e7eb !important;          /* text-gray-200 */
+    border: 1px solid #263142;          /* slate-800 border */
+    box-shadow: 0 24px 60px rgba(0,0,0,.70) !important;
+  }
+
+  .variant-panel h3 { color: #f3f4f6; }
+  .variant-panel label { color: #e5e7eb; }
+
+  /* Selects */
+  .variant-panel select {
+    background: #0f172a !important;     /* slate-900 */
+    color: #e5e7eb !important;
+    border: 1px solid #263142 !important;
+    border-radius: 8px;
+  }
+  .variant-panel select:focus {
+    outline: none;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,.35);
+  }
+  .variant-panel option {
+    background: #0f172a;
+    color: #e5e7eb;
+  }
+
+  /* Close (×) button in the panel header */
+  .variant-panel > button[aria-label] {
+    color: #9ca3af !important;
+  }
+  .variant-panel > button[aria-label]:hover {
+    color: #e5e7eb !important;
+  }
+
+  /* Error text (if you add a class) */
+  .variant-panel .variant-error,
+  .variant-panel .error {
+    color: #f87171 !important; /* red-400 */
+  }
+
+  /* Action buttons row: assumes it's the last direct div in the panel */
+  .variant-panel > div:last-child > button:first-child {
+    /* Cancel */
+    background: #1f2937 !important;     /* gray-800 */
+    color: #e5e7eb !important;
+    border: 1px solid #374151 !important;
+  }
+  .variant-panel > div:last-child > button:first-child:hover {
+    background: #374151 !important;
+  }
+
+  .variant-panel > div:last-child > button:last-child {
+    /* Confirm */
+    background: #2563eb !important;     /* primary */
+    color: #fff !important;
+    border: 1px solid #1d4ed8 !important;
+  }
+  .variant-panel > div:last-child > button:last-child:hover {
+    filter: brightness(.98);
+  }
+
+  /* Disabled state */
+  .variant-panel button[disabled] { opacity: .65; cursor: not-allowed !important; }
+
+  /* Focus rings for a11y */
+  .variant-panel button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59,130,246,.35);
+  }
+}
+
 /* ----------------------------------------
    PROFESSIONAL TOUCH OPTIMIZATIONS
 ---------------------------------------- */

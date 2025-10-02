@@ -234,6 +234,24 @@ const getAuthHeaders = (token) => ({
   ...(token ? { Authorization: `Bearer ${token}` } : {}),
 });
 
+// --- Helpers for bookings: status + shop name fallback ---
+const StatusMap = { pending: 0, confirmed: 1, cancelled: 2, completed: 3 };
+
+const toStatusName = (status) => {
+  if (typeof status === "string") return status.toLowerCase();
+  if (typeof status === "number") {
+    for (const [k, v] of Object.entries(StatusMap)) if (v === status) return k;
+  }
+  return "";
+};
+
+const getShopNameFromBooking = (b) =>
+  b?.shopName ??
+  b?.clothingItem?.businessName ??
+  b?.clothingItem?.business?.name ??
+  "";
+
+
 // Enhanced Activity Panel
 function ActivityStatsCard({ profile, token }) {
   const navigate = useNavigate();
@@ -532,28 +550,28 @@ function BookingsCard({ bookings = [], loading, error }) {
   const navigate = useNavigate();
   const { t } = useTranslation("profile");
   const prefersDark = usePrefersDark();
-
-  const activeBookings = (Array.isArray(bookings) ? bookings : []).filter((b) =>
-    ["confirmed", "pending"].includes(String(b.status || "").toLowerCase())
-  );
+  const activeBookings = (Array.isArray(bookings) ? bookings : []).filter((b) => {
+  const s = toStatusName(b.status);
+  return s === "confirmed" || s === "pending";
+});
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
   const totalPages = Math.max(1, Math.ceil(activeBookings.length / itemsPerPage));
   const paginated = activeBookings.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const getStatusIcon = (status) => {
-    const s = String(status || "").toLowerCase();
-    if (s === "confirmed") return "✅";
-    if (s === "pending") return "⏳";
-    return "📦";
-  };
+const getStatusIcon = (status) => {
+  const s = toStatusName(status);
+  if (s === "confirmed") return "✅";
+  if (s === "pending") return "⏳";
+  return "📦";
+};
 
-  const getStatusClass = (status) => {
-    const s = String(status || "").toLowerCase();
-    if (s === "confirmed") return "confirmed";
-    if (s === "pending") return "pending";
-    return "default";
-  };
+const getStatusClass = (status) => {
+  const s = toStatusName(status);
+  if (s === "confirmed") return "confirmed";
+  if (s === "pending") return "pending";
+  return "default";
+};
 
   return (
     <div className="enhanced-card bookings-card">
@@ -607,7 +625,7 @@ function BookingsCard({ bookings = [], loading, error }) {
                   </div>
                   <div className="booking-details">
                     <h4 className="product-name">
-                      {booking.clothingItem?.name} – {booking.shopName}
+                      {booking.clothingItem?.name} – {getShopNameFromBooking(booking) || "Unknown Shop"}
                     </h4>
                     <div className="booking-meta">
                       <span className={`status-badge ${getStatusClass(booking.status)}`}>
@@ -684,46 +702,34 @@ export default function ProfilePage() {
   const userId = paramId || tokenId;
 
   const fetchBookings = useCallback(async () => {
-    if (!token) {
-      setBookingsError("Not authenticated.");
-      setLoadingBookings(false);
-      return;
-    }
-    setLoadingBookings(true);
-    setBookingsError("");
+  if (!token) {
+    setBookingsError("Not authenticated.");
+    setLoadingBookings(false);
+    return;
+  }
+  setLoadingBookings(true);
+  setBookingsError("");
 
-    try {
-      const res = await fetch(`${API_BASE}/api/Reservation/my-bookings`, { headers: getAuthHeaders(token) });
-      if (!res.ok) throw new Error(`Error ${res.status}`);
-      const raw = await res.json();
-      const list = Array.isArray(raw) ? raw : [];
+  try {
+    const res = await fetch(`${API_BASE}/api/Reservation/my-bookings`, { headers: getAuthHeaders(token) });
+    if (!res.ok) throw new Error(`Error ${res.status}`);
+    const raw = await res.json();
+    const list = Array.isArray(raw) ? raw : [];
 
-      const enriched = await Promise.all(
-        list.map(async (booking) => {
-          try {
-            const itemRes = await fetch(`${API_BASE}/api/ClothingItem/${booking.clothingItemId}`, {
-              headers: getAuthHeaders(token),
-            });
-            if (itemRes.ok) {
-              const itemData = await itemRes.json();
-              booking.shopName = itemData.shop?.name || itemData.business?.name || "Unknown Shop";
-            } else {
-              booking.shopName = "Unknown Shop";
-            }
-          } catch {
-            booking.shopName = "Unknown Shop";
-          }
-          return booking;
-        })
-      );
+    // Prefer flattened fields from backend; fall back to nested ClothingItem.* without extra requests
+    const enriched = list.map((b) => ({
+      ...b,
+      shopName: getShopNameFromBooking(b) || "Unknown Shop",
+    }));
 
-      setBookings(enriched);
-    } catch (e) {
-      setBookingsError(e.message);
-    } finally {
-      setLoadingBookings(false);
-    }
-  }, [token]);
+    setBookings(enriched);
+  } catch (e) {
+    setBookingsError(e.message);
+  } finally {
+    setLoadingBookings(false);
+  }
+}, [token]);
+
 
   useEffect(() => {
     const goOnline = () => setIsOnline(true);

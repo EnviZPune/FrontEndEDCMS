@@ -28,7 +28,6 @@
 /* ---------- container ---------- */
 .navbar_container{
   position:fixed;top:0;left:0;right:0;height:90px;background:var(--navbar-bg);
-  backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--navbar-border);
   box-shadow:var(--shadow-sm);z-index:var(--z-sticky);transition:all var(--transition-normal);
 }
 .navbar_container.scrolled{box-shadow:var(--shadow-md);}
@@ -145,7 +144,6 @@
 .sheet-backdrop{
   position:fixed; inset:0;
   background:rgba(0,0,0,.25);
-  backdrop-filter:saturate(140%) blur(1px);
   z-index:var(--z-backdrop);
   opacity:1;
 }
@@ -179,7 +177,6 @@
   position:fixed; inset:0;
   z-index:0;                                 /* behind sheet content */
   background:var(--sheet-backdrop);
-  backdrop-filter:blur(2px) saturate(1.12);
   opacity:0;
   transition:opacity var(--sheet-in) var(--sheet-ease-out);
   pointer-events:none;
@@ -188,7 +185,6 @@
 /* Ensure real content sits above the backdrop */
 .mobile-sheet > *{
   position:relative;
-  z-index:1;
   opacity:1; /* guard against inherited opacity */
 }
 
@@ -196,7 +192,7 @@
 .mobile-sheet.open{
   pointer-events:auto;
   animation:sheetIn var(--sheet-in) var(--sheet-ease-out) forwards;
-  background-color: #fff;
+  background-color: #ffffff;
 }
 .mobile-sheet.open::before{ opacity:1; }
 

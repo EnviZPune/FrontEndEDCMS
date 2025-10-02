@@ -85,6 +85,9 @@ function SettingsLayoutInner({
   // Drawer open/close
   const [drawerOpen, setDrawerOpen] = useState(false);
 
+  // --- Swipe helpers/refs (declare AFTER drawerOpen is defined) ---
+  const edgeRef = useRef(null); // left-edge catcher zone
+
   // Initial restore (URL hash > sessionStorage)
   useEffect(() => {
     const st = sessionStorage.getItem("settings:drawerOpen");
@@ -200,6 +203,123 @@ function SettingsLayoutInner({
     if (!isMobile) setDrawerOpen(false);
   }, [isMobile]);
 
+  // ───────────────────────────────────────────────────────────
+  // SWIPE OPEN (from a dedicated inside-the-page edge catcher)
+  // Uses Pointer Events + touch-action: pan-y to avoid iOS "back" swipe.
+  // ───────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!isMobile || drawerOpen) return;
+    const el = edgeRef.current;
+    if (!el) return;
+
+    const THRESH_X = 60;   // how far to move horizontally to trigger
+    const TILT_Y  = 45;    // cancel if vertical drift exceeds this
+    const MAX_MS  = 600;   // cancel if drag takes too long
+
+    let tracking = false;
+    let startX = 0, startY = 0, startT = 0;
+
+    const onDown = (e) => {
+      if (!("pointerType" in e)) return;
+      if (e.pointerType !== "touch" && e.pointerType !== "pen") return;
+      tracking = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      startT = Date.now();
+      // Stop iOS back-swipe by consuming the gesture here
+      try { el.setPointerCapture?.(e.pointerId); } catch {}
+      e.preventDefault();
+    };
+
+    const onMove = (e) => {
+      if (!tracking) return;
+      const dx = e.clientX - startX;
+      const dy = Math.abs(e.clientY - startY);
+      const dt = Date.now() - startT;
+
+      if (dy > TILT_Y || dt > MAX_MS) {
+        tracking = false;
+        try { el.releasePointerCapture?.(e.pointerId); } catch {}
+        return;
+      }
+
+      if (dx > THRESH_X) {
+        setDrawerOpen(true);
+        tracking = false;
+        try { el.releasePointerCapture?.(e.pointerId); } catch {}
+      }
+    };
+
+    const onUp = (e) => {
+      tracking = false;
+      try { el.releasePointerCapture?.(e.pointerId); } catch {}
+    };
+
+    el.addEventListener("pointerdown", onDown, { passive: false });
+    el.addEventListener("pointermove", onMove, { passive: false });
+    el.addEventListener("pointerup", onUp, { passive: true });
+    el.addEventListener("pointercancel", onUp, { passive: true });
+
+    return () => {
+      el.removeEventListener("pointerdown", onDown);
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerup", onUp);
+      el.removeEventListener("pointercancel", onUp);
+    };
+  }, [isMobile, drawerOpen]);
+
+  // ───────────────────────────────────────────────────────────
+  // SWIPE CLOSE (anywhere → left)
+  // ───────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!isMobile || !drawerOpen) return;
+
+    const THRESH_X = -60;  // left swipe
+    const TILT_Y  = 45;
+    const MAX_MS  = 600;
+
+    let tracking = false;
+    let startX = 0, startY = 0, startT = 0;
+
+    const onDown = (e) => {
+      if (!("pointerType" in e)) return;
+      if (e.pointerType !== "touch" && e.pointerType !== "pen") return;
+      tracking = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      startT = Date.now();
+    };
+
+    const onMove = (e) => {
+      if (!tracking) return;
+      const dx = e.clientX - startX;
+      const dy = Math.abs(e.clientY - startY);
+      const dt = Date.now() - startT;
+      if (dy > TILT_Y || dt > MAX_MS) {
+        tracking = false;
+        return;
+      }
+      if (dx < THRESH_X) {
+        setDrawerOpen(false);
+        tracking = false;
+      }
+    };
+
+    const onUp = () => { tracking = false; };
+
+    document.addEventListener("pointerdown", onDown, { passive: true });
+    document.addEventListener("pointermove", onMove, { passive: true });
+    document.addEventListener("pointerup", onUp, { passive: true });
+    document.addEventListener("pointercancel", onUp, { passive: true });
+
+    return () => {
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup", onUp);
+      document.removeEventListener("pointercancel", onUp);
+    };
+  }, [isMobile, drawerOpen]);
+
   const disableBusinessSelect = isEmployee && businesses.length <= 1;
 
   return (
@@ -221,6 +341,25 @@ function SettingsLayoutInner({
         )}
 
         {isMobile && <div className="settings-edge-hint" aria-hidden="true" />}
+
+        {/* Left-edge catcher (visible only on mobile when drawer is closed).
+            Inline styles ensure it works without extra CSS changes. */}
+        {isMobile && !drawerOpen && (
+          <div
+            ref={edgeRef}
+            aria-hidden="true"
+            style={{
+              position: "fixed",
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 24,           // edge zone width
+              zIndex: 3,           // above content, below drawer if any
+              background: "transparent",
+              touchAction: "pan-y" // allow vertical scroll; block horizontal for our gesture
+            }}
+          />
+        )}
 
         {isMobile && (
           <div
