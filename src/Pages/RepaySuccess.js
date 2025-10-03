@@ -42,7 +42,7 @@ export default function RepaySuccess() {
         {msg && <div style={ok}>{msg}</div>}
         {error && <div style={err}>{error}</div>}
         <div style={{ marginTop: 16, display: "flex", gap: 12 }}>
-          <button style={btnPrimary} onClick={() => navigate("/profile")}>
+          <button style={btnPrimary} onClick={() => navigate("/settings")}>
             Go to Dashboard
           </button>
           <button style={btn} onClick={() => navigate("/")}>Home</button>

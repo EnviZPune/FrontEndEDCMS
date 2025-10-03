@@ -182,7 +182,7 @@ body.hide-support-widget .chat-container {
 .sd-thread-card:hover { box-shadow: var(--sd-shadow-lg); border-color: var(--sd-primary); }
 
 .sd-thread-main { padding: 16px; cursor: pointer; transition: var(--sd-transition); }
-.sd-thread-main.active { background: var(--sd-primary-light); border-left: 4px solid var(--sd-primary); }
+.sd-thread-main.active { background: var(--sd-primary-light); border-left: 4px solid var(--sd-primary); color: black;}
 
 .sd-thread-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 12px; }
 .sd-thread-title { margin: 0; font-size: 14px; font-weight: 600; color: var(--sd-text-primary); line-height: 1.4; flex: 1; }
