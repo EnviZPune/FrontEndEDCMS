@@ -619,6 +619,7 @@ body {
 /* =========================
    Report button styling
    ========================= */
+   
 .sd-report-btn{
   --report-accent: #ef4444;    /* red-500 */
   --report-accent-600:#dc2626; /* red-600 */
