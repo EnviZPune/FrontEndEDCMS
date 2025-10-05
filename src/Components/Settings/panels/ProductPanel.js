@@ -9,6 +9,14 @@ import "../../../Styling/Settings/productpanel.css"
 
 const CLOTHING_ITEM_API = "/ClothingItem"
 
+// JS-only enum map (frozen)
+const SizeKind = Object.freeze({
+  Alpha: 1,
+  Numeric: 2,
+  WaistInseam: 3,
+  OneSize: 4,
+})
+
 export default function ProductPanel({ business }) {
   const { t } = useTranslation("productpanel")
   const { get, post, put, del } = useApiClient()
@@ -18,7 +26,7 @@ export default function ProductPanel({ business }) {
   const getRef = useRef(get)
   useEffect(() => { getRef.current = get }, [get])
 
-  // ─── Helpers for robust array handling ───────────────────────────────────
+  // Helpers
   const csv = (s) =>
     (s || "")
       .split(",")
@@ -28,28 +36,21 @@ export default function ProductPanel({ business }) {
   const parseMaybeJsonArray = (val) => {
     if (val == null) return []
     if (Array.isArray(val)) return val.map(String)
-
     const s = String(val).trim()
     if (!s) return []
-
-    // JSON array string?
     if ((s.startsWith("[") && s.endsWith("]")) || (s.startsWith("\"[") && s.endsWith("]\""))) {
       try {
         const parsed = JSON.parse(s)
         if (Array.isArray(parsed)) return parsed.map(String)
       } catch {}
     }
-
-    // CSV string?
     if (s.includes(",")) return csv(s).map(String)
-
-    // Single token → wrap
     return [s]
   }
 
   const joinForDisplay = (val) => parseMaybeJsonArray(val).join(", ")
 
-  // ─── State ───────────────────────────────────────────────────────────────
+  // State
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [editingId, setEditingId] = useState(null)
@@ -62,18 +63,14 @@ export default function ProductPanel({ business }) {
   const [pinLoadingId, setPinLoadingId] = useState(null)
   const [pinnedIds, setPinnedIds] = useState(() => new Set())
 
-  // popover menu id (for tablet/desktop small widths)
   const [openMenuId, setOpenMenuId] = useState(null)
-  // bottom-sheet product (for phones)
   const [sheetProduct, setSheetProduct] = useState(null)
 
   const pageSize = 10
 
-  // NEW: inline field errors / touched for important fields
   const [fieldErrors, setFieldErrors] = useState({ name: null, price: null, quantity: null, size: null })
   const [touched, setTouched] = useState({ name: false, price: false, quantity: false, size: false })
 
-  // form state
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -83,8 +80,8 @@ export default function ProductPanel({ business }) {
     brand: "",
     model: "",
     photos: [],
-    colors: "",    // CSV in UI; array for API
-    size: "",      // CSV in UI; array for API
+    colors: "",
+    size: "",
     material: "",
   })
 
@@ -95,10 +92,9 @@ export default function ProductPanel({ business }) {
   const bId = Number(businessId)
   const validBusinessId = Number.isInteger(bId) && bId > 0
 
-  // helper: phone breakpoint (≤640px) for bottom sheet
   const isPhone = () => (typeof window !== "undefined") && window.matchMedia("(max-width: 640px)").matches
 
-  // ─── Validators (Name, Price, Quantity, Size) ────────────────────────────
+  // Validators
   const NAME_MIN = 2
   const NAME_MAX = 120
   const NAME_REGEX = /^[\p{L}\p{N}][\p{L}\p{N}\s'&().,\-]{0,119}$/u
@@ -106,12 +102,9 @@ export default function ProductPanel({ business }) {
   const validateProductName = useCallback((v) => {
     const s = (v || "").trim()
     if (!s) return t("products.errors.name_required", { defaultValue: "Product name is required" })
-    if (s.length < NAME_MIN)
-      return t("products.errors.name_short", { defaultValue: `Name must be at least ${NAME_MIN} characters` })
-    if (s.length > NAME_MAX)
-      return t("products.errors.name_long", { defaultValue: `Name must be at most ${NAME_MAX} characters` })
-    if (!NAME_REGEX.test(s))
-      return t("products.errors.name_chars", { defaultValue: "Use letters, numbers, spaces and . , ( ) ' & - only" })
+    if (s.length < NAME_MIN) return t("products.errors.name_short", { defaultValue: `Name must be at least ${NAME_MIN} characters` })
+    if (s.length > NAME_MAX) return t("products.errors.name_long", { defaultValue: `Name must be at most ${NAME_MAX} characters` })
+    if (!NAME_REGEX.test(s)) return t("products.errors.name_chars", { defaultValue: "Use letters, numbers, spaces and . , ( ) ' & - only" })
     return null
   }, [t])
 
@@ -133,11 +126,12 @@ export default function ProductPanel({ business }) {
     return null
   }, [t])
 
-  // Accept comma-separated tokens: alpha sizes, One-Size, numeric, waist/inseam, etc.
+  // Size parsing
   const ALPHA = /^(XXXS|XXS|XS|S|M|L|XL|XXL|XXXL)$/i
   const ONESIZE = /^(ONE-?SIZE|OS)$/i
-  const NUMERIC = /^(?:\d{1,3})(?:\.\d)?$/ // e.g., 36, 9.5
-  const WAIST_INSEAM = /^(?:\d{2,3})(?:[Ww])?(?:[ /-]?(?:\d{2,3})(?:[Ll])?)?$/ // 32/30, 32-30, 32W/30L, 32W, 30L
+  const NUMERIC = /^(?:\d{1,3})(?:\.\d)?$/i
+  const WAIST_INSEAM = /^(?:\d{2,3})(?:[Ww])?(?:[ /-]?(?:\d{2,3})(?:[Ll])?)?$/i
+  const ALPHA_ORDER = ["XXXS","XXS","XS","S","M","L","XL","XXL","XXXL"]
 
   const validateSize = useCallback((v) => {
     const s = (v || "").trim()
@@ -157,14 +151,11 @@ export default function ProductPanel({ business }) {
     })
 
     if (bad.length > 0) {
-      return t("products.errors.size_invalid_tokens", {
-        defaultValue: `Invalid size value(s): ${bad.join(", ")}`,
-      })
+      return t("products.errors.size_invalid_tokens", { defaultValue: `Invalid size value(s): ${bad.join(", ")}` })
     }
     return null
   }, [t])
 
-  // Small helper to compute + set error for a field onChange if touched
   const setField = (key, value, validator) => {
     setForm(prev => ({ ...prev, [key]: value }))
     if (touched[key]) {
@@ -172,7 +163,7 @@ export default function ProductPanel({ business }) {
     }
   }
 
-  // ─── Data loaders ────────────────────────────────────────────────────────
+  // Loaders
   const normalizePinned = useCallback((payload) => {
     if (!payload) return new Set()
     const arr =
@@ -210,29 +201,21 @@ export default function ProductPanel({ business }) {
   useEffect(() => {
     if (!validBusinessId) return
     let cancelled = false
-
     const loadData = async () => {
       setLoading(true)
       setError(null)
       try {
-        await Promise.all([
-          loadAllProducts(bId),
-          loadCategories(bId),
-          loadPinned(bId),
-        ])
+        await Promise.all([loadAllProducts(bId), loadCategories(bId), loadPinned(bId)])
       } catch (err) {
         console.error("Load error:", err)
         if (!cancelled) {
           setError(t("products.errors.load_failed", { defaultValue: "Failed to load data. Please try again." }))
-          setProducts([])
-          setCategories([])
-          setPinnedIds(new Set())
+          setProducts([]); setCategories([]); setPinnedIds(new Set())
         }
       } finally {
         if (!cancelled) setLoading(false)
       }
     }
-
     loadData()
     return () => { cancelled = true }
   }, [validBusinessId, bId, t, loadAllProducts, loadCategories, loadPinned])
@@ -261,7 +244,7 @@ export default function ProductPanel({ business }) {
     return filteredProducts.slice(start, start + pageSize)
   }, [filteredProducts, page, pageSize])
 
-  // ─── Upload helpers ─────────────────────────────────────────────────────
+  // Uploads
   const uploadImageToGCS = useCallback(async (file) => {
     if (!file) return null
     const maxSize = 5 * 1024 * 1024
@@ -315,7 +298,7 @@ export default function ProductPanel({ business }) {
     if (files.length > 0) handleFileUpload(files)
   }, [handleFileUpload])
 
-  // ─── CRUD helpers ────────────────────────────────────────────────────────
+  // Reset form
   const resetForm = useCallback(() => {
     setEditingId(null)
     setForm({
@@ -326,36 +309,154 @@ export default function ProductPanel({ business }) {
     setMainPhotoIndex(0); setError(null)
     setTouched({ name: false, price: false, quantity: false, size: false })
     setFieldErrors({ name: null, price: null, quantity: null, size: null })
+    setVariantQty({})
   }, [])
+
+  // ===== Variant grid =====
+  // Map key: "color|kind:a:b" -> quantity
+  const [variantQty, setVariantQty] = useState({})
+
+  const parseSizes = useCallback((sizeCsv) => {
+    const tokens = csv(sizeCsv)
+    const sizes = []
+    for (const rawTok of tokens) {
+      const tok = rawTok.trim()
+      if (!tok) continue
+
+      if (ALPHA.test(tok)) {
+        const idx = ALPHA_ORDER.findIndex(x => x.toLowerCase() === tok.toLowerCase())
+        const a = idx >= 0 ? idx : 3
+        sizes.push({ sizeKind: SizeKind.Alpha, a, b: 0, key: `1:${a}:0`, label: ALPHA_ORDER[a] ?? tok.toUpperCase() })
+        continue
+      }
+      if (ONESIZE.test(tok)) {
+        sizes.push({ sizeKind: SizeKind.OneSize, a: 1, b: 0, key: `4:1:0`, label: "OS" })
+        continue
+      }
+      if (NUMERIC.test(tok)) {
+        const n = Math.round(parseFloat(tok))
+        const a = Math.max(1, Math.min(200, n))
+        sizes.push({ sizeKind: SizeKind.Numeric, a, b: 0, key: `2:${a}:0`, label: String(a) })
+        continue
+      }
+      if (WAIST_INSEAM.test(tok)) {
+        const nums = tok.match(/\d{2,3}/g) || []
+        const a = Math.max(1, Math.min(200, parseInt(nums[0] || "0", 10) || 0))
+        const b = Math.max(0, Math.min(200, parseInt(nums[1] || "0", 10) || 0))
+        sizes.push({ sizeKind: SizeKind.WaistInseam, a, b, key: `3:${a}:${b}`, label: b ? `${a}/${b}` : `${a}` })
+        continue
+      }
+    }
+    const seen = new Set()
+    const uniq = []
+    for (const s of sizes) {
+      if (seen.has(s.key)) continue
+      seen.add(s.key); uniq.push(s)
+    }
+    return uniq
+  }, [])
+
+  const parsedColors = useMemo(() => {
+    const arr = csv(form.colors).map(c => c.trim()).filter(Boolean)
+    const seen = new Set()
+    const out = []
+    for (const c of arr) {
+      const k = c.toLowerCase()
+      if (seen.has(k)) continue
+      seen.add(k); out.push(c)
+    }
+    return out
+  }, [form.colors])
+
+  const parsedSizes = useMemo(() => parseSizes(form.size), [form.size, parseSizes])
+
+  const gridActive = parsedColors.length > 0 && parsedSizes.length > 0
+
+  const cellKey = (color, sizeKey) => `${color.toLowerCase()}|${sizeKey}`
+
+  useEffect(() => {
+    setVariantQty(prev => {
+      const next = {}
+      for (const color of parsedColors) {
+        for (const s of parsedSizes) {
+          const k = cellKey(color, s.key)
+          next[k] = prev[k] ?? 0
+        }
+      }
+      return next
+    })
+  }, [parsedColors, parsedSizes])
+
+  const gridTotalQty = useMemo(() => {
+    if (!gridActive) return 0
+    let sum = 0
+    for (const color of parsedColors) {
+      for (const s of parsedSizes) {
+        sum += variantQty[cellKey(color, s.key)] ?? 0
+      }
+    }
+    return sum
+  }, [gridActive, parsedColors, parsedSizes, variantQty])
+
+  useEffect(() => {
+    if (!gridActive) return
+    setForm(prev => ({ ...prev, quantity: String(gridTotalQty) }))
+    setFieldErrors(prev => ({ ...prev, quantity: null }))
+  }, [gridActive, gridTotalQty])
+
+  const onCellQtyChange = (color, sizeKey, value) => {
+    const num = Math.max(0, Math.floor(Number(value || 0)))
+    const k = cellKey(color, sizeKey)
+    setVariantQty(prev => ({ ...prev, [k]: Number.isFinite(num) ? num : 0 }))
+  }
+
+  // DTO builders
+  const buildVariantsPayload = useCallback(() => {
+    if (!gridActive) return []
+    const out = []
+    for (const color of parsedColors) {
+      for (const s of parsedSizes) {
+        const qty = variantQty[cellKey(color, s.key)] ?? 0
+        out.push({
+          color,
+          sizeKind: s.sizeKind,
+          a: s.a,
+          b: s.b,
+          quantity: qty,
+          isActive: true,
+        })
+      }
+    }
+    return out
+  }, [gridActive, parsedColors, parsedSizes, variantQty])
 
   const buildDto = useCallback(() => {
     const orderedPhotos =
       form.photos.length > 0
         ? [form.photos[mainPhotoIndex], ...form.photos.filter((_, idx) => idx !== mainPhotoIndex)]
         : []
-
-    // Convert CSV input → array of strings for API
     const sizesArray = csv(form.size).map(String)
     const colorsArray = csv(form.colors).map(String)
-
+    const variants = buildVariantsPayload()
+    const totalQuantity = gridActive ? variants.reduce((acc, v) => acc + (v.quantity || 0), 0) : (Number.parseInt(form.quantity, 10) || 0)
     return {
       businessId: validBusinessId ? bId : null,
       businessIds: validBusinessId ? [bId] : [],
       clothingItemId: editingId ?? undefined,
-
       name: (form.name || "").trim(),
       description: (form.description || "").trim(),
       price: Number.parseFloat(form.price) || 0,
-      quantity: Number.parseInt(form.quantity, 10) || 0,
+      quantity: totalQuantity,
       clothingCategoryId: form.categoryId ? +form.categoryId : null,
       brand: (form.brand || "").trim(),
       model: (form.model || "").trim(),
       pictureUrls: orderedPhotos,
-      colors: colorsArray,   // ✅ array
-      sizes: sizesArray,     // ✅ array
+      colors: colorsArray,
+      sizes: sizesArray,
       material: (form.material || "").trim(),
+      variants,
     }
-  }, [form, mainPhotoIndex, validBusinessId, bId, editingId])
+  }, [form, mainPhotoIndex, validBusinessId, bId, editingId, gridActive, buildVariantsPayload])
 
   const assertBusinessExists = useCallback(async () => {
     try {
@@ -390,26 +491,17 @@ export default function ProductPanel({ business }) {
     }
   }, [del, bId])
 
-  // ─── Save with strict validation ────────────────────────────────────────
   const saveProduct = useCallback(async () => {
-    // mark all important fields touched
-    setTouched({ name: true, price: true, quantity: true, size: true })
-
+    setTouched(prev => ({ ...prev, name: true, price: true, size: true, quantity: !gridActive }))
     const nameErr = validateProductName(form.name)
     const priceErr = validatePrice(form.price)
-    const qtyErr = validateQuantity(form.quantity)
-    const sizeErr = validateSize(form.size)
-
+    const sizeErr  = validateSize(form.size)
+    const qtyErr   = gridActive ? null : validateQuantity(form.quantity)
     setFieldErrors({ name: nameErr, price: priceErr, quantity: qtyErr, size: sizeErr })
 
     const bizErr = !validBusinessId ? t("products.errors.select_business_first", { defaultValue: "Select a business first." }) : null
-
-    if (nameErr || priceErr || qtyErr || sizeErr || bizErr) {
-      setError(
-        bizErr
-          ? bizErr
-          : t("products.errors.fix_and_retry", { defaultValue: "Please fix the highlighted fields and try again." })
-      )
+    if (nameErr || priceErr || sizeErr || qtyErr || bizErr) {
+      setError(bizErr ? bizErr : t("products.errors.fix_and_retry", { defaultValue: "Please fix the highlighted fields and try again." }))
       return
     }
 
@@ -419,6 +511,14 @@ export default function ProductPanel({ business }) {
       await assertBusinessExists()
 
       if ((role || "").toLowerCase() === "employee") {
+        const variantsPascal = (dto.variants || []).map(v => ({
+          Color: v.color,
+          SizeKind: v.sizeKind,
+          A: v.a,
+          B: v.b,
+          Quantity: v.quantity,
+          IsActive: v.isActive,
+        }))
         const itemDtoProposal = {
           BusinessId: dto.businessId,
           BusinessIds: dto.businessIds,
@@ -431,11 +531,11 @@ export default function ProductPanel({ business }) {
           Brand: dto.brand,
           Model: dto.model,
           PictureUrls: dto.pictureUrls,
-          Colors: dto.colors,   // ✅ array
-          Sizes: dto.sizes,     // ✅ array
+          Colors: dto.colors,
+          Sizes: dto.sizes,
           Material: dto.material,
+          Variants: variantsPascal,
         }
-
         await post("/ProposedChanges/submit", {
           BusinessId: dto.businessId,
           Type: editingId ? "Update" : "Create",
@@ -457,24 +557,16 @@ export default function ProductPanel({ business }) {
       console.error("Save error detail:", err)
       const msg = err?.message || ""
       if (/23503/.test(msg) || /foreign key/i.test(msg)) {
-        setError(
-          t("products.errors.fk_hint", {
-            defaultValue: `Can't save because BusinessId=${bId} doesn't exist in this environment. Double-check you're selecting a valid business on the same server as the API.`,
-          })
-        )
+        setError(t("products.errors.fk_hint", { defaultValue: `Can't save because BusinessId=${bId} doesn't exist in this environment. Double-check you're selecting a valid business on the same server as the API.` }))
       } else {
-        setError(
-          msg
-            ? t("products.errors.save_failed_with_reason", { defaultValue: "Failed to save product: {{reason}}", reason: msg })
-            : t("products.errors.save_failed", { defaultValue: "Failed to save product. Please check console/network for details." })
-        )
+        setError(msg ? t("products.errors.save_failed_with_reason", { defaultValue: "Failed to save product: {{reason}}", reason: msg }) : t("products.errors.save_failed", { defaultValue: "Failed to save product. Please check console/network for details." }))
       }
     } finally { setLoading(false) }
   }, [
     form.name, form.price, form.quantity, form.size,
     validateProductName, validatePrice, validateQuantity, validateSize,
     validBusinessId, t, role, editingId, buildDto, assertBusinessExists,
-    post, smartPutClothingItem, loadAllProducts, bId, resetForm
+    post, smartPutClothingItem, loadAllProducts, bId, resetForm, gridActive
   ])
 
   const handleDelete = useCallback(async (id) => {
@@ -483,9 +575,7 @@ export default function ProductPanel({ business }) {
       (role || "").toLowerCase() === "employee"
         ? t("products.confirms.delete_request", { defaultValue: "Submit delete request for approval?" })
         : t("products.confirms.delete_permanent", { defaultValue: "Permanently delete this product?" })
-
     if (!window.confirm(confirmMessage)) return
-
     setLoading(true); setError(null)
     try {
       if ((role || "").toLowerCase() === "employee") {
@@ -503,11 +593,7 @@ export default function ProductPanel({ business }) {
       }
     } catch (err) {
       console.error("Delete error detail:", err)
-      setError(
-        err?.message
-          ? t("products.errors.delete_failed_with_reason", { defaultValue: "Failed to delete product: {{reason}}", reason: err.message })
-          : t("products.errors.delete_failed", { defaultValue: "Failed to delete product. Please check console/network for details." })
-      )
+      setError(err?.message ? t("products.errors.delete_failed_with_reason", { defaultValue: "Failed to delete product: {{reason}}", reason: err.message }) : t("products.errors.delete_failed", { defaultValue: "Failed to delete product. Please check console/network for details." }))
     } finally { setLoading(false) }
   }, [validBusinessId, role, post, t, bId, loadAllProducts, smartDeleteClothingItem])
 
@@ -543,6 +629,7 @@ export default function ProductPanel({ business }) {
       size: sizesArr.join(", "),
       material: product.material || "",
     })
+    setVariantQty({})
     setMainPhotoIndex(0); setError(null)
     setTouched({ name: false, price: false, quantity: false, size: false })
     setFieldErrors({ name: null, price: null, quantity: null, size: null })
@@ -611,15 +698,14 @@ export default function ProductPanel({ business }) {
     }
   }, [validBusinessId, isPinned, put, t, bId])
 
-  // Derived overall validity to disable Save button
   const formValid =
     !validateProductName(form.name) &&
     !validatePrice(form.price) &&
-    !validateQuantity(form.quantity) &&
     !validateSize(form.size) &&
+    (gridActive ? true : !validateQuantity(form.quantity)) &&
     validBusinessId
 
-  // ─── Menus & sheet behavior ─────────────────────────────────────────────
+  // Menus/sheet
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") {
@@ -649,7 +735,7 @@ export default function ProductPanel({ business }) {
   }
   const closeAllMenus = () => { setOpenMenuId(null); setSheetProduct(null) }
 
-  // ─── Render ──────────────────────────────────────────────────────────────
+  // Render
   if (!business) {
     return (
       <div className="no-business-selected">
@@ -661,7 +747,6 @@ export default function ProductPanel({ business }) {
 
   return (
     <>
-      {/* Error Display */}
       {error && (
         <div className="panel error">
           <div className="error-message">
@@ -675,13 +760,10 @@ export default function ProductPanel({ business }) {
         </div>
       )}
 
-      {/* Product Form */}
       <div className="panel product-form">
         <h3>
           <span className="panel-icon">📦</span>
-          {editingId
-            ? t("products.titles.edit", { defaultValue: "Edit Product" })
-            : t("products.titles.add", { defaultValue: "Add New Product" })}
+          {editingId ? t("products.titles.edit", { defaultValue: "Edit Product" }) : t("products.titles.add", { defaultValue: "Add New Product" })}
         </h3>
 
         <div className="form-group">
@@ -752,21 +834,26 @@ export default function ProductPanel({ business }) {
         <div className="form-group">
           <div className="grid three-cols">
             <div className="form-group">
-              <label htmlFor="product-quantity">{t("products.fields.quantity_req", { defaultValue: "Quantity *" })}</label>
+              <label htmlFor="product-quantity">
+                {gridActive
+                  ? t("products.fields.total_qty_auto", { defaultValue: "Total Quantity (auto)" })
+                  : t("products.fields.quantity_req", { defaultValue: "Quantity *" })}
+              </label>
               <input
                 id="product-quantity"
                 type="number"
                 min="0"
                 placeholder="0"
-                value={form.quantity}
-                onChange={(e) => setField("quantity", e.target.value, validateQuantity)}
-                onBlur={() => { setTouched(prev => ({ ...prev, quantity: true })); setFieldErrors(prev => ({ ...prev, quantity: validateQuantity(form.quantity) })) }}
-                disabled={loading}
-                className={touched.quantity && fieldErrors.quantity ? "input-error" : ""}
-                aria-invalid={touched.quantity && !!fieldErrors.quantity}
+                value={gridActive ? String(gridTotalQty) : form.quantity}
+                onChange={(e) => gridActive ? void 0 : setField("quantity", e.target.value, validateQuantity)}
+                onBlur={() => { if (!gridActive) { setTouched(prev => ({ ...prev, quantity: true })); setFieldErrors(prev => ({ ...prev, quantity: validateQuantity(form.quantity) })) } }}
+                disabled={loading || gridActive}
+                className={!gridActive && touched.quantity && fieldErrors.quantity ? "input-error" : ""}
+                aria-invalid={!gridActive && touched.quantity && !!fieldErrors.quantity}
                 aria-describedby="product-quantity-err"
+                readOnly={gridActive}
               />
-              {touched.quantity && fieldErrors.quantity && <div id="product-quantity-err" className="field-error" role="alert">{fieldErrors.quantity}</div>}
+              {!gridActive && touched.quantity && fieldErrors.quantity && <div id="product-quantity-err" className="field-error" role="alert">{fieldErrors.quantity}</div>}
             </div>
 
             <div className="form-group">
@@ -819,7 +906,50 @@ export default function ProductPanel({ business }) {
           </div>
         </div>
 
-        {/* Description */}
+        {gridActive && (
+          <div className="form-group">
+            <label>{t("products.fields.inventory_by_color_size", { defaultValue: "Inventory by Color & Size" })}</label>
+            <div className="variant-grid">
+              <table className="variants-table">
+                <thead>
+                  <tr>
+                    <th>{t("products.grid.color", { defaultValue: "Color \\ Size" })}</th>
+                    {parsedSizes.map(s => (
+                      <th key={s.key}>{s.label}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {parsedColors.map(color => (
+                    <tr key={color}>
+                      <td><strong>{color}</strong></td>
+                      {parsedSizes.map(s => {
+                        const k = `${color.toLowerCase()}|${s.key}`
+                        const val = variantQty[k] ?? 0
+                        return (
+                          <td key={k}>
+                            <input
+                              type="number"
+                              min="0"
+                              value={val}
+                              onChange={(e) => onCellQtyChange(color, s.key, e.target.value)}
+                              className="variant-cell-input"
+                              aria-label={`${color} ${s.label} quantity`}
+                            />
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="variant-total">
+              {t("products.grid.total", { defaultValue: "Total" })}: <strong>{gridTotalQty}</strong>
+            </div>
+          </div>
+        )}
+
         <div className="form-group">
           <label htmlFor="product-description">{t("products.fields.description", { defaultValue: "Description" })}</label>
           <textarea
@@ -831,7 +961,6 @@ export default function ProductPanel({ business }) {
           />
         </div>
 
-        {/* Photos */}
         <div className="form-group">
           <label>{t("products.fields.photos", { defaultValue: "Product Photos" })}</label>
           <label className="file-btn" aria-disabled={uploading || loading}>
@@ -892,7 +1021,6 @@ export default function ProductPanel({ business }) {
           )}
         </div>
 
-        {/* Actions */}
         <div className="actions">
           <button
             onClick={saveProduct}
@@ -914,7 +1042,6 @@ export default function ProductPanel({ business }) {
         </div>
       </div>
 
-      {/* Products List */}
       <div className="panel product-list">
         <h3>
           <span className="panel-icon">📋</span>
@@ -945,7 +1072,6 @@ export default function ProductPanel({ business }) {
                   const pinned = isPinned(p.clothingItemId)
                   const pinLabel = pinned ? t("products.pin.unpin", { defaultValue: "Unpin" }) : t("products.pin.pin", { defaultValue: "Pin" })
                   const quantityZero = (p.quantity ?? 0) <= 0
-
                   const displaySizes = joinForDisplay(p.sizes)
                   const displayColors = joinForDisplay(p.colors)
 
@@ -966,7 +1092,6 @@ export default function ProductPanel({ business }) {
                       </div>
 
                       <div className="row-actions">
-                        {/* Desktop buttons */}
                         <div className="btns">
                           <button onClick={() => startEdit(p)} disabled={loading} className="edit">{t("common.edit", { defaultValue: "Edit" })}</button>
                           <button onClick={() => handleDelete(p.clothingItemId)} disabled={loading} className="delete">{t("common.delete", { defaultValue: "Delete" })}</button>
@@ -988,7 +1113,6 @@ export default function ProductPanel({ business }) {
                           </button>
                         </div>
 
-                        {/* Small screens trigger */}
                         <button
                           type="button"
                           className="more-trigger"
@@ -1000,7 +1124,6 @@ export default function ProductPanel({ business }) {
                           ...
                         </button>
 
-                        {/* Popover (tablet/laptop small widths) */}
                         {openMenuId === p.clothingItemId && (
                           <div className="action-menu" role="menu" aria-label={t("products.actions.more_menu", { defaultValue: "Product actions" })}>
                             <button role="menuitem" className="menu-item menu-edit" onClick={() => { closeAllMenus(); startEdit(p) }}>
@@ -1051,60 +1174,33 @@ export default function ProductPanel({ business }) {
         </div>
       </div>
 
-      {/* Bottom sheet (phones) */}
       {sheetProduct && (
         <div className="bsheet is-open" aria-hidden={false}>
-          <div
-            className="bsheet-backdrop"
-            onClick={() => setSheetProduct(null)}
-          />
+          <div className="bsheet-backdrop" onClick={() => setSheetProduct(null)} />
           <div className="bsheet-panel" role="dialog" aria-modal="true">
             <div className="bsheet-handle" />
-
             <div className="bsheet-header">
               <h4 className="bsheet-title">{sheetProduct.name}</h4>
-              {sheetProduct.brand && (
-                <div className="bsheet-sub">{sheetProduct.brand}</div>
-              )}
+              {sheetProduct.brand && (<div className="bsheet-sub">{sheetProduct.brand}</div>)}
             </div>
-
             <div className="bsheet-actions">
-              <button
-                className="sheet-btn primary"
-                onClick={() => { setSheetProduct(null); startEdit(sheetProduct); }}
-              >
+              <button className="sheet-btn primary" onClick={() => { setSheetProduct(null); startEdit(sheetProduct); }}>
                 {t("common.edit", { defaultValue: "Edit" })}
               </button>
-
-              <button
-                className="sheet-btn danger"
-                onClick={() => { setSheetProduct(null); handleDelete(sheetProduct.clothingItemId); }}
-              >
+              <button className="sheet-btn danger" onClick={() => { setSheetProduct(null); handleDelete(sheetProduct.clothingItemId); }}>
                 {t("common.delete", { defaultValue: "Delete" })}
               </button>
-
-              <button
-                className="sheet-btn info"
-                disabled={pinLoadingId === sheetProduct.clothingItemId}
-                onClick={() => { setSheetProduct(null); togglePin(sheetProduct); }}
-              >
-                {isPinned(sheetProduct.clothingItemId)
-                  ? t("products.pin.unpin", { defaultValue: "Unpin" })
-                  : t("products.pin.pin",   { defaultValue: "Pin" })}
+              <button className="sheet-btn info" disabled={pinLoadingId === sheetProduct.clothingItemId} onClick={() => { setSheetProduct(null); togglePin(sheetProduct); }}>
+                {isPinned(sheetProduct.clothingItemId) ? t("products.pin.unpin", { defaultValue: "Unpin" }) : t("products.pin.pin", { defaultValue: "Pin" })}
               </button>
-
               <button
                 className="sheet-btn success"
-                disabled={
-                  saleLoadingId === sheetProduct.clothingItemId ||
-                  (sheetProduct.quantity ?? 0) <= 0
-                }
+                disabled={saleLoadingId === sheetProduct.clothingItemId || (sheetProduct.quantity ?? 0) <= 0}
                 onClick={() => { setSheetProduct(null); handleSale(sheetProduct); }}
               >
                 {t("products.sale.button", { defaultValue: "Sale" })}
               </button>
             </div>
-
             <div className="bsheet-footer">
               <button className="sheet-close" onClick={() => setSheetProduct(null)}>
                 {t("common.close", { defaultValue: "Close" })}

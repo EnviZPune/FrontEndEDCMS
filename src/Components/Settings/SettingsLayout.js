@@ -204,8 +204,7 @@ function SettingsLayoutInner({
   }, [isMobile]);
 
   // ───────────────────────────────────────────────────────────
-  // SWIPE OPEN (from a dedicated inside-the-page edge catcher)
-  // Uses Pointer Events + touch-action: pan-y to avoid iOS "back" swipe.
+  // SWIPE OPEN (left edge → right) — Pointer + Touch fallback
   // ───────────────────────────────────────────────────────────
   useEffect(() => {
     if (!isMobile || drawerOpen) return;
@@ -219,57 +218,100 @@ function SettingsLayoutInner({
     let tracking = false;
     let startX = 0, startY = 0, startT = 0;
 
-    const onDown = (e) => {
-      if (!("pointerType" in e)) return;
-      if (e.pointerType !== "touch" && e.pointerType !== "pen") return;
+    const start = (x, y) => {
       tracking = true;
-      startX = e.clientX;
-      startY = e.clientY;
+      startX = x;
+      startY = y;
       startT = Date.now();
-      // Stop iOS back-swipe by consuming the gesture here
-      try { el.setPointerCapture?.(e.pointerId); } catch {}
-      e.preventDefault();
     };
-
-    const onMove = (e) => {
+    const move = (x, y) => {
       if (!tracking) return;
-      const dx = e.clientX - startX;
-      const dy = Math.abs(e.clientY - startY);
+      const dx = x - startX;
+      const dy = Math.abs(y - startY);
       const dt = Date.now() - startT;
 
       if (dy > TILT_Y || dt > MAX_MS) {
         tracking = false;
-        try { el.releasePointerCapture?.(e.pointerId); } catch {}
         return;
       }
-
       if (dx > THRESH_X) {
         setDrawerOpen(true);
         tracking = false;
-        try { el.releasePointerCapture?.(e.pointerId); } catch {}
       }
     };
+    const end = () => { tracking = false; };
 
-    const onUp = (e) => {
-      tracking = false;
+    // ----- Pointer Events path -----
+    const hasPointer = "PointerEvent" in window;
+    let pointerIds = new Set();
+
+    const onPointerDown = (e) => {
+      // Allow touch, pen, and mouse (primary button)
+      if (e.button != null && e.button !== 0 && e.pointerType === "mouse") return;
+      pointerIds.add(e.pointerId);
+      // On iOS, capturing helps but not always; still keep it.
+      try { el.setPointerCapture?.(e.pointerId); } catch {}
+      // Stop iOS back-swipe; must be non-passive listener.
+      e.preventDefault();
+      start(e.clientX, e.clientY);
+    };
+    const onPointerMove = (e) => {
+      if (!pointerIds.has(e.pointerId)) return;
+      move(e.clientX, e.clientY);
+    };
+    const onPointerUp = (e) => {
+      pointerIds.delete(e.pointerId);
       try { el.releasePointerCapture?.(e.pointerId); } catch {}
+      end();
     };
 
-    el.addEventListener("pointerdown", onDown, { passive: false });
-    el.addEventListener("pointermove", onMove, { passive: false });
-    el.addEventListener("pointerup", onUp, { passive: true });
-    el.addEventListener("pointercancel", onUp, { passive: true });
+    // ----- Touch Events fallback (esp. older iOS Safari) -----
+    const onTouchStart = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      const t = e.touches[0];
+      // prevent back-swipe / scrolling
+      e.preventDefault();
+      start(t.clientX, t.clientY);
+    };
+    const onTouchMove = (e) => {
+      if (!tracking || !e.touches || e.touches.length === 0) return;
+      const t = e.touches[0];
+      // we prevent default to keep control of the gesture
+      e.preventDefault();
+      move(t.clientX, t.clientY);
+    };
+    const onTouchEnd = () => end();
+    const onTouchCancel = () => end();
+
+    // Attach listeners
+    if (hasPointer) {
+      el.addEventListener("pointerdown", onPointerDown, { passive: false });
+      el.addEventListener("pointermove", onPointerMove, { passive: false });
+      el.addEventListener("pointerup", onPointerUp, { passive: true });
+      el.addEventListener("pointercancel", onPointerUp, { passive: true });
+    }
+    // Always add touch fallback (helps on some iOS builds even with PointerEvent present)
+    el.addEventListener("touchstart", onTouchStart, { passive: false });
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchend", onTouchEnd, { passive: true });
+    el.addEventListener("touchcancel", onTouchCancel, { passive: true });
 
     return () => {
-      el.removeEventListener("pointerdown", onDown);
-      el.removeEventListener("pointermove", onMove);
-      el.removeEventListener("pointerup", onUp);
-      el.removeEventListener("pointercancel", onUp);
+      if (hasPointer) {
+        el.removeEventListener("pointerdown", onPointerDown);
+        el.removeEventListener("pointermove", onPointerMove);
+        el.removeEventListener("pointerup", onPointerUp);
+        el.removeEventListener("pointercancel", onPointerUp);
+      }
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener("touchcancel", onTouchCancel);
     };
   }, [isMobile, drawerOpen]);
 
   // ───────────────────────────────────────────────────────────
-  // SWIPE CLOSE (anywhere → left)
+  // SWIPE CLOSE (anywhere → left) — Pointer + Touch fallback
   // ───────────────────────────────────────────────────────────
   useEffect(() => {
     if (!isMobile || !drawerOpen) return;
@@ -281,19 +323,16 @@ function SettingsLayoutInner({
     let tracking = false;
     let startX = 0, startY = 0, startT = 0;
 
-    const onDown = (e) => {
-      if (!("pointerType" in e)) return;
-      if (e.pointerType !== "touch" && e.pointerType !== "pen") return;
+    const start = (x, y) => {
       tracking = true;
-      startX = e.clientX;
-      startY = e.clientY;
+      startX = x;
+      startY = y;
       startT = Date.now();
     };
-
-    const onMove = (e) => {
+    const move = (x, y) => {
       if (!tracking) return;
-      const dx = e.clientX - startX;
-      const dy = Math.abs(e.clientY - startY);
+      const dx = x - startX;
+      const dy = Math.abs(y - startY);
       const dt = Date.now() - startT;
       if (dy > TILT_Y || dt > MAX_MS) {
         tracking = false;
@@ -304,19 +343,65 @@ function SettingsLayoutInner({
         tracking = false;
       }
     };
+    const end = () => { tracking = false; };
 
-    const onUp = () => { tracking = false; };
+    const hasPointer = "PointerEvent" in window;
+    let pointerActive = false;
 
-    document.addEventListener("pointerdown", onDown, { passive: true });
-    document.addEventListener("pointermove", onMove, { passive: true });
-    document.addEventListener("pointerup", onUp, { passive: true });
-    document.addEventListener("pointercancel", onUp, { passive: true });
+    const onPointerDown = (e) => {
+      if (e.button != null && e.button !== 0 && e.pointerType === "mouse") return;
+      pointerActive = true;
+      start(e.clientX, e.clientY);
+    };
+    const onPointerMove = (e) => {
+      if (!pointerActive) return;
+      move(e.clientX, e.clientY);
+    };
+    const onPointerUp = () => {
+      pointerActive = false;
+      end();
+    };
+
+    const onTouchStart = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      const t = e.touches[0];
+      // we don't want to block page scroll unless it's clearly horizontal; still keep non-passive on move
+      start(t.clientX, t.clientY);
+    };
+    const onTouchMove = (e) => {
+      if (!tracking || !e.touches || e.touches.length === 0) return;
+      const t = e.touches[0];
+      // prevent default only when we detect strong horizontal intent
+      const dx = t.clientX - startX;
+      const dy = Math.abs(t.clientY - startY);
+      if (Math.abs(dx) > dy) e.preventDefault();
+      move(t.clientX, t.clientY);
+    };
+    const onTouchEnd = () => end();
+    const onTouchCancel = () => end();
+
+    if (hasPointer) {
+      document.addEventListener("pointerdown", onPointerDown, { passive: true });
+      document.addEventListener("pointermove", onPointerMove, { passive: true });
+      document.addEventListener("pointerup", onPointerUp, { passive: true });
+      document.addEventListener("pointercancel", onPointerUp, { passive: true });
+    }
+    document.addEventListener("touchstart", onTouchStart, { passive: true });
+    document.addEventListener("touchmove", onTouchMove, { passive: false });
+    document.addEventListener("touchend", onTouchEnd, { passive: true });
+    document.addEventListener("touchcancel", onTouchCancel, { passive: true });
 
     return () => {
-      document.removeEventListener("pointerdown", onDown);
-      document.removeEventListener("pointermove", onMove);
-      document.removeEventListener("pointerup", onUp);
-      document.removeEventListener("pointercancel", onUp);
+      if (hasPointer) {
+        document.removeEventListener("pointerdown", onPointerDown);
+        document.removeEventListener("pointermove", onPointerMove);
+        document.removeEventListener("pointerup", onPointerUp);
+        document.removeEventListener("pointercancel", onPointerUp);
+      }
+      document.removeEventListener("touchstart", onTouchStart);
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("touchend", onTouchEnd);
+      document.removeEventListener("touchcancel", onTouchCancel);
     };
   }, [isMobile, drawerOpen]);
 
@@ -342,8 +427,7 @@ function SettingsLayoutInner({
 
         {isMobile && <div className="settings-edge-hint" aria-hidden="true" />}
 
-        {/* Left-edge catcher (visible only on mobile when drawer is closed).
-            Inline styles ensure it works without extra CSS changes. */}
+        {/* Left-edge catcher (visible only on mobile when drawer is closed). */}
         {isMobile && !drawerOpen && (
           <div
             ref={edgeRef}
@@ -356,7 +440,10 @@ function SettingsLayoutInner({
               width: 24,           // edge zone width
               zIndex: 3,           // above content, below drawer if any
               background: "transparent",
-              touchAction: "pan-y" // allow vertical scroll; block horizontal for our gesture
+              // Allow vertical scrolling, but signal we handle horizontal swipes.
+              touchAction: "pan-y",
+              // Optional: a visual cue when debugging
+              // background: "rgba(255,0,0,.0)"
             }}
           />
         )}
