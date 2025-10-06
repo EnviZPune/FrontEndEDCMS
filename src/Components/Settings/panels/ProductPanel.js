@@ -597,43 +597,62 @@ export default function ProductPanel({ business }) {
     } finally { setLoading(false) }
   }, [validBusinessId, role, post, t, bId, loadAllProducts, smartDeleteClothingItem])
 
-  const startEdit = useCallback((product) => {
-    const pics =
-      Array.isArray(product.pictureUrls)
-        ? product.pictureUrls
-        : typeof product.pictureUrls === "string" && product.pictureUrls.trim()
-          ? (() => {
-              try {
-                const arr = JSON.parse(product.pictureUrls)
-                return Array.isArray(arr) ? arr : [product.pictureUrls]
-              } catch {
-                return [product.pictureUrls]
-              }
-            })()
-          : []
+const startEdit = useCallback((product) => {
+  const pics =
+    Array.isArray(product.pictureUrls)
+      ? product.pictureUrls
+      : typeof product.pictureUrls === "string" && product.pictureUrls.trim()
+        ? (() => {
+            try {
+              const arr = JSON.parse(product.pictureUrls)
+              return Array.isArray(arr) ? arr : [product.pictureUrls]
+            } catch {
+              return [product.pictureUrls]
+            }
+          })()
+        : []
 
-    const sizesArr = parseMaybeJsonArray(product.sizes)
-    const colorsArr = parseMaybeJsonArray(product.colors)
+  const sizesArr  = parseMaybeJsonArray(product.sizes)
+  const colorsArr = parseMaybeJsonArray(product.colors)
 
-    setEditingId(product.clothingItemId)
-    setForm({
-      name: product.name || "",
-      description: product.description || "",
-      price: (product.price != null ? String(product.price) : "") || "",
-      quantity: (product.quantity != null ? String(product.quantity) : "") || "",
-      categoryId: product.clothingCategoryId != null ? String(product.clothingCategoryId) : "",
-      brand: product.brand || "",
-      model: product.model || "",
-      photos: pics,
-      colors: colorsArr.join(", "),
-      size: sizesArr.join(", "),
-      material: product.material || "",
-    })
-    setVariantQty({})
-    setMainPhotoIndex(0); setError(null)
-    setTouched({ name: false, price: false, quantity: false, size: false })
-    setFieldErrors({ name: null, price: null, quantity: null, size: null })
-  }, [])
+  setEditingId(product.clothingItemId)
+  setForm({
+    name: product.name || "",
+    description: product.description || "",
+    price: (product.price != null ? String(product.price) : "") || "",
+    quantity: (product.quantity != null ? String(product.quantity) : "") || "",
+    categoryId: product.clothingCategoryId != null ? String(product.clothingCategoryId) : "",
+    brand: product.brand || "",
+    model: product.model || "",
+    photos: pics,
+    colors: colorsArr.join(", "),
+    size: sizesArr.join(", "),
+    material: product.material || "",
+  })
+
+  // Prefill variant quantities from the API payload so totals show correctly.
+  const variantsRaw = Array.isArray(product.variants)
+    ? product.variants
+    : Array.isArray(product.Variants)
+      ? product.Variants
+      : []
+
+  const initialVQty = {}
+  for (const v of variantsRaw) {
+    const color = String(v.color ?? v.Color ?? "").toLowerCase()
+    const kind  = Number(v.sizeKind ?? v.SizeKind ?? v.kind ?? v.Kind ?? v?.size?.kind ?? v?.size?.Kind) || 0
+    const a     = Number(v.a ?? v.A ?? v?.size?.a ?? v?.size?.A) || 0
+    const b     = Number(v.b ?? v.B ?? v?.size?.b ?? v?.size?.B) || 0
+    const qty   = Number(v.quantity ?? v.Quantity) || 0
+    const key   = `${color}|${kind}:${a}:${b}`
+    initialVQty[key] = qty
+  }
+  setVariantQty(initialVQty)
+
+  setMainPhotoIndex(0); setError(null)
+  setTouched({ name: false, price: false, quantity: false, size: false })
+  setFieldErrors({ name: null, price: null, quantity: null, size: null })
+}, [])
 
   const removePhoto = useCallback((indexToRemove) => {
     setForm((prev) => ({ ...prev, photos: prev.photos.filter((_, idx) => idx !== indexToRemove) }))
@@ -891,20 +910,36 @@ export default function ProductPanel({ business }) {
           </div>
         </div>
 
-        <div className="form-group">
-          <div className="grid two-cols">
-            <div className="form-group">
-              <label htmlFor="product-colors">{t("products.fields.colors", { defaultValue: "Colors" })}</label>
-              <input
-                id="product-colors"
-                placeholder={t("products.placeholders.colors", { defaultValue: "Red, Blue, Green (comma separated)" })}
-                value={form.colors}
-                onChange={(e) => setForm((f) => ({ ...f, colors: e.target.value }))}
-                disabled={loading}
-              />
-            </div>
-          </div>
-        </div>
+        {/* Colors + Material */}
+<div className="form-group">
+  <div className="grid two-cols">
+    <div className="form-group">
+      <label htmlFor="product-colors">
+        {t("products.fields.colors", { defaultValue: "Colors" })}
+      </label>
+      <input
+        id="product-colors"
+        placeholder={t("products.placeholders.colors", { defaultValue: "Red, Blue, Green (comma separated)" })}
+        value={form.colors}
+        onChange={(e) => setForm((f) => ({ ...f, colors: e.target.value }))}
+        disabled={loading}
+      />
+    </div>
+
+    <div className="form-group">
+      <label htmlFor="product-material">
+        {t("products.fields.material", { defaultValue: "Material" })}
+      </label>
+      <input
+        id="product-material"
+        placeholder={t("products.placeholders.material", { defaultValue: "e.g. Cotton, Polyester, Wool" })}
+        value={form.material}
+        onChange={(e) => setForm((f) => ({ ...f, material: e.target.value }))}
+        disabled={loading}
+      />
+    </div>
+  </div>
+</div>
 
         {gridActive && (
           <div className="form-group">
