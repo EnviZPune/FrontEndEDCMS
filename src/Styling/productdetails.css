@@ -452,10 +452,6 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: none; box
     flex-wrap: wrap;
     gap: 8px;
   }
-  .back-to-shop-button.small {
-    order: 2;         /* button below title on tiny screens */
-    width: 100%;
-  }
 }
 
 /* ================================
@@ -479,18 +475,18 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: none; box
 @media (max-width: 480px) {
   :root { --thumb-size: 52px; }
   .product-main { grid-template-columns: 1fr; gap: var(--gap-3); }
-  .product-images { height: clamp(360px, 58vh, 520px); padding: 10px; }
-  .main-image { height: 70%; object-fit: contain; }
+  .product-images { height: 450px; padding: 10px; max-width: 400px;}
+  .main-image { height: 65%; object-fit: contain; max-width: 400px;}
   .carousel-arrow { display: none; }
   .thumbnail-list { gap: var(--gap-2); }
-  .product-info h1 { font-size: 20px; }
-  .product-info-grid { grid-template-columns: 1fr; gap: var(--gap-2); }
-  .info-card { padding: 12px; }
+  .product-info h1 { font-size: 20px; position: relative; top: 7px;}
+  .product-info-grid { grid-template-columns: 1fr; gap: var(--gap-2);}
+  .info-card { padding: 12px; max-width: 400px;}
 
   .info-card table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .info-card thead, .info-card tbody, .info-card tr { display: table; width: 100%; }
 
-  .rezerve-button { position: sticky; bottom: 12px; z-index: 30; }
+  .rezerve-button { position: relative; top: 15px; z-index: 30; width: 410px;}
 }
 
 /* Small tablets / large phones (481–768px) */

@@ -585,8 +585,8 @@ const ProductDetailsPage = () => {
               className="loading-gif"
               src={isDarkMode ? LOADING_GIF_DARK : LOADING_GIF_LIGHT}
               alt="Loading"
-              width={140}
-              height={140}
+              width={100}
+              height={100}
               style={{ objectFit: "contain" }}
             />
             <p className="loading-text">Loading ...</p>
