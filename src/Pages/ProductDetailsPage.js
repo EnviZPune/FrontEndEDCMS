@@ -140,6 +140,33 @@ const ProductDetailsPage = () => {
     if (typeof window === "undefined" || !window.matchMedia) return false;
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
+
+  const gridUI = React.useMemo(
+  () =>
+    isDarkMode
+      ? {
+          headerBg:  "#0f172a", // slate-900-ish
+          headerFg:  "#cbd5e1", // slate-300
+          border:    "#334155", // slate-600
+          rowHeadBg: "#0b1220", // deep panel
+          filledBg:  "#0b1220",
+          filledFg:  "#e5e7eb", // slate-200
+          emptyBg:   "#111827", // slate-800
+          emptyFg:   "#64748b", // slate-500
+        }
+      : {
+          headerBg:  "#f9fafb",
+          headerFg:  "#111827",
+          border:    "#e5e7eb",
+          rowHeadBg: "#ffffff",
+          filledBg:  "#ffffff",
+          filledFg:  "#111827",
+          emptyBg:   "#f3f4f6",
+          emptyFg:   "#6b7280",
+        },
+  [isDarkMode]
+);
+
   useEffect(() => {
     if (!window.matchMedia) return;
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -799,87 +826,93 @@ const priceLabel = !Number.isNaN(priceNumber)
                       {t("stock.per_variant", { defaultValue: "Available by Color & Size" })}
                     </p>
                     <div style={{ overflowX: "auto" }}>
-                      <table
-                        style={{
-                          borderCollapse: "separate",
-                          borderSpacing: 0,
-                          minWidth: 480,
-                          width: "100%",
-                          fontSize: 14,
-                        }}
-                      >
-                        <thead>
-                          <tr>
-                            <th
+                    <table
+                    style={{
+                      borderCollapse: "separate",
+                      borderSpacing: 0,
+                      minWidth: 480,
+                      width: "100%",
+                      fontSize: 14,
+                    }}
+                  >
+                    <thead>
+                      <tr>
+                        <th
+                          style={{
+                            position: "sticky",
+                            left: 0,
+                            background: gridUI.headerBg,
+                            color: gridUI.headerFg,
+                            border: `1px solid ${gridUI.border}`,
+                            padding: "8px 10px",
+                            textAlign: "left",
+                            zIndex: 1,
+                          }}
+                        >
+                          {t("fields.color", { defaultValue: "Color" })} \{" "}
+                          {t("fields.size", { defaultValue: "Size" })}
+                        </th>
+
+                        {gridAxes.sizes.map((s) => (
+                          <th
+                            key={s.key}
+                            style={{
+                              border: `1px solid ${gridUI.border}`,
+                              padding: "8px 10px",
+                              background: gridUI.headerBg,
+                              color: gridUI.headerFg,
+                              textAlign: "center",
+                              whiteSpace: "nowrap",
+                            }}
+                            title={`${s.label}`}
+                          >
+                            {s.label}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {variantGrid.map((row) => (
+                        <tr key={row.color}>
+                          <th
+                            style={{
+                              position: "sticky",
+                              left: 0,
+                              background: gridUI.rowHeadBg,
+                              color: gridUI.headerFg,
+                              border: `1px solid ${gridUI.border}`,
+                              padding: "8px 10px",
+                              textAlign: "left",
+                              zIndex: 1,
+                              whiteSpace: "nowrap",
+                            }}
+                            scope="row"
+                            title={row.color}
+                          >
+                            {row.color}
+                          </th>
+
+                          {row.cells.map((qty, idx) => (
+                            <td
+                              key={`${row.color}-${idx}`}
                               style={{
-                                position: "sticky",
-                                left: 0,
-                                background: "#f9fafb",
-                                border: "1px solid #e5e7eb",
+                                border: `1px solid ${gridUI.border}`,
                                 padding: "8px 10px",
-                                textAlign: "left",
-                                zIndex: 1,
+                                textAlign: "center",
+                                background: qty > 0 ? gridUI.filledBg : gridUI.emptyBg,
+                                color: qty > 0 ? gridUI.filledFg : gridUI.emptyFg,
+                                fontWeight: qty > 0 ? 600 : 400,
                               }}
+                              aria-label={`${row.color} / ${gridAxes.sizes[idx].label}`}
                             >
-                              {t("fields.color", { defaultValue: "Color" })} \{" "}
-                              {t("fields.size", { defaultValue: "Size" })}
-                            </th>
-                            {gridAxes.sizes.map((s) => (
-                              <th
-                                key={s.key}
-                                style={{
-                                  border: "1px solid #e5e7eb",
-                                  padding: "8px 10px",
-                                  background: "#f9fafb",
-                                  textAlign: "center",
-                                  whiteSpace: "nowrap",
-                                }}
-                                title={`${s.label}`}
-                              >
-                                {s.label}
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {variantGrid.map((row) => (
-                            <tr key={row.color}>
-                              <th
-                                style={{
-                                  position: "sticky",
-                                  left: 0,
-                                  background: "#fff",
-                                  border: "1px solid #e5e7eb",
-                                  padding: "8px 10px",
-                                  textAlign: "left",
-                                  zIndex: 1,
-                                  whiteSpace: "nowrap",
-                                }}
-                                scope="row"
-                                title={row.color}
-                              >
-                                {row.color}
-                              </th>
-                              {row.cells.map((qty, idx) => (
-                                <td
-                                  key={`${row.color}-${idx}`}
-                                  style={{
-                                    border: "1px solid #e5e7eb",
-                                    padding: "8px 10px",
-                                    textAlign: "center",
-                                    background: qty > 0 ? "#ffffff" : "#f3f4f6",
-                                    color: qty > 0 ? "#111827" : "#6b7280",
-                                    fontWeight: qty > 0 ? 600 : 400,
-                                  }}
-                                  aria-label={`${row.color} / ${gridAxes.sizes[idx].label}`}
-                                >
-                                  {qty}
-                                </td>
-                              ))}
-                            </tr>
+                              {qty}
+                            </td>
                           ))}
-                        </tbody>
-                      </table>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                     </div>
                   </div>
                 )}
@@ -1107,7 +1140,7 @@ const priceLabel = !Number.isNaN(priceNumber)
                 }}
                 title={t("lightbox.reset", { defaultValue: "Reset" })}
               >
-                100%
+                ⟳
               </button>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import Fuse from "fuse.js";
@@ -9,7 +9,7 @@ const API_BASE = "https://api.triwears.com/api";
 const DEFAULT_LOGO_LIGHT = "/Assets/default-shop-logo-light.png";
 const DEFAULT_LOGO_DARK = "/Assets/default-shop-logo-dark.png";
 const DEFAULT_PRODUCT_LIGHT = "/Assets/default-product-light.png";
-const DEFAULT_PRODUCT_DARK  = "/Assets/default-product-dark.png";
+const DEFAULT_PRODUCT_DARK = "/Assets/default-product-dark.png";
 
 function getToken() {
   const raw = localStorage.getItem("token");
@@ -29,7 +29,6 @@ const slugify = (str) =>
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
 
-
 const foldDiacritics = (s) =>
   String(s || "")
     .normalize("NFD")
@@ -39,155 +38,18 @@ const foldDiacritics = (s) =>
 
 const normalizeText = (s) => foldDiacritics(String(s || "").toLowerCase());
 const tokenize = (s) => normalizeText(s).split(/[^a-z0-9]+/).filter(Boolean);
-const LETTER_SIZES = [
-  "XXXS",
-  "XXS",
-  "XS",
-  "S",
-  "M",
-  "L",
-  "XL",
-  "XXL",
-  "XXXL",
-  "XXXXL",
-  "4XL",
-  "5XL",
-  "6XL",
-];
 
+const LETTER_SIZES = ["XXXS", "XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL", "XXXXL", "4XL", "5XL", "6XL"];
 const normalizeSizeToken = (s) => String(s).trim().toUpperCase().replace(/\s+/g, "");
 
-function pickSizeLabel(item) {
-  if (!item) return "";
-
-  const single =
-    item.size ||
-    item.Size ||
-    item.sizeLabel ||
-    item.sizeName ||
-    item.dimension ||
-    item.Dimension;
-  if (single && typeof single === "string") return single.trim();
-
-  const arrayish =
-    item.sizes ||
-    item.Sizes ||
-    item.availableSizes ||
-    item.AvailableSizes ||
-    item.sizeOptions ||
-    item.SizeOptions;
-  if (Array.isArray(arrayish)) {
-    const parts = arrayish.map(String).map((s) => s.trim()).filter(Boolean);
-    if (parts.length) return parts.join("/");
-  }
-  if (typeof arrayish === "string") {
-    const parts = arrayish
-      .split(/[\,\|/]+/)
-      .map((s) => s.trim())
-      .filter(Boolean);
-    if (parts.length) return parts.join("/");
-  }
-
-  const dict =
-    item.sizeMap ||
-    item.availability ||
-    item.Availability ||
-    item.stockBySize ||
-    item.StockBySize;
-  if (dict && typeof dict === "object" && !Array.isArray(dict)) {
-    const keys = Object.keys(dict).map((k) => String(k).trim()).filter(Boolean);
-    if (keys.length) return keys.join("/");
-  }
-
-  const variants = item.variants || item.Variants || item.options || item.Options;
-  if (Array.isArray(variants)) {
-    const parts = Array.from(
-      new Set(
-        variants
-          .map((v) => v?.size || v?.Size || v?.option || v?.Option)
-          .map((s) => (s == null ? "" : String(s).trim()))
-          .filter(Boolean)
-      )
-    );
-    if (parts.length) return parts.join("/");
-  }
-
-  return "";
-}
-
-function extractSizeTokens(item) {
-  const out = new Set();
-  const pushToken = (t) => {
-    const tok = normalizeSizeToken(t);
-    if (!tok) return;
-    if (LETTER_SIZES.includes(tok) || /^[0-9]{1,3}(\.[0-9])?$/.test(tok)) {
-      out.add(tok);
-    }
-  };
-
-  const label = pickSizeLabel(item);
-  if (label) {
-    label
-      .split(/[\,\|/ ]+/)
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .forEach(pushToken);
-  }
-
-  const rawArrays = [
-    item.sizes,
-    item.Sizes,
-    item.availableSizes,
-    item.AvailableSizes,
-    item.sizeOptions,
-    item.SizeOptions,
-  ].filter(Boolean);
-  rawArrays.forEach((arr) => {
-    if (Array.isArray(arr)) arr.forEach(pushToken);
-    else if (typeof arr === "string") arr.split(/[\,\|/ ]+/).forEach(pushToken);
-  });
-
-  const dicts = [
-    item.sizeMap,
-    item.availability,
-    item.Availability,
-    item.stockBySize,
-    item.StockBySize,
-  ].filter(Boolean);
-  dicts.forEach((d) => {
-    if (d && typeof d === "object" && !Array.isArray(d)) Object.keys(d).forEach(pushToken);
-  });
-
-  const variants = item.variants || item.Variants || item.options || item.Options;
-  if (Array.isArray(variants)) {
-    variants.forEach((v) => pushToken(v?.size || v?.Size || v?.option || v?.Option));
-  }
-
-  return Array.from(out);
-}
-
-function parseSizeFromQuery(q) {
-  const parts = String(q).trim().split(/\s+/);
-  const sizeTokens = [];
-  const others = [];
-  parts.forEach((p) => {
-    const tok = normalizeSizeToken(p);
-    if (LETTER_SIZES.includes(tok) || /^[0-9]{1,3}(\.[0-9])?$/.test(tok)) {
-      sizeTokens.push(tok);
-    } else {
-      others.push(p);
-    }
-  });
-  return { sizeTokens, nonSizeQuery: others.join(" ").trim() };
-}
-
+/* ===== Canonical dictionaries ===== */
 const COLOR_CANON = {
   black: ["black", "e zeze", "i zi", "zi"],
   white: ["white", "e bardhe", "bardh", "bardhe"],
   gray: ["gray", "grey", "gri"],
-  blue: ["blue", "blu", "e kalter", "kalt\u00ebr", "i kalter"],
-  lightblue: ["lightblue", "e kalter e hapur", "e qellet"],
-  navy: ["navy", "navyblue", "blu e erret"],
+  blue: ["blue", "blu", "e kalter", "kalter", "i kalter"],
+  lightblue: ["lightblue", "light blue", "e kalter e hapur", "e qellet"],
+  navy: ["navy", "navyblue", "navy blue", "blu e erret"],
   red: ["red", "e kuqe", "kuqe"],
   green: ["green", "jeshile", "i gjelber", "gjelber"],
   yellow: ["yellow", "e verdhe", "verdhe"],
@@ -206,7 +68,7 @@ const STYLE_CANON = {
   lowrise: ["low rise", "low-rise", "bel i ulet", "i ulet"],
   cargo: ["cargo", "xhepa", "kargo"],
   hooded: ["hoodie", "hooded", "me kapuc", "kapuc"],
-  waterproof: ["waterproof", "rezistent ndaj ujit", "kundra ujit", "kund\u00ebr ujit"],
+  waterproof: ["waterproof", "rezistent ndaj ujit", "kundra ujit", "kunder ujit"],
   padded: ["padded", "me shtrese", "me jastek"],
   vintage: ["vintage", "retro", "i vjeter", "second hand", "sekond hand"],
 };
@@ -221,8 +83,8 @@ const CATEGORY_CANON = {
   hoodie: ["hoodie", "bluze me kapuc", "kapucon"],
   dress: ["dress", "fustan"],
   skirt: ["skirt", "fund"],
-  shoes: ["shoes", "kepuce", "k\u00ebpuce"],
-  sneakers: ["sneakers", "atlete", "adidas"], // colloquial "adidas" for sneakers in Balkans
+  shoes: ["shoes", "kepuce", "kepuce"],
+  sneakers: ["sneakers", "atlete", "adidas"],
   boots: ["boots", "cizme"],
   hat: ["hat", "kapele"],
   bag: ["bag", "cante", "cant"],
@@ -238,6 +100,7 @@ const BRAND_ALIASES = {
   jordan: ["jordan", "air jordan", "aj1", "j1", "retro"],
 };
 
+/* ===== Helpers to expand/lookup ===== */
 function buildReverseMap(canon) {
   const map = new Map();
   for (const [canonical, arr] of Object.entries(canon)) {
@@ -255,41 +118,121 @@ const REV_STYLE = buildReverseMap(STYLE_CANON);
 const REV_CATEGORY = buildReverseMap(CATEGORY_CANON);
 const REV_BRAND = buildReverseMap(BRAND_ALIASES);
 
-const STOP_EN = new Set([
-  "the",
-  "a",
-  "an",
-  "and",
-  "or",
-  "of",
-  "with",
-  "for",
-  "to",
-]);
-const STOP_AL = new Set(["dhe", "me", "per", "p\u00ebr", "te", "t\u00eb", "ne", "n\u00eb", "nga"]);
+const STOP_EN = new Set(["the", "a", "an", "and", "or", "of", "with", "for", "to"]);
+const STOP_AL = new Set(["dhe", "me", "per", "për", "te", "të", "ne", "në", "nga"]);
 
-function removeStopWords(tokens) {
-  return tokens.filter((t) => !STOP_EN.has(t) && !STOP_AL.has(t));
-}
+const removeStopWords = (tokens) => tokens.filter((t) => !STOP_EN.has(t) && !STOP_AL.has(t));
 
-function expandTokens(tokens) {
+const expandTokens = (tokens) => {
   const out = new Set(tokens);
   for (const tok of tokens) {
     if (REV_CATEGORY.has(tok)) for (const c of REV_CATEGORY.get(tok)) out.add(c);
-    if (REV_COLOR.has(tok)) for (const c of REV_COLOR.get(tok)) out.add(c);
     if (REV_STYLE.has(tok)) for (const c of REV_STYLE.get(tok)) out.add(c);
     if (REV_BRAND.has(tok)) for (const c of REV_BRAND.get(tok)) out.add(c);
+    // keep colors out here; phrase-aware detection below handles multi-word color aliases
+    if (REV_COLOR.has(tok)) for (const c of REV_COLOR.get(tok)) out.add(c); // single-token colors still work
   }
   return Array.from(out);
-}
+};
+
+/* ===== Phrase-aware color detection ===== */
+const ESC = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const COLOR_ALIAS_PAIRS = Object.entries(COLOR_CANON).flatMap(([canon, arr]) =>
+  arr.map((alias) => [normalizeText(alias), canon])
+);
 
 function detectCanonicalColors(textLike) {
-  const toks = tokenize(textLike);
+  const norm = normalizeText(textLike);
+  if (!norm) return [];
   const found = new Set();
-  for (const t of toks) if (REV_COLOR.has(t)) for (const c of REV_COLOR.get(t)) found.add(c);
+  for (const [alias, canon] of COLOR_ALIAS_PAIRS) {
+    if (!alias) continue;
+    const re = new RegExp(`(^|[^a-z0-9])${ESC(alias)}([^a-z0-9]|$)`);
+    if (re.test(norm)) found.add(canon);
+  }
   return Array.from(found);
 }
 
+/* ===== Size helpers ===== */
+function pickSizeLabel(item) {
+  if (!item) return "";
+  const single = item.size || item.Size || item.sizeLabel || item.sizeName || item.dimension || item.Dimension;
+  if (single && typeof single === "string") return single.trim();
+
+  const arrayish =
+    item.sizes || item.Sizes || item.availableSizes || item.AvailableSizes || item.sizeOptions || item.SizeOptions;
+  if (Array.isArray(arrayish)) {
+    const parts = arrayish.map(String).map((s) => s.trim()).filter(Boolean);
+    if (parts.length) return parts.join("/");
+  }
+  if (typeof arrayish === "string") {
+    const parts = arrayish.split(/[,\|/]+/).map((s) => s.trim()).filter(Boolean);
+    if (parts.length) return parts.join("/");
+  }
+
+  const dict = item.sizeMap || item.availability || item.Availability || item.stockBySize || item.StockBySize;
+  if (dict && typeof dict === "object" && !Array.isArray(dict)) {
+    const keys = Object.keys(dict).map((k) => String(k).trim()).filter(Boolean);
+    if (keys.length) return keys.join("/");
+  }
+
+  const variants = item.variants || item.Variants || item.options || item.Options;
+  if (Array.isArray(variants)) {
+    const parts = Array.from(
+      new Set(
+        variants.map((v) => v?.size || v?.Size || v?.option || v?.Option).map((s) => (s == null ? "" : String(s).trim())).filter(Boolean)
+      )
+    );
+    if (parts.length) return parts.join("/");
+  }
+  return "";
+}
+
+function extractSizeTokens(item) {
+  const out = new Set();
+  const push = (t) => {
+    const tok = normalizeSizeToken(t);
+    if (!tok) return;
+    if (LETTER_SIZES.includes(tok) || /^[0-9]{1,3}(\.[0-9])?$/.test(tok)) out.add(tok);
+  };
+
+  const label = pickSizeLabel(item);
+  if (label) label.split(/[,\|/ ]+/).map((s) => s.trim()).filter(Boolean).forEach(push);
+
+  const arrays = [item.sizes, item.Sizes, item.availableSizes, item.AvailableSizes, item.sizeOptions, item.SizeOptions].filter(Boolean);
+  arrays.forEach((arr) => {
+    if (Array.isArray(arr)) arr.forEach(push);
+    else if (typeof arr === "string") arr.split(/[,\|/ ]+/).forEach(push);
+  });
+
+  const dicts = [item.sizeMap, item.availability, item.Availability, item.stockBySize, item.StockBySize].filter(Boolean);
+  dicts.forEach((d) => {
+    if (d && typeof d === "object" && !Array.isArray(d)) Object.keys(d).forEach(push);
+  });
+
+  const variants = item.variants || item.Variants || item.options || item.Options;
+  if (Array.isArray(variants)) variants.forEach((v) => push(v?.size || v?.Size || v?.option || v?.Option));
+
+  return Array.from(out);
+}
+
+function parseQuery(q) {
+  const parts = String(q).trim().split(/\s+/);
+  const sizeTokens = [];
+  const others = [];
+  for (const p of parts) {
+    const tok = normalizeSizeToken(p);
+    if (LETTER_SIZES.includes(tok) || /^[0-9]{1,3}(\.[0-9])?$/.test(tok)) sizeTokens.push(tok);
+    else others.push(p);
+  }
+  const nonSizeText = others.join(" ").trim();
+  const colorTokens = detectCanonicalColors(nonSizeText);
+  const baseTokens = removeStopWords(tokenize(nonSizeText));
+  const expandedTokens = expandTokens(baseTokens);
+  return { sizeTokens, colorTokens, expandedTokens, nonSizeText };
+}
+
+/* ===== Component ===== */
 export default function SearchBar() {
   const { t } = useTranslation("searchbar");
   const navigate = useNavigate();
@@ -306,6 +249,7 @@ export default function SearchBar() {
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
   );
+
   useEffect(() => {
     if (!window.matchMedia) return;
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -318,8 +262,6 @@ export default function SearchBar() {
     };
   }, []);
 
-  const recognitionRef = useRef(null);
-
   useEffect(() => {
     const fetchAll = async () => {
       const token = getToken();
@@ -329,9 +271,7 @@ export default function SearchBar() {
         const payload = token.split(".")[1];
         const decoded = JSON.parse(window.atob(payload));
         setCurrentUserId(decoded.userId || decoded.id || decoded.sub);
-      } catch (err) {
-        console.error("Failed to decode token:", err);
-      }
+      } catch {}
 
       const headers = { Authorization: `Bearer ${token}` };
 
@@ -350,18 +290,21 @@ export default function SearchBar() {
           bizData.map(async (b) => {
             const itemsRes = await fetch(`${API_BASE}/ClothingItem/business/${b.businessId}`, { headers });
             const itemsData = await itemsRes.json();
+
             return {
               id: b.businessId,
               slug: b.slug || slugify(b.name),
               name: b.name,
               logoUrl: (b.profilePictureUrl || "").trim(),
-              address: b.address,
-              phoneNumber: b.businessPhoneNumber,
-              NIPT: b.nipt,
-              description: b.description,
+              address: b.address || "",
+              openingHours: b.openingHours || b.OpeningHours || "",
+              phoneNumber: b.businessPhoneNumber || "",
+              NIPT: b.nipt || "",
+              description: b.description || "",
               clothingItems: itemsData.map((i) => {
                 const sizeLabel = pickSizeLabel(i);
                 const sizeTokens = extractSizeTokens(i);
+
                 const alias = new Set();
                 const brand = normalizeText(i.brand);
                 const model = normalizeText(i.model);
@@ -378,39 +321,40 @@ export default function SearchBar() {
                   alias.add(categoryRaw);
                   if (REV_CATEGORY.has(categoryRaw)) for (const c of REV_CATEGORY.get(categoryRaw)) alias.add(c);
                 }
-
                 if (brand) {
                   alias.add(brand);
                   if (REV_BRAND.has(brand)) for (const c of REV_BRAND.get(brand)) alias.add(c);
                 }
-
                 [model, name].forEach((txt) => {
                   tokenize(txt).forEach((tok) => {
                     if (REV_BRAND.has(tok)) for (const c of REV_BRAND.get(tok)) alias.add(c);
                   });
                 });
 
+                // colors from explicit color fields + name/description
                 const colorFields = [i.color, i.colour, i.colors, i.Colours, i.Color, i.Colour]
                   .filter(Boolean)
                   .map((x) => (Array.isArray(x) ? x.join(" ") : String(x)));
-                const colorTokens = new Set();
-                colorFields.forEach((cf) => detectCanonicalColors(cf).forEach((c) => colorTokens.add(c)));
-                detectCanonicalColors(i.name).forEach((c) => colorTokens.add(c));
-                detectCanonicalColors(i.description).forEach((c) => colorTokens.add(c));
-                for (const c of colorTokens) alias.add(c);
+                const colorsCanon = new Set();
+                colorFields.forEach((cf) => detectCanonicalColors(cf).forEach((c) => colorsCanon.add(c)));
+                detectCanonicalColors(i.name).forEach((c) => colorsCanon.add(c));
+                detectCanonicalColors(i.description).forEach((c) => colorsCanon.add(c));
+                for (const c of colorsCanon) alias.add(c);
 
-                const styleTokens = new Set();
                 tokenize(i.name)
                   .concat(tokenize(i.description))
                   .forEach((tok) => {
-                    if (REV_STYLE.has(tok)) for (const s of REV_STYLE.get(tok)) styleTokens.add(s);
+                    if (REV_STYLE.has(tok)) for (const s of REV_STYLE.get(tok)) alias.add(s);
                   });
-                for (const s of styleTokens) alias.add(s);
 
                 sizeTokens.forEach((s) => alias.add(normalizeText(s)));
-
                 const aliasTokens = Array.from(alias);
                 const aliasText = aliasTokens.join(" ");
+
+                const imageUrl =
+                  (Array.isArray(i.pictureUrls) &&
+                    i.pictureUrls.find((u) => typeof u === "string" && u.trim())) ||
+                  "";
 
                 return {
                   id: i.clothingItemId,
@@ -420,8 +364,10 @@ export default function SearchBar() {
                   price: i.price,
                   category: i.category,
                   description: i.description,
-                  imageUrl: (Array.isArray(i.pictureUrls) && i.pictureUrls.find(u => typeof u === "string" && u.trim())) || "",                  sizeLabel,
+                  imageUrl,
+                  sizeLabel,
                   sizeTokens,
+                  colorsCanon: Array.from(colorsCanon), // canonical color names
                   __aliasTokens: aliasTokens,
                   __aliasText: aliasText,
                 };
@@ -430,15 +376,15 @@ export default function SearchBar() {
           })
         );
 
-        setShops(withItems);
-        setCategories(catData);
-
         const enrichedUsers = userData.map((u) => ({
           userId: u.userId,
           name: u.name,
           email: u.email,
           imageUrl: u.profilePictureUrl || u.profileImage || "/Assets/default-avatar.jpg",
         }));
+
+        setShops(withItems);
+        setCategories(catData);
         setUsers(enrichedUsers);
       } catch (err) {
         console.error("SearchBar fetch error:", err);
@@ -460,19 +406,19 @@ export default function SearchBar() {
     [shops]
   );
 
-
   const fuseShops = useMemo(
     () =>
       new Fuse(shops, {
         keys: [
-          { name: "name", weight: 0.7 },
-          { name: "description", weight: 0.3 },
-          { name: "address", weight: 0.5 },
-          { name: "NIPT", weight: 0.2 },
+          { name: "name", weight: 0.9 },
+          { name: "description", weight: 0.6 },
+          { name: "address", weight: 0.8 },
+          { name: "openingHours", weight: 0.5 },
           { name: "phoneNumber", weight: 0.2 },
+          { name: "NIPT", weight: 0.1 },
         ],
-        threshold: 0.35,
-        distance: 200,
+        threshold: 0.34,
+        distance: 300,
         ignoreLocation: true,
         minMatchCharLength: 2,
       }),
@@ -482,18 +428,18 @@ export default function SearchBar() {
   const fuseItemsBaseOptions = useMemo(
     () => ({
       includeScore: true,
-      threshold: 0.36,
-      distance: 300,
+      threshold: 0.34,
+      distance: 350,
       ignoreLocation: true,
       minMatchCharLength: 2,
       keys: [
-        { name: "__aliasText", weight: 1.1 }, 
-        { name: "name", weight: 0.5 },
-        { name: "brand", weight: 0.5 },
-        { name: "model", weight: 0.35 },
-        { name: "category", weight: 0.35 },
-        { name: "description", weight: 0.2 },
-        { name: "sizeLabel", weight: 0.7 },
+        { name: "__aliasText", weight: 1.15 }, // includes colors, styles, brand aliases, categories, description terms
+        { name: "name", weight: 0.6 },
+        { name: "brand", weight: 0.55 },
+        { name: "model", weight: 0.4 },
+        { name: "category", weight: 0.4 },
+        { name: "description", weight: 0.35 },
+        { name: "sizeLabel", weight: 0.75 },
         { name: "sizeTokens", weight: 0.9 },
       ],
     }),
@@ -501,28 +447,8 @@ export default function SearchBar() {
   );
 
   const fuseItems = useMemo(() => new Fuse(flatItems, fuseItemsBaseOptions), [flatItems, fuseItemsBaseOptions]);
-
-  const fuseCategories = useMemo(
-    () =>
-      new Fuse(categories, {
-        keys: ["name"],
-        threshold: 0.3,
-        distance: 200,
-        ignoreLocation: true,
-      }),
-    [categories]
-  );
-
-  const fuseUsers = useMemo(
-    () =>
-      new Fuse(users, {
-        keys: ["name", "email"],
-        threshold: 0.3,
-        distance: 200,
-        ignoreLocation: true,
-      }),
-    [users]
-  );
+  const fuseCategories = useMemo(() => new Fuse(categories, { keys: ["name"], threshold: 0.3, distance: 200, ignoreLocation: true }), [categories]);
+  const fuseUsers = useMemo(() => new Fuse(users, { keys: ["name", "email"], threshold: 0.3, distance: 200, ignoreLocation: true }), [users]);
 
   useEffect(() => {
     const q = searchQuery.trim();
@@ -532,36 +458,53 @@ export default function SearchBar() {
     }
 
     const timer = setTimeout(() => {
-      const { sizeTokens, nonSizeQuery } = parseSizeFromQuery(q);
+      const { sizeTokens, colorTokens, expandedTokens, nonSizeText } = parseQuery(q);
+      const expandedQuery = expandedTokens.join(" ");
+      const fallbackLogo = isDarkMode ? DEFAULT_LOGO_DARK : DEFAULT_LOGO_LIGHT;
+      const fallbackProduct = isDarkMode ? DEFAULT_PRODUCT_DARK : DEFAULT_PRODUCT_LIGHT;
 
-      const baseTokens = removeStopWords(tokenize(nonSizeQuery || q));
-      const expanded = expandTokens(baseTokens);
-      const expandedQuery = expanded.join(" ");
       const shopMatches = fuseShops.search(expandedQuery || q).map((r) => r.item);
+      const directShopBoost = shops.filter((s) => {
+        const addr = normalizeText(s.address || "");
+        const hours = normalizeText(s.openingHours || "");
+        const needle = normalizeText(nonSizeText);
+        return needle && (addr.includes(needle) || hours.includes(needle));
+      });
+
+      const dedupShops = [];
+      const seenShop = new Set();
+      [...directShopBoost, ...shopMatches].forEach((s) => {
+        if (!seenShop.has(s.id)) {
+          seenShop.add(s.id);
+          dedupShops.push(s);
+        }
+      });
+
+      let baseItems = flatItems;
+
+      if (sizeTokens.length) {
+        baseItems = baseItems.filter((it) => {
+          const set = new Set((it.sizeTokens || []).map(normalizeSizeToken));
+          return sizeTokens.every((tok) => set.has(tok));
+        });
+      }
+      if (colorTokens.length) {
+        baseItems = baseItems.filter((it) => {
+          if (!it.colorsCanon || it.colorsCanon.length === 0) return false;
+          const set = new Set(it.colorsCanon);
+          return colorTokens.every((c) => set.has(c));
+        });
+      }
+
+      const itemMatches =
+        expandedQuery || q
+          ? new Fuse(baseItems, fuseItemsBaseOptions).search(expandedQuery || q).map((r) => r.item)
+          : baseItems;
+
       const categoryMatches = fuseCategories.search(expandedQuery || q).map((r) => r.item);
       const userMatches = fuseUsers.search(expandedQuery || q).map((r) => r.item);
 
-      let itemMatches = [];
-      if (sizeTokens.length) {
-        const exact = flatItems.filter((it) => {
-          if (!it.sizeTokens || it.sizeTokens.length === 0) return false;
-          const set = new Set(it.sizeTokens.map(normalizeSizeToken));
-          return sizeTokens.every((tok) => set.has(tok));
-        });
-        if (expandedQuery) {
-          const fuseSubset = new Fuse(exact, fuseItemsBaseOptions);
-          itemMatches = fuseSubset.search(expandedQuery).map((r) => r.item);
-        } else {
-          itemMatches = exact;
-        }
-      } else {
-        itemMatches = fuseItems.search(expandedQuery || q).map((r) => r.item);
-      }
-
-          const fallbackLogo    = isDarkMode ? DEFAULT_LOGO_DARK  : DEFAULT_LOGO_LIGHT;
-          const fallbackProduct = isDarkMode ? DEFAULT_PRODUCT_DARK : DEFAULT_PRODUCT_LIGHT;
-
-      const shopsGroup = shopMatches.map((s) => ({
+      const shopsGroup = dedupShops.map((s) => ({
         type: "shop",
         id: s.id,
         slug: s.slug,
@@ -570,23 +513,16 @@ export default function SearchBar() {
       }));
 
       const itemsGroup = itemMatches.map((it) => ({
-      type: "item",
-      id: it.id,
-      name: it.name,
-      shopName: it.shopName || it.shopSlug,
-      imageUrl: it.imageUrl && it.imageUrl.trim() ? it.imageUrl : fallbackProduct,
-      sizeLabel: it.sizeLabel || "",
-    }));
+        type: "item",
+        id: it.id,
+        name: it.name,
+        shopName: it.shopName || it.shopSlug,
+        imageUrl: it.imageUrl && it.imageUrl.trim() ? it.imageUrl : fallbackProduct,
+        sizeLabel: it.sizeLabel || "",
+      }));
 
       const categoriesGroup = categoryMatches.map((c) => ({ type: "category", name: c.name }));
-
-      const usersGroup = userMatches.map((u) => ({
-        type: "user",
-        id: u.userId,
-        name: u.name,
-        email: u.email,
-        imageUrl: u.imageUrl,
-      }));
+      const usersGroup = userMatches.map((u) => ({ type: "user", id: u.userId, name: u.name, email: u.email, imageUrl: u.imageUrl }));
 
       const groupTitles = {
         shops: t("groups.shops", { defaultValue: "Shops" }),
@@ -600,31 +536,17 @@ export default function SearchBar() {
       if (itemsGroup.length) newGroups.push({ category: groupTitles.items, results: itemsGroup });
       if (categoriesGroup.length) newGroups.push({ category: groupTitles.categories, results: categoriesGroup });
       if (usersGroup.length) newGroups.push({ category: groupTitles.users, results: usersGroup });
-
       setGroups(newGroups);
     }, 220);
 
     return () => clearTimeout(timer);
-    }, 
-    
-    [
-    searchQuery,
-    fuseShops,
-    fuseItems,
-    fuseItemsBaseOptions,
-    fuseCategories,
-    fuseUsers,
-    flatItems,
-    isDarkMode,
-    t,
-  ]);
+  }, [searchQuery, shops, flatItems, categories, users, fuseShops, fuseItemsBaseOptions, isDarkMode, t]);
 
+  const navigateTo = (path) => navigate(path);
   const handleSubmit = (e) => {
     e.preventDefault();
     const q = searchQuery.trim();
-    if (q) {
-      navigate(`/search?query=${encodeURIComponent(q)}`);
-    }
+    if (q) navigateTo(`/search?query=${encodeURIComponent(q)}`);
   };
 
   const clearSearch = () => {
@@ -638,11 +560,13 @@ export default function SearchBar() {
     const re = new RegExp(`(${safe})`, "gi");
     return String(text)
       .split(re)
-      .map((part, i) => (re.test(part) ? (
-        <span key={i} className="highlight">{part}</span>
-      ) : (
-        <span key={i} className="highlight-part">{part}</span>
-      )));
+      .map((part, i) =>
+        re.test(part) ? (
+          <span key={i} className="highlight">{part}</span>
+        ) : (
+          <span key={i} className="highlight-part">{part}</span>
+        )
+      );
   };
 
   const handleClick = (item, e) => {
@@ -650,16 +574,16 @@ export default function SearchBar() {
     if (!currentUserId) return;
     switch (item.type) {
       case "shop":
-        window.location.href = `/shop/${item.slug}`;
+        navigateTo(`/shop/${item.slug}`);
         break;
       case "item":
-        window.location.href = `/product/${item.id}`;
+        navigateTo(`/product/${item.id}`);
         break;
       case "category":
-        window.location.href = `/category-filter?category=${encodeURIComponent(item.name)}`;
+        navigateTo(`/category-filter?category=${encodeURIComponent(item.name)}`);
         break;
       case "user":
-        window.location.href = item.id === currentUserId ? "/my-profile" : `/profile/${item.id}`;
+        navigateTo(item.id === currentUserId ? "/my-profile" : `/profile/${item.id}`);
         break;
       default:
         break;
@@ -672,8 +596,7 @@ export default function SearchBar() {
         <input
           type="text"
           placeholder={t("placeholder", {
-            defaultValue:
-              "Search shops, items, sizes (e.g., M, 42), colors (e.g., e zezë/black), categories, or users...",
+            defaultValue: "Search shops, items, sizes (e.g., M, 42), colors (e.g., e zezë/black/navy blue), categories, keywords, opening hours…",
           })}
           className="search-input"
           value={searchQuery}
@@ -682,9 +605,7 @@ export default function SearchBar() {
         <FaSearch className="search-icon" />
         <button type="submit" className="search-icon-button" />
         {searchQuery && (
-          <button type="button" className="clear-button" onClick={clearSearch}>
-            ✕
-          </button>
+          <button type="button" className="clear-button" onClick={clearSearch}>✕</button>
         )}
       </div>
 
@@ -717,28 +638,22 @@ export default function SearchBar() {
                       onClick={(e) => handleClick(item, e)}
                     >
                       {item.imageUrl && (
-                          <img
-                            src={item.imageUrl}
-                            alt={item.name}
-                            className="result-image"
-                            onError={(e) => {
-                              e.currentTarget.onerror = null;
-                              e.currentTarget.src = isDarkMode ? DEFAULT_PRODUCT_DARK : DEFAULT_PRODUCT_LIGHT;
-                            }}
-                          />
-                        )}
+                        <img
+                          src={item.imageUrl}
+                          alt={item.name}
+                          className="result-image"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = isDarkMode ? DEFAULT_PRODUCT_DARK : DEFAULT_PRODUCT_LIGHT;
+                          }}
+                        />
+                      )}
                       <span>
                         {highlight(item.name)}
                         {item.type === "item" && (
                           <>
-                            {" — "}
-                            {item.shopName}
-                            {item.sizeLabel ? (
-                              <>
-                                {" · "}
-                                <b>{item.sizeLabel}</b>
-                              </>
-                            ) : null}
+                            {" — "}{item.shopName}
+                            {item.sizeLabel ? <>{" · "}<b>{item.sizeLabel}</b></> : null}
                           </>
                         )}
                         {item.type === "user" && ` — ${item.email}`}

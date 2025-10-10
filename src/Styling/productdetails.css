@@ -458,9 +458,35 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: none; box
    DARK MODE (explicit preference)
    ================================ */
 @media (prefers-color-scheme: dark) {
-  :root { color-scheme: dark; }
-  .product-images { box-shadow: var(--shadow); }
+  :root {
+    color-scheme: dark;
+    --btn-accent:        #059669;
+    --btn-accent-hover:  #10b981; 
+    --btn-accent-active: #047857; 
+    --btn-accent-fg:     #f8fafc; 
+  }
+
+  .product-images,
   .info-card { box-shadow: var(--shadow); }
+
+  .rezerve-button {
+    background: var(--btn-accent);
+    color: var(--btn-accent-fg);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+      0 8px 20px rgba(5,150,105,.25),
+      inset 0 1px 0 rgba(255,255,255,.06);
+    transition: background .15s ease, transform .05s ease, box-shadow .15s ease;
+  }
+  .rezerve-button:hover   { background: var(--btn-accent-hover); }
+  .rezerve-button:active  { background: var(--btn-accent-active); transform: translateY(0.5px); }
+  .rezerve-button:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(16,185,129,.35); }
+  .rezerve-button:disabled {
+    background: #374151; 
+    color: #9ca3af;      
+    box-shadow: none;
+    cursor: not-allowed;
+  }
 }
 
 /* Safe-area (iOS) */
